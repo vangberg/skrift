@@ -1,32 +1,36 @@
-import React, { useMemo, useCallback } from 'react';
+import React, {
+  useMemo,
+  useCallback,
+  useState
+} from 'react';
 
-import { createEditor, Node } from 'slate'
-import { Slate, Editable, RenderElementProps, withReact, DefaultElement } from 'slate-react'
+import {
+  createEditor,
+  Node,
+  Range
+} from 'slate'
+
+import {
+  Slate,
+  Editable,
+  RenderElementProps,
+  withReact,
+  DefaultElement
+} from 'slate-react'
 
 import NoteLink from './NoteLink'
 
-const defaultValue: Node[] = [
+const initialValue: Node[] = [
   {
     type: 'paragraph',
     children: [
-      {
-        text: 'A line of text in a paragraph.',
-        marks: [],
-      },
+      { text: 'A line of text in a paragraph.' },
       { 
         type: 'note-link',
         id: 123,
-        children: [
-          {
-            text: '',
-            marks: [],
-          },
-        ],
+        children: [{ text: '' }],
       },
-      {
-        text: 'Boo.',
-        marks: [],
-      },
+      { text: 'Boo.' },
     ],
   },
 ]
@@ -69,9 +73,22 @@ const App: React.FC = () => {
     }
   }, [])
 
+  const [value, setValue] = useState(initialValue)
+  const [selection, setSelection] =
+    useState<Range | null>(null)
+
+
   return (
     <div>
-      <Slate editor={editor} defaultValue={defaultValue}>
+      <Slate
+        editor={editor}
+        value={value}
+        selection={selection}
+        onChange={(value, selection) => {
+          setValue(value)
+          setSelection(selection)
+        }}
+      >
         <Editable
           renderElement={renderElement}
         />
