@@ -10,7 +10,18 @@ type Props = {
 }
 
 const Editor: React.FC<Props> = (props) => {
-  const editor = useMemo(() => withNoteLink(withReact(createEditor())), [])
+  const editor = useMemo(() => {
+    const editor = withNoteLink(withReact(createEditor()))
+
+    const { exec } = editor
+
+    editor.exec = command => {
+      console.log(command, editor.selection)
+      exec(command)
+    } 
+
+    return editor
+  }, [])
 
   const [value, setValue] = useState(props.initialValue)
 
