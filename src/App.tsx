@@ -7,7 +7,7 @@ const initialValue: Node[] = [
   {
     type: 'paragraph',
     children: [
-      { text: 'A line of text in a paragraph.' },
+      { text: 'A line of text in a \nparagraph.' },
       { 
         type: 'note-link',
         id: 123,

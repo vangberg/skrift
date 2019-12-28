@@ -1,5 +1,5 @@
 import Remarkable from 'remarkable'
-import noteLink from './index'
+import { noteLink } from './index'
 
 describe('note-link', () => {
   fit('tokenizes', () => {

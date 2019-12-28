@@ -1,4 +1,4 @@
-export default function noteLink(
+export function noteLink(
   state: Remarkable.StateInline,
   silent: boolean
 ) {
