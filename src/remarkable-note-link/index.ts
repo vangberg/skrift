@@ -12,6 +12,7 @@ export default function noteLink(
   if (silent) { return false; } // don't run any pairs in validation mode
   if (start + 4 >= max) { return false; }
   if (state.src.charCodeAt(start + 1) !== 91 /* [ */) { return false; }
+  // @ts-ignore: Faulty typings
   if (state.level >= state.options.maxNesting) { return false; }
 
   lastChar = start > 0 ? state.src.charCodeAt(start - 1) : -1;
