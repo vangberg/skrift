@@ -5,7 +5,7 @@ describe('heading', () => {
     const result = deserialize('# Heading 1')
     const expected = [{
       type: 'heading1',
-      children: [{ text: '# ' }, { text: 'Heading 1'}]
+      children: [{ text: 'Heading 1'}]
     }]
 
     expect(result).toEqual(expected)
@@ -38,7 +38,7 @@ describe('note', () => {
     const expected = [
       {
         type: 'heading1',
-        children: [{ text: '# ' }, { text: 'A title' }]
+        children: [{ text: 'A title' }]
       },
       {
         type: 'paragraph',

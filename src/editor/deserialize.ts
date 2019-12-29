@@ -28,15 +28,16 @@ function isHeadingOpenToken(token: Token): token is HeadingOpenToken {
   return (token.type === 'heading_open')
 }
 
-export function parseMarkdown(markdown: string): Token[] {
+export function tokenize(markdown: string): Token[] {
   return md.parse(markdown, {})
 }
 
 export function parse(tokens: Token[]): Node[] {
   const nodes = []
 
-  let token
-  while (token = tokens.shift()) {
+  while (tokens.length > 0) {
+    const token = tokens.shift() !
+
     switch (token.type) {
       case 'heading_open':
         nodes.push(...heading(token, tokens))
@@ -59,14 +60,22 @@ export function parse(tokens: Token[]): Node[] {
   return nodes
 }
 
-function paragraph(tokens: Token[]): Node[] {
-  const children: Token[] = []
-  let next
+function takeUntil(tokens: Token[], type: string): Token[] {
+  const children = []
 
-  while (next = tokens.shift()) {
-    if (next.type === 'paragraph_close') { break }
+  while (tokens.length > 0) {
+    const next = tokens.shift() !
+
+    if (next.type === type) { break }
+
     children.push(next)
   }
+
+  return children
+}
+
+function paragraph(tokens: Token[]): Node[] {
+  const children = takeUntil(tokens, 'paragraph_close')
 
   return [{
     type: 'paragraph',
@@ -76,56 +85,45 @@ function paragraph(tokens: Token[]): Node[] {
 
 function heading(token: Token, tokens: Token[]): Node[] {
   if (!isHeadingOpenToken(token)) {
-    throw `Expected token of type 'heading_open', got ${token.type}`
+    throw new Error(`Expected 'heading_open' token, got ${token.type}`)
   }
 
-  const children: Token[] = []
-
-  let next
-  while (next = tokens.shift()) {
-    if (next.type === 'heading_close') { break }
-
-    children.push(next)
-  }
+  const children = takeUntil(tokens, 'heading_close')
 
   return [{
     type: 'heading' + token.hLevel,
-    children: [
-      { text: '#'.repeat(token.hLevel) + ' ' },
-      ...parse(children)
-    ]
+    children: parse(children)
   }]
 }
 
 function inline(token: BlockContentToken, tokens: Token[]): Node[] {
-  if (!token.children) { return [] }
+  if (!token.children) {
+    throw new Error(`Expected 'inline' token, got '${token.type}'`)
+  }
 
   return parse(token.children)
 }
 
 function text(token: Token): Node[] {
-  if (!isTextToken(token)) { return [] }
+  if (!isTextToken(token)) { 
+    throw new Error(`Expected 'text' token, got '${token.type}'`)
+  }
   if (!token.content) { return [] }
 
   return [{ text: token.content }]
 }
 
 function noteLink(tokens: Token[]): Node[] {
-  const children: Token[] = []
-  let next
-  while (next = tokens.shift()) {
-    if (next.type === 'note_link_close') { break }
-    children.push(next)
-  }
+  const children = takeUntil(tokens, 'note_link_close')
 
   if (children.length > 1) {
-    throw `Expected 1 children, got ${children.length}`
+    throw new Error(`Expected 1 children, got ${children.length}`)
   }
 
   const child = children[0]
 
   if (!isTextToken(child)) {
-    throw `Expected token of type 'text', got ${child.type}`
+    throw new Error(`Expected 'text' token, got ${child.type}`)
   }
 
   return [{
@@ -136,7 +134,7 @@ function noteLink(tokens: Token[]): Node[] {
 }
 
 export default function deserialize(markdown: string): Node[] {
-  const tokens = parseMarkdown(markdown)
+  const tokens = tokenize(markdown)
   const nodes = parse(tokens)
   return nodes
 } 
