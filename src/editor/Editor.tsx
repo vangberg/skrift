@@ -1,12 +1,13 @@
 import React, { useMemo, useCallback, useState } from 'react';
-import { createEditor, Node } from 'slate'
+import { createEditor } from 'slate'
 import { Slate, Editable, withReact } from 'slate-react'
 
 import { withNoteLink } from './NoteLink'
 import renderElement from './renderElement'
+import deserialize from './deserialize';
 
 type Props = {
-  initialValue: Node[]
+  markdown: string
 }
 
 const Editor: React.FC<Props> = (props) => {
@@ -16,7 +17,11 @@ const Editor: React.FC<Props> = (props) => {
     return editor
   }, [])
 
-  const [value, setValue] = useState(props.initialValue)
+  const initialValue = useMemo(() => {
+    return deserialize(props.markdown)
+  }, [props.markdown])
+
+  const [value, setValue] = useState(initialValue)
 
   const onChange = useCallback((value) => {
     setValue(value)

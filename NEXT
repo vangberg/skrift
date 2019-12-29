@@ -1,1 +1,1 @@
-* Deserialize plaintext to Slate
+* Serialize Slate to Markdown, and deserialize on editor-change
