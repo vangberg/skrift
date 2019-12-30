@@ -133,7 +133,7 @@ function noteLink(tokens: Token[]): Node[] {
   }]
 }
 
-export default function deserialize(markdown: string): Node[] {
+export function deserialize(markdown: string): Node[] {
   const tokens = tokenize(markdown)
   const nodes = parse(tokens)
   return nodes

@@ -1,7 +1,4 @@
-export function noteLink(
-  state: Remarkable.StateInline,
-  silent: boolean
-) {
+export function noteLink(state: Remarkable.StateInline, silent: boolean) {
   let found = false
   let max = state.posMax
   let start = state.pos

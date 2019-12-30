@@ -4,7 +4,7 @@ import { RenderElementProps, DefaultElement } from 'slate-react'
 import { NoteLink } from './NoteLink'
 import { Heading1 } from './Heading'
 
-const renderElement = (props: RenderElementProps) => {
+export function renderElement(props: RenderElementProps) {
   switch (props.element.type) {
     case 'heading1':
       return <Heading1 {...props} />
@@ -14,5 +14,3 @@ const renderElement = (props: RenderElementProps) => {
       return <DefaultElement {...props} />
   }
 }
-
-export default renderElement

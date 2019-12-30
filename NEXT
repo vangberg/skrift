@@ -1,1 +1,5 @@
-* Add NoteList
+* Note
+  * Parse:
+    - title
+    - links
+    - markdown

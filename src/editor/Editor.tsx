@@ -3,8 +3,8 @@ import { createEditor } from 'slate'
 import { Slate, Editable, withReact } from 'slate-react'
 
 import { withNoteLink } from './NoteLink'
-import renderElement from './renderElement'
-import deserialize from './deserialize';
+import { renderElement } from './renderElement'
+import { Serializer } from '../serializer';
 
 type Props = {
   markdown: string
@@ -18,7 +18,7 @@ const Editor: React.FC<Props> = (props) => {
   }, [])
 
   const initialValue = useMemo(() => {
-    return deserialize(props.markdown)
+    return Serializer.deserialize(props.markdown)
   }, [props.markdown])
 
   const [value, setValue] = useState(initialValue)
