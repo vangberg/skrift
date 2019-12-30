@@ -74,6 +74,14 @@ function takeUntil(tokens: Token[], type: string): Token[] {
   return children
 }
 
+function inline(token: BlockContentToken, tokens: Token[]): Node[] {
+  if (!token.children) {
+    throw new Error(`Expected 'inline' token, got '${token.type}'`)
+  }
+
+  return parse(token.children)
+}
+
 function paragraph(tokens: Token[]): Node[] {
   const children = takeUntil(tokens, 'paragraph_close')
 
@@ -94,14 +102,6 @@ function heading(token: Token, tokens: Token[]): Node[] {
     type: 'heading' + token.hLevel,
     children: parse(children)
   }]
-}
-
-function inline(token: BlockContentToken, tokens: Token[]): Node[] {
-  if (!token.children) {
-    throw new Error(`Expected 'inline' token, got '${token.type}'`)
-  }
-
-  return parse(token.children)
 }
 
 function text(token: Token): Node[] {
