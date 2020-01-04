@@ -1,13 +1,13 @@
-import { Note } from './'
+import { Note } from '.'
 
 const fullNote = `# A title
 
 Some content. [[123]].
 Another link: [[456]]`
 
-describe('parse', () => {
+describe('parseMarkdown', () => {
   describe('with full note', () => {
-    const note = Note.parse(fullNote)
+    const note = Note.parseMarkdown(fullNote)
 
     it('parses title', () => {
       expect(note.title).toEqual('A title')

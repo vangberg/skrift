@@ -1,6 +1,6 @@
 import { Node } from 'slate'
 import { Serializer } from '../serializer'
-import { Note, NoteLink } from './'
+import { Note, NoteLink } from '.'
 
 function parseTitle(nodes: Node[]): string {
   if (nodes.length === 0) { return "" }
@@ -17,7 +17,7 @@ function parseLinks(nodes: Node[]): NoteLink[] {
     .map(link => ({ id: link.id }))
 }
 
-export function parse(markdown: string): Note {
+export function parseMarkdown(markdown: string): Note {
   const nodes = Serializer.deserialize(markdown)
 
   return {

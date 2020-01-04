@@ -1,6 +1,4 @@
-import { Node } from 'slate'
-import { Serializer } from '../serializer'
-import { parse } from './parse'
+import { parseMarkdown } from './fromMarkdown'
 
 export interface Note {
   title: string,
@@ -14,5 +12,5 @@ export interface NoteLink {
 }
 
 export const Note = {
-  parse
+  parseMarkdown
 }
