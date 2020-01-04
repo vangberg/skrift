@@ -19,13 +19,10 @@ function serializeNode(node: Node): string {
   switch (node.type) {
     case 'heading1':
       return heading1(node)
-      break
     case 'paragraph':
       return paragraph(node)
-      break
     case 'note-link':
       return noteLink(node)
-      break
   }
 
   return ""
