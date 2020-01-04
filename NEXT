@@ -1,0 +1,3 @@
+* Generate new note and add to openNotes
+  * useReducer
+    Action 'ADD_NOTE' -> adds note + adds it to list of open notes

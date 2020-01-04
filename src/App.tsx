@@ -1,16 +1,15 @@
-import React from 'react';
-
-import { Editor } from './editor'
-
-const markdown = `# En note
-
-A line of text in a
-paragraph. [[123]] Boo.`
+import React, { useState } from 'react';
+import { useNotes } from './useNotes';
 
 const App: React.FC = () => {
+  const { notes, setNote } = useNotes()
+  const [ openNotes, setOpenNotes ] = useState([])
+
   return (
     <div>
-      <Editor markdown={markdown} />
+      <div onClick></div>
+      {JSON.stringify(notes)}
+      {JSON.stringify(openNotes)}
     </div>
   );
 }
