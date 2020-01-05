@@ -7,7 +7,7 @@ type Props = {
 
 const App: React.FC<Props> = (props) => {
   const { store } = props
-  const [ noteIds, setNoteIds ] = useState<string[]>([])
+  const [ noteIds, setNoteIds ] = useState<string[]>(() => store.getIds())
 
   useEffect(() => {
     store.onUpdate(() => setNoteIds(store.getIds()))

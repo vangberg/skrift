@@ -16,7 +16,7 @@ function fromLocalStorage(): Notes {
 }
 
 function toLocalStorage(notes: Notes) {
-  const json = JSON.stringify(notes.entries())
+  const json = JSON.stringify(Array.from(notes.entries()))
   window.localStorage.setItem(KEY, json)
 }
 
