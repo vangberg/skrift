@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
-import { useNotes } from './useNotes';
+import React, { useState, useEffect } from 'react';
+import { Store } from './store';
 
-const App: React.FC = () => {
-  const { notes, setNote } = useNotes()
-  const [ openNotes, setOpenNotes ] = useState([])
+type Props = {
+  store: Store
+}
+
+const App: React.FC<Props> = (props) => {
+  const { store } = props
+  const [ noteIds, setNoteIds ] = useState<string[]>([])
+
+  useEffect(() => {
+    store.onUpdate(() => setNoteIds(store.getIds()))
+  }, [])
 
   return (
     <div>
-      <div onClick></div>
-      {JSON.stringify(notes)}
-      {JSON.stringify(openNotes)}
+      <div onClick={() => store.generate()}>Add</div>
+
+      {JSON.stringify(noteIds)}
     </div>
   );
 }
