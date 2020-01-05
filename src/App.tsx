@@ -10,7 +10,6 @@ const App: React.FC<Props> = (props) => {
   const [ noteIds, setNoteIds ] = useState<string[]>([])
 
   useEffect(() => {
-    console.log(123)
     store.onUpdate(() => setNoteIds(store.getIds()))
   }, [store])
 
