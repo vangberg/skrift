@@ -34,8 +34,14 @@ export class Store {
     return Array.from(this.notes.keys())
   }
 
-  get(id: string): Note | undefined {
-    return this.notes.get(id)
+  get(id: string): Note {
+    const note = this.notes.get(id)
+    
+    if (!note) {
+      throw new Error(`Could not find note with id ${id}`)
+    }
+    
+    return note
   }
 
   save(id: string, note: Note) {

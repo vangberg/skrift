@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StoreContext } from './store';
+import { NoteList } from './components/NoteList';
 
 const App: React.FC = () => {
   const store = useContext(StoreContext)
@@ -14,7 +15,7 @@ const App: React.FC = () => {
       <div onClick={() => store.generate()}>Add</div>
       <div onClick={() => {window.localStorage.clear(); window.location.reload()}}>Clear</div>
 
-      {JSON.stringify(noteIds)}
+      <NoteList ids={noteIds} />
     </div>
   );
 }
