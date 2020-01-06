@@ -10,22 +10,16 @@ type Props = {
   markdown: string
 }
 
-export const Editor: React.FC<Props> = (props) => {
-  const editor = useMemo(() => {
-    const editor = withReact(withNoteLink(createEditor()))
+export const Editor: React.FC<Props> = ({ markdown }) => {
+  const editor = useMemo(
+    () => withReact(withNoteLink(createEditor())),
+    []
+  )
 
-    return editor
-  }, [])
+  const [value, setValue] =
+    useState(() => Serializer.deserialize(markdown))
 
-  const initialValue = useMemo(() => {
-    return Serializer.deserialize(props.markdown)
-  }, [props.markdown])
-
-  const [value, setValue] = useState(initialValue)
-
-  const onChange = useCallback((value) => {
-    setValue(value)
-  }, [])
+  const onChange = useCallback(setValue, [])
 
   return (
     <Slate editor={editor} value={value} onChange={onChange}>
