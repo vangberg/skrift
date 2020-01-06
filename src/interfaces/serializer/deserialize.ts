@@ -1,6 +1,6 @@
 import Remarkable, { Token, BlockContentToken, TextToken, HeadingOpenToken } from 'remarkable'
 import { Node } from 'slate'
-import { noteLink as noteLinkRule } from '../remarkable-note-link'
+import { noteLink as noteLinkRule } from '../../remarkable-note-link'
 
 export const md = new Remarkable()
 

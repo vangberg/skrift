@@ -1,5 +1,5 @@
 import React from 'react'
-import { Note } from "./note";
+import { Note } from "./interfaces/note";
 
 type Notes = Map<string, Note>
 type Callback = () => void
@@ -50,7 +50,6 @@ export class Store {
     const note = {
       title: "",
       links: [],
-      backlinks: [],
       markdown: ""
     }
     

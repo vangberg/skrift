@@ -23,7 +23,6 @@ export function parseMarkdown(markdown: string): Note {
   return {
     title: parseTitle(nodes),
     links: parseLinks(nodes),
-    backlinks: [],
     markdown
   }
 }
