@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useMemo, useCallback, useState } from 'react'
 import { createEditor } from 'slate'
 import { Slate, Editable, withReact } from 'slate-react'
 
@@ -10,7 +10,7 @@ type Props = {
   markdown: string
 }
 
-const Editor: React.FC<Props> = (props) => {
+export const Editor: React.FC<Props> = (props) => {
   const editor = useMemo(() => {
     const editor = withReact(withNoteLink(createEditor()))
 
@@ -33,5 +33,3 @@ const Editor: React.FC<Props> = (props) => {
     </Slate>
   );
 }
-
-export default Editor;
