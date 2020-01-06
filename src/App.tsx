@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { StoreContext } from './storeContext';
+import { StoreContext } from './store';
 
 const App: React.FC = () => {
   const store = useContext(StoreContext)

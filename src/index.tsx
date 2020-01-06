@@ -2,8 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { Store } from './store';
-import { StoreContext } from './storeContext'
+import { Store, StoreContext } from './store';
 
 const store = new Store()
 

@@ -1,3 +1,4 @@
+import React from 'react'
 import { Note } from "./note";
 
 type Notes = Map<string, Note>
@@ -62,3 +63,5 @@ export class Store {
     this.callbacks.push(callback)
   }
 }
+
+export const StoreContext = React.createContext(new Store())
