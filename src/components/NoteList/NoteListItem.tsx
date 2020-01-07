@@ -1,13 +1,18 @@
-import React, { useContext, useMemo } from 'react'
+import React, { useContext, useMemo, useCallback } from 'react'
 import { StoreContext } from '../../store'
 
 type Props = {
-  id: string
+  id: string,
+  onClick?: (() => void)
 }
 
-export const NoteListItem: React.FC<Props> = ({ id }) => {
+export const NoteListItem: React.FC<Props> = ({ id, onClick }) => {
   const store = useContext(StoreContext)
   const note = useMemo(() => store.get(id), [id, store])
 
-  return <li>{note.title || id}</li>
+  const handleClick = useCallback(() => {
+    if (onClick) { onClick() }
+  }, [onClick])
+
+  return <li onClick={handleClick}>{note.title || id}</li>
 }
