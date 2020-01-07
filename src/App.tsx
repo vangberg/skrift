@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useCallback } from 'react';
 import produce from 'immer'
 import { StoreContext } from './store';
 import { NoteList } from './components/NoteList';
-import { Editor } from './components/Editor';
+import { NoteEditor } from './components/NoteEditor';
 
 const App: React.FC = () => {
   const store = useContext(StoreContext)
@@ -24,9 +24,7 @@ const App: React.FC = () => {
 
       <NoteList ids={noteIds} onSelectNote={handleSelectNote} />
 
-      {[...openNoteIds].map(id => (
-        <Editor key={id} markdown={store.get(id).markdown} />
-      ))}
+      {[...openNoteIds].map(id => <NoteEditor key={id} id={id} />)}
     </div>
   );
 }
