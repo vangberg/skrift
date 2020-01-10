@@ -11,6 +11,8 @@ export const NoteEditor: React.FC<Props> = ({ id }) => {
   const note = useMemo(() => store.get(id), [id])
 
   return (
-    <Editor markdown={note.markdown} />
+    <div className="border border-gray-500">
+      <Editor markdown={note.markdown} />
+    </div>
   )
 }
