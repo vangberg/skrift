@@ -3,10 +3,9 @@ import { Node, Text } from 'slate'
 export function serialize(nodes: Node[]): string {
   let out = ""
   
-  while (nodes.length > 0) {
-    const next = nodes.shift() !
-    out += serializeNode(next)
-  }
+  nodes.forEach(node => {
+    out += serializeNode(node)
+  })
 
   return out.trim()
 }

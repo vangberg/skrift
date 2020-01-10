@@ -1,4 +1,4 @@
-import { parseMarkdown } from './fromMarkdown'
+import { fromMarkdown } from './fromMarkdown'
 
 export interface Note {
   title: string,
@@ -11,5 +11,5 @@ export interface NoteLink {
 }
 
 export const Note = {
-  parseMarkdown
+  fromMarkdown
 }

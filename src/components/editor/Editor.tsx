@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useState } from 'react'
+import React, { useMemo, useCallback, useEffect, useState } from 'react'
 import { Node, createEditor } from 'slate'
 import { Slate, Editable, withReact } from 'slate-react'
 
@@ -7,7 +7,8 @@ import { renderElement } from './renderElement'
 import { Serializer } from '../../interfaces/serializer';
 
 type Props = {
-  markdown: string
+  markdown: string,
+  onUpdate: (markdown: string) => void,
 }
 
 const initialValue = (markdown: string) => {
@@ -23,18 +24,23 @@ const initialValue = (markdown: string) => {
   }]
 }
 
-export const Editor: React.FC<Props> = ({ markdown }) => {
-  const editor = useMemo(
-    () => withReact(withNoteLink(createEditor())),
-    []
-  )
+export const Editor: React.FC<Props> = ({ markdown, onUpdate }) => {
+  useEffect(() => {
+    console.log({ markdown })
+  }, [markdown])
+  const editor =
+    useMemo(() => withReact(withNoteLink(createEditor())), [])
+  const [value, setValue] =
+    useState(() => initialValue(markdown))
 
-  const [value, setValue] = useState<Node[]>(() => initialValue(markdown))
-
-  const onChange = useCallback(setValue, [])
+  const handleChange = useCallback(((value: Node[]) => {
+    console.log({ value })
+    setValue(value)
+    onUpdate(Serializer.serialize(value))
+  }), [onUpdate])
 
   return (
-    <Slate editor={editor} value={value} onChange={onChange}>
+    <Slate editor={editor} value={value} onChange={handleChange}>
       <Editable renderElement={useCallback(renderElement, [])} />
     </Slate>
   );

@@ -17,7 +17,7 @@ function parseLinks(nodes: Node[]): NoteLink[] {
     .map(link => ({ id: link.id }))
 }
 
-export function parseMarkdown(markdown: string): Note {
+export function fromMarkdown(markdown: string): Note {
   const nodes = Serializer.deserialize(markdown)
 
   return {
