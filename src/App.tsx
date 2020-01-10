@@ -6,8 +6,9 @@ import { NoteEditor } from './components/NoteEditor';
 
 const App: React.FC = () => {
   const store = useContext(StoreContext)
-  const [noteIds, setNoteIds] = useState<string[]>(() => store.getIds())
-  const [openNoteIds, setOpenNoteIds] = useState<Set<string>>(new Set())
+  const [noteIds, setNoteIds] = useState(() => store.getIds())
+  const [openNoteIds, setOpenNoteIds] =
+    useState(() => new Set(store.getIds().slice(0, 1)))
 
   useEffect(() => {
     store.onUpdate(() => setNoteIds(store.getIds()))
