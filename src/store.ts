@@ -30,6 +30,10 @@ export class Store {
     this.callbacks = []
   }
 
+  getNotes(): Notes {
+    return new Map(this.notes)
+  }
+
   getIds(): string[] {
     return Array.from(this.notes.keys())
   }

@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useCallback } from 'react'
-import { StoreContext } from '../../store'
+import { NotesContext } from '../../notesContext'
 import { Editor } from '../Editor'
 
 type Props = {
@@ -8,11 +8,13 @@ type Props = {
 }
 
 export const NoteEditor: React.FC<Props> = ({ id, onUpdate }) => {
-  const store = useContext(StoreContext)
-  const note = useMemo(() => store.get(id), [store, id])
+  const notes = useContext(NotesContext)
+  const note = useMemo(() => notes.get(id), [notes, id])
 
   const handleUpdate =
     useCallback((markdown: string) => onUpdate(id, markdown), [id, onUpdate])
+
+  if (!note) { return null }
 
   return (
     <div className="border border-gray-500">

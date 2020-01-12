@@ -8,9 +8,9 @@ import './styles/tailwind.css'
 const store = new Store()
 
 ReactDOM.render(
-  <StoreContext.Provider value={store}>
+    <StoreContext.Provider value={store}>
       <App />
-  </StoreContext.Provider>,
+    </StoreContext.Provider>,
     document.getElementById('root')
   );
 
