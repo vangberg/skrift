@@ -1,61 +1,89 @@
-import { deserialize } from './deserialize'
+import { deserialize, deserializeInline } from './deserialize'
 
-describe('heading', () => {
-  it('deserializes', () => {
-    const result = deserialize('# Heading 1')
-    const expected = [{
-      type: 'heading1',
-      children: [{ text: 'Heading 1'}]
-    }]
-
-    expect(result).toEqual(expected)
-  })
-})
-
-describe('note link', () => {
-  it('deserializes', () => {
-    const result = deserialize('[[123]]')
-    const expected = [{
-      type: 'paragraph',
-      children: [{
-        type: 'note-link',
-        id: '123',
-        children: [{ text: '[[123]]' }]
-      }]
-    }]
-
-    expect(result).toEqual(expected)
-  })
-})
-
-const note = `# A title
-
-Someone ([[123]]) said.`
-
-describe('note', () => {
-  it('deserializes', () => {
-    const result = deserialize(note)
-    const expected = [
-      {
+describe('deserialize', () => {
+  describe('heading', () => {
+    it('deserializes', () => {
+      const result = deserialize('# Heading 1')
+      const expected = [{
         type: 'heading1',
-        children: [{ text: 'A title' }]
-      },
-      {
+        children: [{ text: 'Heading 1'}]
+      }]
+
+      expect(result).toEqual(expected)
+    })
+  })
+
+  describe('note link', () => {
+    it('deserializes', () => {
+      const result = deserialize('[[123]]')
+      const expected = [{
         type: 'paragraph',
         children: [
-          { text: 'Someone (' },
+          { text: '' },
           {
             type: 'note-link',
             id: '123',
-            children: [{ text: '[[123]]' }]
+            children: [{ text: '' }]
           },
-          { text: ') said.'}
+          { text: '' },
         ]
-      }
-    ]
+      }]
 
-    expect(result).toEqual(expected)
+      expect(result).toEqual(expected)
+    })
   })
+
+  const note = `# A title
+
+  Someone ([[123]]) said.`
+
+  describe('note', () => {
+    it('deserializes', () => {
+      const result = deserialize(note)
+      const expected = [
+        {
+          type: 'heading1',
+          children: [{ text: 'A title' }]
+        },
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Someone (' },
+            { text: '' },
+            {
+              type: 'note-link',
+              id: '123',
+              children: [{ text: '' }]
+            },
+            { text: '' },
+            { text: ') said.'}
+          ]
+        }
+      ]
+
+      expect(result).toEqual(expected)
+    })
+  })
+})
+
+describe('desiralizeInline', () => {
+  describe('note link', () => {
+    it('deserializes', () => {
+      const result = deserializeInline('[[123]]')
+      const expected = [
+        { text: '' },
+        {
+          type: 'note-link',
+          id: '123',
+          children: [{ text: '' }]
+        },
+        { text: '' }
+      ]
+
+      expect(result).toEqual(expected)
+    })
+  })
+
 })
 
 export default {}

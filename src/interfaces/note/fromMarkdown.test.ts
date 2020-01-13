@@ -7,7 +7,7 @@ Another link: [[456]]`
 
 describe('parseMarkdown', () => {
   describe('with full note', () => {
-    const note = Note.parseMarkdown(fullNote)
+    const note = Note.fromMarkdown(fullNote)
 
     it('parses title', () => {
       expect(note.title).toEqual('A title')

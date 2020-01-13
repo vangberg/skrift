@@ -40,5 +40,5 @@ function paragraph(node: Node): string {
 }
 
 function noteLink(node: Node): string {
-  return serializeChildren(node)
+  return `[[${node.id}]]`
 }

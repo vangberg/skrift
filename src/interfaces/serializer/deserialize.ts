@@ -32,6 +32,10 @@ export function tokenize(markdown: string): Token[] {
   return md.parse(markdown, {})
 }
 
+export function tokenizeInline(markdown: string): Token[] {
+  return md.parseInline(markdown, {})
+}
+
 export function parse(tokens: Token[]): Node[] {
   const nodes = []
 
@@ -126,15 +130,25 @@ function noteLink(tokens: Token[]): Node[] {
     throw new Error(`Expected 'text' token, got ${child.type}`)
   }
 
-  return [{
-    type: 'note-link',
-    id: child.content,
-    children: [{ text: `[[${child.content}]]` }]
-  }]
+  return [
+    { text: '' },
+    {
+      type: 'note-link',
+      id: child.content,
+      children: [{ text: '' }],
+    },
+    { text: '' }
+  ]
 }
 
 export function deserialize(markdown: string): Node[] {
   const tokens = tokenize(markdown)
+  const nodes = parse(tokens)
+  return nodes
+} 
+
+export function deserializeInline(markdown: string): Node[] {
+  const tokens = tokenizeInline(markdown)
   const nodes = parse(tokens)
   return nodes
 } 

@@ -5,6 +5,8 @@ import * as serviceWorker from './serviceWorker';
 import { Store, StoreContext } from './store';
 import './styles/tailwind.css'
 
+window.skriftDebug = true
+
 const store = new Store()
 
 ReactDOM.render(

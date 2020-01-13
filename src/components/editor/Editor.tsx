@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback, useEffect, useState } from 'react'
 import { Node, createEditor } from 'slate'
-import { Slate, Editable, withReact } from 'slate-react'
+import { Slate, Editable, withReact, RenderLeafProps } from 'slate-react'
 
 import { withNoteLink } from './NoteLink'
 import { renderElement } from './renderElement'
@@ -11,7 +11,7 @@ type Props = {
   onUpdate: (markdown: string) => void,
 }
 
-const initialValue = (markdown: string) => {
+const deserialize = (markdown: string) => {
   const nodes = Serializer.deserialize(markdown)
 
   if (nodes.length > 0) {
@@ -24,24 +24,34 @@ const initialValue = (markdown: string) => {
   }]
 }
 
+const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
+  const className = window.skriftDebug ? "border border-green-200" : ""
+
+  return (
+    <span {...attributes} className={className}>
+      {children}
+    </span>
+  )
+}
+
 export const Editor: React.FC<Props> = ({ markdown, onUpdate }) => {
-  useEffect(() => {
-    console.log({ markdown })
-  }, [markdown])
   const editor =
     useMemo(() => withReact(withNoteLink(createEditor())), [])
   const [value, setValue] =
-    useState(() => initialValue(markdown))
+    useState(() => deserialize(markdown))
 
   const handleChange = useCallback(((value: Node[]) => {
-    console.log({ value })
     setValue(value)
     onUpdate(Serializer.serialize(value))
   }), [onUpdate])
 
   return (
     <Slate editor={editor} value={value} onChange={handleChange}>
-      <Editable renderElement={useCallback(renderElement, [])} />
+      <pre>{JSON.stringify(value, undefined, 2)}</pre>
+      <Editable
+        renderElement={renderElement}
+        renderLeaf={renderLeaf}
+      />
     </Slate>
   );
 }

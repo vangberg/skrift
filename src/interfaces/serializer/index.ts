@@ -1,7 +1,7 @@
 import { Node } from 'slate'
 
 import { serialize } from './serialize'
-import { deserialize } from './deserialize'
+import { deserialize, deserializeInline } from './deserialize'
 import * as guards from './guards'
 
 export interface NoteLinkElement {
@@ -11,6 +11,6 @@ export interface NoteLinkElement {
 }
 
 export const Serializer = {
-  serialize, deserialize,
+  serialize, deserialize, deserializeInline,
   ...guards
 }
