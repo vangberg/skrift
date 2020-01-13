@@ -59,11 +59,9 @@ export const withNoteLink = (editor: Editor): Editor => {
     Transforms.insertNodes(editor, nodes, { select: true })
     // Move into note link
     Transforms.move(editor)
-    // Move past note link
+    // Move out of note link
     Transforms.move(editor)
   }
-
-  const { insertNode } = editor
 
   return editor
 }

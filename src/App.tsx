@@ -9,7 +9,7 @@ import { NotesContext } from './notesContext'
 const App: React.FC = () => {
   const store = useContext(StoreContext)
   const [notes, setNotes] = useState(() => store.getNotes())
-  const noteIds = useMemo<string[]>(() => store.getIds(), [store])
+  const noteIds = useMemo(() => [...notes.keys()], [notes])
   const [openNoteIds, setOpenNoteIds] = useState(noteIds.slice(0, 1))
 
   useEffect(() => {
@@ -19,6 +19,7 @@ const App: React.FC = () => {
   const handleSelectNote = useCallback((id: string) => {
     setOpenNoteIds((ids => [...ids, id]))
   }, [])
+  
   const handleUpdateNote = useCallback((id: string, markdown: string) => {
     store.save(id, Note.fromMarkdown(markdown))
   }, [store])
