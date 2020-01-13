@@ -3,6 +3,7 @@ import { RenderElementProps } from 'slate-react'
 
 import { NoteLink } from './NoteLink'
 import { Heading1 } from './Heading'
+import { Paragraph } from './Paragraph'
 
 const DefaultElement: React.FC<RenderElementProps> = ({ attributes, children }) => {
   const className = window.skriftDebug ? "border border-blue-200" : ""
@@ -20,6 +21,8 @@ export function renderElement(props: RenderElementProps) {
       return <Heading1 {...props} />
     case 'note-link':
       return <NoteLink {...props} />
+    case 'paragraph':
+      return <Paragraph {...props} />
     default:
       return (
         <DefaultElement {...props} />

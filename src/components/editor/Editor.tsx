@@ -47,7 +47,6 @@ export const Editor: React.FC<Props> = ({ markdown, onUpdate }) => {
 
   return (
     <Slate editor={editor} value={value} onChange={handleChange}>
-      <pre>{JSON.stringify(value, undefined, 2)}</pre>
       <Editable
         renderElement={renderElement}
         renderLeaf={renderLeaf}
