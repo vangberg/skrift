@@ -2,7 +2,7 @@ import React, { useMemo, useCallback, useEffect, useState } from 'react'
 import { Node, createEditor } from 'slate'
 import { Slate, Editable, withReact, RenderLeafProps } from 'slate-react'
 
-import { withNoteLink } from './NoteLink'
+import { withNoteLink } from './withNoteLink'
 import { renderElement } from './renderElement'
 import { Serializer } from '../../interfaces/serializer';
 
