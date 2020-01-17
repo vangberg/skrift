@@ -9,5 +9,9 @@ export const SkriftTransforms = {
   ) {
     const paragraph = { type: 'paragraph', children: [{ text: '' }]}
     Transforms.insertNodes(editor, paragraph, options)
-  }
+  },
+
+  insertSoftBreak(editor: Editor) {
+    Transforms.insertFragment(editor, [{ text: '\n' }])
+  },
 }

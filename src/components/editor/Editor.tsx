@@ -6,6 +6,8 @@ import { withNoteLink } from './withNoteLink'
 import { renderElement } from './renderElement'
 import { Serializer } from '../../interfaces/serializer';
 import { withHeading } from './withHeading'
+import { isHotkey } from 'is-hotkey'
+import { SkriftTransforms } from './transforms'
 
 type Props = {
   markdown: string,
@@ -61,6 +63,13 @@ export const SkriftEditor: React.FC<Props> = ({ markdown, onUpdate }) => {
       <Editable
         renderElement={renderElement}
         renderLeaf={renderLeaf}
+        onKeyDown={event => {
+          const { nativeEvent } = event
+          if (isHotkey('shift+enter')(nativeEvent)) {
+            event.preventDefault()
+            SkriftTransforms.insertSoftBreak(editor)
+          }
+        }}
       />
     </Slate>
   );
