@@ -10,10 +10,7 @@ export const withHeading = (editor: Editor): Editor => {
     })
 
     if (block && block[0].type === 'heading' && editor.selection) {
-      SkriftTransforms.insertParagraph(editor, {
-        at: editor.selection,
-        select: true
-      })
+      SkriftTransforms.insertParagraph(editor)
       return
     }
 
