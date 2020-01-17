@@ -1,9 +1,9 @@
 import React from 'react'
 import { RenderElementProps } from 'slate-react'
 
-import { NoteLink } from './NoteLink'
-import { Heading1 } from './Heading'
-import { Paragraph } from './Paragraph'
+import { NoteLink } from './elements/NoteLink'
+import { Heading } from './elements/Heading'
+import { Paragraph } from './elements/Paragraph'
 
 const DefaultElement: React.FC<RenderElementProps> = ({ attributes, children }) => {
   const className = window.skriftDebug ? "border border-blue-200" : ""
@@ -17,8 +17,8 @@ const DefaultElement: React.FC<RenderElementProps> = ({ attributes, children }) 
 
 export function renderElement(props: RenderElementProps) {
   switch (props.element.type) {
-    case 'heading1':
-      return <Heading1 {...props} />
+    case 'heading':
+      return <Heading {...props} />
     case 'note-link':
       return <NoteLink {...props} />
     case 'paragraph':

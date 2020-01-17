@@ -1,7 +1,7 @@
 import React from 'react'
 import { RenderElementProps } from 'slate-react'
 
-export const Heading1: React.FC<RenderElementProps> = props => {
+export const Heading: React.FC<RenderElementProps> = props => {
   const className = "text-3xl"
   
   return (
@@ -11,4 +11,4 @@ export const Heading1: React.FC<RenderElementProps> = props => {
   )
 }
 
-export default { Heading1 }
+export default { Heading }

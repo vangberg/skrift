@@ -1,10 +1,11 @@
 import React, { useMemo, useCallback, useEffect, useState } from 'react'
-import { Node, createEditor } from 'slate'
+import { Editor, Node, createEditor } from 'slate'
 import { Slate, Editable, withReact, RenderLeafProps } from 'slate-react'
 
 import { withNoteLink } from './withNoteLink'
 import { renderElement } from './renderElement'
 import { Serializer } from '../../interfaces/serializer';
+import { withHeading } from './withHeading'
 
 type Props = {
   markdown: string,
@@ -34,11 +35,21 @@ const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   )
 }
 
-export const Editor: React.FC<Props> = ({ markdown, onUpdate }) => {
-  const editor =
-    useMemo(() => withReact(withNoteLink(createEditor())), [])
-  const [value, setValue] =
-    useState(() => deserialize(markdown))
+const PLUGINS = [withNoteLink, withHeading]
+
+type Plugin = (editor: Editor) => Editor
+
+const withPlugins = (editor: Editor, plugins: Plugin[]) => {
+  return plugins
+    .reverse()
+    .reduce((currentEditor, plugin) => plugin(currentEditor), editor)
+}
+
+export const SkriftEditor: React.FC<Props> = ({ markdown, onUpdate }) => {
+  const editor = useMemo(() => (
+    withReact(withPlugins(createEditor(), PLUGINS))
+  ), [])
+  const [value, setValue] = useState(() => deserialize(markdown))
 
   const handleChange = useCallback(((value: Node[]) => {
     setValue(value)

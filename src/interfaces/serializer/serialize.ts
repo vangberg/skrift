@@ -16,8 +16,8 @@ function serializeNode(node: Node): string {
   }
 
   switch (node.type) {
-    case 'heading1':
-      return heading1(node)
+    case 'heading':
+      return heading(node)
     case 'paragraph':
       return paragraph(node)
     case 'note-link':
@@ -31,8 +31,10 @@ function serializeChildren(node: Node): string {
   return node.children.map(serializeNode).join('')
 }
 
-function heading1(node: Node): string {
-  return '# ' + serializeChildren(node) + '\n'
+function heading(node: Node): string {
+  const level = node.level || 1
+
+  return '#'.repeat(level) + ' ' + serializeChildren(node) + '\n'
 }
 
 function paragraph(node: Node): string {

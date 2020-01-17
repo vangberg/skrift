@@ -3,7 +3,8 @@ import { Node } from "slate"
 
 const value = [
   {
-    type: 'heading1',
+    type: 'heading',
+    level: 1,
     children: [{ text: 'A title' }]
   },
   {

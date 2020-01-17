@@ -1,3 +1,2 @@
 * Detect #-#### headings
 * Soft-breaks on shift-enter
-* Enter should default to new paragraph, not new heading

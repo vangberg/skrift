@@ -103,7 +103,8 @@ function heading(token: Token, tokens: Token[]): Node[] {
   const children = takeUntil(tokens, 'heading_close')
 
   return [{
-    type: 'heading' + token.hLevel,
+    type: 'heading',
+    level: token.hLevel,
     children: parse(children)
   }]
 }

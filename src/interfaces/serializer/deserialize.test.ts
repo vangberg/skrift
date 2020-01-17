@@ -5,7 +5,8 @@ describe('deserialize', () => {
     it('deserializes', () => {
       const result = deserialize('# Heading 1')
       const expected = [{
-        type: 'heading1',
+        type: 'heading',
+        level: 1,
         children: [{ text: 'Heading 1'}]
       }]
 
@@ -42,7 +43,8 @@ describe('deserialize', () => {
       const result = deserialize(note)
       const expected = [
         {
-          type: 'heading1',
+          type: 'heading',
+          level: 1,
           children: [{ text: 'A title' }]
         },
         {
