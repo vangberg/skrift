@@ -1,15 +1,23 @@
-import { Editor } from 'slate'
+import { Editor, Range } from 'slate'
 import { SkriftTransforms } from './transforms'
+
+const isEndOfHeading = (editor: Editor, selection: Range) => {
+  const block = Editor.above(editor, {
+    match: n => Editor.isBlock(editor, n)
+  })
+
+  if (!block || block[0].type !== 'heading') { return false}
+
+  return(Editor.isEnd(editor, selection.focus, block[1]))
+}
 
 export const withHeading = (editor: Editor): Editor => {
   const { insertBreak } = editor
 
   editor.insertBreak = () => {
-    const block = Editor.above(editor, {
-      match: n => Editor.isBlock(editor, n)
-    })
+    const { selection } = editor
 
-    if (block && block[0].type === 'heading' && editor.selection) {
+    if (selection && isEndOfHeading(editor, selection)) {
       SkriftTransforms.insertParagraph(editor)
       return
     }
