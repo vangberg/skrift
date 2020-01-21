@@ -1,24 +1,28 @@
-import React, { useContext, useMemo, useCallback } from 'react'
-import { NotesContext } from '../../notesContext'
-import { Editor } from '../Editor'
+import React, { useContext, useMemo, useCallback } from "react";
+import { NotesContext } from "../../notesContext";
+import { Editor } from "../Editor";
 
 type Props = {
-  id: string,
-  onUpdate: (id: string, markdown: string) => void,
-}
+  id: string;
+  onUpdate: (id: string, markdown: string) => void;
+};
 
 export const NoteEditor: React.FC<Props> = ({ id, onUpdate }) => {
-  const notes = useContext(NotesContext)
-  const note = useMemo(() => notes.get(id), [notes, id])
+  const notes = useContext(NotesContext);
+  const note = useMemo(() => notes.get(id), [notes, id]);
 
-  const handleUpdate =
-    useCallback((markdown: string) => onUpdate(id, markdown), [id, onUpdate])
+  const handleUpdate = useCallback(
+    (markdown: string) => onUpdate(id, markdown),
+    [id, onUpdate]
+  );
 
-  if (!note) { return null }
+  if (!note) {
+    return null;
+  }
 
   return (
     <div className="border border-gray-500">
       <Editor markdown={note.markdown} onUpdate={handleUpdate} />
     </div>
-  )
-}
+  );
+};

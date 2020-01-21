@@ -1,15 +1,15 @@
-import { fromMarkdown } from './fromMarkdown'
+import { fromMarkdown } from "./fromMarkdown";
 
 export interface Note {
-  title: string,
-  links: NoteLink[],
-  markdown: string
+  title: string;
+  links: NoteLink[];
+  markdown: string;
 }
 
 export interface NoteLink {
-  id: string
+  id: string;
 }
 
 export const Note = {
   fromMarkdown
-}
+};

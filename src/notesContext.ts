@@ -1,4 +1,4 @@
-import React from 'react'
-import { Note } from './interfaces/note'
+import React from "react";
+import { Note } from "./interfaces/note";
 
-export const NotesContext = React.createContext(new Map<string, Note>())
+export const NotesContext = React.createContext(new Map<string, Note>());

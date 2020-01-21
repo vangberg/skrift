@@ -1,1 +1,1 @@
-export { SkriftEditor as Editor } from './Editor'
+export { SkriftEditor as Editor } from "./Editor";

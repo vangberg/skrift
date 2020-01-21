@@ -1,155 +1,186 @@
-import Remarkable, { Token, BlockContentToken, TextToken, HeadingOpenToken } from 'remarkable'
-import { Node } from 'slate'
-import { noteLink as noteLinkRule } from '../../remarkable-note-link'
+import Remarkable, {
+  Token,
+  BlockContentToken,
+  TextToken,
+  HeadingOpenToken
+} from "remarkable";
+import { Node } from "slate";
+import { noteLink as noteLinkRule } from "../../remarkable-note-link";
 
-export const md = new Remarkable()
+export const md = new Remarkable();
 
 md.core.ruler.disable([
-  'references', 'footnote_tail', 'abbr2',
-  'replacements', 'smartquotes', 'linkify'
-])
+  "references",
+  "footnote_tail",
+  "abbr2",
+  "replacements",
+  "smartquotes",
+  "linkify"
+]);
 md.block.ruler.disable([
-  'code', 'fences', 'blockquote', 'hr',
-  'list', 'footnote', 'htmlblock', 'table',
-  'lheading'
-])
+  "code",
+  "fences",
+  "blockquote",
+  "hr",
+  "list",
+  "footnote",
+  "htmlblock",
+  "table",
+  "lheading"
+]);
 md.inline.ruler.disable([
-  'links', 'escape', 'backticks', 'del', 'emphasis',
-  'footnote_ref', 'autolink', 'htmltag', 'entity', 'newline'
-])
+  "links",
+  "escape",
+  "backticks",
+  "del",
+  "emphasis",
+  "footnote_ref",
+  "autolink",
+  "htmltag",
+  "entity",
+  "newline"
+]);
 
-md.inline.ruler.push("note-link", noteLinkRule, {})
+md.inline.ruler.push("note-link", noteLinkRule, {});
 
 function isTextToken(token: Token): token is TextToken {
-  return (token.type === 'text')
+  return token.type === "text";
 }
 
 function isHeadingOpenToken(token: Token): token is HeadingOpenToken {
-  return (token.type === 'heading_open')
+  return token.type === "heading_open";
 }
 
 export function tokenize(markdown: string): Token[] {
-  return md.parse(markdown, {})
+  return md.parse(markdown, {});
 }
 
 export function tokenizeInline(markdown: string): Token[] {
-  return md.parseInline(markdown, {})
+  return md.parseInline(markdown, {});
 }
 
 export function parse(tokens: Token[]): Node[] {
-  const nodes = []
+  const nodes = [];
 
   while (tokens.length > 0) {
-    const token = tokens.shift() !
+    const token = tokens.shift()!;
 
     switch (token.type) {
-      case 'heading_open':
-        nodes.push(...heading(token, tokens))
-        break
-      case 'inline':
-        nodes.push(...inline(token, tokens))
-        break
-      case 'text':
-        nodes.push(...text(token))
-        break
-      case 'paragraph_open':
-        nodes.push(...paragraph(tokens))
-        break
-      case 'note_link_open':
-        nodes.push(...noteLink(tokens))
-        break
+      case "heading_open":
+        nodes.push(...heading(token, tokens));
+        break;
+      case "inline":
+        nodes.push(...inline(token, tokens));
+        break;
+      case "text":
+        nodes.push(...text(token));
+        break;
+      case "paragraph_open":
+        nodes.push(...paragraph(tokens));
+        break;
+      case "note_link_open":
+        nodes.push(...noteLink(tokens));
+        break;
     }
   }
 
-  return nodes
+  return nodes;
 }
 
 function takeUntil(tokens: Token[], type: string): Token[] {
-  const children = []
+  const children = [];
 
   while (tokens.length > 0) {
-    const next = tokens.shift() !
+    const next = tokens.shift()!;
 
-    if (next.type === type) { break }
+    if (next.type === type) {
+      break;
+    }
 
-    children.push(next)
+    children.push(next);
   }
 
-  return children
+  return children;
 }
 
 function inline(token: BlockContentToken, tokens: Token[]): Node[] {
   if (!token.children) {
-    throw new Error(`Expected 'inline' token, got '${token.type}'`)
+    throw new Error(`Expected 'inline' token, got '${token.type}'`);
   }
 
-  return parse(token.children)
+  return parse(token.children);
 }
 
 function paragraph(tokens: Token[]): Node[] {
-  const children = takeUntil(tokens, 'paragraph_close')
+  const children = takeUntil(tokens, "paragraph_close");
 
-  return [{
-    type: 'paragraph',
-    children: parse(children)
-  }]
+  return [
+    {
+      type: "paragraph",
+      children: parse(children)
+    }
+  ];
 }
 
 function heading(token: Token, tokens: Token[]): Node[] {
   if (!isHeadingOpenToken(token)) {
-    throw new Error(`Expected 'heading_open' token, got ${token.type}`)
+    throw new Error(`Expected 'heading_open' token, got ${token.type}`);
   }
 
-  const children = takeUntil(tokens, 'heading_close')
+  const children = takeUntil(tokens, "heading_close");
 
-  return [{
-    type: 'heading',
-    level: token.hLevel,
-    children: parse(children)
-  }]
+  return [
+    {
+      type: "heading",
+      level: token.hLevel,
+      children: parse(children)
+    }
+  ];
 }
 
 function text(token: Token): Node[] {
-  if (!isTextToken(token)) { 
-    throw new Error(`Expected 'text' token, got '${token.type}'`)
+  if (!isTextToken(token)) {
+    throw new Error(`Expected 'text' token, got '${token.type}'`);
   }
-  if (!token.content) { return [] }
+  if (!token.content) {
+    return [];
+  }
 
-  return [{ text: token.content }]
+  return [{ text: token.content }];
 }
 
 function noteLink(tokens: Token[]): Node[] {
-  const children = takeUntil(tokens, 'note_link_close')
+  const children = takeUntil(tokens, "note_link_close");
 
   if (children.length > 1) {
-    throw new Error(`Expected 1 children, got ${children.length}`)
+    throw new Error(`Expected 1 children, got ${children.length}`);
   }
 
-  const child = children[0]
+  const child = children[0];
 
   if (!isTextToken(child)) {
-    throw new Error(`Expected 'text' token, got ${child.type}`)
+    throw new Error(`Expected 'text' token, got ${child.type}`);
   }
 
   return [
-    { text: '' },
+    { text: "" },
     {
-      type: 'note-link',
+      type: "note-link",
       id: child.content,
-      children: [{ text: '' }],
+      children: [{ text: "" }]
     },
-    { text: '' }
-  ]
+    { text: "" }
+  ];
 }
 
 export function deserialize(markdown: string): Node[] {
-  const tokens = tokenize(markdown)
-  const nodes = parse(tokens)
-  return nodes
-} 
+  const tokens = tokenize(markdown);
+  const nodes = parse(tokens);
+  return nodes;
+}
 
 export function deserializeInline(markdown: string): Node[] {
-  const tokens = tokenizeInline(markdown)
-  const nodes = parse(tokens)
-  return nodes
-} 
+  const tokens = tokenizeInline(markdown);
+  const nodes = parse(tokens);
+  return nodes;
+}
