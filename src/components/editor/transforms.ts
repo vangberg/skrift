@@ -1,8 +1,6 @@
 import { Transforms, Editor, Location } from 'slate'
 
 export const SkriftTransforms = {
-  ...Transforms,
-  
   insertParagraph(editor: Editor) {
     const paragraph = { type: 'paragraph', children: [{ text: '' }]}
     Transforms.insertNodes(editor, paragraph)

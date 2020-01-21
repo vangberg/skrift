@@ -8,6 +8,7 @@ import { Serializer } from '../../interfaces/serializer';
 import { withHeading } from './withHeading'
 import { isHotkey } from 'is-hotkey'
 import { SkriftTransforms } from './transforms'
+import { withShortcuts } from './withShortcuts'
 
 type Props = {
   markdown: string,
@@ -37,7 +38,7 @@ const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   )
 }
 
-const PLUGINS = [withNoteLink, withHeading]
+const PLUGINS = [withNoteLink, withHeading, withShortcuts]
 
 type Plugin = (editor: Editor) => Editor
 
@@ -71,6 +72,9 @@ export const SkriftEditor: React.FC<Props> = ({ markdown, onUpdate }) => {
           }
         }}
       />
+      {window.skriftDebug && 
+        <pre className="text-xs">{JSON.stringify(value, undefined, 2)}</pre>
+      }
     </Slate>
   );
 }
