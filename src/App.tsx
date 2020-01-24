@@ -15,7 +15,7 @@ import { NotesContext } from "./notesContext";
 const App: React.FC = () => {
   const store = useContext(StoreContext);
   const [notes, setNotes] = useState(() => store.getNotes());
-  const noteIds = useMemo(() => [...notes.keys()], [notes]);
+  const noteIds = useMemo(() => [...notes.keys()].sort().reverse(), [notes]);
   const [openNoteIds, setOpenNoteIds] = useState(noteIds.slice(0, 1));
 
   useEffect(() => {
