@@ -1,5 +1,5 @@
-import React, { useMemo, useCallback, useState, useEffect } from "react";
-import { Editor, Node, createEditor, Transforms } from "slate";
+import React, { useMemo, useCallback, useState } from "react";
+import { Editor, Node, createEditor } from "slate";
 import { Slate, Editable, withReact, RenderLeafProps } from "slate-react";
 
 import { withNoteLink } from "./withNoteLink";

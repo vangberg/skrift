@@ -85,6 +85,20 @@ describe("deserialize", () => {
       expect(result).toEqual(expected);
     });
   });
+
+  describe("empty note", () => {
+    it("deserializes", () => {
+      const result = deserialize("");
+      const expected = [
+        {
+          type: "paragraph",
+          children: [{ text: "" }]
+        }
+      ];
+
+      expect(result).toEqual(expected);
+    });
+  });
 });
 
 describe("desiralizeInline", () => {

@@ -179,8 +179,12 @@ function noteLink(tokens: Token[]): Node[] {
 
 export function deserialize(markdown: string): Node[] {
   const tokens = tokenize(markdown);
-  const nodes = parse(tokens);
-  return nodes;
+
+  if (tokens.length === 0) {
+    return paragraph([]);
+  }
+
+  return parse(tokens);
 }
 
 export function deserializeInline(markdown: string): Node[] {

@@ -66,7 +66,7 @@ const App: React.FC = () => {
           />
         </div>
 
-        <div className="flex-grow p-2">
+        <div className="flex-grow p-2 overflow-y-scroll">
           {[...openNoteIds].map(id => (
             <NoteEditor
               key={id}
