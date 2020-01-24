@@ -10,6 +10,7 @@ export const SearchBar: React.FC<Props> = ({ onAdd }) => {
     (event: React.FormEvent) => {
       event.preventDefault();
       onAdd(text);
+      setText("")
     },
     [onAdd, text]
   );
