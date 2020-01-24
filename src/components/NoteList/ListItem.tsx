@@ -6,7 +6,7 @@ type Props = {
   onClick?: () => void;
 };
 
-export const NoteListItem: React.FC<Props> = ({ id, onClick }) => {
+export const ListItem: React.FC<Props> = ({ id, onClick }) => {
   const notes = useContext(NotesContext);
   const note = useMemo(() => notes.get(id), [id, notes]);
 
@@ -20,5 +20,12 @@ export const NoteListItem: React.FC<Props> = ({ id, onClick }) => {
     return null;
   }
 
-  return <li onClick={handleClick}>{note.title || id}</li>;
+  return (
+    <li
+      className="p-1 cursor-pointer hover:bg-gray-300 text-sm truncate"
+      onClick={handleClick}
+    >
+      {note.title || id}
+    </li>
+  );
 };

@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
-import { NoteListItem } from "./NoteListItem";
+import { ListItem } from "./ListItem";
+import { SearchBar } from "./SearchBar";
 
 type Props = {
   ids: string[];
@@ -17,10 +18,13 @@ export const NoteList: React.FC<Props> = ({ ids, onSelectNote }) => {
   );
 
   return (
-    <ul>
-      {ids.map(id => (
-        <NoteListItem key={id} id={id} onClick={() => handleClick(id)} />
-      ))}
-    </ul>
+    <div>
+      <SearchBar />
+      <ul className="pt-2">
+        {ids.map(id => (
+          <ListItem key={id} id={id} onClick={() => handleClick(id)} />
+        ))}
+      </ul>
+    </div>
   );
 };

@@ -5,7 +5,6 @@ import React, {
   useCallback,
   useMemo
 } from "react";
-import produce from "immer";
 import { StoreContext } from "./store";
 import { NoteList } from "./components/NoteList";
 import { NoteEditor } from "./components/NoteEditor";
@@ -34,25 +33,19 @@ const App: React.FC = () => {
   );
 
   return (
-    <div>
-      <NotesContext.Provider value={notes}>
-        <div onClick={() => store.generate()}>Add</div>
-        <div
-          onClick={() => {
-            window.localStorage.clear();
-            window.location.reload();
-          }}
-        >
-          Clear
+    <NotesContext.Provider value={notes}>
+      <div className="flex flex-1 ">
+        <div className="p-2 max-w-xs bg-gray-100">
+          <NoteList ids={noteIds} onSelectNote={handleSelectNote} />
         </div>
 
-        <NoteList ids={noteIds} onSelectNote={handleSelectNote} />
-
-        {[...openNoteIds].map(id => (
-          <NoteEditor key={id} id={id} onUpdate={handleUpdateNote} />
-        ))}
-      </NotesContext.Provider>
-    </div>
+        <div className="flex-grow p-2">
+          {[...openNoteIds].map(id => (
+            <NoteEditor key={id} id={id} onUpdate={handleUpdateNote} />
+          ))}
+        </div>
+      </div>
+    </NotesContext.Provider>
   );
 };
 
