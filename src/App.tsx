@@ -16,15 +16,22 @@ const App: React.FC = () => {
   const store = useContext(StoreContext);
   const [notes, setNotes] = useState(() => store.getNotes());
   const noteIds = useMemo(() => [...notes.keys()], [notes]);
-  const [openNoteIds, setOpenNoteIds] = useState(new Set(noteIds.slice(0, 1)));
+  const [openNoteIds, setOpenNoteIds] = useState(noteIds.slice(0, 1));
 
   useEffect(() => {
     store.onUpdate(() => setNotes(store.getNotes()));
   }, [store]);
 
-  const handleSelectNote = useCallback((id: string) => {
-    setOpenNoteIds(ids => produce(ids, draft => draft.add(id)));
-  }, []);
+  const handleSelectNote = useCallback(
+    (id: string) => {
+      setOpenNoteIds(ids =>
+        produce(ids, draft => {
+          draft.push(id);
+        })
+      );
+    },
+    [setOpenNoteIds]
+  );
 
   const handleUpdateNote = useCallback(
     (id: string, markdown: string) => {
@@ -39,8 +46,12 @@ const App: React.FC = () => {
       store.save(id, Note.fromMarkdown(`# ${title}`));
       handleSelectNote(id);
     },
-    [store]
+    [store, handleSelectNote]
   );
+
+  const handleCloseNote = useCallback((id: string) => {
+    setOpenNoteIds(ids => ids.filter(i => i !== id));
+  }, []);
 
   return (
     <NotesContext.Provider value={notes}>
@@ -55,7 +66,12 @@ const App: React.FC = () => {
 
         <div className="flex-grow p-2">
           {[...openNoteIds].map(id => (
-            <NoteEditor key={id} id={id} onUpdate={handleUpdateNote} />
+            <NoteEditor
+              key={id}
+              id={id}
+              onUpdate={handleUpdateNote}
+              onClose={handleCloseNote}
+            />
           ))}
         </div>
       </div>

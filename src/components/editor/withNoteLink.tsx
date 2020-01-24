@@ -1,4 +1,4 @@
-import { Editor, Transforms, Text, Path, Node } from "slate";
+import { Editor, Transforms, Node } from "slate";
 import { Serializer } from "../../interfaces/serializer";
 
 export const withNoteLink = (editor: Editor): Editor => {

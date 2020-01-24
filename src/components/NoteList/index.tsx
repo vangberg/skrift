@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { ListItem } from "./ListItem";
 import { SearchBar } from "./SearchBar";
 

@@ -1,6 +1,4 @@
 import { Editor, Range, Point, Transforms, Location } from "slate";
-import { SkriftTransforms } from "./transforms";
-import { Z_BLOCK } from "zlib";
 
 const SHORTCUTS = new Map([["#", { type: "heading", level: 1 }]]);
 

@@ -1,4 +1,4 @@
-import { Transforms, Editor, Location } from "slate";
+import { Transforms, Editor } from "slate";
 
 export const SkriftTransforms = {
   insertParagraph(editor: Editor) {

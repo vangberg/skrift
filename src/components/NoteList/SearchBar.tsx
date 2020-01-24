@@ -11,7 +11,7 @@ export const SearchBar: React.FC<Props> = ({ onAdd }) => {
       event.preventDefault();
       onAdd(text);
     },
-    [text]
+    [onAdd, text]
   );
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => setText(event.target.value),
