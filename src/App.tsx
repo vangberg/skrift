@@ -26,7 +26,9 @@ const App: React.FC = () => {
     (id: string) => {
       setOpenNoteIds(ids =>
         produce(ids, draft => {
-          draft.push(id);
+          if (ids.indexOf(id) < 0) {
+            draft.push(id);
+          }
         })
       );
     },
@@ -65,7 +67,7 @@ const App: React.FC = () => {
         </div>
 
         <div className="flex-grow p-2">
-          {[...openNoteIds].map(id => (
+          {[...openNoteIds].map((id, idx) => (
             <NoteEditor
               key={id}
               id={id}
