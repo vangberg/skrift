@@ -4,25 +4,17 @@ import { SearchBar } from "./SearchBar";
 
 type Props = {
   ids: string[];
-  onSelectNote?: (id: string) => void;
+  onSelectNote: (id: string) => void;
+  onAddNote: (title: string) => void;
 };
 
-export const NoteList: React.FC<Props> = ({ ids, onSelectNote }) => {
-  const handleClick = useCallback(
-    (id: string) => {
-      if (onSelectNote) {
-        onSelectNote(id);
-      }
-    },
-    [onSelectNote]
-  );
-
+export const NoteList: React.FC<Props> = ({ ids, onSelectNote, onAddNote }) => {
   return (
     <div>
-      <SearchBar />
+      <SearchBar onAdd={onAddNote} />
       <ul className="pt-2">
         {ids.map(id => (
-          <ListItem key={id} id={id} onClick={() => handleClick(id)} />
+          <ListItem key={id} id={id} onClick={() => onSelectNote(id)} />
         ))}
       </ul>
     </div>

@@ -33,11 +33,24 @@ const App: React.FC = () => {
     [store]
   );
 
+  const handleAddNote = useCallback(
+    title => {
+      const [id] = store.generate();
+      store.save(id, Note.fromMarkdown(`# ${title}`));
+      handleSelectNote(id);
+    },
+    [store]
+  );
+
   return (
     <NotesContext.Provider value={notes}>
-      <div className="flex flex-1 ">
-        <div className="p-2 max-w-xs bg-gray-100">
-          <NoteList ids={noteIds} onSelectNote={handleSelectNote} />
+      <div className="flex flex-1 bg-gray-100">
+        <div className="p-2 max-w-xs bg-white border-r-2">
+          <NoteList
+            ids={noteIds}
+            onSelectNote={handleSelectNote}
+            onAddNote={handleAddNote}
+          />
         </div>
 
         <div className="flex-grow p-2">

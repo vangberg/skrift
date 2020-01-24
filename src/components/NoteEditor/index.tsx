@@ -21,7 +21,7 @@ export const NoteEditor: React.FC<Props> = ({ id, onUpdate }) => {
   }
 
   return (
-    <div className="shadow p-2 mb-2">
+    <div className="shadow p-2 mb-2 bg-white">
       <Editor markdown={note.markdown} onUpdate={handleUpdate} />
     </div>
   );
