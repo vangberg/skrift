@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useMemo
 } from "react";
+import produce from "immer";
 import { StoreContext } from "./store";
 import { NoteList } from "./components/NoteList";
 import { NoteEditor } from "./components/NoteEditor";
@@ -15,14 +16,14 @@ const App: React.FC = () => {
   const store = useContext(StoreContext);
   const [notes, setNotes] = useState(() => store.getNotes());
   const noteIds = useMemo(() => [...notes.keys()], [notes]);
-  const [openNoteIds, setOpenNoteIds] = useState(noteIds.slice(0, 1));
+  const [openNoteIds, setOpenNoteIds] = useState(new Set(noteIds.slice(0, 1)));
 
   useEffect(() => {
     store.onUpdate(() => setNotes(store.getNotes()));
   }, [store]);
 
   const handleSelectNote = useCallback((id: string) => {
-    setOpenNoteIds(ids => [...ids, id]);
+    setOpenNoteIds(ids => produce(ids, draft => draft.add(id)));
   }, []);
 
   const handleUpdateNote = useCallback(
