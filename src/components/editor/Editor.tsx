@@ -1,5 +1,5 @@
-import React, { useMemo, useCallback, useState } from "react";
-import { Editor, Node, createEditor } from "slate";
+import React, { useMemo, useCallback, useState, useEffect } from "react";
+import { Editor, Node, createEditor, Transforms } from "slate";
 import { Slate, Editable, withReact, RenderLeafProps } from "slate-react";
 
 import { withNoteLink } from "./withNoteLink";
@@ -30,7 +30,7 @@ const deserialize = (markdown: string) => {
   ];
 };
 
-const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
+const renderLeaf = ({ attributes, children }: RenderLeafProps) => {
   const className = window.skriftDebug ? "border border-green-200" : "";
 
   return (
@@ -55,6 +55,7 @@ export const SkriftEditor: React.FC<Props> = ({ markdown, onUpdate }) => {
     () => withReact(withPlugins(createEditor(), PLUGINS)),
     []
   );
+
   const [value, setValue] = useState(() => deserialize(markdown));
 
   const handleChange = useCallback(

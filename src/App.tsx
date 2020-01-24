@@ -67,7 +67,7 @@ const App: React.FC = () => {
         </div>
 
         <div className="flex-grow p-2">
-          {[...openNoteIds].map((id, idx) => (
+          {[...openNoteIds].map(id => (
             <NoteEditor
               key={id}
               id={id}
