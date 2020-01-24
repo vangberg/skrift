@@ -84,6 +84,10 @@ export function parse(tokens: Token[]): Node[] {
     }
   }
 
+  if (nodes.length === 0) {
+    nodes.push({ text: "" });
+  }
+
   return nodes;
 }
 

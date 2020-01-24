@@ -16,6 +16,21 @@ describe("deserialize", () => {
     });
   });
 
+  describe("empty heading", () => {
+    it("deserializes", () => {
+      const result = deserialize("# ");
+      const expected = [
+        {
+          type: "heading",
+          level: 1,
+          children: [{ text: "" }]
+        }
+      ];
+
+      expect(result).toEqual(expected);
+    });
+  });
+
   describe("note link", () => {
     it("deserializes", () => {
       const result = deserialize("[[123]]");
