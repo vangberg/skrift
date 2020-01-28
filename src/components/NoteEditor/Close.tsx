@@ -6,9 +6,10 @@ type Props = {
 
 export const Close: React.FC<Props> = ({ onClick }) => {
   const classNames = [
-    "w-6 h-6 flex items-center justify-center rounded-full",
+    "w-5 h-5 flex items-center justify-center rounded-full",
     "border border-gray-500 text-gray-500",
     "hover:bg-gray-500 hover:text-white",
+    "text-sm",
     "cursor-pointer"
   ].join(" ");
 

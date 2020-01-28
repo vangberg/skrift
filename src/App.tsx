@@ -1,15 +1,18 @@
 import React, { useEffect, useContext, useReducer } from "react";
-import { reducer, initialState, StateContext } from "./state";
+import { reducer, StateContext } from "./state";
 import { StoreContext } from "./store";
 import { NoteEditorContainer } from "./containers/NoteEditorContainer";
 import { NoteListContainer } from "./containers/NoteListContainer";
 
 const App: React.FC = () => {
   const store = useContext(StoreContext);
-  const [state, dispatch] = useReducer(
-    reducer,
-    initialState({ notes: store.getNotes() })
-  );
+  const [state, dispatch] = useReducer(reducer, {}, () => {
+    const notes = store.getNotes();
+    return {
+      notes,
+      openIds: [...notes.keys()].slice(0, 3)
+    };
+  });
 
   useEffect(() => {
     store.onUpdate(() =>
