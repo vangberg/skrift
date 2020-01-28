@@ -1,7 +1,7 @@
 import React from "react";
 import { Note } from "./interfaces/note";
 
-type Notes = Map<string, Note>;
+export type Notes = Map<string, Note>;
 type Callback = () => void;
 
 const KEY = "skrift.store.notes";
@@ -53,14 +53,16 @@ export class Store {
     this.callbacks.forEach(callback => callback());
   }
 
-  generate(): [string, Note] {
+  generate(markdown?: string): [string, Note] {
     const id = new Date().toJSON();
 
-    const note = {
-      title: "",
-      links: [],
-      markdown: ""
-    };
+    const note = markdown
+      ? Note.fromMarkdown(markdown)
+      : {
+          title: "",
+          links: [],
+          markdown: ""
+        };
 
     this.save(id, note);
 

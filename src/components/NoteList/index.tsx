@@ -1,20 +1,22 @@
 import React from "react";
 import { ListItem } from "./ListItem";
 import { SearchBar } from "./SearchBar";
+import { Notes } from "../../store";
 
 type Props = {
-  ids: string[];
-  onSelectNote: (id: string) => void;
-  onAddNote: (title: string) => void;
+  notes: Notes;
+  onOpen: (id: string) => void;
+  onAdd: (title: string) => void;
 };
 
-export const NoteList: React.FC<Props> = ({ ids, onSelectNote, onAddNote }) => {
+export const NoteList: React.FC<Props> = ({ notes, onOpen, onAdd }) => {
   return (
     <div>
-      <SearchBar onAdd={onAddNote} />
+      <SearchBar onAdd={onAdd} />
+
       <ul className="pt-2">
-        {ids.map(id => (
-          <ListItem key={id} id={id} onClick={() => onSelectNote(id)} />
+        {[...notes].map(([id, note]) => (
+          <ListItem key={id} id={id} note={note} onClick={() => onOpen(id)} />
         ))}
       </ul>
     </div>

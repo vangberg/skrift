@@ -1,24 +1,18 @@
-import React, { useContext, useMemo, useCallback } from "react";
-import { NotesContext } from "../../notesContext";
+import React, { useCallback } from "react";
+import { Note } from "../../interfaces/note";
 
 type Props = {
   id: string;
+  note: Note;
   onClick?: () => void;
 };
 
-export const ListItem: React.FC<Props> = ({ id, onClick }) => {
-  const notes = useContext(NotesContext);
-  const note = useMemo(() => notes.get(id), [id, notes]);
-
+export const ListItem: React.FC<Props> = ({ id, note, onClick }) => {
   const handleClick = useCallback(() => {
     if (onClick) {
       onClick();
     }
   }, [onClick]);
-
-  if (!note) {
-    return null;
-  }
 
   return (
     <li

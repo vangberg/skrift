@@ -1,30 +1,26 @@
-import React, { useContext, useMemo, useCallback } from "react";
-import { NotesContext } from "../../notesContext";
-import { NoteEditor } from "./NoteEditor";
-import { StoreContext } from "../../store";
+import React, { useCallback } from "react";
+import { Editor } from "../Editor";
+import { Close } from "./Close";
 import { Note } from "../../interfaces/note";
 
 type Props = {
-  id: string;
-  onClose: (id: string) => void;
+  note: Note;
+  onUpdate: (markdown: string) => void;
+  onClose: () => void;
 };
 
-export const NoteEditorContainer: React.FC<Props> = ({ id, onClose }) => {
-  const store = useContext(StoreContext);
-  const notes = useContext(NotesContext);
-  const note = useMemo(() => notes.get(id), [notes, id]);
-
-  const handleUpdate = useCallback(
-    (markdown: string) => store.save(id, Note.fromMarkdown(markdown)),
-    [store, id]
-  );
-  const handleClose = useCallback(() => onClose(id), [id, onClose]);
-
-  if (!note) {
-    return null;
-  }
+export const NoteEditor: React.FC<Props> = ({ note, onUpdate, onClose }) => {
+  const handleUpdate = useCallback((markdown: string) => onUpdate(markdown), [
+    onUpdate
+  ]);
+  const handleClose = useCallback(() => onClose(), [onClose]);
 
   return (
-    <NoteEditor note={note} onClose={handleClose} onUpdate={handleUpdate} />
+    <div className="shadow p-2 mb-2 bg-white">
+      <div className="float-right">
+        <Close onClick={handleClose} />
+      </div>
+      <Editor markdown={note.markdown} onUpdate={handleUpdate} />
+    </div>
   );
 };
