@@ -6,7 +6,10 @@ import { NoteListContainer } from "./containers/NoteListContainer";
 
 const App: React.FC = () => {
   const store = useContext(StoreContext);
-  const [state, dispatch] = useReducer(reducer, initialState());
+  const [state, dispatch] = useReducer(
+    reducer,
+    initialState({ notes: store.getNotes() })
+  );
 
   useEffect(() => {
     store.onUpdate(() =>

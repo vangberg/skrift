@@ -35,9 +35,10 @@ export const reducer = (state: State, action: Action): State => {
   return state;
 };
 
-export const initialState = (): State => ({
+export const initialState = (state?: Partial<State>): State => ({
   notes: new Map(),
-  openIds: []
+  openIds: [],
+  ...state
 });
 
 type Context = [State, React.Dispatch<Action>];
