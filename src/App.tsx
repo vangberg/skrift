@@ -8,7 +8,7 @@ import React, {
 import produce from "immer";
 import { StoreContext } from "./store";
 import { NoteList } from "./components/NoteList";
-import { NoteEditor } from "./components/NoteEditor";
+import { NoteEditorContainer } from "./components/NoteEditor";
 import { Note } from "./interfaces/note";
 import { NotesContext } from "./notesContext";
 
@@ -33,13 +33,6 @@ const App: React.FC = () => {
       );
     },
     [setOpenNoteIds]
-  );
-
-  const handleUpdateNote = useCallback(
-    (id: string, markdown: string) => {
-      store.save(id, Note.fromMarkdown(markdown));
-    },
-    [store]
   );
 
   const handleAddNote = useCallback(
@@ -68,12 +61,7 @@ const App: React.FC = () => {
 
         <div className="flex-grow p-2 overflow-y-scroll">
           {[...openNoteIds].map(id => (
-            <NoteEditor
-              key={id}
-              id={id}
-              onUpdate={handleUpdateNote}
-              onClose={handleCloseNote}
-            />
+            <NoteEditorContainer key={id} id={id} onClose={handleCloseNote} />
           ))}
         </div>
       </div>
