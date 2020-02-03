@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { AppContainer } from "./containers/AppContainer";
 import * as serviceWorker from "./serviceWorker";
 import { Store, StoreContext } from "./store";
 import "./styles/tailwind.css";
+import { App } from "./app";
 
 window.skriftDebug = false;
 
@@ -11,7 +11,7 @@ const store = new Store();
 
 ReactDOM.render(
   <StoreContext.Provider value={store}>
-    <AppContainer />
+    <App />
   </StoreContext.Provider>,
   document.getElementById("root")
 );

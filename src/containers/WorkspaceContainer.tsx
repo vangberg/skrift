@@ -1,10 +1,9 @@
 import React, { useEffect, useContext, useReducer } from "react";
 import { reducer, StateContext } from "../state";
 import { StoreContext } from "../store";
-import { NoteEditorContainer } from "./NoteEditorContainer";
-import { NoteListContainer } from "./NoteListContainer";
+import { Workspace } from "../components/Workspace";
 
-export const AppContainer: React.FC = () => {
+export const WorkspaceContainer: React.FC = () => {
   const store = useContext(StoreContext);
   const [state, dispatch] = useReducer(reducer, {}, () => {
     const notes = store.getNotes();
@@ -25,17 +24,7 @@ export const AppContainer: React.FC = () => {
 
   return (
     <StateContext.Provider value={[state, dispatch]}>
-      <div className="flex flex-1 bg-gray-100">
-        <div className="p-2 max-w-xs bg-white border-r-2">
-          <NoteListContainer />
-        </div>
-
-        <div className="flex-grow p-2 overflow-y-scroll">
-          {[...state.openIds].map(id => (
-            <NoteEditorContainer key={id} id={id} />
-          ))}
-        </div>
-      </div>
+      <Workspace />
     </StateContext.Provider>
   );
 };

@@ -3,7 +3,7 @@ import { StateContext } from "../state";
 import { NoteEditorContainer } from "../containers/NoteEditorContainer";
 import { NoteListContainer } from "../containers/NoteListContainer";
 
-export const App: React.FC = () => {
+export const Workspace: React.FC = () => {
   const [state, ] = useContext(StateContext);
   const { openIds } = state
 
