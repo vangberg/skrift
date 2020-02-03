@@ -1,10 +1,10 @@
 import React, { useEffect, useContext, useReducer } from "react";
-import { reducer, StateContext } from "./state";
-import { StoreContext } from "./store";
-import { NoteEditorContainer } from "./containers/NoteEditorContainer";
-import { NoteListContainer } from "./containers/NoteListContainer";
+import { reducer, StateContext } from "../state";
+import { StoreContext } from "../store";
+import { NoteEditorContainer } from "./NoteEditorContainer";
+import { NoteListContainer } from "./NoteListContainer";
 
-const App: React.FC = () => {
+export const AppContainer: React.FC = () => {
   const store = useContext(StoreContext);
   const [state, dispatch] = useReducer(reducer, {}, () => {
     const notes = store.getNotes();
@@ -39,5 +39,3 @@ const App: React.FC = () => {
     </StateContext.Provider>
   );
 };
-
-export default App;
