@@ -1,18 +1,17 @@
-import React from 'react'
-import { Router, RouteComponentProps } from '@reach/router'
-import { WorkspaceContainer } from './containers/WorkspaceContainer'
-import { SignupContainer } from './containers/SignupContainer'
+import React, { useReducer } from "react";
+import { Router, RouteComponentProps } from "@reach/router";
+import { WorkspaceContainer } from "./containers/WorkspaceContainer";
 
 const route = (Component: React.FC): React.FC<RouteComponentProps> => {
-  return (props: RouteComponentProps) => <Component />
-}
+  return (props: RouteComponentProps) => <Component />;
+};
 
-const Workspace = route(WorkspaceContainer)
-const Signup = route(SignupContainer)
+const Workspace = route(WorkspaceContainer);
 
 export const App: React.FC = () => {
-  return <Router className="flex flex-1">
-    <Workspace path="/" />
-    <Signup path="/signup" />
-  </Router>
-}
+  return (
+    <Router className="flex flex-1">
+      <Workspace path="/" />
+    </Router>
+  );
+};

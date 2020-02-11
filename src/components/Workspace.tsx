@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useCallback } from "react";
 import { StateContext } from "../state";
 import { NoteEditorContainer } from "../containers/NoteEditorContainer";
 import { NoteListContainer } from "../containers/NoteListContainer";
 
 export const Workspace: React.FC = () => {
-  const [state, ] = useContext(StateContext);
-  const { openIds } = state
+  const [state] = useContext(StateContext);
+  const { openIds } = state;
 
   return (
     <div className="flex flex-1 bg-gray-100">
