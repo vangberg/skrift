@@ -11,7 +11,9 @@ export const Workspace: React.FC = () => {
   return (
     <div className="flex flex-1 bg-gray-100">
       <div className="p-2 max-w-xs bg-white border-r-2">
-        <FileList />
+        <div className="border border-green-500">
+          <FileList />
+        </div>
         <NoteListContainer />
       </div>
 
