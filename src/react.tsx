@@ -9,6 +9,7 @@ import { App } from "./app";
 window.skriftDebug = false;
 
 const store = new Store();
+store.readAll();
 
 ReactDOM.render(
   <StoreContext.Provider value={store}>

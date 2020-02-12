@@ -1,32 +1,37 @@
 import React from "react";
 import { Note } from "./interfaces/note";
+import path from "path";
+import os from "os";
+import fs from "fs";
 
 export type Notes = Map<string, Note>;
 type Callback = () => void;
 
-const KEY = "skrift.store.notes";
-
-function fromLocalStorage(): Notes {
-  const json = window.localStorage.getItem(KEY) || "";
-  try {
-    return new Map(JSON.parse(json));
-  } catch {
-    return new Map();
-  }
-}
-
-function toLocalStorage(notes: Notes) {
-  const json = JSON.stringify(Array.from(notes.entries()));
-  window.localStorage.setItem(KEY, json);
-}
+const PATH = path.join(os.homedir(), "Documents", "zettelkasten");
 
 export class Store {
   notes: Notes;
   callbacks: Callback[];
 
   constructor() {
-    this.notes = fromLocalStorage();
+    this.notes = new Map();
     this.callbacks = [];
+  }
+
+  async readAll(): Promise<void> {
+    const filenames = await fs.promises.readdir(PATH);
+    await Promise.all(
+      filenames.map(filename =>
+        fs.promises
+          .readFile(path.join(PATH, filename), "utf8")
+          .then(markdown => {
+            const note = Note.fromMarkdown(markdown);
+            this.notes.set(filename, note);
+          })
+      )
+    );
+
+    this.triggerCallbacks();
   }
 
   getNotes(): Notes {
@@ -49,8 +54,8 @@ export class Store {
 
   save(id: string, note: Note) {
     this.notes.set(id, note);
-    toLocalStorage(this.notes);
-    this.callbacks.forEach(callback => callback());
+    fs.promises.writeFile(path.join(PATH, id), note.markdown);
+    this.triggerCallbacks();
   }
 
   generate(markdown?: string): [string, Note] {
@@ -71,6 +76,10 @@ export class Store {
 
   onUpdate(callback: Callback) {
     this.callbacks.push(callback);
+  }
+
+  triggerCallbacks() {
+    this.callbacks.forEach(callback => callback());
   }
 }
 
