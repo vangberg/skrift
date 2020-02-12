@@ -6,6 +6,9 @@ module.exports = [
     entry: "./src/react.tsx",
     target: "electron-renderer",
     devtool: "source-map",
+    resolve: {
+      extensions: [".tsx", ".ts", ".js"]
+    },
     module: {
       rules: [
         {

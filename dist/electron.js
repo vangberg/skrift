@@ -94,7 +94,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\nexports.__esModule = true;\nvar electron_1 = __webpack_require__(/*! electron */ \"electron\");\nfunction createWindow() {\n    // Create the browser window.\n    var win = new electron_1.BrowserWindow({\n        width: 1200,\n        height: 800,\n        webPreferences: {\n            nodeIntegration: true\n        }\n    });\n    // and load the index.html of the app.\n    win.loadURL(\"http://localhost:8080\");\n}\nelectron_1.app.on(\"ready\", createWindow);\n\n\n//# sourceURL=webpack:///./src/electron.ts?");
+eval("\nexports.__esModule = true;\nvar electron_1 = __webpack_require__(/*! electron */ \"electron\");\nvar mainWindow;\nfunction createWindow() {\n    mainWindow = new electron_1.BrowserWindow({\n        width: 1200,\n        height: 800,\n        webPreferences: {\n            nodeIntegration: true\n        }\n    });\n    mainWindow.loadURL(\"http://localhost:8080\");\n    mainWindow.webContents.openDevTools();\n    mainWindow.on(\"closed\", function () {\n        mainWindow.destroy();\n    });\n}\nelectron_1.app.on(\"ready\", createWindow);\nelectron_1.app.on(\"window-all-closed\", function () {\n    if (process.platform !== \"darwin\") {\n        electron_1.app.quit();\n    }\n});\nelectron_1.app.on(\"activate\", function () {\n    if (mainWindow === null) {\n        createWindow();\n    }\n});\n\n\n//# sourceURL=webpack:///./src/electron.ts?");
 
 /***/ }),
 
