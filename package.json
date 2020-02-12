@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --config ./webpack.config.js",
-    "start": "npm run build && electron ./dist/electron.js"
+    "build:electron": "webpack --config ./webpack.electron.config.js",
+    "start:electron": "npm run build:electron && electron ./dist/electron.js",
+    "start:react": "webpack-dev-server --config ./webpack.react.config.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.5",
     "webpack": "^4.41.6",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
   }
 }

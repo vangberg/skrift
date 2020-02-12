@@ -31925,7 +31925,7 @@ exports.__esModule = true;
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var ReactDOM = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 var Index = function () {
-    return React.createElement("div", null, "Hello React!");
+    return React.createElement("div", null, "Hello YOUss!");
 };
 ReactDOM.render(React.createElement(Index, null), document.getElementById("app"));
 

@@ -93,7 +93,8 @@
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var _a = __webpack_require__(/*! electron */ \"electron\"), app = _a.app, BrowserWindow = _a.BrowserWindow;\nfunction createWindow() {\n    // Create the browser window.\n    var win = new BrowserWindow({\n        width: 800,\n        height: 600,\n        webPreferences: {\n            nodeIntegration: true\n        }\n    });\n    // and load the index.html of the app.\n    win.loadFile(\"index.html\");\n}\napp.on(\"ready\", createWindow);\n\n\n//# sourceURL=webpack:///./src/electron.ts?");
+"use strict";
+eval("\nexports.__esModule = true;\nvar electron_1 = __webpack_require__(/*! electron */ \"electron\");\nfunction createWindow() {\n    // Create the browser window.\n    var win = new electron_1.BrowserWindow({\n        width: 1200,\n        height: 800,\n        webPreferences: {\n            nodeIntegration: true\n        }\n    });\n    // and load the index.html of the app.\n    win.loadURL(\"http://localhost:8080\");\n}\nelectron_1.app.on(\"ready\", createWindow);\n\n\n//# sourceURL=webpack:///./src/electron.ts?");
 
 /***/ }),
 
