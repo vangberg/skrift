@@ -15,6 +15,11 @@ module.exports = [
           test: /\.ts(x?)$/,
           include: /src/,
           use: [{ loader: "ts-loader" }]
+        },
+        {
+          test: /\.css$/,
+          exclude: /node_modules/,
+          use: ["style-loader", "css-loader", "postcss-loader"]
         }
       ]
     },
