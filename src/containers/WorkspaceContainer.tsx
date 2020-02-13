@@ -5,21 +5,27 @@ import { Workspace } from "../components/Workspace";
 
 export const WorkspaceContainer: React.FC = () => {
   const store = useContext(StoreContext);
+
   const [state, dispatch] = useReducer(reducer, {}, () => {
     const notes = store.getNotes();
     return {
       notes,
-      openIds: [...notes.keys()].slice(0, 3)
+      openIds: []
     };
   });
 
   useEffect(() => {
-    store.onUpdate(() =>
+    store.onUpdate(() => {
+      const notes = store.getNotes();
       dispatch({
         type: "SET_NOTES",
-        notes: store.getNotes()
-      })
-    );
+        notes
+      });
+      dispatch({
+        type: "OPEN_NOTES",
+        ids: [...notes.keys()].slice(0, 3)
+      });
+    });
   }, [store]);
 
   return (

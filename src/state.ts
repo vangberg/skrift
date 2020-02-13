@@ -9,8 +9,17 @@ export interface State {
 
 export type Action =
   | { type: "SET_NOTES"; notes: Notes }
+  | { type: "OPEN_NOTES"; ids: string[] }
   | { type: "OPEN_NOTE"; id: string }
   | { type: "CLOSE_NOTE"; id: string };
+
+const openNote = (state: State, id: string): State => {
+  return produce(state, ({ openIds }) => {
+    if (openIds.indexOf(id) < 0) {
+      openIds.push(id);
+    }
+  });
+};
 
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -18,13 +27,10 @@ export const reducer = (state: State, action: Action): State => {
       return produce(state, draft => {
         draft.notes = action.notes;
       });
+    case "OPEN_NOTES":
+      return action.ids.reduce((state, id) => openNote(state, id), state);
     case "OPEN_NOTE":
-      return produce(state, ({ openIds }) => {
-        const { id } = action;
-        if (openIds.indexOf(id) < 0) {
-          openIds.push(id);
-        }
-      });
+      return openNote(state, action.id);
     case "CLOSE_NOTE":
       return produce(state, draft => {
         const { id } = action;

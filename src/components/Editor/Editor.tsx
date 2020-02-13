@@ -1,6 +1,12 @@
 import React, { useMemo, useCallback, useState } from "react";
 import { Editor, Node, createEditor } from "slate";
-import { Slate, Editable, withReact, RenderLeafProps } from "slate-react";
+import {
+  Slate,
+  Editable,
+  withReact,
+  RenderLeafProps,
+  ReactEditor
+} from "slate-react";
 
 import { withNoteLink } from "./withNoteLink";
 import { renderElement } from "./renderElement";
@@ -9,6 +15,7 @@ import { withHeading } from "./withHeading";
 import { isHotkey } from "is-hotkey";
 import { SkriftTransforms } from "./transforms";
 import { withShortcuts } from "./withShortcuts";
+import { withMarkdown } from "./withMarkdown";
 
 type Props = {
   markdown: string;
@@ -40,11 +47,11 @@ const renderLeaf = ({ attributes, children }: RenderLeafProps) => {
   );
 };
 
-const PLUGINS = [withNoteLink, withHeading, withShortcuts];
+const PLUGINS = [withNoteLink, withHeading, withShortcuts, withMarkdown];
 
-type Plugin = (editor: Editor) => Editor;
+type Plugin = (editor: ReactEditor) => ReactEditor;
 
-const withPlugins = (editor: Editor, plugins: Plugin[]) => {
+const withPlugins = (editor: ReactEditor, plugins: Plugin[]) => {
   return plugins
     .reverse()
     .reduce((currentEditor, plugin) => plugin(currentEditor), editor);
@@ -52,7 +59,7 @@ const withPlugins = (editor: Editor, plugins: Plugin[]) => {
 
 export const SkriftEditor: React.FC<Props> = ({ markdown, onUpdate }) => {
   const editor = useMemo(
-    () => withReact(withPlugins(createEditor(), PLUGINS)),
+    () => withPlugins(withReact(createEditor()), PLUGINS),
     []
   );
 
