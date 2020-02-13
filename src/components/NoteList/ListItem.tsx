@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import { Note } from "../../interfaces/note";
+import { clipboard } from "electron";
 
 type Props = {
   id: string;
@@ -14,12 +15,24 @@ export const ListItem: React.FC<Props> = ({ id, note, onClick }) => {
     }
   }, [onClick]);
 
+  const handleCopy = useCallback(() => {
+    clipboard.writeText(`[[${id}]]`);
+  }, []);
+
   return (
-    <li
-      className="p-1 cursor-pointer hover:bg-gray-300 text-sm truncate"
-      onClick={handleClick}
-    >
-      {note.title || id}
-    </li>
+    <div className="flex text-sm">
+      <div
+        className="flex-1 p-1 cursor-pointer hover:bg-gray-300 truncate"
+        onClick={handleClick}
+      >
+        {note.title || id}
+      </div>
+      <div
+        className="p-1 text-blue-400 underline cursor-pointer"
+        onClick={handleCopy}
+      >
+        [c]
+      </div>
+    </div>
   );
 };

@@ -14,11 +14,11 @@ export const NoteList: React.FC<Props> = ({ notes, onOpen, onAdd }) => {
     <div>
       <SearchBar onAdd={onAdd} />
 
-      <ul className="pt-2">
+      <div className="pt-2">
         {[...notes].map(([id, note]) => (
           <ListItem key={id} id={id} note={note} onClick={() => onOpen(id)} />
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
