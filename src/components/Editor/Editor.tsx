@@ -1,22 +1,11 @@
 import React, { useMemo, useCallback, useState } from "react";
-import { Editor, Node, createEditor } from "slate";
-import {
-  Slate,
-  Editable,
-  withReact,
-  RenderLeafProps,
-  ReactEditor
-} from "slate-react";
+import { Node } from "slate";
+import { Slate } from "slate-react";
 
-import { withNoteLink } from "./withNoteLink";
-import { renderElement } from "./renderElement";
+import { SkriftEditable } from "./Editable";
 import { Serializer } from "../../interfaces/serializer";
-import { withHeading } from "./withHeading";
-import { isHotkey } from "is-hotkey";
-import { SkriftTransforms } from "./transforms";
-import { withShortcuts } from "./withShortcuts";
-import { withMarkdown } from "./withMarkdown";
 import { Note } from "../../interfaces/note";
+import { createEditor } from "./createEditor";
 
 const deserialize = (markdown: string) => {
   const nodes = Serializer.deserialize(markdown);
@@ -33,26 +22,6 @@ const deserialize = (markdown: string) => {
   ];
 };
 
-const renderLeaf = ({ attributes, children }: RenderLeafProps) => {
-  const className = window.skriftDebug ? "border border-green-200" : "";
-
-  return (
-    <span {...attributes} className={className}>
-      {children}
-    </span>
-  );
-};
-
-const PLUGINS = [withNoteLink, withHeading, withShortcuts, withMarkdown];
-
-type Plugin = (editor: ReactEditor) => ReactEditor;
-
-const withPlugins = (editor: ReactEditor, plugins: Plugin[]) => {
-  return plugins
-    .reverse()
-    .reduce((currentEditor, plugin) => plugin(currentEditor), editor);
-};
-
 type Props = {
   markdown: string;
   onUpdate: (markdown: string) => void;
@@ -66,10 +35,7 @@ export const SkriftEditor: React.FC<Props> = ({
   onOpen,
   getNote
 }) => {
-  const editor = useMemo(
-    () => withPlugins(withReact(createEditor()), PLUGINS),
-    []
-  );
+  const editor = useMemo(() => createEditor(), []);
 
   const [value, setValue] = useState(() => deserialize(markdown));
 
@@ -81,24 +47,9 @@ export const SkriftEditor: React.FC<Props> = ({
     [onUpdate]
   );
 
-  const handleRenderElement = useMemo(
-    () => renderElement({ getNote, onOpen }),
-    [getNote]
-  );
-
   return (
     <Slate editor={editor} value={value} onChange={handleChange}>
-      <Editable
-        renderElement={handleRenderElement}
-        renderLeaf={renderLeaf}
-        onKeyDown={event => {
-          const { nativeEvent } = event;
-          if (isHotkey("shift+enter")(nativeEvent)) {
-            event.preventDefault();
-            SkriftTransforms.insertSoftBreak(editor);
-          }
-        }}
-      />
+      <SkriftEditable onOpen={onOpen} getNote={getNote} />
       {window.skriftDebug && (
         <pre className="text-xs">{JSON.stringify(value, undefined, 2)}</pre>
       )}
