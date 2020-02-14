@@ -1,6 +1,7 @@
 import React, { useMemo, useCallback, useState } from "react";
 import { Node } from "slate";
-import { Slate } from "slate-react";
+import { Slate, useFocused, ReactEditor } from "slate-react";
+import cx from "classnames";
 
 import { SkriftEditable } from "./Editable";
 import { Serializer } from "../../interfaces/serializer";
@@ -39,8 +40,8 @@ export const SkriftEditor: React.FC<Props> = ({
   getNote
 }) => {
   const editor = useMemo(() => createEditor(), []);
-
   const [value, setValue] = useState(() => deserialize(note.markdown));
+  const focused = ReactEditor.isFocused(editor);
 
   const handleChange = useCallback(
     (value: Node[]) => {
@@ -51,7 +52,11 @@ export const SkriftEditor: React.FC<Props> = ({
   );
 
   return (
-    <div className="shadow p-2 mb-2 bg-white">
+    <div
+      className={cx("shadow p-2 mb-2 bg-white border-2 border-white", {
+        "border-blue-300": focused
+      })}
+    >
       <div className="float-right">
         <Close onClick={onClose} />
       </div>
