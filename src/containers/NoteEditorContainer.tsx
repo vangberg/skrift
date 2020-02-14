@@ -17,6 +17,7 @@ export const NoteEditorContainer: React.FC<Props> = ({ id }) => {
     (markdown: string) => store.save(id, Note.fromMarkdown(markdown)),
     [store, id]
   );
+  const handleOpen = useCallback(id => dispatch({ type: "OPEN_NOTE", id }), []);
   const handleClose = useCallback(() => dispatch({ type: "CLOSE_NOTE", id }), [
     id,
     dispatch
@@ -31,6 +32,7 @@ export const NoteEditorContainer: React.FC<Props> = ({ id }) => {
     <NoteEditor
       note={note}
       getNote={getNote}
+      onOpen={handleOpen}
       onClose={handleClose}
       onUpdate={handleUpdate}
     />

@@ -18,15 +18,18 @@ const DefaultElement: React.FC<RenderElementProps> = ({
   );
 };
 
-export function renderElement(options: { getNote: (id: string) => Note }) {
-  const { getNote } = options;
+export function renderElement(options: {
+  getNote: (id: string) => Note;
+  onOpen: (id: string) => void;
+}) {
+  const { getNote, onOpen } = options;
 
   return function(props: RenderElementProps) {
     switch (props.element.type) {
       case "heading":
         return <Heading {...props} />;
       case "note-link":
-        return <NoteLink getNote={getNote} {...props} />;
+        return <NoteLink getNote={getNote} onOpen={onOpen} {...props} />;
       case "paragraph":
         return <Paragraph {...props} />;
       default:

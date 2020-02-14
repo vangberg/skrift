@@ -18,12 +18,6 @@ import { withShortcuts } from "./withShortcuts";
 import { withMarkdown } from "./withMarkdown";
 import { Note } from "../../interfaces/note";
 
-type Props = {
-  markdown: string;
-  onUpdate: (markdown: string) => void;
-  getNote: (id: string) => Note;
-};
-
 const deserialize = (markdown: string) => {
   const nodes = Serializer.deserialize(markdown);
 
@@ -59,9 +53,17 @@ const withPlugins = (editor: ReactEditor, plugins: Plugin[]) => {
     .reduce((currentEditor, plugin) => plugin(currentEditor), editor);
 };
 
+type Props = {
+  markdown: string;
+  onUpdate: (markdown: string) => void;
+  onOpen: (id: string) => void;
+  getNote: (id: string) => Note;
+};
+
 export const SkriftEditor: React.FC<Props> = ({
   markdown,
   onUpdate,
+  onOpen,
   getNote
 }) => {
   const editor = useMemo(
@@ -79,9 +81,10 @@ export const SkriftEditor: React.FC<Props> = ({
     [onUpdate]
   );
 
-  const handleRenderElement = useMemo(() => renderElement({ getNote }), [
-    getNote
-  ]);
+  const handleRenderElement = useMemo(
+    () => renderElement({ getNote, onOpen }),
+    [getNote]
+  );
 
   return (
     <Slate editor={editor} value={value} onChange={handleChange}>

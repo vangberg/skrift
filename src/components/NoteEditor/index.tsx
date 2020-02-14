@@ -7,6 +7,7 @@ type Props = {
   note: Note;
   getNote: (id: string) => Note;
   onUpdate: (markdown: string) => void;
+  onOpen: (id: string) => void;
   onClose: () => void;
 };
 
@@ -14,21 +15,22 @@ export const NoteEditor: React.FC<Props> = ({
   note,
   getNote,
   onUpdate,
+  onOpen,
   onClose
 }) => {
   const handleUpdate = useCallback((markdown: string) => onUpdate(markdown), [
     onUpdate
   ]);
-  const handleClose = useCallback(() => onClose(), [onClose]);
 
   return (
     <div className="shadow p-2 mb-2 bg-white">
       <div className="float-right">
-        <Close onClick={handleClose} />
+        <Close onClick={onClose} />
       </div>
       <Editor
         markdown={note.markdown}
         getNote={getNote}
+        onOpen={onOpen}
         onUpdate={handleUpdate}
       />
     </div>
