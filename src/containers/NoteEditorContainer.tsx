@@ -21,7 +21,7 @@ export const NoteEditorContainer: React.FC<Props> = ({ id }) => {
     id,
     dispatch
   ]);
-  const getNote = useCallback(id => store.notes.get(id), [store]);
+  const getNote = useCallback(id => state.notes.get(id), [state]);
 
   if (!note) {
     return null;
