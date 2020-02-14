@@ -5,11 +5,17 @@ import { Note } from "../../interfaces/note";
 
 type Props = {
   note: Note;
+  getNote: (id: string) => Note;
   onUpdate: (markdown: string) => void;
   onClose: () => void;
 };
 
-export const NoteEditor: React.FC<Props> = ({ note, onUpdate, onClose }) => {
+export const NoteEditor: React.FC<Props> = ({
+  note,
+  getNote,
+  onUpdate,
+  onClose
+}) => {
   const handleUpdate = useCallback((markdown: string) => onUpdate(markdown), [
     onUpdate
   ]);
@@ -20,7 +26,11 @@ export const NoteEditor: React.FC<Props> = ({ note, onUpdate, onClose }) => {
       <div className="float-right">
         <Close onClick={handleClose} />
       </div>
-      <Editor markdown={note.markdown} onUpdate={handleUpdate} />
+      <Editor
+        markdown={note.markdown}
+        getNote={getNote}
+        onUpdate={handleUpdate}
+      />
     </div>
   );
 };

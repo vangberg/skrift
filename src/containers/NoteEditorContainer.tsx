@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useCallback } from "react";
+import React, { useContext, useMemo, useCallback, useEffect } from "react";
 import { StateContext } from "../state";
 import { NoteEditor } from "../components/NoteEditor";
 import { StoreContext } from "../store";
@@ -21,12 +21,18 @@ export const NoteEditorContainer: React.FC<Props> = ({ id }) => {
     id,
     dispatch
   ]);
+  const getNote = useCallback(id => store.notes.get(id), [store]);
 
   if (!note) {
     return null;
   }
 
   return (
-    <NoteEditor note={note} onClose={handleClose} onUpdate={handleUpdate} />
+    <NoteEditor
+      note={note}
+      getNote={getNote}
+      onClose={handleClose}
+      onUpdate={handleUpdate}
+    />
   );
 };

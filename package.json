@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build:electron": "webpack --config ./webpack.electron.config.js",
-    "start:electron": "npm run build:electron && electron ./dist/electron.js",
     "build:react": "webpack --config ./webpack.react.config.js",
-    "start:react": "webpack-dev-server --config ./webpack.react.config.js"
+    "start:electron": "npm run build:electron && electron ./dist/electron.js",
+    "start:react": "webpack-dev-server --config ./webpack.react.config.js",
+    "start": "concurrently \"npm:start:*\""
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,8 @@
     "@types/react": "^16.9.19",
     "@types/react-dom": "^16.9.5",
     "@types/remarkable": "^1.7.4",
+    "classnames": "^2.2.6",
+    "concurrently": "^5.1.0",
     "css-loader": "^3.4.2",
     "electron": "^8.0.0",
     "html-webpack-plugin": "^3.2.0",

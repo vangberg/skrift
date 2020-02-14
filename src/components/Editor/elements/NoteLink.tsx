@@ -1,13 +1,29 @@
-import React from "react";
-import { RenderElementProps } from "slate-react";
+import React, { useMemo } from "react";
+import { RenderElementProps, useFocused, useSelected } from "slate-react";
+import { Note } from "../../../interfaces/note";
+import cx from "classnames";
 
-export const NoteLink: React.FC<RenderElementProps> = props => {
-  const className = "border-b-4 border-orange-400";
+type Props = {
+  getNote: (id: string) => Note;
+};
+
+export const NoteLink: React.FC<RenderElementProps & Props> = ({
+  getNote,
+  attributes,
+  element,
+  children
+}) => {
+  const note = useMemo(() => getNote(element.id), [getNote]);
+  const selected = useSelected();
 
   return (
-    <span {...props.attributes} className={className}>
-      <a href="http://google.com">{props.element.id}</a>
-      {props.children}
+    <span {...attributes} className={cx({ "bg-gray-300": selected })}>
+      <span className="text-gray-500">[[</span>
+      <span className="underline text-blue-600 cursor-pointer">
+        {note.title}
+      </span>
+      <span className="text-gray-500">]]</span>
+      {children}
     </span>
   );
 };

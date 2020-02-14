@@ -10,11 +10,7 @@ export const withMarkdown = (editor: ReactEditor): ReactEditor => {
 
     if (!fragment) {
       const text = data.getData("text/plain");
-
       const parsed = Serializer.deserialize(text);
-      console.log(data.types);
-      console.log(parsed);
-
       Transforms.insertFragment(editor, parsed);
       return;
     }

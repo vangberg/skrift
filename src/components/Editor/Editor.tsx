@@ -16,10 +16,12 @@ import { isHotkey } from "is-hotkey";
 import { SkriftTransforms } from "./transforms";
 import { withShortcuts } from "./withShortcuts";
 import { withMarkdown } from "./withMarkdown";
+import { Note } from "../../interfaces/note";
 
 type Props = {
   markdown: string;
   onUpdate: (markdown: string) => void;
+  getNote: (id: string) => Note;
 };
 
 const deserialize = (markdown: string) => {
@@ -57,7 +59,11 @@ const withPlugins = (editor: ReactEditor, plugins: Plugin[]) => {
     .reduce((currentEditor, plugin) => plugin(currentEditor), editor);
 };
 
-export const SkriftEditor: React.FC<Props> = ({ markdown, onUpdate }) => {
+export const SkriftEditor: React.FC<Props> = ({
+  markdown,
+  onUpdate,
+  getNote
+}) => {
   const editor = useMemo(
     () => withPlugins(withReact(createEditor()), PLUGINS),
     []
@@ -73,10 +79,14 @@ export const SkriftEditor: React.FC<Props> = ({ markdown, onUpdate }) => {
     [onUpdate]
   );
 
+  const handleRenderElement = useMemo(() => renderElement({ getNote }), [
+    getNote
+  ]);
+
   return (
     <Slate editor={editor} value={value} onChange={handleChange}>
       <Editable
-        renderElement={renderElement}
+        renderElement={handleRenderElement}
         renderLeaf={renderLeaf}
         onKeyDown={event => {
           const { nativeEvent } = event;
