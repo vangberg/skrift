@@ -1,6 +1,6 @@
 import React, { useContext, useMemo, useCallback, useEffect } from "react";
 import { StateContext } from "../state";
-import { NoteEditor } from "../components/NoteEditor";
+import { Editor } from "../components/Editor";
 import { StoreContext } from "../store";
 import { Note } from "../interfaces/note";
 
@@ -29,7 +29,7 @@ export const NoteEditorContainer: React.FC<Props> = ({ id }) => {
   }
 
   return (
-    <NoteEditor
+    <Editor
       note={note}
       getNote={getNote}
       onOpen={handleOpen}

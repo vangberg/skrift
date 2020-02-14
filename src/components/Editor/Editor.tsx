@@ -6,6 +6,7 @@ import { SkriftEditable } from "./Editable";
 import { Serializer } from "../../interfaces/serializer";
 import { Note } from "../../interfaces/note";
 import { createEditor } from "./createEditor";
+import { Close } from "./Close";
 
 const deserialize = (markdown: string) => {
   const nodes = Serializer.deserialize(markdown);
@@ -23,21 +24,23 @@ const deserialize = (markdown: string) => {
 };
 
 type Props = {
-  markdown: string;
+  note: Note;
   onUpdate: (markdown: string) => void;
   onOpen: (id: string) => void;
+  onClose: () => void;
   getNote: (id: string) => Note;
 };
 
 export const SkriftEditor: React.FC<Props> = ({
-  markdown,
+  note,
   onUpdate,
   onOpen,
+  onClose,
   getNote
 }) => {
   const editor = useMemo(() => createEditor(), []);
 
-  const [value, setValue] = useState(() => deserialize(markdown));
+  const [value, setValue] = useState(() => deserialize(note.markdown));
 
   const handleChange = useCallback(
     (value: Node[]) => {
@@ -48,11 +51,16 @@ export const SkriftEditor: React.FC<Props> = ({
   );
 
   return (
-    <Slate editor={editor} value={value} onChange={handleChange}>
-      <SkriftEditable onOpen={onOpen} getNote={getNote} />
-      {window.skriftDebug && (
-        <pre className="text-xs">{JSON.stringify(value, undefined, 2)}</pre>
-      )}
-    </Slate>
+    <div className="shadow p-2 mb-2 bg-white">
+      <div className="float-right">
+        <Close onClick={onClose} />
+      </div>
+      <Slate editor={editor} value={value} onChange={handleChange}>
+        <SkriftEditable onOpen={onOpen} getNote={getNote} />
+        {window.skriftDebug && (
+          <pre className="text-xs">{JSON.stringify(value, undefined, 2)}</pre>
+        )}
+      </Slate>
+    </div>
   );
 };
