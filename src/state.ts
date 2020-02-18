@@ -1,4 +1,4 @@
-import { Notes } from "./store";
+import { Notes } from "./interfaces/notes";
 import produce from "immer";
 import React from "react";
 

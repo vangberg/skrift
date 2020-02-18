@@ -18,7 +18,7 @@ const renderLeaf = ({ attributes, children }: RenderLeafProps) => {
 
 type Props = {
   onOpen: (id: string) => void;
-  getNote: (id: string) => Note;
+  getNote: (id: string) => Note | undefined;
 };
 
 export const SkriftEditable: React.FC<Props> = ({ onOpen, getNote }) => {

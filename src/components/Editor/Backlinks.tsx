@@ -5,7 +5,7 @@ import { NoteLink } from "./NoteLink";
 type Props = {
   note: Note;
   onOpen: (id: string) => void;
-  getNote: (id: string) => Note;
+  getNote: (id: string) => Note | undefined;
 };
 
 export const Backlinks: React.FC<Props> = ({ note, onOpen, getNote }) => {

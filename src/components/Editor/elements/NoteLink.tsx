@@ -11,7 +11,7 @@ import { NoteLink as BaseNoteLink } from "../NoteLink";
 import cx from "classnames";
 
 type Props = {
-  getNote: (id: string) => Note;
+  getNote: (id: string) => Note | undefined;
   onOpen: (id: string) => void;
 };
 

@@ -1,11 +1,10 @@
 import React from "react";
 import { Note } from "./interfaces/note";
+import { Notes } from "./interfaces/notes";
 import path from "path";
 import os from "os";
 import fs from "fs";
-import produce from "immer";
 
-export type Notes = Map<string, Note>;
 type Callback = () => void;
 
 const PATH = path.join(os.homedir(), "Documents", "zettelkasten");
@@ -29,9 +28,7 @@ export class Store {
           .readFile(path.join(PATH, filename), "utf8")
           .then(markdown => {
             const note = Note.fromMarkdown(markdown);
-            this.notes = produce(this.notes, draft =>
-              draft.set(filename, note)
-            );
+            this.notes = Notes.setNote(this.notes, filename, note);
           })
       )
     );
@@ -59,7 +56,7 @@ export class Store {
   }
 
   save(id: string, note: Note) {
-    this.notes = produce(this.notes, draft => draft.set(id, note));
+    this.notes = Notes.setNote(this.notes, id, note);
     this.updateBacklinks(id, note);
     fs.promises.writeFile(path.join(PATH, id), note.markdown);
     this.triggerCallbacks();
@@ -68,14 +65,13 @@ export class Store {
   generate(markdown?: string): [string, Note] {
     const id = new Date().toJSON();
 
-    const note = markdown
-      ? Note.fromMarkdown(markdown)
-      : {
-          title: "",
-          links: new Set<string>(),
-          backlinks: new Set<string>(),
-          markdown: ""
-        };
+    const note = {
+      title: "",
+      links: new Set<string>(),
+      backlinks: new Set<string>(),
+      markdown: "",
+      ...(markdown ? Note.fromMarkdown(markdown) : {})
+    };
 
     this.save(id, note);
 
@@ -83,11 +79,8 @@ export class Store {
   }
 
   updateBacklinks(id: string, note: Note) {
-    this.notes = produce(this.notes, draft => {
-      note.links.forEach(link => {
-        const n = draft.get(link);
-        n.backlinks.add(id);
-      });
+    note.links.forEach(link => {
+      this.notes = Notes.addBacklink(this.notes, { id: link, backlink: id });
     });
   }
 

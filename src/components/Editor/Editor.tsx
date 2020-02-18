@@ -1,7 +1,6 @@
 import React, { useMemo, useCallback, useState, useEffect } from "react";
 import { Node } from "slate";
 import { Slate, useFocused, ReactEditor } from "slate-react";
-import cx from "classnames";
 
 import { SkriftEditable } from "./Editable";
 import { Serializer } from "../../interfaces/serializer";
@@ -34,7 +33,7 @@ type Props = {
   onUpdate: (markdown: string) => void;
   onOpen: (id: string) => void;
   onClose: () => void;
-  getNote: (id: string) => Note;
+  getNote: (id: string) => Note | undefined;
 };
 
 export const SkriftEditor: React.FC<Props> = ({

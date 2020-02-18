@@ -19,7 +19,7 @@ const DefaultElement: React.FC<RenderElementProps> = ({
 };
 
 export function renderElement(options: {
-  getNote: (id: string) => Note;
+  getNote: (id: string) => Note | undefined;
   onOpen: (id: string) => void;
 }) {
   const { getNote, onOpen } = options;

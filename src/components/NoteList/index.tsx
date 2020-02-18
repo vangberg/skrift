@@ -1,7 +1,7 @@
 import React from "react";
 import { ListItem } from "./ListItem";
 import { SearchBar } from "./SearchBar";
-import { Notes } from "../../store";
+import { Notes } from "../../interfaces/notes";
 
 type Props = {
   notes: Notes;

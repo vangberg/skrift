@@ -3,7 +3,7 @@ import { Note } from "../../interfaces/note";
 
 type Props = {
   id: string;
-  getNote: (id: string) => Note;
+  getNote: (id: string) => Note | undefined;
   onOpen: (id: string) => void;
 };
 
@@ -19,7 +19,7 @@ export const NoteLink: React.FC<Props> = ({ id, getNote, onOpen }) => {
         className="underline text-blue-600 cursor-pointer"
         onClick={handleOpen}
       >
-        {note.title}
+        {note?.title || id}
       </span>
       <span className="text-gray-500">]]</span>
     </span>
