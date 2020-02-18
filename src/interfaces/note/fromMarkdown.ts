@@ -1,6 +1,6 @@
 import { Node } from "slate";
 import { Serializer } from "../serializer";
-import { Note, NoteLink } from ".";
+import { Note } from ".";
 
 function parseTitle(nodes: Node[]): string {
   if (nodes.length === 0) {
@@ -10,13 +10,15 @@ function parseTitle(nodes: Node[]): string {
   return Node.string(nodes[0]);
 }
 
-function parseLinks(nodes: Node[]): NoteLink[] {
+function parseLinks(nodes: Node[]): Set<string> {
   const elements = Node.elements({ type: "root", children: nodes });
 
-  return Array.from(elements)
-    .map(([element, path]) => element)
-    .filter(Serializer.isNoteLink)
-    .map(link => ({ id: link.id }));
+  return new Set(
+    Array.from(elements)
+      .map(([element, path]) => element)
+      .filter(Serializer.isNoteLink)
+      .map(link => link.id)
+  );
 }
 
 export function fromMarkdown(markdown: string): Note {

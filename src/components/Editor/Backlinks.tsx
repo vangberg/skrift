@@ -13,12 +13,7 @@ export const Backlinks: React.FC<Props> = ({ note, onOpen, getNote }) => {
     <div>
       <h2>Backlinks</h2>
       {[...note.backlinks].map(link => (
-        <NoteLink
-          key={link.id}
-          id={link.id}
-          onOpen={onOpen}
-          getNote={getNote}
-        />
+        <NoteLink key={link} id={link} onOpen={onOpen} getNote={getNote} />
       ))}
     </div>
   );

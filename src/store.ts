@@ -1,8 +1,9 @@
 import React from "react";
-import { Note, NoteLink } from "./interfaces/note";
+import { Note } from "./interfaces/note";
 import path from "path";
 import os from "os";
 import fs from "fs";
+import produce from "immer";
 
 export type Notes = Map<string, Note>;
 type Callback = () => void;
@@ -28,7 +29,9 @@ export class Store {
           .readFile(path.join(PATH, filename), "utf8")
           .then(markdown => {
             const note = Note.fromMarkdown(markdown);
-            this.notes.set(filename, note);
+            this.notes = produce(this.notes, draft =>
+              draft.set(filename, note)
+            );
           })
       )
     );
@@ -56,7 +59,7 @@ export class Store {
   }
 
   save(id: string, note: Note) {
-    this.notes.set(id, note);
+    this.notes = produce(this.notes, draft => draft.set(id, note));
     this.updateBacklinks(id, note);
     fs.promises.writeFile(path.join(PATH, id), note.markdown);
     this.triggerCallbacks();
@@ -69,8 +72,8 @@ export class Store {
       ? Note.fromMarkdown(markdown)
       : {
           title: "",
-          links: [],
-          backlinks: new Set<NoteLink>(),
+          links: new Set<string>(),
+          backlinks: new Set<string>(),
           markdown: ""
         };
 
@@ -80,9 +83,11 @@ export class Store {
   }
 
   updateBacklinks(id: string, note: Note) {
-    note.links.forEach(link => {
-      const n = this.notes.get(link.id);
-      n.backlinks.add({ id });
+    this.notes = produce(this.notes, draft => {
+      note.links.forEach(link => {
+        const n = draft.get(link);
+        n.backlinks.add(id);
+      });
     });
   }
 

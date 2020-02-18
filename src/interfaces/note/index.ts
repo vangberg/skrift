@@ -2,13 +2,9 @@ import { fromMarkdown } from "./fromMarkdown";
 
 export interface Note {
   title: string;
-  links: NoteLink[];
-  backlinks: Set<NoteLink>;
+  links: Set<string>;
+  backlinks: Set<string>;
   markdown: string;
-}
-
-export interface NoteLink {
-  id: string;
 }
 
 export const Note = {
