@@ -15,9 +15,11 @@ export const NoteList: React.FC<Props> = ({ notes, onOpen, onAdd }) => {
       <SearchBar onAdd={onAdd} />
 
       <div className="pt-2">
-        {[...notes].map(([id, note]) => (
-          <ListItem key={id} id={id} note={note} onClick={() => onOpen(id)} />
-        ))}
+        {[...notes]
+          .sort((n1, n2) => n1[1].title.localeCompare(n2[1].title))
+          .map(([id, note]) => (
+            <ListItem key={id} id={id} note={note} onClick={() => onOpen(id)} />
+          ))}
       </div>
     </div>
   );

@@ -45,7 +45,6 @@ export const SkriftEditor: React.FC<Props> = ({
 }) => {
   const editor = useMemo(() => createEditor(), []);
   const [value, setValue] = useState(() => deserialize(note.markdown));
-  const focused = ReactEditor.isFocused(editor);
 
   const handleChange = useCallback(
     (newValue: Node[]) => {
