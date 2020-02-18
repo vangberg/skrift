@@ -25,6 +25,7 @@ export function fromMarkdown(markdown: string): Note {
   return {
     title: parseTitle(nodes),
     links: parseLinks(nodes),
+    backlinks: new Set(),
     markdown
   };
 }

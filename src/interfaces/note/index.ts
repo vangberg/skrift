@@ -3,6 +3,7 @@ import { fromMarkdown } from "./fromMarkdown";
 export interface Note {
   title: string;
   links: NoteLink[];
+  backlinks: Set<NoteLink>;
   markdown: string;
 }
 

@@ -7,6 +7,7 @@ import {
   ReactEditor
 } from "slate-react";
 import { Note } from "../../../interfaces/note";
+import { NoteLink as BaseNoteLink } from "../NoteLink";
 import cx from "classnames";
 
 type Props = {
@@ -36,17 +37,8 @@ export const NoteLink: React.FC<RenderElementProps & Props> = ({
       {...attributes}
       className={cx({ "bg-gray-300": selected && focused })}
     >
-      <span className="select-none">
-        <span className="text-gray-500">[[</span>
-        <span
-          className="underline text-blue-600 cursor-pointer"
-          onClick={handleOpen}
-        >
-          {note.title}
-        </span>
-        <span className="text-gray-500">]]</span>
-        {children}
-      </span>
+      <BaseNoteLink id={element.id} onOpen={handleOpen} getNote={getNote} />
+      {children}
     </span>
   );
 };

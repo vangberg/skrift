@@ -8,6 +8,7 @@ import { Serializer } from "../../interfaces/serializer";
 import { Note } from "../../interfaces/note";
 import { createEditor } from "./createEditor";
 import { Close } from "./Close";
+import { Backlinks } from "./Backlinks";
 
 const deserialize = (markdown: string) => {
   const nodes = Serializer.deserialize(markdown);
@@ -52,7 +53,7 @@ export const SkriftEditor: React.FC<Props> = ({
         return;
       }
       setValue(newValue);
-      onUpdate(Serializer.serialize(value));
+      onUpdate(Serializer.serialize(newValue));
     },
     [onUpdate]
   );
@@ -62,12 +63,15 @@ export const SkriftEditor: React.FC<Props> = ({
       <div className="float-right">
         <Close onClick={onClose} />
       </div>
+
       <Slate editor={editor} value={value} onChange={handleChange}>
         <SkriftEditable onOpen={onOpen} getNote={getNote} />
         {window.skriftDebug && (
           <pre className="text-xs">{JSON.stringify(value, undefined, 2)}</pre>
         )}
       </Slate>
+
+      <Backlinks note={note} onOpen={onOpen} getNote={getNote} />
     </div>
   );
 };

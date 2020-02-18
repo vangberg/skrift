@@ -1,5 +1,5 @@
 import React from "react";
-import { Note } from "./interfaces/note";
+import { Note, NoteLink } from "./interfaces/note";
 import path from "path";
 import os from "os";
 import fs from "fs";
@@ -32,6 +32,7 @@ export class Store {
           })
       )
     );
+    this.notes.forEach((note, id) => this.updateBacklinks(id, note));
 
     this.triggerCallbacks();
   }
@@ -56,6 +57,7 @@ export class Store {
 
   save(id: string, note: Note) {
     this.notes.set(id, note);
+    this.updateBacklinks(id, note);
     fs.promises.writeFile(path.join(PATH, id), note.markdown);
     this.triggerCallbacks();
   }
@@ -68,12 +70,20 @@ export class Store {
       : {
           title: "",
           links: [],
+          backlinks: new Set<NoteLink>(),
           markdown: ""
         };
 
     this.save(id, note);
 
     return [id, note];
+  }
+
+  updateBacklinks(id: string, note: Note) {
+    note.links.forEach(link => {
+      const n = this.notes.get(link.id);
+      n.backlinks.add({ id });
+    });
   }
 
   subscribe(callback: Callback): number {
