@@ -17,7 +17,7 @@ export const Notes = {
     { id, backlink }: { id: string; backlink: string }
   ): Notes {
     return produce(notes, draft => {
-      const note = Notes.getNote(notes, id);
+      const note = Notes.getNote(draft, id);
 
       if (!note) {
         throw new Error(
