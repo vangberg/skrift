@@ -31,6 +31,7 @@ export const SkriftEditable: React.FC<Props> = ({ onOpen, getNote }) => {
 
   return (
     <Editable
+      autoFocus={true}
       renderElement={handleRenderElement}
       renderLeaf={renderLeaf}
       onKeyDown={event => {

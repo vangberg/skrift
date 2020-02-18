@@ -14,7 +14,9 @@ export const NoteEditorContainer: React.FC<Props> = ({ id }) => {
   const note = useMemo(() => state.notes.get(id), [state, id]);
 
   const handleUpdate = useCallback(
-    (markdown: string) => store.save(id, Note.fromMarkdown(markdown)),
+    (markdown: string) => {
+      store.save(id, Note.fromMarkdown(markdown));
+    },
     [store, id]
   );
   const handleOpen = useCallback(id => dispatch({ type: "OPEN_NOTE", id }), []);

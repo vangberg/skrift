@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useState } from "react";
+import React, { useMemo, useCallback, useState, useEffect } from "react";
 import { Node } from "slate";
 import { Slate, useFocused, ReactEditor } from "slate-react";
 import cx from "classnames";
@@ -24,6 +24,10 @@ const deserialize = (markdown: string) => {
   ];
 };
 
+const areEqual = (n1: Node[], n2: Node[]) => {
+  return JSON.stringify(n1) === JSON.stringify(n2);
+};
+
 type Props = {
   note: Note;
   onUpdate: (markdown: string) => void;
@@ -44,19 +48,18 @@ export const SkriftEditor: React.FC<Props> = ({
   const focused = ReactEditor.isFocused(editor);
 
   const handleChange = useCallback(
-    (value: Node[]) => {
-      setValue(value);
+    (newValue: Node[]) => {
+      if (areEqual(value, newValue)) {
+        return;
+      }
+      setValue(newValue);
       onUpdate(Serializer.serialize(value));
     },
     [onUpdate]
   );
 
   return (
-    <div
-      className={cx("shadow p-2 mb-2 bg-white border-2 border-white", {
-        "border-blue-300": focused
-      })}
-    >
+    <div className="shadow p-2 mb-2 bg-white border-2 border-white">
       <div className="float-right">
         <Close onClick={onClose} />
       </div>

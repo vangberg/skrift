@@ -11,11 +11,13 @@ const PATH = path.join(os.homedir(), "Documents", "zettelkasten");
 
 export class Store {
   notes: Notes;
-  callbacks: Callback[];
+  callbackCounter: number;
+  callbacks: Map<number, Callback>;
 
   constructor() {
     this.notes = new Map();
-    this.callbacks = [];
+    this.callbackCounter = 0;
+    this.callbacks = new Map();
   }
 
   async readAll(): Promise<void> {
@@ -74,8 +76,14 @@ export class Store {
     return [id, note];
   }
 
-  onUpdate(callback: Callback) {
-    this.callbacks.push(callback);
+  subscribe(callback: Callback): number {
+    const id = this.callbackCounter++;
+    this.callbacks.set(id, callback);
+    return id;
+  }
+
+  unsubscribe(id: number) {
+    this.callbacks.delete(id);
   }
 
   triggerCallbacks() {

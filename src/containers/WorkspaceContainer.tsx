@@ -15,17 +15,14 @@ export const WorkspaceContainer: React.FC = () => {
   });
 
   useEffect(() => {
-    store.onUpdate(() => {
+    const id = store.subscribe(() => {
       const notes = store.getNotes();
       dispatch({
         type: "SET_NOTES",
         notes
       });
-      dispatch({
-        type: "OPEN_NOTES",
-        ids: [...notes.keys()].slice(0, 3)
-      });
     });
+    return () => store.unsubscribe(id);
   }, [store]);
 
   return (
