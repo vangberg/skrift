@@ -31,7 +31,7 @@ export const ListItem: React.FC<Props> = ({ id, note, onClick }) => {
         className="p-1 text-blue-400 underline cursor-pointer"
         onClick={handleCopy}
       >
-        [c]
+        Copy
       </div>
     </div>
   );
