@@ -17,10 +17,13 @@ export const WorkspaceContainer: React.FC = () => {
   useEffect(() => {
     const id = store.subscribe(() => {
       const notes = store.getNotes();
-      console.log("set notes", notes);
       dispatch({
         type: "SET_NOTES",
         notes
+      });
+      dispatch({
+        type: "OPEN_NOTES",
+        ids: [...notes.keys()].slice(0, 3)
       });
     });
     return () => store.unsubscribe(id);

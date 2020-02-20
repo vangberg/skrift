@@ -58,17 +58,19 @@ export const SkriftEditor: React.FC<Props> = ({
   );
 
   return (
-    <div className="shadow p-2 mb-2 bg-white border-2 border-white">
-      <div className="float-right">
+    <div className="shadow mb-2 bg-white">
+      <div className="float-right p-2">
         <Close onClick={onClose} />
       </div>
 
-      <Slate editor={editor} value={value} onChange={handleChange}>
-        <SkriftEditable onOpen={onOpen} getNote={getNote} />
-        {window.skriftDebug && (
-          <pre className="text-xs">{JSON.stringify(value, undefined, 2)}</pre>
-        )}
-      </Slate>
+      <div className="p-2">
+        <Slate editor={editor} value={value} onChange={handleChange}>
+          <SkriftEditable onOpen={onOpen} getNote={getNote} />
+          {window.skriftDebug && (
+            <pre className="text-xs">{JSON.stringify(value, undefined, 2)}</pre>
+          )}
+        </Slate>
+      </div>
 
       <Backlinks note={note} onOpen={onOpen} getNote={getNote} />
     </div>

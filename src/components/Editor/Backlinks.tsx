@@ -9,9 +9,13 @@ type Props = {
 };
 
 export const Backlinks: React.FC<Props> = ({ note, onOpen, getNote }) => {
+  if (note.backlinks.size === 0) {
+    return null;
+  }
+
   return (
-    <div>
-      <h2>Backlinks</h2>
+    <div className="p-2 bg-gray-200">
+      Backlinks:
       {[...note.backlinks].map(link => (
         <NoteLink key={link} id={link} onOpen={onOpen} getNote={getNote} />
       ))}
