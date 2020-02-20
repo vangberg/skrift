@@ -17,6 +17,7 @@ export const WorkspaceContainer: React.FC = () => {
   useEffect(() => {
     const id = store.subscribe(() => {
       const notes = store.getNotes();
+      console.log("set notes", notes);
       dispatch({
         type: "SET_NOTES",
         notes

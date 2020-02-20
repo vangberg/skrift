@@ -4,6 +4,7 @@ import { Notes } from "./interfaces/notes";
 import path from "path";
 import os from "os";
 import fs from "fs";
+import produce from "immer";
 
 type Callback = () => void;
 
@@ -28,11 +29,17 @@ export class Store {
           .readFile(path.join(PATH, filename), "utf8")
           .then(markdown => {
             const note = Note.fromMarkdown(markdown);
-            this.notes = Notes.setNote(this.notes, filename, note);
+            this.notes = produce(this.notes, draft => {
+              Notes.setNote(draft, filename, note);
+            });
           })
       )
     );
-    this.notes.forEach((note, id) => this.updateBacklinks(id, note));
+    this.notes.forEach((note, id) => {
+      this.notes = produce(this.notes, draft => {
+        Notes.linksToBacklinks(draft, id);
+      });
+    });
 
     this.triggerCallbacks();
   }
@@ -56,8 +63,11 @@ export class Store {
   }
 
   save(id: string, note: Note) {
-    this.notes = Notes.setNote(this.notes, id, note);
-    this.updateBacklinks(id, note);
+    this.notes = produce(this.notes, draft => {
+      Notes.setNote(draft, id, note);
+      Notes.linksToBacklinks(draft, id);
+    });
+
     fs.promises.writeFile(path.join(PATH, id), note.markdown);
     this.triggerCallbacks();
   }
@@ -76,12 +86,6 @@ export class Store {
     this.save(id, note);
 
     return [id, note];
-  }
-
-  updateBacklinks(id: string, note: Note) {
-    note.links.forEach(link => {
-      this.notes = Notes.addBacklink(this.notes, { id: link, backlink: id });
-    });
   }
 
   subscribe(callback: Callback): number {
