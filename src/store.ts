@@ -40,8 +40,7 @@ export class Store {
         Notes.linksToBacklinks(draft, id);
       });
     });
-
-    this.triggerCallbacks();
+    console.log("readAll done");
   }
 
   getNotes(): Notes {

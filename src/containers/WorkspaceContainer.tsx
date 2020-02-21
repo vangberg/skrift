@@ -1,10 +1,10 @@
-import React, { useEffect, useContext, useReducer } from "react";
+import React, { useEffect, useContext, useReducer, useState } from "react";
 import { reducer, StateContext } from "../state";
-import { StoreContext } from "../store";
+import { Store, StoreContext } from "../store";
 import { Workspace } from "../components/Workspace";
 
 export const WorkspaceContainer: React.FC = () => {
-  const store = useContext(StoreContext);
+  const [store, _] = useState(() => new Store());
 
   const [state, dispatch] = useReducer(reducer, {}, () => {
     const notes = store.getNotes();
@@ -15,7 +15,8 @@ export const WorkspaceContainer: React.FC = () => {
   });
 
   useEffect(() => {
-    const id = store.subscribe(() => {
+    (async () => {
+      await store.readAll();
       const notes = store.getNotes();
       dispatch({
         type: "SET_NOTES",
@@ -25,13 +26,24 @@ export const WorkspaceContainer: React.FC = () => {
         type: "OPEN_NOTES",
         ids: [...notes.keys()].slice(0, 3)
       });
+    })();
+  }, []);
+
+  useEffect(() => {
+    const id = store.subscribe(() => {
+      dispatch({
+        type: "SET_NOTES",
+        notes: store.getNotes()
+      });
     });
     return () => store.unsubscribe(id);
   }, [store]);
 
   return (
-    <StateContext.Provider value={[state, dispatch]}>
-      <Workspace />
-    </StateContext.Provider>
+    <StoreContext.Provider value={store}>
+      <StateContext.Provider value={[state, dispatch]}>
+        <Workspace />
+      </StateContext.Provider>
+    </StoreContext.Provider>
   );
 };
