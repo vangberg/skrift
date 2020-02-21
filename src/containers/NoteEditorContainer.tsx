@@ -15,7 +15,7 @@ export const NoteEditorContainer: React.FC<Props> = ({ id }) => {
 
   const handleUpdate = useCallback(
     (markdown: string) => {
-      store.save(id, Note.fromMarkdown(markdown));
+      store.updateMarkdown(id, markdown);
     },
     [store, id]
   );

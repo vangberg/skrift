@@ -28,7 +28,10 @@ export class Store {
         fs.promises
           .readFile(path.join(PATH, filename), "utf8")
           .then(markdown => {
-            const note = Note.fromMarkdown(markdown);
+            const note = {
+              ...Note.empty(),
+              ...Note.fromMarkdown(markdown)
+            };
             this.notes = produce(this.notes, draft => {
               Notes.setNote(draft, filename, note);
             });
@@ -71,14 +74,18 @@ export class Store {
     this.triggerCallbacks();
   }
 
+  updateMarkdown(id: string, markdown: string) {
+    const note = this.notes.get(id) || Note.empty();
+    const next = { ...note, ...Note.fromMarkdown(markdown) };
+
+    this.save(id, next);
+  }
+
   generate(markdown?: string): [string, Note] {
     const id = new Date().toJSON();
 
     const note = {
-      title: "",
-      links: new Set<string>(),
-      backlinks: new Set<string>(),
-      markdown: "",
+      ...Note.empty(),
       ...(markdown ? Note.fromMarkdown(markdown) : {})
     };
 

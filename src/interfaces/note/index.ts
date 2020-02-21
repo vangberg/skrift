@@ -8,5 +8,14 @@ export interface Note {
 }
 
 export const Note = {
-  fromMarkdown
+  fromMarkdown,
+
+  empty(): Note {
+    return {
+      title: "",
+      links: new Set(),
+      backlinks: new Set(),
+      markdown: ""
+    };
+  }
 };

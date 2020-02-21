@@ -2,6 +2,12 @@ import { Node } from "slate";
 import { Serializer } from "../serializer";
 import { Note } from ".";
 
+interface ParsedNote {
+  title: string;
+  links: Set<string>;
+  markdown: string;
+}
+
 function parseTitle(nodes: Node[]): string {
   if (nodes.length === 0) {
     return "";
@@ -21,13 +27,12 @@ function parseLinks(nodes: Node[]): Set<string> {
   );
 }
 
-export function fromMarkdown(markdown: string): Note {
+export function fromMarkdown(markdown: string): ParsedNote {
   const nodes = Serializer.deserialize(markdown);
 
   return {
     title: parseTitle(nodes),
     links: parseLinks(nodes),
-    backlinks: new Set(),
     markdown
   };
 }
