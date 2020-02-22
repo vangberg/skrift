@@ -1,7 +1,6 @@
 import { Notes } from "./interfaces/notes";
 import produce from "immer";
 import React from "react";
-import { Note } from "./interfaces/note";
 
 export interface State {
   notes: Notes;
@@ -10,7 +9,6 @@ export interface State {
 
 export type Action =
   | { type: "SET_NOTES"; notes: Notes }
-  | { type: "SET_NOTE"; id: string; note: Note }
   | { type: "OPEN_NOTES"; ids: string[] }
   | { type: "OPEN_NOTE"; id: string }
   | { type: "CLOSE_NOTE"; id: string };
@@ -28,11 +26,6 @@ export const reducer = (state: State, action: Action): State => {
     case "SET_NOTES":
       return produce(state, draft => {
         draft.notes = action.notes;
-      });
-    case "SET_NOTE":
-      return produce(state, draft => {
-        const { id, note } = action;
-        Notes.setNote(draft, id, note);
       });
     case "OPEN_NOTES":
       return action.ids.reduce((state, id) => openNote(state, id), state);
