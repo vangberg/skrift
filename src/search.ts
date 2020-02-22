@@ -1,3 +1,3 @@
 import { Store } from "./store";
 
-export class Search {}
+export const createIndex = () => {};

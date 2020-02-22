@@ -5,6 +5,7 @@ import path from "path";
 import os from "os";
 import fs from "fs";
 import produce from "immer";
+import { TypedEvent } from "./event";
 
 type Callback = () => void;
 
@@ -12,13 +13,15 @@ const PATH = path.join(os.homedir(), "Documents", "zettelkasten");
 
 export class Store {
   notes: Notes;
-  callbackCounter: number;
-  callbacks: Map<number, Callback>;
+  events: {
+    update: TypedEvent<string>;
+  };
 
   constructor() {
     this.notes = new Map();
-    this.callbackCounter = 0;
-    this.callbacks = new Map();
+    this.events = {
+      update: new TypedEvent()
+    };
   }
 
   async readAll(): Promise<void> {
@@ -43,7 +46,6 @@ export class Store {
         Notes.linksToBacklinks(draft, id);
       });
     });
-    console.log("readAll done");
   }
 
   getNotes(): Notes {
@@ -71,7 +73,7 @@ export class Store {
     });
 
     fs.promises.writeFile(path.join(PATH, id), note.markdown);
-    this.triggerCallbacks();
+    this.events.update.emit(id);
   }
 
   updateMarkdown(id: string, markdown: string) {
@@ -92,20 +94,6 @@ export class Store {
     this.save(id, note);
 
     return [id, note];
-  }
-
-  subscribe(callback: Callback): number {
-    const id = this.callbackCounter++;
-    this.callbacks.set(id, callback);
-    return id;
-  }
-
-  unsubscribe(id: number) {
-    this.callbacks.delete(id);
-  }
-
-  triggerCallbacks() {
-    this.callbacks.forEach(callback => callback());
   }
 }
 

@@ -30,6 +30,10 @@ export const WorkspaceContainer: React.FC = () => {
   useEffect(() => {
     const notes = store.getNotes();
 
+    notes.forEach((note, id) => {
+      index.add;
+    });
+
     dispatch({
       type: "SET_NOTES",
       notes
@@ -39,13 +43,15 @@ export const WorkspaceContainer: React.FC = () => {
       ids: [...notes.keys()].slice(0, 3)
     });
 
-    const id = store.subscribe(() => {
+    const unsubscribe = store.events.update.subscribe(id => {
+      const note = store.get(id);
       dispatch({
-        type: "SET_NOTES",
-        notes: store.getNotes()
+        type: "SET_NOTE",
+        id,
+        note
       });
     });
-    return () => store.unsubscribe(id);
+    return unsubscribe;
   }, [store]);
 
   return (
