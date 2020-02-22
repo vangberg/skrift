@@ -1,35 +1,44 @@
 import React, { useEffect, useContext, useReducer, useState } from "react";
+import FlexSearch from "flexsearch";
 import { reducer, StateContext } from "../state";
 import { Store, StoreContext } from "../store";
 import { Workspace } from "../components/Workspace";
 
 export const WorkspaceContainer: React.FC = () => {
-  const [store, _] = useState(() => new Store());
+  const [store, setStore] = useState(() => new Store());
+
+  useEffect(() => {
+    (async () => {
+      const store = new Store();
+      await store.readAll();
+      setStore(store);
+    })();
+  }, []);
+
+  const [index] = useState(() => {
+    // @ts-ignore
+    return new FlexSearch({ worker: true });
+  });
 
   const [state, dispatch] = useReducer(reducer, {}, () => {
-    const notes = store.getNotes();
     return {
-      notes,
+      notes: new Map(),
       openIds: []
     };
   });
 
   useEffect(() => {
-    (async () => {
-      await store.readAll();
-      const notes = store.getNotes();
-      dispatch({
-        type: "SET_NOTES",
-        notes
-      });
-      dispatch({
-        type: "OPEN_NOTES",
-        ids: [...notes.keys()].slice(0, 3)
-      });
-    })();
-  }, []);
+    const notes = store.getNotes();
 
-  useEffect(() => {
+    dispatch({
+      type: "SET_NOTES",
+      notes
+    });
+    dispatch({
+      type: "OPEN_NOTES",
+      ids: [...notes.keys()].slice(0, 3)
+    });
+
     const id = store.subscribe(() => {
       dispatch({
         type: "SET_NOTES",
