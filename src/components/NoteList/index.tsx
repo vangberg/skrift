@@ -17,6 +17,7 @@ export const NoteList: React.FC<Props> = ({ notes, onOpen, onAdd }) => {
       <div className="pt-2">
         {[...notes]
           .sort((n1, n2) => n1[0].localeCompare(n2[0]))
+          .reverse()
           .map(([id, note]) => (
             <ListItem key={id} id={id} note={note} onClick={() => onOpen(id)} />
           ))}
