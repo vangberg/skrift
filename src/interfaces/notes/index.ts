@@ -3,22 +3,24 @@ import { Note, NoteID } from "../note";
 export type Notes = Map<NoteID, Note>;
 
 export const Notes = {
-  getNote(notes: Notes, id: NoteID): Note | undefined {
-    return notes.get(id);
+  getNote(notes: Notes, id: NoteID): Note {
+    const note = notes.get(id);
+
+    if (!note) {
+      throw new Error(`Could not find note with id ${id}`);
+    }
+
+    return note;
   },
 
   setNote(notes: Notes, note: Note) {
-    notes.set(note.id, note);
+    const previous = notes.get(note.id);
+    const revision = previous?.revision || 0;
+    notes.set(note.id, { ...note, revision });
   },
 
   linksToBacklinks(notes: Notes, id: NoteID) {
     const note = Notes.getNote(notes, id);
-
-    if (!note) {
-      throw new Error(
-        `Could not add backlinks from note ${id}, since the note does not exist`
-      );
-    }
 
     note.links.forEach(link =>
       Notes.addBacklink(notes, { id: link, backlink: id })
@@ -31,12 +33,6 @@ export const Notes = {
   ) {
     const note = Notes.getNote(notes, id);
 
-    if (!note) {
-      throw new Error(
-        `Could not add backlink to note ${id}, since the note does not exist`
-      );
-    }
-
     note.backlinks.add(backlink);
   },
 
@@ -45,12 +41,6 @@ export const Notes = {
     { id, backlink }: { id: NoteID; backlink: NoteID }
   ) {
     const note = Notes.getNote(notes, id);
-
-    if (!note) {
-      throw new Error(
-        `Could not remove backlink from note ${id}, since the note does not exist`
-      );
-    }
 
     note.backlinks.delete(backlink);
   },

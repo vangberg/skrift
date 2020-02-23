@@ -1,17 +1,17 @@
-import React, { useContext, useMemo, useCallback, useEffect } from "react";
+import React, { useContext, useMemo, useCallback } from "react";
 import { StateContext } from "../state";
 import { Editor } from "../components/Editor";
 import { StoreContext } from "../store";
-import { Note } from "../interfaces/note";
+import { Note, NoteID } from "../interfaces/note";
+import { Notes } from "../interfaces/notes";
 
 interface Props {
-  id: string;
+  id: NoteID;
 }
 
 export const NoteEditorContainer: React.FC<Props> = ({ id }) => {
-  const store = useContext(StoreContext);
   const [state, dispatch] = useContext(StateContext);
-  const note = useMemo(() => state.notes.get(id), [state, id]);
+  const store = useContext(StoreContext);
 
   const handleUpdate = useCallback(
     (markdown: string) => {
@@ -21,14 +21,10 @@ export const NoteEditorContainer: React.FC<Props> = ({ id }) => {
   );
   const handleOpen = useCallback(id => dispatch({ type: "OPEN_NOTE", id }), []);
   const handleClose = useCallback(() => dispatch({ type: "CLOSE_NOTE", id }), [
-    id,
-    dispatch
+    id
   ]);
-  const getNote = useCallback(id => state.notes.get(id), [state]);
-
-  if (!note) {
-    return null;
-  }
+  const getNote = useCallback(id => store.get(id), [store]);
+  const note = useMemo(() => Notes.getNote(state.notes, id), [state, id]);
 
   return (
     <Editor

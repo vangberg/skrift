@@ -1,17 +1,18 @@
-import { Notes } from "./interfaces/notes";
 import produce from "immer";
 import React from "react";
+import { NoteID, NoteRevision } from "./interfaces/note";
+import { Notes } from "./interfaces/notes";
 
 export interface State {
   notes: Notes;
-  openIds: string[];
+  openIds: NoteID[];
 }
 
 export type Action =
   | { type: "SET_NOTES"; notes: Notes }
-  | { type: "OPEN_NOTES"; ids: string[] }
-  | { type: "OPEN_NOTE"; id: string }
-  | { type: "CLOSE_NOTE"; id: string };
+  | { type: "OPEN_NOTES"; ids: NoteID[] }
+  | { type: "OPEN_NOTE"; id: NoteID }
+  | { type: "CLOSE_NOTE"; id: NoteID };
 
 const openNote = (state: State, id: string): State => {
   return produce(state, ({ openIds }) => {

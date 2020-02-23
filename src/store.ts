@@ -7,8 +7,6 @@ import fs from "fs";
 import produce from "immer";
 import { TypedEvent } from "./event";
 
-type Callback = () => void;
-
 const PATH = path.join(os.homedir(), "Documents", "zettelkasten");
 
 export class Store {
@@ -47,14 +45,6 @@ export class Store {
     this.events.update.emit([...this.notes.keys()]);
   }
 
-  getNotes(): Notes {
-    return new Map(this.notes);
-  }
-
-  getIds(): string[] {
-    return Array.from(this.notes.keys());
-  }
-
   get(id: string): Note {
     const note = this.notes.get(id);
 
@@ -76,7 +66,7 @@ export class Store {
   }
 
   updateMarkdown(id: string, markdown: string) {
-    const note = this.notes.get(id) || Note.empty({ id });
+    const note = this.get(id) || Note.empty({ id });
     const next = { ...note, ...Note.fromMarkdown(markdown) };
 
     this.save(next);

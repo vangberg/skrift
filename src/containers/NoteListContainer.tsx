@@ -1,4 +1,4 @@
-import React, { useContext, useCallback, useMemo } from "react";
+import React, { useContext, useCallback, useMemo, useState } from "react";
 import { NoteList } from "../components/NoteList";
 import { StateContext } from "../state";
 import { StoreContext } from "../store";
@@ -7,9 +7,14 @@ import { Notes } from "../interfaces/notes";
 
 export const NoteListContainer: React.FC = () => {
   const store = useContext(StoreContext);
-  const search = useContext(SearchContext);
   const [state, dispatch] = useContext(StateContext);
-  const notes = useMemo(() => Notes.byDate(state.notes), [state]);
+
+  const search = useContext(SearchContext);
+  const [query, setQuery] = useState("");
+
+  const [searchResult, setSearchResult] = useState([]);
+
+  const notes = useMemo(() => Notes.byDate(store.notes), [state, store]);
 
   const handleAdd = useCallback(
     title => {

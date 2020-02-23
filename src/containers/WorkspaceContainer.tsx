@@ -27,7 +27,7 @@ export const WorkspaceContainer: React.FC = () => {
 
   useEffect(() => {
     const unsubscribe = store.events.update.subscribe(ids => {
-      const notes = store.getNotes();
+      const { notes } = store;
 
       dispatch({
         type: "SET_NOTES",
@@ -51,7 +51,7 @@ export const WorkspaceContainer: React.FC = () => {
     <StoreContext.Provider value={store}>
       <SearchContext.Provider value={search}>
         <StateContext.Provider value={[state, dispatch]}>
-          <Workspace />
+          <Workspace openIds={state.openIds} />
         </StateContext.Provider>
       </SearchContext.Provider>
     </StoreContext.Provider>
