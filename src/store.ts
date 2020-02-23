@@ -1,5 +1,5 @@
 import React from "react";
-import { Note } from "./interfaces/note";
+import { Note, NoteID } from "./interfaces/note";
 import { Notes } from "./interfaces/notes";
 import path from "path";
 import os from "os";
@@ -14,7 +14,7 @@ const PATH = path.join(os.homedir(), "Documents", "zettelkasten");
 export class Store {
   notes: Notes;
   events: {
-    update: TypedEvent<string>;
+    update: TypedEvent<NoteID[]>;
   };
 
   constructor() {
@@ -46,6 +46,7 @@ export class Store {
         Notes.linksToBacklinks(draft, id);
       });
     });
+    this.events.update.emit([...this.notes.keys()]);
   }
 
   getNotes(): Notes {
@@ -73,7 +74,7 @@ export class Store {
     });
 
     fs.promises.writeFile(path.join(PATH, id), note.markdown);
-    this.events.update.emit(id);
+    this.events.update.emit([id]);
   }
 
   updateMarkdown(id: string, markdown: string) {

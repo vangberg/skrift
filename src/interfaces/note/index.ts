@@ -1,9 +1,11 @@
 import { fromMarkdown } from "./fromMarkdown";
 
+export type NoteID = string;
+
 export interface Note {
   title: string;
-  links: Set<string>;
-  backlinks: Set<string>;
+  links: Set<NoteID>;
+  backlinks: Set<NoteID>;
   markdown: string;
 }
 
