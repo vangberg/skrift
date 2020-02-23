@@ -1,10 +1,10 @@
 import React from "react";
 import { ListItem } from "./ListItem";
 import { SearchBar } from "./SearchBar";
-import { Notes } from "../../interfaces/notes";
+import { Note } from "../../interfaces/note";
 
 type Props = {
-  notes: Notes;
+  notes: Note[];
   onOpen: (id: string) => void;
   onAdd: (title: string) => void;
 };
@@ -15,8 +15,8 @@ export const NoteList: React.FC<Props> = ({ notes, onOpen, onAdd }) => {
       <SearchBar onAdd={onAdd} />
 
       <div className="pt-2">
-        {Notes.byDate(notes).map(([id, note]) => (
-          <ListItem key={id} id={id} note={note} onClick={() => onOpen(id)} />
+        {notes.map(note => (
+          <ListItem key={note.id} note={note} onClick={onOpen} />
         ))}
       </div>
     </div>

@@ -1,17 +1,17 @@
 import { Note, NoteID } from "../note";
 
-export type Notes = Map<string, Note>;
+export type Notes = Map<NoteID, Note>;
 
 export const Notes = {
-  getNote(notes: Notes, id: string): Note | undefined {
+  getNote(notes: Notes, id: NoteID): Note | undefined {
     return notes.get(id);
   },
 
-  setNote(notes: Notes, id: string, note: Note) {
-    notes.set(id, note);
+  setNote(notes: Notes, note: Note) {
+    notes.set(note.id, note);
   },
 
-  linksToBacklinks(notes: Notes, id: string) {
+  linksToBacklinks(notes: Notes, id: NoteID) {
     const note = Notes.getNote(notes, id);
 
     if (!note) {
@@ -27,7 +27,7 @@ export const Notes = {
 
   addBacklink(
     notes: Notes,
-    { id, backlink }: { id: string; backlink: string }
+    { id, backlink }: { id: NoteID; backlink: NoteID }
   ) {
     const note = Notes.getNote(notes, id);
 
@@ -42,7 +42,7 @@ export const Notes = {
 
   removeBacklink(
     notes: Notes,
-    { id, backlink }: { id: string; backlink: string }
+    { id, backlink }: { id: NoteID; backlink: NoteID }
   ) {
     const note = Notes.getNote(notes, id);
 
@@ -55,7 +55,9 @@ export const Notes = {
     note.backlinks.delete(backlink);
   },
 
-  byDate(notes: Notes): [NoteID, Note][] {
-    return [...notes].sort((n1, n2) => n1[0].localeCompare(n2[0])).reverse();
+  byDate(notes: Notes): Note[] {
+    return [...notes.values()]
+      .sort((n1, n2) => n1.id.localeCompare(n2.id))
+      .reverse();
   }
 };

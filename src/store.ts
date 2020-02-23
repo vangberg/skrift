@@ -27,23 +27,21 @@ export class Store {
   async readAll(): Promise<void> {
     const filenames = await fs.promises.readdir(PATH);
     await Promise.all(
-      filenames.map(filename =>
-        fs.promises
-          .readFile(path.join(PATH, filename), "utf8")
-          .then(markdown => {
-            const note = {
-              ...Note.empty(),
-              ...Note.fromMarkdown(markdown)
-            };
-            this.notes = produce(this.notes, draft => {
-              Notes.setNote(draft, filename, note);
-            });
-          })
+      filenames.map(id =>
+        fs.promises.readFile(path.join(PATH, id), "utf8").then(markdown => {
+          const note = {
+            ...Note.empty({ id }),
+            ...Note.fromMarkdown(markdown)
+          };
+          this.notes = produce(this.notes, draft => {
+            Notes.setNote(draft, note);
+          });
+        })
       )
     );
-    this.notes.forEach((note, id) => {
+    this.notes.forEach(note => {
       this.notes = produce(this.notes, draft => {
-        Notes.linksToBacklinks(draft, id);
+        Notes.linksToBacklinks(draft, note.id);
       });
     });
     this.events.update.emit([...this.notes.keys()]);
@@ -67,34 +65,34 @@ export class Store {
     return note;
   }
 
-  save(id: string, note: Note) {
+  save(note: Note) {
     this.notes = produce(this.notes, draft => {
-      Notes.setNote(draft, id, note);
-      Notes.linksToBacklinks(draft, id);
+      Notes.setNote(draft, note);
+      Notes.linksToBacklinks(draft, note.id);
     });
 
-    fs.promises.writeFile(path.join(PATH, id), note.markdown);
-    this.events.update.emit([id]);
+    fs.promises.writeFile(path.join(PATH, note.id), note.markdown);
+    this.events.update.emit([note.id]);
   }
 
   updateMarkdown(id: string, markdown: string) {
-    const note = this.notes.get(id) || Note.empty();
+    const note = this.notes.get(id) || Note.empty({ id });
     const next = { ...note, ...Note.fromMarkdown(markdown) };
 
-    this.save(id, next);
+    this.save(next);
   }
 
-  generate(markdown?: string): [string, Note] {
+  generate(markdown?: string): Note {
     const id = new Date().toJSON();
 
     const note = {
-      ...Note.empty(),
+      ...Note.empty({ id }),
       ...(markdown ? Note.fromMarkdown(markdown) : {})
     };
 
-    this.save(id, note);
+    this.save(note);
 
-    return [id, note];
+    return note;
   }
 }
 

@@ -3,6 +3,7 @@ import { fromMarkdown } from "./fromMarkdown";
 export type NoteID = string;
 
 export interface Note {
+  id: NoteID;
   title: string;
   links: Set<NoteID>;
   backlinks: Set<NoteID>;
@@ -12,12 +13,14 @@ export interface Note {
 export const Note = {
   fromMarkdown,
 
-  empty(): Note {
+  empty(partial?: Partial<Note>): Note {
     return {
+      id: "",
       title: "",
       links: new Set(),
       backlinks: new Set(),
-      markdown: ""
+      markdown: "",
+      ...(partial || {})
     };
   }
 };

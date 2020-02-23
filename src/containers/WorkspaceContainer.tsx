@@ -36,7 +36,7 @@ export const WorkspaceContainer: React.FC = () => {
       dispatch({
         type: "OPEN_NOTES",
         ids: Notes.byDate(notes)
-          .map(([id]) => id)
+          .map(note => note.id)
           .slice(0, 3)
       });
     });
