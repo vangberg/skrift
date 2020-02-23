@@ -1,6 +1,8 @@
 TODO
 * Search
 * Remove NoteRevision
-* ESLint
 * Force access to store.notes through explicit method,
   so we don't do it by accident.
+
+DONE
+* ESLint

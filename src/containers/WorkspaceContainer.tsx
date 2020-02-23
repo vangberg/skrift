@@ -1,11 +1,12 @@
 import React, { useEffect, useReducer, useState } from "react";
+import { RouteComponentProps } from "@reach/router";
 import { reducer, StateContext } from "../state";
 import { Store, StoreContext } from "../store";
 import { Workspace } from "../components/Workspace";
 import { Search, SearchContext } from "../search";
 import { Notes } from "../interfaces/notes";
 
-export const WorkspaceContainer: React.FC = () => {
+export const WorkspaceContainer: React.FC<RouteComponentProps> = () => {
   const [store] = useState(() => new Store());
 
   const [state, dispatch] = useReducer(reducer, {}, () => ({
