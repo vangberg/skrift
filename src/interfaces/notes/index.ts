@@ -3,6 +3,12 @@ import { Note, NoteID } from "../note";
 export type Notes = Map<NoteID, Note>;
 
 export const Notes = {
+  getByIds(notes: Notes, ids: NoteID[]): Note[] {
+    const result: Note[] = [];
+    ids.forEach(id => result.push(Notes.getNote(notes, id)));
+    return result;
+  },
+
   getNote(notes: Notes, id: NoteID): Note {
     const note = notes.get(id);
 

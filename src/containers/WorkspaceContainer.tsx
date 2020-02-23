@@ -4,25 +4,22 @@ import { Store, StoreContext } from "../store";
 import { Workspace } from "../components/Workspace";
 import { Search, SearchContext } from "../search";
 import { Notes } from "../interfaces/notes";
+import { NoteID } from "../interfaces/note";
 
 export const WorkspaceContainer: React.FC = () => {
-  const [store, setStore] = useState(() => new Store());
-
-  const [search] = useState(() => new Search());
-
-  useEffect(() => {
-    search.subscribe(store);
-  }, []);
+  const [store] = useState(() => new Store());
 
   const [state, dispatch] = useReducer(reducer, {}, () => ({
     notes: new Map(),
-    openIds: []
+    openIds: [],
+    search: {
+      query: "",
+      results: []
+    }
   }));
-
   useEffect(() => {
-    const unsubscribe = store.events.update.subscribe(ids => {
+    return store.events.update.subscribe(ids => {
       const { notes } = store;
-
       dispatch({
         type: "SET_NOTES",
         notes
@@ -34,8 +31,23 @@ export const WorkspaceContainer: React.FC = () => {
           .slice(0, 3)
       });
     });
-    return unsubscribe;
   }, [store]);
+
+  const [search] = useState(() => new Search());
+  useEffect(() => {
+    return search.subscribe(store);
+  }, []);
+  useEffect(() => {
+    const { query } = state.search;
+
+    if (query === "") {
+      dispatch({ type: "@search/SET_RESULTS", results: [] });
+    } else {
+      search.search(query).then(results => {
+        dispatch({ type: "@search/SET_RESULTS", results });
+      });
+    }
+  }, [state]);
 
   useEffect(() => {
     store.readAll();
