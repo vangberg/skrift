@@ -70,7 +70,7 @@ export function parse(tokens: Token[]): Node[] {
         nodes.push(...heading(token, tokens));
         break;
       case "inline":
-        nodes.push(...inline(token, tokens));
+        nodes.push(...inline(token));
         break;
       case "text":
         nodes.push(...text(token));
@@ -107,7 +107,7 @@ function takeUntil(tokens: Token[], type: string): Token[] {
   return children;
 }
 
-function inline(token: BlockContentToken, tokens: Token[]): Node[] {
+function inline(token: BlockContentToken): Node[] {
   if (!token.children) {
     throw new Error(`Expected 'inline' token, got '${token.type}'`);
   }

@@ -4,7 +4,6 @@ import { Store, StoreContext } from "../store";
 import { Workspace } from "../components/Workspace";
 import { Search, SearchContext } from "../search";
 import { Notes } from "../interfaces/notes";
-import { NoteID } from "../interfaces/note";
 
 export const WorkspaceContainer: React.FC = () => {
   const [store] = useState(() => new Store());
@@ -18,7 +17,7 @@ export const WorkspaceContainer: React.FC = () => {
     }
   }));
   useEffect(() => {
-    return store.events.update.subscribe(ids => {
+    return store.events.update.subscribe(() => {
       const { notes } = store;
       dispatch({
         type: "SET_NOTES",

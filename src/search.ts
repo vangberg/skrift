@@ -17,7 +17,7 @@ export class Search {
   }
 
   async search(query: string): Promise<NoteID[]> {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       this.index.search(query, 20, (result: string[]) => resolve(result));
     });
   }

@@ -1,8 +1,7 @@
-import React, { useContext, useCallback } from "react";
+import React from "react";
 import { NoteEditorContainer } from "../containers/NoteEditorContainer";
 import { NoteListContainer } from "../containers/NoteListContainer";
 import { NoteID } from "../interfaces/note";
-import { Notes } from "../interfaces/notes";
 
 type Props = {
   openIds: NoteID[];

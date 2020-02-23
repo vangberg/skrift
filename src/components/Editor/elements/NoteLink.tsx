@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from "react";
+import React, { useCallback } from "react";
 import {
   RenderElementProps,
   useFocused,
@@ -22,7 +22,6 @@ export const NoteLink: React.FC<RenderElementProps & Props> = ({
   element,
   children
 }) => {
-  const note = useMemo(() => getNote(element.id), [getNote]);
   const selected = useSelected();
   const focused = useFocused();
   const editor = useEditor();

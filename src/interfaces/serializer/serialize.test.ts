@@ -1,5 +1,4 @@
 import { serialize } from "./serialize";
-import { Node } from "slate";
 
 const value = [
   {

@@ -1,6 +1,5 @@
 import { Node } from "slate";
 import { Serializer } from "../serializer";
-import { Note } from ".";
 
 interface ParsedNote {
   title: string;
@@ -21,7 +20,7 @@ function parseLinks(nodes: Node[]): Set<string> {
 
   return new Set(
     Array.from(elements)
-      .map(([element, path]) => element)
+      .map(([element]) => element)
       .filter(Serializer.isNoteLink)
       .map(link => link.id)
   );

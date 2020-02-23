@@ -1,6 +1,6 @@
-import React, { useMemo, useCallback, useState, useEffect } from "react";
+import React, { useMemo, useCallback, useState } from "react";
 import { Node } from "slate";
-import { Slate, useFocused, ReactEditor } from "slate-react";
+import { Slate } from "slate-react";
 
 import { SkriftEditable } from "./Editable";
 import { Serializer } from "../../interfaces/serializer";

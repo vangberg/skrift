@@ -1,9 +1,11 @@
-import React, { useReducer } from "react";
+import React from "react";
 import { Router, RouteComponentProps } from "@reach/router";
 import { WorkspaceContainer } from "./containers/WorkspaceContainer";
 
 const route = (Component: React.FC): React.FC<RouteComponentProps> => {
-  return (props: RouteComponentProps) => <Component />;
+  return function Route() {
+    return <Component />;
+  };
 };
 
 const Workspace = route(WorkspaceContainer);

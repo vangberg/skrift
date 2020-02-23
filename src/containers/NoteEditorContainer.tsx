@@ -2,7 +2,7 @@ import React, { useContext, useMemo, useCallback } from "react";
 import { StateContext } from "../state";
 import { Editor } from "../components/Editor";
 import { StoreContext } from "../store";
-import { Note, NoteID } from "../interfaces/note";
+import { NoteID } from "../interfaces/note";
 import { Notes } from "../interfaces/notes";
 
 interface Props {

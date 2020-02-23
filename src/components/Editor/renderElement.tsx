@@ -24,7 +24,7 @@ export function renderElement(options: {
 }) {
   const { getNote, onOpen } = options;
 
-  return function(props: RenderElementProps) {
+  return function RenderElement(props: RenderElementProps) {
     switch (props.element.type) {
       case "heading":
         return <Heading {...props} />;

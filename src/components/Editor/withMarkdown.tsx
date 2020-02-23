@@ -1,4 +1,4 @@
-import { Editor, Transforms } from "slate";
+import { Transforms } from "slate";
 import { Serializer } from "../../interfaces/serializer";
 import { ReactEditor } from "slate-react";
 
