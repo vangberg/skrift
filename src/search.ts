@@ -1,6 +1,7 @@
 import { Store } from "./store";
 import FlexSearch from "flexsearch";
 import { NoteID, Note } from "./interfaces/note";
+import React from "react";
 
 export class Search {
   index: any;
@@ -31,3 +32,5 @@ export class Search {
     this.unsubscribe();
   }
 }
+
+export const SearchContext = React.createContext(new Search(new Store()));

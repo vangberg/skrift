@@ -2,19 +2,19 @@ import React, { useEffect, useReducer, useState } from "react";
 import { reducer, StateContext } from "../state";
 import { Store, StoreContext } from "../store";
 import { Workspace } from "../components/Workspace";
-import { Search } from "../search";
+import { Search, SearchContext } from "../search";
 import { Notes } from "../interfaces/notes";
 
 export const WorkspaceContainer: React.FC = () => {
   const [store, setStore] = useState(() => new Store());
 
-  const [index] = useState(() => new Search(store));
+  const [search] = useState(() => new Search(store));
 
   useEffect(() => {
     const unsubscribe = store.events.update.subscribe(ids => {
       ids.forEach(id => {
         const note = store.get(id);
-        index.add(id, note);
+        search.add(id, note);
       });
     });
     return unsubscribe;
@@ -49,9 +49,11 @@ export const WorkspaceContainer: React.FC = () => {
 
   return (
     <StoreContext.Provider value={store}>
-      <StateContext.Provider value={[state, dispatch]}>
-        <Workspace />
-      </StateContext.Provider>
+      <SearchContext.Provider value={search}>
+        <StateContext.Provider value={[state, dispatch]}>
+          <Workspace />
+        </StateContext.Provider>
+      </SearchContext.Provider>
     </StoreContext.Provider>
   );
 };
