@@ -8,17 +8,11 @@ import { Notes } from "../interfaces/notes";
 export const WorkspaceContainer: React.FC = () => {
   const [store, setStore] = useState(() => new Store());
 
-  const [search] = useState(() => new Search(store));
+  const [search] = useState(() => new Search());
 
   useEffect(() => {
-    const unsubscribe = store.events.update.subscribe(ids => {
-      ids.forEach(id => {
-        const note = store.get(id);
-        search.add(id, note);
-      });
-    });
-    return unsubscribe;
-  }, [store]);
+    search.subscribe(store);
+  }, []);
 
   const [state, dispatch] = useReducer(reducer, {}, () => ({
     notes: new Map(),

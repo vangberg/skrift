@@ -45,16 +45,6 @@ export class Store {
     this.events.update.emit([...this.notes.keys()]);
   }
 
-  get(id: string): Note {
-    const note = this.notes.get(id);
-
-    if (!note) {
-      throw new Error(`Could not find note with id ${id}`);
-    }
-
-    return note;
-  }
-
   save(note: Note) {
     this.notes = produce(this.notes, draft => {
       Notes.setNote(draft, note);
@@ -66,7 +56,7 @@ export class Store {
   }
 
   updateMarkdown(id: string, markdown: string) {
-    const note = this.get(id) || Note.empty({ id });
+    const note = this.notes.get(id) || Note.empty({ id });
     const next = { ...note, ...Note.fromMarkdown(markdown) };
 
     this.save(next);

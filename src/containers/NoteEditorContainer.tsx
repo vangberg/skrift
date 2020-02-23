@@ -23,7 +23,10 @@ export const NoteEditorContainer: React.FC<Props> = ({ id }) => {
   const handleClose = useCallback(() => dispatch({ type: "CLOSE_NOTE", id }), [
     id
   ]);
-  const getNote = useCallback(id => store.get(id), [store]);
+  const getNote = useCallback(id => Notes.getNote(state.notes, id), [
+    state,
+    id
+  ]);
   const note = useMemo(() => Notes.getNote(state.notes, id), [state, id]);
 
   return (
