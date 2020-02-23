@@ -3,6 +3,7 @@ import { reducer, StateContext } from "../state";
 import { Store, StoreContext } from "../store";
 import { Workspace } from "../components/Workspace";
 import { Search } from "../search";
+import { Notes } from "../interfaces/notes";
 
 export const WorkspaceContainer: React.FC = () => {
   const [store, setStore] = useState(() => new Store());
@@ -26,14 +27,17 @@ export const WorkspaceContainer: React.FC = () => {
 
   useEffect(() => {
     const unsubscribe = store.events.update.subscribe(ids => {
-      console.log("UPDATE", ids.length);
+      const notes = store.getNotes();
+
       dispatch({
         type: "SET_NOTES",
-        notes: store.getNotes()
+        notes
       });
       dispatch({
         type: "OPEN_NOTES",
-        ids: [...store.getNotes().keys()].slice(0, 3)
+        ids: Notes.byDate(notes)
+          .map(([id]) => id)
+          .slice(0, 3)
       });
     });
     return unsubscribe;

@@ -1,5 +1,4 @@
-import { Note } from "../note";
-import produce from "immer";
+import { Note, NoteID } from "../note";
 
 export type Notes = Map<string, Note>;
 
@@ -54,5 +53,9 @@ export const Notes = {
     }
 
     note.backlinks.delete(backlink);
+  },
+
+  byDate(notes: Notes): [NoteID, Note][] {
+    return [...notes].sort((n1, n2) => n1[0].localeCompare(n2[0])).reverse();
   }
 };
