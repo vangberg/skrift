@@ -54,7 +54,7 @@ export const SkriftEditor: React.FC<Props> = ({
       setValue(newValue);
       onUpdate(Serializer.serialize(newValue));
     },
-    [onUpdate]
+    [onUpdate, value]
   );
 
   return (

@@ -29,7 +29,7 @@ export const NoteLink: React.FC<RenderElementProps & Props> = ({
   const handleOpen = useCallback(() => {
     ReactEditor.blur(editor);
     onOpen(element.id);
-  }, [onOpen, element]);
+  }, [editor, onOpen, element]);
 
   return (
     <span

@@ -35,7 +35,7 @@ export const WorkspaceContainer: React.FC = () => {
   const [search] = useState(() => new Search());
   useEffect(() => {
     return search.subscribe(store);
-  }, []);
+  }, [search, store]);
   useEffect(() => {
     const { query } = state.search;
 
@@ -46,11 +46,11 @@ export const WorkspaceContainer: React.FC = () => {
         dispatch({ type: "@search/SET_RESULTS", results });
       });
     }
-  }, [state]);
+  }, [state, search]);
 
   useEffect(() => {
     store.readAll();
-  }, []);
+  }, [store]);
 
   return (
     <StoreContext.Provider value={store}>

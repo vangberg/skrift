@@ -8,9 +8,9 @@ type Props = {
 };
 
 export const NoteLink: React.FC<Props> = ({ id, getNote, onOpen }) => {
-  const note = useMemo(() => getNote(id), [getNote]);
+  const note = useMemo(() => getNote(id), [getNote, id]);
 
-  const handleOpen = useCallback(() => onOpen(id), [onOpen]);
+  const handleOpen = useCallback(() => onOpen(id), [onOpen, id]);
 
   return (
     <span>

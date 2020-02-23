@@ -12,11 +12,11 @@ export const ListItem: React.FC<Props> = ({ note, onClick }) => {
     if (onClick) {
       onClick(note.id);
     }
-  }, [onClick]);
+  }, [onClick, note]);
 
   const handleCopy = useCallback(() => {
     clipboard.writeText(`[[${note.id}]]`);
-  }, []);
+  }, [note]);
 
   return (
     <div className="flex text-sm">

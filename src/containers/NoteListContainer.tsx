@@ -18,7 +18,7 @@ export const NoteListContainer: React.FC = () => {
       return Notes.getByIds(notes, results);
     }
 
-    return Notes.byDate(store.notes);
+    return Notes.byDate(state.notes);
   }, [state]);
 
   const handleAdd = useCallback(
