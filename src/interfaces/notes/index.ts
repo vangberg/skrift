@@ -40,6 +40,20 @@ export const Notes = {
     );
   },
 
+  clearBacklinks(notes: Notes, id: NoteID) {
+    const note = Notes.getNote(notes, id);
+
+    if (!note) {
+      throw new Error(
+        `Could not add note ${id} to backlinks, since it doesn't exist`
+      );
+    }
+
+    note.links.forEach(link =>
+      Notes.removeBacklink(notes, { id: link, backlink: id })
+    );
+  },
+
   addBacklink(
     notes: Notes,
     { id, backlink }: { id: NoteID; backlink: NoteID }

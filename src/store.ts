@@ -49,6 +49,7 @@ export class Store {
 
   save(note: Note): void {
     this.notes = produce(this.notes, draft => {
+      Notes.clearBacklinks(draft, note.id);
       Notes.setNote(draft, note);
       Notes.linksToBacklinks(draft, note.id);
     });
