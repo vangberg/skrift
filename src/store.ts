@@ -13,12 +13,14 @@ export class Store {
   notes: Notes;
   events: {
     update: TypedEvent<NoteID[]>;
+    delete: TypedEvent<NoteID[]>;
   };
 
   constructor() {
     this.notes = new Map();
     this.events = {
-      update: new TypedEvent()
+      update: new TypedEvent(),
+      delete: new TypedEvent()
     };
   }
 
@@ -26,7 +28,7 @@ export class Store {
     const filenames = await fs.promises.readdir(PATH);
     await Promise.all(
       filenames.map(id =>
-        fs.promises.readFile(path.join(PATH, id), "utf8").then(markdown => {
+        fs.promises.readFile(this.path(id), "utf8").then(markdown => {
           const note = {
             ...Note.empty({ id }),
             ...Note.fromMarkdown(markdown)
@@ -51,7 +53,7 @@ export class Store {
       Notes.linksToBacklinks(draft, note.id);
     });
 
-    fs.promises.writeFile(path.join(PATH, note.id), note.markdown);
+    fs.promises.writeFile(this.path(note.id), note.markdown);
     this.events.update.emit([note.id]);
   }
 
@@ -60,6 +62,19 @@ export class Store {
     const next = { ...note, ...Note.fromMarkdown(markdown) };
 
     this.save(next);
+  }
+
+  delete(id: NoteID): void {
+    this.notes = produce(this.notes, draft => {
+      Notes.deleteNote(draft, id);
+    });
+
+    fs.promises.unlink(this.path(id));
+    this.events.delete.emit([id]);
+  }
+
+  path(id: NoteID): string {
+    return path.join(PATH, id);
   }
 
   generate(markdown?: string): Note {

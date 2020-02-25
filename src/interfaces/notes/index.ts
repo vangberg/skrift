@@ -23,6 +23,10 @@ export const Notes = {
     notes.set(note.id, note);
   },
 
+  deleteNote(notes: Notes, id: NoteID) {
+    notes.delete(id);
+  },
+
   linksToBacklinks(notes: Notes, id: NoteID) {
     const note = Notes.getNote(notes, id);
 
