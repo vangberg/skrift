@@ -20,9 +20,7 @@ export const Notes = {
   },
 
   setNote(notes: Notes, note: Note) {
-    const previous = notes.get(note.id);
-    const revision = previous?.revision || 0;
-    notes.set(note.id, { ...note, revision });
+    notes.set(note.id, note);
   },
 
   linksToBacklinks(notes: Notes, id: NoteID) {

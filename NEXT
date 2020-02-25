@@ -1,6 +1,4 @@
 TODO
-* Search
-* Remove NoteRevision
 * Force access to store.notes through explicit method,
   so we don't do it by accident.
 
