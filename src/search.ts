@@ -9,7 +9,7 @@ export class Search {
 
   constructor() {
     // @ts-ignore
-    this.index = new FlexSearch({ worker: true });
+    this.index = new FlexSearch();
   }
 
   add(id: NoteID, note: Note) {
@@ -24,7 +24,6 @@ export class Search {
 
   subscribe(store: Store) {
     const unsubscribe = store.events.update.subscribe(ids => {
-      console.log("Indexing notes", ids.length);
       ids.forEach(id => {
         const note = Notes.getNote(store.notes, id);
         this.add(id, note);

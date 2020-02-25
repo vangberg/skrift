@@ -1,22 +1,24 @@
 import React, { useCallback, useState } from "react";
 
 type Props = {
+  query: string;
   onAdd: (title: string) => void;
+  onSearch: (query: string) => void;
 };
 
-export const SearchBar: React.FC<Props> = ({ onAdd }) => {
-  const [text, setText] = useState("");
+export const SearchBar: React.FC<Props> = ({ query, onAdd, onSearch }) => {
   const handleSubmit = useCallback(
     (event: React.FormEvent) => {
       event.preventDefault();
-      onAdd(text);
-      setText("")
+      onAdd(query);
+      onSearch("");
     },
-    [onAdd, text]
+    [query, onAdd, onSearch]
   );
   const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => setText(event.target.value),
-    [setText]
+    (event: React.ChangeEvent<HTMLInputElement>) =>
+      onSearch(event.target.value),
+    [onSearch]
   );
 
   return (
@@ -26,7 +28,7 @@ export const SearchBar: React.FC<Props> = ({ onAdd }) => {
           type="text"
           className="flex-grow border rounded-l p-1 outline-none"
           placeholder="Type to search…"
-          value={text}
+          value={query}
           onChange={handleChange}
         />
         <button className="p-1 border border-blue-200 bg-blue-200 rounded-r">

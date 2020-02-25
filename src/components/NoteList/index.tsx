@@ -5,14 +5,22 @@ import { Note } from "../../interfaces/note";
 
 type Props = {
   notes: Note[];
+  query: string;
   onOpen: (id: string) => void;
   onAdd: (title: string) => void;
+  onSearch: (query: string) => void;
 };
 
-export const NoteList: React.FC<Props> = ({ notes, onOpen, onAdd }) => {
+export const NoteList: React.FC<Props> = ({
+  notes,
+  query,
+  onOpen,
+  onAdd,
+  onSearch
+}) => {
   return (
     <div>
-      <SearchBar onAdd={onAdd} />
+      <SearchBar query={query} onAdd={onAdd} onSearch={onSearch} />
 
       <div className="pt-2">
         {notes.map(note => (

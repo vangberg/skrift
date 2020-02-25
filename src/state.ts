@@ -29,6 +29,8 @@ const openNote = (state: State, id: string): State => {
 };
 
 export const reducer = (state: State, action: Action): State => {
+  console.log(action);
+
   switch (action.type) {
     case "SET_NOTES":
       return produce(state, draft => {
