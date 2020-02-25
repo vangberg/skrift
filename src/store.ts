@@ -29,19 +29,15 @@ export class Store {
     await Promise.all(
       filenames.map(id =>
         fs.promises.readFile(this.path(id), "utf8").then(markdown => {
-          const note = {
-            ...Note.empty({ id }),
-            ...Note.fromMarkdown(markdown)
-          };
           this.notes = produce(this.notes, draft => {
-            Notes.setNote(draft, note);
+            Notes.saveMarkdown(draft, id, markdown);
           });
         })
       )
     );
     this.notes.forEach(note => {
       this.notes = produce(this.notes, draft => {
-        Notes.linksToBacklinks(draft, note.id);
+        Notes.addBacklinks(draft, note.id);
       });
     });
     this.events.update.emit([...this.notes.keys()]);
@@ -49,9 +45,7 @@ export class Store {
 
   save(note: Note): void {
     this.notes = produce(this.notes, draft => {
-      Notes.clearBacklinks(draft, note.id);
-      Notes.setNote(draft, note);
-      Notes.linksToBacklinks(draft, note.id);
+      Notes.saveNote(draft, note);
     });
 
     fs.promises.writeFile(this.path(note.id), note.markdown);

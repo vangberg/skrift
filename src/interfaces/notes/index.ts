@@ -18,15 +18,27 @@ export const Notes = {
     return notes.get(id);
   },
 
-  setNote(notes: Notes, note: Note) {
+  saveNote(notes: Notes, note: Note) {
+    if (notes.has(note.id)) {
+      Notes.removeBacklinks(notes, note.id);
+    }
     notes.set(note.id, note);
+    Notes.addBacklinks(notes, note.id);
+  },
+
+  saveMarkdown(notes: Notes, id: NoteID, markdown: string) {
+    const note = {
+      ...Note.empty({ id }),
+      ...Note.fromMarkdown(markdown)
+    };
+    Notes.saveNote(notes, note);
   },
 
   deleteNote(notes: Notes, id: NoteID) {
     notes.delete(id);
   },
 
-  linksToBacklinks(notes: Notes, id: NoteID) {
+  addBacklinks(notes: Notes, id: NoteID) {
     const note = Notes.getNote(notes, id);
 
     if (!note) {
@@ -40,7 +52,7 @@ export const Notes = {
     );
   },
 
-  clearBacklinks(notes: Notes, id: NoteID) {
+  removeBacklinks(notes: Notes, id: NoteID) {
     const note = Notes.getNote(notes, id);
 
     if (!note) {
