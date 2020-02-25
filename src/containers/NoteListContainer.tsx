@@ -13,7 +13,7 @@ export const NoteListContainer: React.FC = () => {
     const { notes } = state;
     const { results } = search;
 
-    if (results.length > 0) {
+    if (results) {
       return Notes.getByIds(notes, results);
     }
 

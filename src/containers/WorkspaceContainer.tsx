@@ -42,7 +42,7 @@ export const WorkspaceContainer: React.FC<RouteComponentProps> = () => {
     console.log({ query });
 
     if (query === "") {
-      dispatch({ type: "@search/SET_RESULTS", results: [] });
+      dispatch({ type: "@search/CLEAR_RESULTS" });
     } else {
       search.search(query).then(results => {
         dispatch({ type: "@search/SET_RESULTS", results });

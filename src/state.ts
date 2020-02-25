@@ -8,7 +8,7 @@ export interface State {
   openIds: NoteID[];
   search: {
     query: string;
-    results: NoteID[];
+    results: NoteID[] | null;
   };
 }
 
@@ -18,7 +18,8 @@ export type Action =
   | { type: "OPEN_NOTE"; id: NoteID }
   | { type: "CLOSE_NOTE"; id: NoteID }
   | { type: "@search/SET_QUERY"; query: string }
-  | { type: "@search/SET_RESULTS"; results: NoteID[] };
+  | { type: "@search/SET_RESULTS"; results: NoteID[] }
+  | { type: "@search/CLEAR_RESULTS" };
 
 const openNote = (state: State, id: string): State => {
   return produce(state, ({ openIds }) => {
@@ -52,6 +53,10 @@ export const reducer = (state: State, action: Action): State => {
     case "@search/SET_RESULTS":
       return produce(state, draft => {
         draft.search.results = action.results;
+      });
+    case "@search/CLEAR_RESULTS":
+      return produce(state, draft => {
+        draft.search.results = null;
       });
   }
 };
