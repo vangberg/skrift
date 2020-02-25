@@ -1,6 +1,4 @@
 TODO
+* Wrap all access to store through a context
 * Force access to store.notes through explicit method,
   so we don't do it by accident.
-
-DONE
-* ESLint

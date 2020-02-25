@@ -19,13 +19,18 @@ export const NoteEditorContainer: React.FC<Props> = ({ id }) => {
     },
     [store, id]
   );
+
+  const handleDelete = useCallback(() => store.delete(id), [store, id]);
+
   const handleOpen = useCallback(id => dispatch({ type: "OPEN_NOTE", id }), [
     dispatch
   ]);
+
   const handleClose = useCallback(() => dispatch({ type: "CLOSE_NOTE", id }), [
     dispatch,
     id
   ]);
+
   const getNote = useCallback(id => Notes.getNote(state.notes, id), [state]);
   const note = useMemo(() => Notes.getNote(state.notes, id), [state, id]);
 
@@ -34,6 +39,7 @@ export const NoteEditorContainer: React.FC<Props> = ({ id }) => {
       note={note}
       getNote={getNote}
       onOpen={handleOpen}
+      onDelete={handleDelete}
       onClose={handleClose}
       onUpdate={handleUpdate}
     />

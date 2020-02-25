@@ -36,6 +36,7 @@ export const reducer = (state: State, action: Action): State => {
     case "SET_NOTES":
       return produce(state, draft => {
         draft.notes = action.notes;
+        draft.openIds = draft.openIds.filter(id => draft.notes.has(id));
       });
     case "OPEN_NOTES":
       return action.ids.reduce((state, id) => openNote(state, id), state);

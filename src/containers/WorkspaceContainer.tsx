@@ -24,6 +24,20 @@ export const WorkspaceContainer: React.FC<RouteComponentProps> = () => {
         type: "SET_NOTES",
         notes
       });
+    });
+  }, [store]);
+  useEffect(() => {
+    return store.events.delete.subscribe(() => {
+      const { notes } = store;
+      dispatch({
+        type: "SET_NOTES",
+        notes
+      });
+    });
+  }, [store]);
+  useEffect(() => {
+    return store.events.update.subscribe(() => {
+      const { notes } = store;
       dispatch({
         type: "OPEN_NOTES",
         ids: Notes.byDate(notes)

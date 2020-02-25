@@ -1,13 +1,14 @@
 import React, { useMemo, useCallback, useState } from "react";
 import { Node } from "slate";
 import { Slate } from "slate-react";
+import { remote } from "electron";
 
 import { SkriftEditable } from "./Editable";
 import { Serializer } from "../../interfaces/serializer";
 import { Note } from "../../interfaces/note";
 import { createEditor } from "./createEditor";
-import { Close } from "./Close";
 import { Backlinks } from "./Backlinks";
+import { Toolbar } from "./Toolbar";
 
 const deserialize = (markdown: string) => {
   const nodes = Serializer.deserialize(markdown);
@@ -31,6 +32,7 @@ const areEqual = (n1: Node[], n2: Node[]) => {
 type Props = {
   note: Note;
   onUpdate: (markdown: string) => void;
+  onDelete: () => void;
   onOpen: (id: string) => void;
   onClose: () => void;
   getNote: (id: string) => Note | undefined;
@@ -39,6 +41,7 @@ type Props = {
 export const SkriftEditor: React.FC<Props> = ({
   note,
   onUpdate,
+  onDelete,
   onOpen,
   onClose,
   getNote
@@ -57,15 +60,27 @@ export const SkriftEditor: React.FC<Props> = ({
     [onUpdate, value]
   );
 
+  const handleDelete = useCallback(async () => {
+    const { response } = await remote.dialog.showMessageBox({
+      type: "question",
+      message: `Are you sure you want to delete the note ${note.title}`,
+      buttons: ["Yes", "No"]
+    });
+    if (response === 0) {
+      onDelete();
+    }
+  }, [note.title, onDelete]);
+
   return (
     <div className="shadow mb-2 bg-white">
       <div className="float-right p-2">
-        <Close onClick={onClose} />
+        <Toolbar onClose={onClose} onDelete={handleDelete}></Toolbar>
       </div>
 
       <div className="p-2">
         <Slate editor={editor} value={value} onChange={handleChange}>
           <SkriftEditable onOpen={onOpen} getNote={getNote} />
+
           {window.skriftDebug && (
             <pre className="text-xs">{JSON.stringify(value, undefined, 2)}</pre>
           )}
