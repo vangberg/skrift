@@ -34,6 +34,10 @@ export const NoteEditorContainer: React.FC<Props> = ({ id }) => {
   const getNote = useCallback(id => Notes.getNote(state.notes, id), [state]);
   const note = useMemo(() => Notes.getNote(state.notes, id), [state, id]);
 
+  if (!note) {
+    return <div>Could not find note with ID {id}</div>;
+  }
+
   return (
     <Editor
       note={note}

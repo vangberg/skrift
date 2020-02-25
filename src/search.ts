@@ -23,13 +23,22 @@ export class Search {
   }
 
   subscribe(store: Store) {
-    const unsubscribe = store.events.update.subscribe(ids => {
+    const updateUnsubscribe = store.events.update.subscribe(ids => {
       ids.forEach(id => {
         const note = Notes.getNote(store.notes, id);
-        this.add(id, note);
+        if (note) {
+          this.add(id, note);
+        }
       });
     });
-    return unsubscribe;
+    const deleteUnsubscribe = store.events.delete.subscribe(ids => {
+      ids.forEach(id => this.index.remove(id));
+    });
+
+    return () => {
+      updateUnsubscribe();
+      deleteUnsubscribe();
+    };
   }
 }
 

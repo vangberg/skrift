@@ -12,6 +12,10 @@ export const NoteLink: React.FC<Props> = ({ id, getNote, onOpen }) => {
 
   const handleOpen = useCallback(() => onOpen(id), [onOpen, id]);
 
+  if (!note) {
+    return <span>[[{id}]]</span>;
+  }
+
   return (
     <span>
       <span className="text-gray-500">[[</span>

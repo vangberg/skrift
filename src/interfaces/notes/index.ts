@@ -5,18 +5,17 @@ export type Notes = Map<NoteID, Note>;
 export const Notes = {
   getByIds(notes: Notes, ids: NoteID[]): Note[] {
     const result: Note[] = [];
-    ids.forEach(id => result.push(Notes.getNote(notes, id)));
+    ids.forEach(id => {
+      const note = Notes.getNote(notes, id);
+      if (note) {
+        result.push(note);
+      }
+    });
     return result;
   },
 
-  getNote(notes: Notes, id: NoteID): Note {
-    const note = notes.get(id);
-
-    if (!note) {
-      throw new Error(`Could not find note with id ${id}`);
-    }
-
-    return note;
+  getNote(notes: Notes, id: NoteID): Note | undefined {
+    return notes.get(id);
   },
 
   setNote(notes: Notes, note: Note) {
@@ -30,6 +29,12 @@ export const Notes = {
   linksToBacklinks(notes: Notes, id: NoteID) {
     const note = Notes.getNote(notes, id);
 
+    if (!note) {
+      throw new Error(
+        `Could not add note ${id} to backlinks, since it doesn't exist`
+      );
+    }
+
     note.links.forEach(link =>
       Notes.addBacklink(notes, { id: link, backlink: id })
     );
@@ -41,6 +46,10 @@ export const Notes = {
   ) {
     const note = Notes.getNote(notes, id);
 
+    if (!note) {
+      return;
+    }
+
     note.backlinks.add(backlink);
   },
 
@@ -49,6 +58,10 @@ export const Notes = {
     { id, backlink }: { id: NoteID; backlink: NoteID }
   ) {
     const note = Notes.getNote(notes, id);
+
+    if (!note) {
+      return;
+    }
 
     note.backlinks.delete(backlink);
   },
