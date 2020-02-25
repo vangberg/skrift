@@ -62,7 +62,7 @@ export const WorkspaceContainer: React.FC<RouteComponentProps> = () => {
         dispatch({ type: "@search/SET_RESULTS", results });
       });
     }
-  }, [state.search.query, search]);
+  }, [state.search, search]);
 
   useEffect(() => {
     store.readAll();
