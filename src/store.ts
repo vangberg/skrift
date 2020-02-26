@@ -27,13 +27,17 @@ export class Store {
   async readAll(): Promise<void> {
     const filenames = await fs.promises.readdir(PATH);
     await Promise.all(
-      filenames.map(id =>
-        fs.promises.readFile(this.path(id), "utf8").then(markdown => {
+      filenames
+        .filter(filename => filename.endsWith(".md"))
+        .map(async filename => {
+          const markdown = await fs.promises.readFile(
+            path.join(PATH, filename),
+            "utf8"
+          );
           this.notes = produce(this.notes, draft => {
-            Notes.saveMarkdown(draft, id, markdown);
+            Notes.saveMarkdown(draft, path.basename(filename, ".md"), markdown);
           });
         })
-      )
     );
     this.notes.forEach(note => {
       this.notes = produce(this.notes, draft => {
@@ -69,7 +73,7 @@ export class Store {
   }
 
   path(id: NoteID): string {
-    return path.join(PATH, id);
+    return path.join(PATH, id + ".md");
   }
 
   generate(markdown?: string): Note {

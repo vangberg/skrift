@@ -19,6 +19,10 @@ export const Notes = {
   },
 
   saveNote(notes: Notes, note: Note) {
+    // If note exists, clear all references to it in other
+    // notes' backlinks, before re-adding it. That way, any
+    // references that has been deleted since last save will
+    // disappear.
     if (notes.has(note.id)) {
       Notes.removeBacklinks(notes, note.id);
     }
