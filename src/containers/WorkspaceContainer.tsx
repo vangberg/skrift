@@ -1,22 +1,20 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "@reach/router";
-import { reducer, StateContext } from "../state";
+import { reducer, StateContext, initialState } from "../state";
 import { Store, StoreContext } from "../store";
 import { Workspace } from "../components/Workspace";
 import { Search, SearchContext } from "../search";
 import { Notes } from "../interfaces/notes";
+import useElmish, { Effects } from "react-use-elmish";
 
 export const WorkspaceContainer: React.FC<RouteComponentProps> = () => {
   const [store] = useState(() => new Store());
 
-  const [state, dispatch] = useReducer(reducer, {}, () => ({
-    notes: new Map(),
-    openIds: [],
-    search: {
-      query: "",
-      results: []
-    }
-  }));
+  const [state, dispatch] = useElmish(reducer, () => [
+    initialState(),
+    Effects.none()
+  ]);
+
   useEffect(() => {
     return store.events.update.subscribe(() => {
       const { notes } = store;
@@ -25,7 +23,7 @@ export const WorkspaceContainer: React.FC<RouteComponentProps> = () => {
         notes
       });
     });
-  }, [store]);
+  }, [store, dispatch]);
   useEffect(() => {
     return store.events.delete.subscribe(() => {
       const { notes } = store;
@@ -34,7 +32,7 @@ export const WorkspaceContainer: React.FC<RouteComponentProps> = () => {
         notes
       });
     });
-  }, [store]);
+  }, [store, dispatch]);
   useEffect(() => {
     return store.events.update.subscribe(() => {
       const { notes } = store;
@@ -45,7 +43,7 @@ export const WorkspaceContainer: React.FC<RouteComponentProps> = () => {
           .slice(0, 3)
       });
     });
-  }, [store]);
+  }, [store, dispatch]);
 
   const [search] = useState(() => new Search());
   useEffect(() => {
@@ -61,7 +59,7 @@ export const WorkspaceContainer: React.FC<RouteComponentProps> = () => {
         dispatch({ type: "@search/SET_RESULTS", results });
       });
     }
-  }, [state.search.query, search]);
+  }, [state.search.query, search, dispatch]);
 
   useEffect(() => {
     store.readAll();
