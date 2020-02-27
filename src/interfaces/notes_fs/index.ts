@@ -11,6 +11,25 @@ export const NotesFS = {
     return path.join(PATH, id + ".md");
   },
 
+  async readAll(): Promise<Notes> {
+    const filenames = await fs.promises.readdir(PATH);
+    const notes = new Map();
+
+    await Promise.all(
+      filenames
+        .filter(filename => filename.endsWith(".md"))
+        .map(async filename => {
+          const markdown = await fs.promises.readFile(
+            path.join(PATH, filename),
+            "utf8"
+          );
+          Notes.saveMarkdown(notes, path.basename(filename, ".md"), markdown);
+        })
+    );
+    notes.forEach(note => Notes.addBacklinks(notes, note.id));
+    return notes;
+  },
+
   save(notes: Notes, id: NoteID): Promise<void> {
     const note = Notes.getNote(notes, id);
 

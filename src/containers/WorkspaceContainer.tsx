@@ -6,6 +6,7 @@ import { Workspace } from "../components/Workspace";
 import { Search, SearchContext } from "../search";
 import { Notes } from "../interfaces/notes";
 import useElmish, { Effects } from "react-use-elmish";
+import { NotesFS } from "../interfaces/notes_fs";
 
 export const WorkspaceContainer: React.FC<RouteComponentProps> = () => {
   const [store] = useState(() => new Store());
@@ -16,26 +17,11 @@ export const WorkspaceContainer: React.FC<RouteComponentProps> = () => {
   ]);
 
   useEffect(() => {
-    return store.events.update.subscribe(() => {
-      const { notes } = store;
+    NotesFS.readAll().then(notes => {
       dispatch({
         type: "SET_NOTES",
         notes
       });
-    });
-  }, [store, dispatch]);
-  useEffect(() => {
-    return store.events.delete.subscribe(() => {
-      const { notes } = store;
-      dispatch({
-        type: "SET_NOTES",
-        notes
-      });
-    });
-  }, [store, dispatch]);
-  useEffect(() => {
-    return store.events.update.subscribe(() => {
-      const { notes } = store;
       dispatch({
         type: "OPEN_NOTES",
         ids: Notes.byDate(notes)
@@ -43,7 +29,7 @@ export const WorkspaceContainer: React.FC<RouteComponentProps> = () => {
           .slice(0, 3)
       });
     });
-  }, [store, dispatch]);
+  }, []);
 
   const [search] = useState(() => new Search());
   useEffect(() => {
