@@ -25,7 +25,7 @@ export const SearchBar: React.FC<Props> = ({ query, onAdd, onSearch }) => {
     <div className="flex">
       <form className="flex flex-1" onSubmit={handleSubmit}>
         <input
-          type="text"
+          type="search"
           className="flex-grow border rounded-l p-1 outline-none"
           placeholder="Type to search…"
           value={query}
