@@ -32,7 +32,7 @@ export const Notes = {
 
   saveMarkdown(notes: Notes, id: NoteID, markdown: string) {
     const note = {
-      ...Note.empty({ id }),
+      ...(Notes.getNote(notes, id) || Note.empty({ id })),
       ...Note.fromMarkdown(markdown)
     };
     Notes.saveNote(notes, note);
