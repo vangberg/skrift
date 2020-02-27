@@ -1,7 +1,6 @@
 import React, { useContext, useMemo, useCallback } from "react";
 import { StateContext } from "../state";
 import { Editor } from "../components/Editor";
-import { StoreContext } from "../store";
 import { NoteID } from "../interfaces/note";
 import { Notes } from "../interfaces/notes";
 
@@ -11,7 +10,6 @@ interface Props {
 
 export const NoteEditorContainer: React.FC<Props> = ({ id }) => {
   const [state, dispatch] = useContext(StateContext);
-  const store = useContext(StoreContext);
 
   const handleUpdate = useCallback(
     (markdown: string) => dispatch({ type: "SAVE_MARKDOWN", id, markdown }),
