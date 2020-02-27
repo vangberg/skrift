@@ -1,11 +1,9 @@
 import React, { useContext, useCallback, useMemo } from "react";
 import { NoteList } from "../components/NoteList";
 import { StateContext } from "../state";
-import { StoreContext } from "../store";
 import { Notes } from "../interfaces/notes";
 
 export const NoteListContainer: React.FC = () => {
-  const store = useContext(StoreContext);
   const [state, dispatch] = useContext(StateContext);
   const { search } = state;
 
@@ -18,14 +16,15 @@ export const NoteListContainer: React.FC = () => {
     }
 
     return Notes.byDate(state.notes);
-  }, [state]);
+  }, [state, search]);
 
   const handleAdd = useCallback(
     title => {
-      const { id } = store.generate(`# ${title}`);
+      const id = new Date().toJSON();
+      dispatch({ type: "SAVE_MARKDOWN", id, markdown: `# ${title}` });
       dispatch({ type: "OPEN_NOTE", id });
     },
-    [store, dispatch]
+    [dispatch]
   );
 
   const handleSearch = useCallback(

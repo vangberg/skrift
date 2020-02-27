@@ -14,21 +14,24 @@ export interface State {
   };
 }
 
+type ErrorAction = {
+  type: "ERROR";
+  message: string;
+};
+
 type SaveMarkdownAction = {
   type: "SAVE_MARKDOWN";
   id: NoteID;
   markdown: string;
 };
 
-type ErrorAction = {
-  type: "ERROR";
-  message: string;
-};
+type DeleteNoteAction = { type: "DELETE_NOTE"; id: NoteID };
 
 export type Action =
   | { type: "SET_NOTES"; notes: Notes }
   | { type: "OPEN_NOTES"; ids: NoteID[] }
   | SaveMarkdownAction
+  | DeleteNoteAction
   | { type: "OPEN_NOTE"; id: NoteID }
   | { type: "CLOSE_NOTE"; id: NoteID }
   | { type: "@search/SET_QUERY"; query: string }
@@ -65,6 +68,21 @@ const saveMarkdown = (
   ];
 };
 
+const deleteNote = (
+  state: State,
+  action: DeleteNoteAction
+): StateEffectPair<State, Action> => {
+  return [
+    produce(state, draft => {
+      Notes.deleteNote(draft.notes, action.id);
+    }),
+    Effects.attemptPromise(
+      () => NotesFS.delete(action.id),
+      err => errorAction(err.message)
+    )
+  ];
+};
+
 export const reducer: Reducer<State, Action> = (state, action) => {
   console.log(action);
 
@@ -86,6 +104,8 @@ export const reducer: Reducer<State, Action> = (state, action) => {
       ];
     case "SAVE_MARKDOWN":
       return saveMarkdown(state, action);
+    case "DELETE_NOTE":
+      return deleteNote(state, action);
     case "OPEN_NOTE":
       return [openNote(state, action.id), Effects.none()];
     case "CLOSE_NOTE":

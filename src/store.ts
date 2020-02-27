@@ -47,28 +47,8 @@ export class Store {
     this.events.update.emit([...this.notes.keys()]);
   }
 
-  delete(id: NoteID): void {
-    this.notes = produce(this.notes, draft => {
-      Notes.deleteNote(draft, id);
-    });
-
-    fs.promises.unlink(this.path(id));
-    this.events.delete.emit([id]);
-  }
-
   path(id: NoteID): string {
     return path.join(PATH, id + ".md");
-  }
-
-  generate(markdown?: string): Note {
-    const id = new Date().toJSON();
-
-    const note = {
-      ...Note.empty({ id }),
-      ...(markdown ? Note.fromMarkdown(markdown) : {})
-    };
-
-    return note;
   }
 }
 

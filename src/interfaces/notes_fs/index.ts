@@ -15,16 +15,20 @@ export const NotesFS = {
     const note = Notes.getNote(notes, id);
 
     if (!note) {
-      return Promise.reject(`Could not save note ${id} - note did not exist`);
+      return Promise.reject(`Could not save note ${id} - note does not exist`);
     }
 
     return new Promise((resolve, reject) => {
       fs.writeFile(this.path(note.id), note.markdown, err => {
-        if (err) {
-          return reject(err);
-        }
+        err ? reject(err) : resolve();
+      });
+    });
+  },
 
-        resolve();
+  delete(id: NoteID): Promise<void> {
+    return new Promise((resolve, reject) => {
+      fs.unlink(this.path(id), err => {
+        err ? reject(err) : resolve();
       });
     });
   }
