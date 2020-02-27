@@ -47,22 +47,6 @@ export class Store {
     this.events.update.emit([...this.notes.keys()]);
   }
 
-  save(note: Note): void {
-    this.notes = produce(this.notes, draft => {
-      Notes.saveNote(draft, note);
-    });
-
-    fs.promises.writeFile(this.path(note.id), note.markdown);
-    this.events.update.emit([note.id]);
-  }
-
-  updateMarkdown(id: string, markdown: string): void {
-    const note = this.notes.get(id) || Note.empty({ id });
-    const next = { ...note, ...Note.fromMarkdown(markdown) };
-
-    this.save(next);
-  }
-
   delete(id: NoteID): void {
     this.notes = produce(this.notes, draft => {
       Notes.deleteNote(draft, id);
@@ -83,8 +67,6 @@ export class Store {
       ...Note.empty({ id }),
       ...(markdown ? Note.fromMarkdown(markdown) : {})
     };
-
-    this.save(note);
 
     return note;
   }
