@@ -1,5 +1,5 @@
 import React from "react";
-import { Note, NoteID } from "./interfaces/note";
+import { NoteID } from "./interfaces/note";
 import { Notes } from "./interfaces/notes";
 import path from "path";
 import os from "os";

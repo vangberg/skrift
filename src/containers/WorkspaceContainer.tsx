@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { RouteComponentProps } from "@reach/router";
 import { reducer, StateContext, initialState } from "../state";
-import { Store, StoreContext } from "../store";
 import { Workspace } from "../components/Workspace";
 import { Search, SearchContext } from "../search";
 import { Notes } from "../interfaces/notes";
@@ -9,12 +8,15 @@ import useElmish, { Effects } from "react-use-elmish";
 import { NotesFS } from "../interfaces/notes_fs";
 
 export const WorkspaceContainer: React.FC<RouteComponentProps> = () => {
-  const [store] = useState(() => new Store());
-
-  const [state, dispatch] = useElmish(reducer, () => [
+  const [state, elmishDispatch] = useElmish(reducer, () => [
     initialState(),
     Effects.none()
   ]);
+  const [index] = useState(() => Search.makeIndex());
+  const dispatch = useCallback(
+    Search.dispatchWithSearch(elmishDispatch, index),
+    [elmishDispatch]
+  );
 
   useEffect(() => {
     NotesFS.readAll().then(notes => {
@@ -31,33 +33,23 @@ export const WorkspaceContainer: React.FC<RouteComponentProps> = () => {
     });
   }, []);
 
-  const [search] = useState(() => new Search());
-  useEffect(() => {
-    return search.subscribe(store);
-  }, [search, store]);
   useEffect(() => {
     const query = state.search.query;
 
     if (query === "") {
       dispatch({ type: "@search/CLEAR_RESULTS" });
     } else {
-      search.search(query).then(results => {
+      Search.search(index, query).then(results => {
         dispatch({ type: "@search/SET_RESULTS", results });
       });
     }
-  }, [state.search.query, search, dispatch]);
-
-  useEffect(() => {
-    store.readAll();
-  }, [store]);
+  }, [state.search.query, dispatch, index]);
 
   return (
-    <StoreContext.Provider value={store}>
-      <SearchContext.Provider value={search}>
-        <StateContext.Provider value={[state, dispatch]}>
-          <Workspace openIds={state.openIds} />
-        </StateContext.Provider>
-      </SearchContext.Provider>
-    </StoreContext.Provider>
+    <SearchContext.Provider value={index}>
+      <StateContext.Provider value={[state, dispatch]}>
+        <Workspace openIds={state.openIds} />
+      </StateContext.Provider>
+    </SearchContext.Provider>
   );
 };

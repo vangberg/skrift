@@ -1,45 +1,49 @@
-import { Store } from "./store";
 import FlexSearch from "flexsearch";
-import { NoteID, Note } from "./interfaces/note";
-import React from "react";
-import { Notes } from "./interfaces/notes";
+import { NoteID } from "./interfaces/note";
+import React, { Dispatch } from "react";
+import { Action } from "./state";
 
-export class Search {
-  index: any;
-
-  constructor() {
-    // @ts-ignore
-    this.index = new FlexSearch();
-  }
-
-  add(id: NoteID, note: Note) {
-    this.index.add(id, note.markdown);
-  }
-
-  async search(query: string): Promise<NoteID[]> {
-    return new Promise(resolve => {
-      this.index.search(query, 20, (result: string[]) => resolve(result));
-    });
-  }
-
-  subscribe(store: Store) {
-    const updateUnsubscribe = store.events.update.subscribe(ids => {
-      ids.forEach(id => {
-        const note = Notes.getNote(store.notes, id);
-        if (note) {
-          this.add(id, note);
-        }
-      });
-    });
-    const deleteUnsubscribe = store.events.delete.subscribe(ids => {
-      ids.forEach(id => this.index.remove(id));
-    });
-
-    return () => {
-      updateUnsubscribe();
-      deleteUnsubscribe();
-    };
-  }
+interface Index {
+  add(id: string, item: string): void;
+  remove(id: string): void;
+  search(
+    query: string,
+    limit: number,
+    callback: (result: string[]) => void
+  ): void;
 }
 
-export const SearchContext = React.createContext(new Search());
+export const Search = {
+  makeIndex(): Index {
+    return new FlexSearch() as Index;
+  },
+
+  dispatchWithSearch(
+    dispatch: Dispatch<Action>,
+    index: Index
+  ): Dispatch<Action> {
+    return (action: Action) => {
+      switch (action.type) {
+        case "SET_NOTES":
+          action.notes.forEach(note => index.add(note.id, note.markdown));
+          break;
+        case "SAVE_MARKDOWN":
+          index.add(action.id, action.markdown);
+          break;
+        case "DELETE_NOTE":
+          index.remove(action.id);
+          break;
+      }
+
+      return dispatch(action);
+    };
+  },
+
+  async search(index: Index, query: string): Promise<NoteID[]> {
+    return new Promise(resolve => {
+      index.search(query, 20, (result: string[]) => resolve(result));
+    });
+  }
+};
+
+export const SearchContext = React.createContext(Search.makeIndex());
