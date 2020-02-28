@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "@reach/router";
 import { reducer, StateContext, initialState } from "../state";
 import { Workspace } from "../components/Workspace";
@@ -8,15 +8,11 @@ import useElmish, { Effects } from "react-use-elmish";
 import { NotesFS } from "../interfaces/notes_fs";
 
 export const WorkspaceContainer: React.FC<RouteComponentProps> = () => {
-  const [state, elmishDispatch] = useElmish(reducer, () => [
+  const [index] = useState(() => Search.makeIndex());
+  const [state, dispatch] = useElmish(reducer(index), () => [
     initialState(),
     Effects.none()
   ]);
-  const [index] = useState(() => Search.makeIndex());
-  const dispatch = useCallback(
-    Search.dispatchWithSearch(elmishDispatch, index),
-    [elmishDispatch]
-  );
 
   useEffect(() => {
     NotesFS.readAll().then(notes => {

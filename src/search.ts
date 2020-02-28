@@ -1,9 +1,9 @@
 import FlexSearch from "flexsearch";
-import { NoteID } from "./interfaces/note";
-import React, { Dispatch } from "react";
-import { Action } from "./state";
+import { NoteID, Note } from "./interfaces/note";
+import React from "react";
+import { Notes } from "./interfaces/notes";
 
-interface Index {
+export interface Index {
   add(id: string, item: string): void;
   remove(id: string): void;
   search(
@@ -18,25 +18,16 @@ export const Search = {
     return new FlexSearch() as Index;
   },
 
-  dispatchWithSearch(
-    dispatch: Dispatch<Action>,
-    index: Index
-  ): Dispatch<Action> {
-    return (action: Action) => {
-      switch (action.type) {
-        case "SET_NOTES":
-          action.notes.forEach(note => index.add(note.id, note.markdown));
-          break;
-        case "SAVE_MARKDOWN":
-          index.add(action.id, action.markdown);
-          break;
-        case "DELETE_NOTE":
-          index.remove(action.id);
-          break;
-      }
+  replaceAll(index: Index, notes: Notes) {
+    notes.forEach(note => index.add(note.id, note.markdown));
+  },
 
-      return dispatch(action);
-    };
+  add(index: Index, note: Note) {
+    index.add(note.id, note.markdown);
+  },
+
+  remove(index: Index, id: NoteID) {
+    index.remove(id);
   },
 
   async search(index: Index, query: string): Promise<NoteID[]> {
