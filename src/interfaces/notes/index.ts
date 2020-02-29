@@ -39,6 +39,7 @@ export const Notes = {
   },
 
   deleteNote(notes: Notes, id: NoteID) {
+    Notes.removeBacklinks(notes, id);
     notes.delete(id);
   },
 
