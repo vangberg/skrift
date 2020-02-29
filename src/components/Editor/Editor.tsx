@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback, useState } from "react";
 import { Node } from "slate";
 import { Slate } from "slate-react";
-import { remote } from "electron";
+import { remote, clipboard } from "electron";
 
 import { SkriftEditable } from "./Editable";
 import { Serializer } from "../../interfaces/serializer";
@@ -71,10 +71,18 @@ export const SkriftEditor: React.FC<Props> = ({
     }
   }, [note.title, onDelete]);
 
+  const handleCopy = useCallback(() => {
+    clipboard.writeText(`[[${note.id}]]`);
+  }, [note]);
+
   return (
     <div className="shadow mb-2 bg-white">
       <div className="float-right p-2">
-        <Toolbar onClose={onClose} onDelete={handleDelete}></Toolbar>
+        <Toolbar
+          onCopy={handleCopy}
+          onClose={onClose}
+          onDelete={handleDelete}
+        ></Toolbar>
       </div>
 
       <div className="p-2">

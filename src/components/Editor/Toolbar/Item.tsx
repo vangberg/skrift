@@ -10,7 +10,7 @@ export const Item: React.FC<Props> = ({ onClick, children }) => {
       className="ml-1 text-gray-500 hover:text-gray-600 text-sm cursor-pointer"
       onClick={onClick}
     >
-      {children}
+      [{children}]
     </div>
   );
 };
