@@ -16,7 +16,7 @@ export const Workspace: React.FC<Props> = ({ openIds }) => {
 
       <div className="flex-grow p-2 overflow-y-scroll">
         {[...openIds].map((id, idx) => (
-          <NoteEditorContainer key={[id, idx].join("-")} id={id} />
+          <NoteEditorContainer key={[id, idx].join("-")} id={id} index={idx} />
         ))}
       </div>
     </div>

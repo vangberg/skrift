@@ -29,6 +29,7 @@ type SaveMarkdownAction = {
 };
 
 type DeleteNoteAction = { type: "DELETE_NOTE"; id: NoteID };
+type CloseNoteAction = { type: "CLOSE_NOTE"; index: number };
 
 export type Action =
   | SetNotesAction
@@ -36,7 +37,7 @@ export type Action =
   | SaveMarkdownAction
   | DeleteNoteAction
   | { type: "OPEN_NOTE"; id: NoteID }
-  | { type: "CLOSE_NOTE"; id: NoteID }
+  | CloseNoteAction
   | { type: "@search/SET_QUERY"; query: string }
   | { type: "@search/SET_RESULTS"; results: NoteID[] }
   | { type: "@search/CLEAR_RESULTS" }
@@ -44,9 +45,7 @@ export type Action =
 
 const openNote = (state: State, id: string): State => {
   return produce(state, ({ openIds }) => {
-    if (openIds.indexOf(id) < 0) {
-      openIds.push(id);
-    }
+    openIds.push(id);
   });
 };
 
@@ -113,10 +112,25 @@ const deleteNote = (
   ];
 };
 
+const closeNote = (
+  state: State,
+  action: CloseNoteAction
+): StateEffectPair<State, Action> => {
+  return [
+    produce(state, draft => {
+      const { index } = action;
+      draft.openIds.splice(index, 1);
+    }),
+    Effects.none()
+  ];
+};
+
 export const reducer: (index: Index) => Reducer<State, Action> = index => (
   state,
   action
 ) => {
+  console.log(action);
+
   switch (action.type) {
     case "ERROR":
       return [state, Effects.none()];
@@ -134,13 +148,7 @@ export const reducer: (index: Index) => Reducer<State, Action> = index => (
     case "OPEN_NOTE":
       return [openNote(state, action.id), Effects.none()];
     case "CLOSE_NOTE":
-      return [
-        produce(state, draft => {
-          const { id } = action;
-          draft.openIds = draft.openIds.filter(i => i !== id);
-        }),
-        Effects.none()
-      ];
+      return closeNote(state, action);
     case "@search/SET_QUERY":
       return [
         produce(state, draft => {

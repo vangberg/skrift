@@ -1,6 +1,6 @@
-import React, { useMemo, useCallback, useState } from "react";
+import React, { useMemo, useCallback, useState, useEffect } from "react";
 import { Node } from "slate";
-import { Slate } from "slate-react";
+import { Slate, useFocused, ReactEditor } from "slate-react";
 import { remote, clipboard } from "electron";
 
 import { SkriftEditable } from "./Editable";
@@ -48,6 +48,15 @@ export const SkriftEditor: React.FC<Props> = ({
 }) => {
   const editor = useMemo(() => createEditor(), []);
   const [value, setValue] = useState(() => deserialize(note.markdown));
+
+  // If the same note is opened multiple times, make sure
+  // changes from the focused editor is propagated to the
+  // non-focused editors.
+  useEffect(() => {
+    if (!ReactEditor.isFocused(editor)) {
+      setValue(deserialize(note.markdown));
+    }
+  }, [note.markdown]);
 
   const handleChange = useCallback(
     (newValue: Node[]) => {

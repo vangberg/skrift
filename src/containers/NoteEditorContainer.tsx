@@ -6,9 +6,10 @@ import { Notes } from "../interfaces/notes";
 
 interface Props {
   id: NoteID;
+  index: number;
 }
 
-export const NoteEditorContainer: React.FC<Props> = ({ id }) => {
+export const NoteEditorContainer: React.FC<Props> = ({ id, index }) => {
   const [state, dispatch] = useContext(StateContext);
 
   const handleUpdate = useCallback(
@@ -17,7 +18,7 @@ export const NoteEditorContainer: React.FC<Props> = ({ id }) => {
   );
 
   const handleDelete = useCallback(() => {
-    dispatch({ type: "CLOSE_NOTE", id });
+    dispatch({ type: "CLOSE_NOTE", index });
     dispatch({ type: "DELETE_NOTE", id });
   }, [dispatch, id]);
 
@@ -25,10 +26,10 @@ export const NoteEditorContainer: React.FC<Props> = ({ id }) => {
     dispatch
   ]);
 
-  const handleClose = useCallback(() => dispatch({ type: "CLOSE_NOTE", id }), [
-    dispatch,
-    id
-  ]);
+  const handleClose = useCallback(
+    () => dispatch({ type: "CLOSE_NOTE", index }),
+    [dispatch, id]
+  );
 
   const getNote = useCallback(id => Notes.getNote(state.notes, id), [state]);
   const note = useMemo(() => Notes.getNote(state.notes, id), [state, id]);
