@@ -117,8 +117,6 @@ export const reducer: (index: Index) => Reducer<State, Action> = index => (
   state,
   action
 ) => {
-  console.log(action);
-
   switch (action.type) {
     case "ERROR":
       return [state, Effects.none()];
