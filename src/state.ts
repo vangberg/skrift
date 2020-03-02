@@ -20,6 +20,7 @@ type ErrorAction = {
   message: string;
 };
 
+type OpenFolderAction = { type: "OPEN_FOLDER" };
 type SetNotesAction = { type: "SET_NOTES"; notes: Notes };
 
 type SaveMarkdownAction = {
@@ -32,6 +33,7 @@ type DeleteNoteAction = { type: "DELETE_NOTE"; id: NoteID };
 type CloseNoteAction = { type: "CLOSE_NOTE"; index: number };
 
 export type Action =
+  | OpenFolderAction
   | SetNotesAction
   | { type: "OPEN_NOTES"; ids: NoteID[] }
   | SaveMarkdownAction
@@ -51,6 +53,19 @@ const openNote = (state: State, id: string): State => {
 
 const errorHandler = (error: Error): ErrorAction => {
   return { type: "ERROR", message: error.message };
+};
+
+const openFolder = (
+  state: State,
+  action: OpenFolderAction
+): StateEffectPair<State, Action> => {
+  return [
+    state,
+    Effects.dispatchFromPromise<Action>(async () => {
+      const notes = await NotesFS.readAll();
+      return { type: "SET_NOTES", notes };
+    }, errorHandler)
+  ];
 };
 
 const setNotes = (
@@ -134,6 +149,8 @@ export const reducer: (index: Index) => Reducer<State, Action> = index => (
   switch (action.type) {
     case "ERROR":
       return [state, Effects.none()];
+    case "OPEN_FOLDER":
+      return openFolder(state, action);
     case "SET_NOTES":
       return setNotes(index, state, action);
     case "OPEN_NOTES":
