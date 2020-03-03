@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "@reach/router";
-import { reducer, StateContext, initialState } from "../state";
+import { makeReducer, StateContext, initialState } from "../state";
 import { Workspace } from "../components/Workspace";
 import { Search, SearchContext } from "../search";
 import useElmish, { Effects } from "react-use-elmish";
 
 export const WorkspaceContainer: React.FC<RouteComponentProps> = () => {
   const [index] = useState(() => Search.makeIndex());
-  const [state, dispatch] = useElmish(reducer(index), () => [
+  const [state, dispatch] = useElmish(makeReducer(index), () => [
     initialState(),
     Effects.none()
   ]);

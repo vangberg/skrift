@@ -140,7 +140,7 @@ const closeNote = (
   ];
 };
 
-export const reducer: (index: Index) => Reducer<State, Action> = index => (
+export const makeReducer: (index: Index) => Reducer<State, Action> = index => (
   state,
   action
 ) => {
