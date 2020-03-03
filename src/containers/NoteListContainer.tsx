@@ -21,20 +21,21 @@ export const NoteListContainer: React.FC = () => {
   const handleAdd = useCallback(
     title => {
       const id = new Date().toJSON();
-      dispatch({ type: "SAVE_MARKDOWN", id, markdown: `# ${title}` });
-      dispatch({ type: "OPEN_NOTE", id });
+      dispatch({ type: "notes/SAVE_MARKDOWN", id, markdown: `# ${title}` });
+      dispatch({ type: "streams/OPEN_NOTE", id });
     },
     [dispatch]
   );
 
   const handleSearch = useCallback(
-    query => dispatch({ type: "@search/SET_QUERY", query }),
+    query => dispatch({ type: "search/SET_QUERY", query }),
     [dispatch]
   );
 
-  const handleOpen = useCallback(id => dispatch({ type: "OPEN_NOTE", id }), [
-    dispatch
-  ]);
+  const handleOpen = useCallback(
+    id => dispatch({ type: "streams/OPEN_NOTE", id }),
+    [dispatch]
+  );
 
   return (
     <NoteList

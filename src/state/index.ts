@@ -1,10 +1,10 @@
 import produce from "immer";
 import React from "react";
 import { Effects, Reducer, StateEffectPair } from "react-use-elmish";
-import { NoteID } from "./interfaces/note";
-import { Notes } from "./interfaces/notes";
-import { NotesFS } from "./interfaces/notes_fs";
-import { Search, Index } from "./search";
+import { NoteID } from "../interfaces/note";
+import { Notes } from "../interfaces/notes";
+import { NotesFS } from "../interfaces/notes_fs";
+import { Search, Index } from "../search";
 
 export interface State {
   notes: Notes;
