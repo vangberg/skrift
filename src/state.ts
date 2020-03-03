@@ -20,30 +20,31 @@ type ErrorAction = {
   message: string;
 };
 
-type OpenFolderAction = { type: "OPEN_FOLDER" };
-type SetNotesAction = { type: "SET_NOTES"; notes: Notes };
-
+type NotesAction =
+  | OpenFolderAction
+  | SetNotesAction
+  | SaveMarkdownAction
+  | DeleteNoteAction;
+type OpenFolderAction = { type: "notes/OPEN_FOLDER" };
+type SetNotesAction = { type: "notes/SET_NOTES"; notes: Notes };
 type SaveMarkdownAction = {
-  type: "SAVE_MARKDOWN";
+  type: "notes/SAVE_MARKDOWN";
   id: NoteID;
   markdown: string;
 };
+type DeleteNoteAction = { type: "notes/DELETE_NOTE"; id: NoteID };
 
-type DeleteNoteAction = { type: "DELETE_NOTE"; id: NoteID };
-type CloseNoteAction = { type: "CLOSE_NOTE"; index: number };
+type StreamsAction = OpenNotesAction | OpenNoteAction | CloseNoteAction;
+type OpenNotesAction = { type: "streams/OPEN_NOTES"; ids: NoteID[] };
+type OpenNoteAction = { type: "streams/OPEN_NOTE"; id: NoteID };
+type CloseNoteAction = { type: "streams/CLOSE_NOTE"; index: number };
 
-export type Action =
-  | OpenFolderAction
-  | SetNotesAction
-  | { type: "OPEN_NOTES"; ids: NoteID[] }
-  | SaveMarkdownAction
-  | DeleteNoteAction
-  | { type: "OPEN_NOTE"; id: NoteID }
-  | CloseNoteAction
-  | { type: "@search/SET_QUERY"; query: string }
-  | { type: "@search/SET_RESULTS"; results: NoteID[] }
-  | { type: "@search/CLEAR_RESULTS" }
-  | ErrorAction;
+type SearchAction = SetQueryAction | SetResultsAction | ClearResultsAction;
+type SetQueryAction = { type: "search/SET_QUERY"; query: string };
+type SetResultsAction = { type: "search/SET_RESULTS"; results: NoteID[] };
+type ClearResultsAction = { type: "search/CLEAR_RESULTS" };
+
+export type Action = NotesAction | StreamsAction | SearchAction | ErrorAction;
 
 const openNote = (state: State, id: string): State => {
   return produce(state, ({ openIds }) => {
@@ -59,11 +60,12 @@ const openFolder = (
   state: State,
   action: OpenFolderAction
 ): StateEffectPair<State, Action> => {
+  action;
   return [
     state,
     Effects.dispatchFromPromise<Action>(async () => {
       const notes = await NotesFS.readAll();
-      return { type: "SET_NOTES", notes };
+      return { type: "notes/SET_NOTES", notes };
     }, errorHandler)
   ];
 };
@@ -144,43 +146,41 @@ export const makeReducer: (index: Index) => Reducer<State, Action> = index => (
   state,
   action
 ) => {
-  console.log(action);
-
   switch (action.type) {
     case "ERROR":
       return [state, Effects.none()];
-    case "OPEN_FOLDER":
+    case "notes/OPEN_FOLDER":
       return openFolder(state, action);
-    case "SET_NOTES":
+    case "notes/SET_NOTES":
       return setNotes(index, state, action);
-    case "OPEN_NOTES":
+    case "streams/OPEN_NOTES":
       return [
         action.ids.reduce((state, id) => openNote(state, id), state),
         Effects.none()
       ];
-    case "SAVE_MARKDOWN":
+    case "notes/SAVE_MARKDOWN":
       return saveMarkdown(index, state, action);
-    case "DELETE_NOTE":
+    case "notes/DELETE_NOTE":
       return deleteNote(index, state, action);
-    case "OPEN_NOTE":
+    case "streams/OPEN_NOTE":
       return [openNote(state, action.id), Effects.none()];
-    case "CLOSE_NOTE":
+    case "streams/CLOSE_NOTE":
       return closeNote(state, action);
-    case "@search/SET_QUERY":
+    case "search/SET_QUERY":
       return [
         produce(state, draft => {
           draft.search.query = action.query;
         }),
         Effects.none()
       ];
-    case "@search/SET_RESULTS":
+    case "search/SET_RESULTS":
       return [
         produce(state, draft => {
           draft.search.results = action.results;
         }),
         Effects.none()
       ];
-    case "@search/CLEAR_RESULTS":
+    case "search/CLEAR_RESULTS":
       return [
         produce(state, draft => {
           draft.search.results = null;

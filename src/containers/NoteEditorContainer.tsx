@@ -13,22 +13,24 @@ export const NoteEditorContainer: React.FC<Props> = ({ id, index }) => {
   const [state, dispatch] = useContext(StateContext);
 
   const handleUpdate = useCallback(
-    (markdown: string) => dispatch({ type: "SAVE_MARKDOWN", id, markdown }),
+    (markdown: string) =>
+      dispatch({ type: "notes/SAVE_MARKDOWN", id, markdown }),
     [dispatch, id]
   );
 
   const handleDelete = useCallback(() => {
-    dispatch({ type: "CLOSE_NOTE", index });
-    dispatch({ type: "DELETE_NOTE", id });
-  }, [dispatch, id]);
+    dispatch({ type: "streams/CLOSE_NOTE", index });
+    dispatch({ type: "notes/DELETE_NOTE", id });
+  }, [dispatch, id, index]);
 
-  const handleOpen = useCallback(id => dispatch({ type: "OPEN_NOTE", id }), [
-    dispatch
-  ]);
+  const handleOpen = useCallback(
+    id => dispatch({ type: "streams/OPEN_NOTE", id }),
+    [dispatch]
+  );
 
   const handleClose = useCallback(
-    () => dispatch({ type: "CLOSE_NOTE", index }),
-    [dispatch, id]
+    () => dispatch({ type: "streams/CLOSE_NOTE", index }),
+    [dispatch, index]
   );
 
   const getNote = useCallback(id => Notes.getNote(state.notes, id), [state]);

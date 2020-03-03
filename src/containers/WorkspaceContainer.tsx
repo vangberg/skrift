@@ -14,7 +14,7 @@ export const WorkspaceContainer: React.FC<RouteComponentProps> = () => {
 
   useEffect(() => {
     dispatch({
-      type: "OPEN_FOLDER"
+      type: "notes/OPEN_FOLDER"
     });
   }, []);
 
@@ -22,10 +22,10 @@ export const WorkspaceContainer: React.FC<RouteComponentProps> = () => {
     const query = state.search.query;
 
     if (query === "") {
-      dispatch({ type: "@search/CLEAR_RESULTS" });
+      dispatch({ type: "search/CLEAR_RESULTS" });
     } else {
       Search.search(index, query).then(results => {
-        dispatch({ type: "@search/SET_RESULTS", results });
+        dispatch({ type: "search/SET_RESULTS", results });
       });
     }
   }, [state.search.query, dispatch, index]);
