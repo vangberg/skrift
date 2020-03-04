@@ -27,8 +27,7 @@ export type SaveMarkdownAction = {
 };
 export type DeleteNoteAction = { type: "notes/DELETE_NOTE"; id: NoteID };
 
-export type StreamsAction = OpenNotesAction | OpenNoteAction | CloseNoteAction;
-export type OpenNotesAction = { type: "streams/OPEN_NOTES"; ids: NoteID[] };
+export type StreamsAction = OpenNoteAction | CloseNoteAction;
 export type OpenNoteAction = { type: "streams/OPEN_NOTE"; id: NoteID };
 export type CloseNoteAction = { type: "streams/CLOSE_NOTE"; index: number };
 
