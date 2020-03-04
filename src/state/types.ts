@@ -1,11 +1,13 @@
 import { Notes } from "../interfaces/notes";
 import { NoteID } from "../interfaces/note";
 import { StateEffectPair } from "react-use-elmish";
+import { Index } from "../search";
 
 export interface State {
   notes: Notes;
   openIds: NoteID[];
   search: {
+    index: Index;
     query: string;
     results: NoteID[] | null;
   };
@@ -34,13 +36,13 @@ export type CloseNoteAction = { type: "streams/CLOSE_NOTE"; index: number };
 export type SearchAction =
   | SetQueryAction
   | SetResultsAction
-  | ClearResultsAction;
+  | ClearSearchAction;
 export type SetQueryAction = { type: "search/SET_QUERY"; query: string };
 export type SetResultsAction = {
   type: "search/SET_RESULTS";
   results: NoteID[];
 };
-export type ClearResultsAction = { type: "search/CLEAR_RESULTS" };
+export type ClearSearchAction = { type: "search/CLEAR" };
 
 export type Action = NotesAction | StreamsAction | SearchAction | ErrorAction;
 

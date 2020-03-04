@@ -1,24 +1,15 @@
 import React from "react";
 import { Effects, Reducer } from "react-use-elmish";
-import { NoteID } from "../interfaces/note";
-import { Notes } from "../interfaces/notes";
 import { openFolder, setNotes, saveMarkdown, deleteNote } from "./notes";
 import { openNote, closeNote } from "./streams";
-import { setQuery, setResults, clearResults } from "./search";
-import { Action } from "./types";
-
-export interface State {
-  notes: Notes;
-  openIds: NoteID[];
-  search: {
-    query: string;
-    results: NoteID[] | null;
-  };
-}
+import { setQuery, setResults, clearSearch } from "./search";
+import { State, Action } from "./types";
+import { Search } from "../search";
 
 export const reducer: Reducer<State, Action> = (state, action) => {
   switch (action.type) {
     case "ERROR":
+      console.log(action);
       return [state, Effects.none()];
 
     case "notes/OPEN_FOLDER":
@@ -39,15 +30,16 @@ export const reducer: Reducer<State, Action> = (state, action) => {
       return setQuery(state, action);
     case "search/SET_RESULTS":
       return setResults(state, action);
-    case "search/CLEAR_RESULTS":
-      return clearResults(state, action);
+    case "search/CLEAR":
+      return clearSearch(state, action);
   }
 };
 
 export const initialState = (state?: Partial<State>): State => ({
   search: {
+    index: Search.makeIndex(),
     query: "",
-    results: []
+    results: null
   },
   notes: new Map(),
   openIds: [],

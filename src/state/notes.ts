@@ -12,6 +12,7 @@ import {
   ActionHandler
 } from "./types";
 import { errorHandler } from "./errorHandler";
+import { Search } from "../search";
 
 export const openFolder: ActionHandler<OpenFolderAction> = state => {
   return [
@@ -29,11 +30,10 @@ export const setNotes: ActionHandler<SetNotesAction> = (state, action) => {
       draft.notes = action.notes;
       draft.openIds = draft.openIds.filter(id => draft.notes.has(id));
     }),
-    Effects.none()
-    // Effects.attemptFunction(
-    //   () => Search.replaceAll(index, action.notes),
-    //   errorHandler
-    // )
+    Effects.attemptFunction(
+      () => Search.replaceAll(state.search.index, action.notes),
+      errorHandler
+    )
   ];
 };
 
@@ -45,7 +45,7 @@ export const saveMarkdown: ActionHandler<SaveMarkdownAction> = (
     Notes.saveMarkdown(draft.notes, action.id, action.markdown);
   });
 
-  // const note = Notes.getNote(next, action.id)!;
+  const note = Notes.getNote(next.notes, action.id)!;
 
   return [
     next,
@@ -53,8 +53,11 @@ export const saveMarkdown: ActionHandler<SaveMarkdownAction> = (
       Effects.attemptPromise(
         () => NotesFS.save(next.notes, action.id),
         errorHandler
+      ),
+      Effects.attemptFunction(
+        () => Search.add(state.search.index, note),
+        errorHandler
       )
-      // Effects.attemptFunction(() => Search.add(index, note), errorHandler)
     )
   ];
 };
@@ -65,11 +68,11 @@ export const deleteNote: ActionHandler<DeleteNoteAction> = (state, action) => {
       Notes.deleteNote(draft.notes, action.id);
     }),
     Effects.combine(
-      Effects.attemptPromise(() => NotesFS.delete(action.id), errorHandler)
-      // Effects.attemptFunction(
-      //   () => Search.remove(index, action.id),
-      //   errorHandler
-      // )
+      Effects.attemptPromise(() => NotesFS.delete(action.id), errorHandler),
+      Effects.attemptFunction(
+        () => Search.remove(state.search.index, action.id),
+        errorHandler
+      )
     )
   ];
 };

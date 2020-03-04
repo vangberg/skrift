@@ -1,6 +1,5 @@
 import FlexSearch from "flexsearch";
 import { NoteID, Note } from "./interfaces/note";
-import React from "react";
 import { Notes } from "./interfaces/notes";
 
 export interface Index {
@@ -36,5 +35,3 @@ export const Search = {
     });
   }
 };
-
-export const SearchContext = React.createContext(Search.makeIndex());

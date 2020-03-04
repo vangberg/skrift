@@ -4,15 +4,27 @@ import {
   ActionHandler,
   SetQueryAction,
   SetResultsAction,
-  ClearResultsAction
+  ClearSearchAction
 } from "./types";
+import { errorHandler } from "./errorHandler";
+import { Search } from "../search";
 
 export const setQuery: ActionHandler<SetQueryAction> = (state, action) => {
+  const { query } = action;
+
+  if (query === "") {
+    return [state, Effects.action({ type: "search/CLEAR" })];
+  }
+
   return [
     produce(state, draft => {
-      draft.search.query = action.query;
+      draft.search.query = query;
     }),
-    Effects.none()
+    Effects.fromPromise(
+      () => Search.search(state.search.index, query),
+      results => ({ type: "search/SET_RESULTS", results }),
+      errorHandler
+    )
   ];
 };
 
@@ -25,9 +37,10 @@ export const setResults: ActionHandler<SetResultsAction> = (state, action) => {
   ];
 };
 
-export const clearResults: ActionHandler<ClearResultsAction> = state => {
+export const clearSearch: ActionHandler<ClearSearchAction> = state => {
   return [
     produce(state, draft => {
+      draft.search.query = "";
       draft.search.results = null;
     }),
     Effects.none()
