@@ -19,13 +19,15 @@ export const NoteList: React.FC<Props> = ({
   onSearch
 }) => {
   return (
-    <div>
+    <div className="w-full">
       <SearchBar query={query} onAdd={onAdd} onSearch={onSearch} />
 
-      <div className="pt-2">
-        {notes.map(note => (
-          <ListItem key={note.id} note={note} onClick={onOpen} />
-        ))}
+      <div className="w-full h-full overflow-y-scroll">
+        <div className="w-full p-2 pt-0">
+          {notes.map(note => (
+            <ListItem key={note.id} note={note} onClick={onOpen} />
+          ))}
+        </div>
       </div>
     </div>
   );
