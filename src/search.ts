@@ -14,7 +14,11 @@ export interface Index {
 
 export const Search = {
   makeIndex(): Index {
-    return new FlexSearch() as Index;
+    // @ts-ignore
+    return FlexSearch.create({
+      encode: "advanced",
+      tokenize: "full"
+    }) as Index;
   },
 
   replaceAll(index: Index, notes: Notes) {
