@@ -28,7 +28,6 @@ export const setNotes: ActionHandler<SetNotesAction> = (state, action) => {
   return [
     produce(state, draft => {
       draft.notes = action.notes;
-      draft.openIds = draft.openIds.filter(id => draft.notes.has(id));
     }),
     Effects.attemptFunction(
       () => Search.replaceAll(state.search.index, action.notes),

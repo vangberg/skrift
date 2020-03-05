@@ -42,7 +42,7 @@ export const initialState = (state?: Partial<State>): State => ({
     results: null
   },
   notes: new Map(),
-  openIds: [],
+  streams: [],
   ...state
 });
 

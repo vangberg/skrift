@@ -2,21 +2,25 @@ import produce from "immer";
 import { Effects } from "react-use-elmish";
 
 import { ActionHandler, OpenNoteAction, CloseNoteAction } from "./types";
+import { Streams } from "../interfaces/streams";
 
 export const openNote: ActionHandler<OpenNoteAction> = (state, action) => {
+  const { streamIndex, noteId } = action;
+
   return [
-    produce(state, ({ openIds }) => {
-      openIds.push(action.id);
+    produce(state, draft => {
+      Streams.openNote(draft.streams, streamIndex, noteId);
     }),
     Effects.none()
   ];
 };
 
 export const closeNote: ActionHandler<CloseNoteAction> = (state, action) => {
+  const { location } = action;
+
   return [
     produce(state, draft => {
-      const { index } = action;
-      draft.openIds.splice(index, 1);
+      Streams.closeNote(draft.streams, location);
     }),
     Effects.none()
   ];

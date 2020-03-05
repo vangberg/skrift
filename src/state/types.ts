@@ -2,10 +2,11 @@ import { Notes } from "../interfaces/notes";
 import { NoteID } from "../interfaces/note";
 import { StateEffectPair } from "react-use-elmish";
 import { Index } from "../search";
+import { Streams, StreamIndex, StreamLocation } from "../interfaces/streams";
 
 export interface State {
   notes: Notes;
-  openIds: NoteID[];
+  streams: Streams;
   search: {
     index: Index;
     query: string;
@@ -30,8 +31,15 @@ export type SaveMarkdownAction = {
 export type DeleteNoteAction = { type: "notes/DELETE_NOTE"; id: NoteID };
 
 export type StreamsAction = OpenNoteAction | CloseNoteAction;
-export type OpenNoteAction = { type: "streams/OPEN_NOTE"; id: NoteID };
-export type CloseNoteAction = { type: "streams/CLOSE_NOTE"; index: number };
+export type OpenNoteAction = {
+  type: "streams/OPEN_NOTE";
+  streamIndex: StreamIndex;
+  noteId: NoteID;
+};
+export type CloseNoteAction = {
+  type: "streams/CLOSE_NOTE";
+  location: StreamLocation;
+};
 
 export type SearchAction =
   | SetQueryAction

@@ -3,14 +3,16 @@ import { StateContext } from "../state";
 import { Editor } from "../components/Editor";
 import { NoteID } from "../interfaces/note";
 import { Notes } from "../interfaces/notes";
+import { StreamLocation } from "../interfaces/streams";
 
 interface Props {
   id: NoteID;
-  index: number;
+  location: StreamLocation;
 }
 
-export const NoteEditorContainer: React.FC<Props> = ({ id, index }) => {
+export const NoteEditorContainer: React.FC<Props> = ({ id, location }) => {
   const [state, dispatch] = useContext(StateContext);
+  const [streamIndex] = location;
 
   const handleUpdate = useCallback(
     (markdown: string) =>
@@ -19,18 +21,18 @@ export const NoteEditorContainer: React.FC<Props> = ({ id, index }) => {
   );
 
   const handleDelete = useCallback(() => {
-    dispatch({ type: "streams/CLOSE_NOTE", index });
+    dispatch({ type: "streams/CLOSE_NOTE", location });
     dispatch({ type: "notes/DELETE_NOTE", id });
-  }, [dispatch, id, index]);
+  }, [dispatch, id, location]);
 
   const handleOpen = useCallback(
-    id => dispatch({ type: "streams/OPEN_NOTE", id }),
-    [dispatch]
+    id => dispatch({ type: "streams/OPEN_NOTE", streamIndex, noteId: id }),
+    [dispatch, streamIndex]
   );
 
   const handleClose = useCallback(
-    () => dispatch({ type: "streams/CLOSE_NOTE", index }),
-    [dispatch, index]
+    () => dispatch({ type: "streams/CLOSE_NOTE", location }),
+    [dispatch, location]
   );
 
   const getNote = useCallback(id => Notes.getNote(state.notes, id), [state]);
