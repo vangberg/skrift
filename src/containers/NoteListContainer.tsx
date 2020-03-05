@@ -2,6 +2,7 @@ import React, { useContext, useCallback, useMemo } from "react";
 import { NoteList } from "../components/NoteList";
 import { StateContext } from "../state";
 import { Notes } from "../interfaces/notes";
+import { Streams } from "../interfaces/streams";
 
 export const NoteListContainer: React.FC = () => {
   const [state, dispatch] = useContext(StateContext);
@@ -33,8 +34,12 @@ export const NoteListContainer: React.FC = () => {
   );
 
   const handleOpen = useCallback(
-    id => dispatch({ type: "streams/OPEN_NOTE", stream: 0, id }),
-    [dispatch]
+    (id, push) => {
+      // cmd/ctrl-click should open note in a new stream
+      const stream = push ? Streams.next(state.streams) : 0;
+      dispatch({ type: "streams/OPEN_NOTE", stream, id });
+    },
+    [dispatch, state.streams]
   );
 
   return (

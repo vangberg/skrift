@@ -16,7 +16,7 @@ export const Workspace: React.FC<Props> = ({ streams }) => {
 
       <div className="flex-1 flex flex-row p-2 overflow-y-scroll">
         {streams.map((stream, streamIdx) => (
-          <div key={streamIdx} className="border-4 border-red-500">
+          <div key={streamIdx} className="flex-1 border-4 border-red-500">
             {stream.map((noteId, noteIdx) => (
               <NoteEditorContainer
                 key={[noteId, noteIdx].join("-")}

@@ -4,7 +4,7 @@ import { NoteLink } from "./NoteLink";
 
 type Props = {
   note: Note;
-  onOpen: (id: string) => void;
+  onOpen: (id: string, push: boolean) => void;
   getNote: (id: string) => Note | undefined;
 };
 

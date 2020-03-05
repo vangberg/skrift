@@ -4,15 +4,18 @@ import { clipboard } from "electron";
 
 type Props = {
   note: Note;
-  onClick?: (id: NoteID) => void;
+  onClick?: (id: NoteID, push: boolean) => void;
 };
 
 export const ListItem: React.FC<Props> = ({ note, onClick }) => {
-  const handleClick = useCallback(() => {
-    if (onClick) {
-      onClick(note.id);
-    }
-  }, [onClick, note]);
+  const handleClick = useCallback(
+    (event: React.MouseEvent) => {
+      if (onClick) {
+        onClick(note.id, event.metaKey);
+      }
+    },
+    [onClick, note]
+  );
 
   const handleCopy = useCallback(() => {
     clipboard.writeText(`[[${note.id}]]`);

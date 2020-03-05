@@ -33,7 +33,7 @@ type Props = {
   note: Note;
   onUpdate: (markdown: string) => void;
   onDelete: () => void;
-  onOpen: (id: string) => void;
+  onOpen: (id: string, push: boolean) => void;
   onClose: () => void;
   getNote: (id: string) => Note | undefined;
 };

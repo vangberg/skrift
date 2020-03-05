@@ -4,13 +4,18 @@ import { Note } from "../../interfaces/note";
 type Props = {
   id: string;
   getNote: (id: string) => Note | undefined;
-  onOpen: (id: string) => void;
+  onOpen: (id: string, push: boolean) => void;
 };
 
 export const NoteLink: React.FC<Props> = ({ id, getNote, onOpen }) => {
   const note = useMemo(() => getNote(id), [getNote, id]);
 
-  const handleOpen = useCallback(() => onOpen(id), [onOpen, id]);
+  const handleOpen = useCallback(
+    (event: React.MouseEvent) => {
+      onOpen(id, event.metaKey);
+    },
+    [onOpen, id]
+  );
 
   if (!note) {
     return <span>[[{id}]]</span>;

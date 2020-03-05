@@ -6,7 +6,7 @@ import { Note } from "../../interfaces/note";
 type Props = {
   notes: Note[];
   query: string;
-  onOpen: (id: string) => void;
+  onOpen: (id: string, push: boolean) => void;
   onAdd: (title: string) => void;
   onSearch: (query: string) => void;
 };

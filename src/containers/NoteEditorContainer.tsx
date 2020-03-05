@@ -26,7 +26,10 @@ export const NoteEditorContainer: React.FC<Props> = ({ id, location }) => {
   }, [dispatch, id, location]);
 
   const handleOpen = useCallback(
-    id => dispatch({ type: "streams/OPEN_NOTE", stream, id }),
+    (id, push) => {
+      const idx = push ? stream + 1 : stream;
+      dispatch({ type: "streams/OPEN_NOTE", stream: idx, id });
+    },
     [dispatch, stream]
   );
 

@@ -17,7 +17,7 @@ const renderLeaf = ({ attributes, children }: RenderLeafProps) => {
 };
 
 type Props = {
-  onOpen: (id: string) => void;
+  onOpen: (id: string, push: boolean) => void;
   getNote: (id: string) => Note | undefined;
 };
 

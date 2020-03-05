@@ -12,7 +12,7 @@ import cx from "classnames";
 
 type Props = {
   getNote: (id: string) => Note | undefined;
-  onOpen: (id: string) => void;
+  onOpen: (id: string, push: boolean) => void;
 };
 
 export const NoteLink: React.FC<RenderElementProps & Props> = ({
@@ -26,10 +26,13 @@ export const NoteLink: React.FC<RenderElementProps & Props> = ({
   const focused = useFocused();
   const editor = useEditor();
 
-  const handleOpen = useCallback(() => {
-    ReactEditor.blur(editor);
-    onOpen(element.id);
-  }, [editor, onOpen, element]);
+  const handleOpen = useCallback(
+    (id, push) => {
+      ReactEditor.blur(editor);
+      onOpen(id, push);
+    },
+    [editor, onOpen]
+  );
 
   return (
     <span
