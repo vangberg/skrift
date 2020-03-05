@@ -18,7 +18,7 @@ export const WorkspaceContainer: React.FC<RouteComponentProps> = () => {
 
   return (
     <StateContext.Provider value={[state, dispatch]}>
-      <Workspace streams={state.streams} />
+      <Workspace />
     </StateContext.Provider>
   );
 };
