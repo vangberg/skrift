@@ -22,7 +22,7 @@ export const NoteListContainer: React.FC = () => {
     title => {
       const id = new Date().toJSON();
       dispatch({ type: "notes/SAVE_MARKDOWN", id, markdown: `# ${title}` });
-      dispatch({ type: "streams/OPEN_NOTE", streamIndex: 0, id });
+      dispatch({ type: "streams/OPEN_NOTE", stream: 0, id });
     },
     [dispatch]
   );
@@ -33,7 +33,7 @@ export const NoteListContainer: React.FC = () => {
   );
 
   const handleOpen = useCallback(
-    id => dispatch({ type: "streams/OPEN_NOTE", streamIndex: 0, id }),
+    id => dispatch({ type: "streams/OPEN_NOTE", stream: 0, id }),
     [dispatch]
   );
 

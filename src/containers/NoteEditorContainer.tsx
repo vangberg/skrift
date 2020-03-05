@@ -12,7 +12,7 @@ interface Props {
 
 export const NoteEditorContainer: React.FC<Props> = ({ id, location }) => {
   const [state, dispatch] = useContext(StateContext);
-  const [streamIndex] = location;
+  const [stream] = location;
 
   const handleUpdate = useCallback(
     (markdown: string) =>
@@ -26,8 +26,8 @@ export const NoteEditorContainer: React.FC<Props> = ({ id, location }) => {
   }, [dispatch, id, location]);
 
   const handleOpen = useCallback(
-    id => dispatch({ type: "streams/OPEN_NOTE", streamIndex, id }),
-    [dispatch, streamIndex]
+    id => dispatch({ type: "streams/OPEN_NOTE", stream, id }),
+    [dispatch, stream]
   );
 
   const handleClose = useCallback(

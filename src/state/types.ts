@@ -33,7 +33,7 @@ export type DeleteNoteAction = { type: "notes/DELETE_NOTE"; id: NoteID };
 export type StreamsAction = OpenNoteAction | CloseNoteAction;
 export type OpenNoteAction = {
   type: "streams/OPEN_NOTE";
-  streamIndex: StreamIndex;
+  stream: StreamIndex;
   id: NoteID;
 };
 export type CloseNoteAction = {

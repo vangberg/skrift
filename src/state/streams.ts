@@ -5,11 +5,11 @@ import { ActionHandler, OpenNoteAction, CloseNoteAction } from "./types";
 import { Streams } from "../interfaces/streams";
 
 export const openNote: ActionHandler<OpenNoteAction> = (state, action) => {
-  const { streamIndex, id } = action;
+  const { stream, id } = action;
 
   return [
     produce(state, draft => {
-      Streams.openNote(draft.streams, streamIndex, id);
+      Streams.openNote(draft.streams, stream, id);
     }),
     Effects.none()
   ];
