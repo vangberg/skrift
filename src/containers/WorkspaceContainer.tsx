@@ -14,7 +14,7 @@ export const WorkspaceContainer: React.FC<RouteComponentProps> = () => {
     dispatch({
       type: "notes/OPEN_FOLDER"
     });
-  }, []);
+  }, [dispatch]);
 
   return (
     <StateContext.Provider value={[state, dispatch]}>

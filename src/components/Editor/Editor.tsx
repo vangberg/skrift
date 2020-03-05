@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback, useState, useEffect } from "react";
 import { Node } from "slate";
-import { Slate, useFocused, ReactEditor } from "slate-react";
+import { Slate, ReactEditor } from "slate-react";
 import { remote, clipboard } from "electron";
 
 import { SkriftEditable } from "./Editable";
@@ -56,7 +56,7 @@ export const SkriftEditor: React.FC<Props> = ({
     if (!ReactEditor.isFocused(editor)) {
       setValue(deserialize(note.markdown));
     }
-  }, [note.markdown]);
+  }, [editor, note.markdown]);
 
   const handleChange = useCallback(
     (newValue: Node[]) => {
