@@ -34,7 +34,7 @@ export type StreamsAction = OpenNoteAction | CloseNoteAction;
 export type OpenNoteAction = {
   type: "streams/OPEN_NOTE";
   streamIndex: StreamIndex;
-  noteId: NoteID;
+  id: NoteID;
 };
 export type CloseNoteAction = {
   type: "streams/CLOSE_NOTE";
