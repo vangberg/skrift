@@ -9,7 +9,7 @@ export const Workspace: React.FC = () => {
         <NoteListContainer />
       </div>
 
-      <div className="flex-1 flex flex-row py-2 pr-2 overflow-y-scroll overflow-x-scroll">
+      <div className="flex-1 flex flex-row py-2 pr-2 overflow-x-scroll">
         <StreamsContainer />
       </div>
     </div>
