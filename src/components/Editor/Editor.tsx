@@ -85,7 +85,7 @@ export const SkriftEditor: React.FC<Props> = ({
   }, [note]);
 
   return (
-    <div className="shadow mb-2 bg-white">
+    <div className="shadow mb-2 mx-1 bg-white">
       <div className="float-right p-2">
         <Toolbar
           onCopy={handleCopy}
