@@ -9,7 +9,7 @@ type Props = {
 
 export const Stream: React.FC<Props> = ({ index, stream }) => {
   return (
-    <div className="flex-1 overflow-y-scroll max-w-2xl">
+    <div className="flex-1 overflow-y-auto max-w-2xl">
       {stream.map((noteId, noteIdx) => (
         <NoteEditorContainer
           key={[noteId, noteIdx].join("-")}
