@@ -94,7 +94,7 @@ export const SkriftEditor: React.FC<Props> = ({
         ></Toolbar>
       </div>
 
-      <div className="p-2 text-sm">
+      <div className="p-2">
         <Slate editor={editor} value={value} onChange={handleChange}>
           <SkriftEditable onOpen={onOpen} getNote={getNote} />
 

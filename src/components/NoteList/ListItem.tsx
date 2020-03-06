@@ -22,7 +22,7 @@ export const ListItem: React.FC<Props> = ({ note, onClick }) => {
   }, [note]);
 
   return (
-    <div className="flex text-sm">
+    <div className="flex">
       <div
         className="flex-1 p-1 cursor-pointer hover:bg-gray-300 truncate"
         onClick={handleClick}
