@@ -1,7 +1,11 @@
 import { Editor, Range, Point, Transforms, Location } from "slate";
 import { ReactEditor } from "slate-react";
 
-const SHORTCUTS = new Map([["#", { type: "heading", level: 1 }]]);
+const SHORTCUTS = new Map([
+  ["#", { type: "heading", level: 1 }],
+  ["##", { type: "heading", level: 2 }],
+  ["###", { type: "heading", level: 3 }]
+]);
 
 const rangeBefore = (editor: Editor, point: Point): Location => {
   const block = Editor.above(editor, { match: n => Editor.isBlock(editor, n) });
