@@ -14,7 +14,7 @@ describe("parseMarkdown", () => {
     });
 
     it("parses links", () => {
-      expect(note.links).toEqual([{ id: "123" }, { id: "456" }]);
+      expect(note.links).toEqual(new Set(["123", "456"]));
     });
 
     it("stores markdown", () => {
