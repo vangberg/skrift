@@ -1,11 +1,12 @@
 import React from "react";
-import { Router } from "@reach/router";
 import { WorkspaceContainer } from "./containers/WorkspaceContainer";
+import { DevInfo } from "./components/DevInfo";
 
 export const App: React.FC = () => {
   return (
-    <Router className="flex flex-1">
-      <WorkspaceContainer path="/" />
-    </Router>
+    <div className="flex flex-1">
+      <DevInfo />
+      <WorkspaceContainer />
+    </div>
   );
 };
