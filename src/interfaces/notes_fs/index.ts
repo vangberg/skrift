@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import os from "os";
-import { NoteID } from "../note";
+import { NoteID, Note } from "../note";
 import { Notes } from "../notes";
 
 const PATH = path.join(os.homedir(), "Documents", "zettelkasten");
@@ -19,11 +19,20 @@ export const NotesFS = {
       filenames
         .filter(filename => filename.endsWith(".md"))
         .map(async filename => {
-          const markdown = await fs.promises.readFile(
-            path.join(PATH, filename),
-            "utf8"
-          );
-          Notes.saveMarkdown(notes, path.basename(filename, ".md"), markdown);
+          const fullPath = path.join(PATH, filename);
+          const [stats, markdown] = await Promise.all([
+            fs.promises.stat(fullPath),
+            fs.promises.readFile(fullPath, "utf8")
+          ]);
+
+          const id = path.basename(filename, ".md");
+          const note = Note.empty({
+            ...Note.fromMarkdown(markdown),
+            id,
+            modifiedAt: stats.mtime
+          });
+
+          Notes.saveNote(notes, note);
         })
     );
     notes.forEach(note => Notes.addBacklinks(notes, note.id));

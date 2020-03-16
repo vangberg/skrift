@@ -33,7 +33,8 @@ export const Notes = {
   saveMarkdown(notes: Notes, id: NoteID, markdown: string) {
     const note = {
       ...(Notes.getNote(notes, id) || Note.empty({ id })),
-      ...Note.fromMarkdown(markdown)
+      ...Note.fromMarkdown(markdown),
+      modifiedAt: new Date()
     };
     Notes.saveNote(notes, note);
   },
@@ -99,7 +100,13 @@ export const Notes = {
 
   byDate(notes: Notes): Note[] {
     return [...notes.values()]
-      .sort((n1, n2) => n1.id.localeCompare(n2.id))
+      .sort((a, b) => a.id.localeCompare(b.id))
       .reverse();
+  },
+
+  byModifiedAt(notes: Notes): Note[] {
+    return [...notes.values()].sort(
+      (a, b) => a.modifiedAt.getTime() - b.modifiedAt.getTime()
+    );
   }
 };

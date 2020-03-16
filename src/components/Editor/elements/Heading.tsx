@@ -4,12 +4,12 @@ import { RenderElementProps } from "slate-react";
 const headerClasses = (level: number) => {
   switch (level) {
     case 1:
-      return "text-xl font-bold";
+      return "text-xl font-semibold";
     case 2:
-      return "text-lg font-bold";
+      return "text-lg font-semibold";
   }
 
-  return "font-bold";
+  return "font-semibold";
 };
 export const Heading: React.FC<RenderElementProps> = props => {
   return (

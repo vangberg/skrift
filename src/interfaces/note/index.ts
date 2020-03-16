@@ -8,6 +8,7 @@ export interface Note {
   links: Set<NoteID>;
   backlinks: Set<NoteID>;
   markdown: string;
+  modifiedAt: Date;
 }
 
 export const Note = {
@@ -20,6 +21,7 @@ export const Note = {
       links: new Set(),
       backlinks: new Set(),
       markdown: "",
+      modifiedAt: new Date(),
       ...(partial || {})
     };
   }
