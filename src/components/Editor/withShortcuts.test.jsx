@@ -16,9 +16,8 @@ describe("withShortcuts", () => {
         <paragraph>Line 3</paragraph>
       </editor>
     );
-    //
-    const editor = withShortcuts(input);
 
+    const editor = withShortcuts(input);
     editor.insertText(" ");
 
     // prettier-ignore
@@ -33,5 +32,6 @@ describe("withShortcuts", () => {
     );
 
     assert.deepEqual(editor.children, output.children);
+    assert.deepEqual(editor.selection, output.selection);
   });
 });
