@@ -4,7 +4,7 @@ module.exports = {
   parserOptions: {
     sourceType: "module"
   },
-  plugins: ["@typescript-eslint", "react-hooks"],
+  plugins: ["@typescript-eslint", "react-hooks", "jest"],
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
@@ -12,9 +12,17 @@ module.exports = {
   ],
   rules: {
     "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-unused-vars": "off",
     "react/prop-types": "off", // Prop type validation does not make sense with TypeScript
     "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
     "react-hooks/exhaustive-deps": "warn" // Checks effect dependencies
-  }
+  },
+  overrides: [
+    {
+      files: ["**/*.test.js", "**/*.test.jsx"],
+      env: {
+        jest: true
+      }
+    }
+  ]
 };
