@@ -1,5 +1,5 @@
-/** @jsx s */
-import { s } from "../../testSupport";
+/** @jsx jsx */
+import { jsx } from "../../testSupport";
 import { withShortcuts } from "./withShortcuts";
 import { Transforms } from "slate";
 import assert from "assert";
@@ -16,7 +16,7 @@ describe("withShortcuts", () => {
         <paragraph>Line 3</paragraph>
       </editor>
     );
-
+    //
     const editor = withShortcuts(input);
 
     editor.insertText(" ");
