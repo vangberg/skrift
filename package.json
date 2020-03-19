@@ -9,7 +9,9 @@
     "start:electron": "npm run build:electron && electron ./dist/electron.js",
     "start:react": "webpack-dev-server --config ./webpack.react.config.js",
     "start": "concurrently \"npm:start:*\"",
-    "eslint": "eslint ./src --ext .js,.jsx,.ts,.tsx"
+    "eslint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "test": "jest",
+    "test-watch": "jest --watch"
   },
   "repository": {
     "type": "git",
