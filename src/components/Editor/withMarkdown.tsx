@@ -1,11 +1,10 @@
-import { Transforms } from "slate";
+import { Transforms, Editor } from "slate";
 import { Serializer } from "../../interfaces/serializer";
-import { ReactEditor } from "slate-react";
 
-export const withMarkdown = (editor: ReactEditor): ReactEditor => {
+export const withMarkdown = (editor: Editor): Editor => {
   const { insertData } = editor;
 
-  editor.insertData = data => {
+  editor.insertData = (data: DataTransfer) => {
     const fragment = data.getData("application/x-slate-fragment");
 
     if (!fragment) {

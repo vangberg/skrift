@@ -1,5 +1,5 @@
-import { createEditor as slateCreateEditor } from "slate";
-import { withReact, ReactEditor } from "slate-react";
+import { createEditor as slateCreateEditor, Editor } from "slate";
+import { withReact } from "slate-react";
 import { withHistory } from "slate-history";
 
 import { withNoteLink } from "./withNoteLink";
@@ -15,13 +15,13 @@ const PLUGINS = [
   withHistory
 ];
 
-type Plugin = (editor: ReactEditor) => ReactEditor;
+type Plugin = (editor: Editor) => Editor;
 
-const withPlugins = (editor: ReactEditor, plugins: Plugin[]) => {
+const withPlugins = (editor: Editor, plugins: Plugin[]) => {
   return plugins
     .reverse()
     .reduce((currentEditor, plugin) => plugin(currentEditor), editor);
 };
 
 export const createEditor = () =>
-  withPlugins(withReact(slateCreateEditor()), PLUGINS);
+  withReact(withPlugins(slateCreateEditor(), PLUGINS));

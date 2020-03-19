@@ -1,8 +1,8 @@
 import { Editor, Transforms, Node } from "slate";
 import { Serializer } from "../../interfaces/serializer";
-import { ReactEditor } from "slate-react";
+import {} from "slate-react";
 
-export const withNoteLink = (editor: ReactEditor): ReactEditor => {
+export const withNoteLink = (editor: Editor): Editor => {
   const { isInline } = editor;
 
   editor.isInline = element => {

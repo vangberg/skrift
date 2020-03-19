@@ -1,5 +1,4 @@
 import { Editor, Range, Point, Transforms, Location } from "slate";
-import { ReactEditor } from "slate-react";
 
 const SHORTCUTS = new Map([
   ["#", { type: "heading", level: 1 }],
@@ -14,7 +13,7 @@ const rangeBefore = (editor: Editor, point: Point): Location => {
   return { anchor: point, focus: start };
 };
 
-export const withShortcuts = (editor: ReactEditor): ReactEditor => {
+export const withShortcuts = (editor: Editor): Editor => {
   const { deleteBackward, insertText } = editor;
 
   editor.insertText = text => {

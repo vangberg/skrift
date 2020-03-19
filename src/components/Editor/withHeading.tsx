@@ -1,8 +1,7 @@
 import { Editor, Range } from "slate";
 import { SkriftTransforms } from "./transforms";
-import { ReactEditor } from "slate-react";
 
-const isEndOfHeading = (editor: ReactEditor, selection: Range) => {
+const isEndOfHeading = (editor: Editor, selection: Range) => {
   const block = Editor.above(editor, {
     match: n => Editor.isBlock(editor, n)
   });
@@ -14,7 +13,7 @@ const isEndOfHeading = (editor: ReactEditor, selection: Range) => {
   return Editor.isEnd(editor, selection.focus, block[1]);
 };
 
-export const withHeading = (editor: ReactEditor): ReactEditor => {
+export const withHeading = (editor: Editor): Editor => {
   const { insertBreak } = editor;
 
   editor.insertBreak = () => {
