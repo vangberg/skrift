@@ -1,8 +1,6 @@
 /** @jsx jsx */
-import { jsx } from "../../testSupport";
+import { jsx, assertEqual } from "../../testSupport";
 import { withShortcuts } from "./withShortcuts";
-import { Transforms } from "slate";
-import assert from "assert";
 
 describe("withShortcuts", () => {
   it("inserts header 1", () => {
@@ -31,7 +29,7 @@ describe("withShortcuts", () => {
       </editor>
     );
 
-    assert.deepEqual(editor.children, output.children);
-    assert.deepEqual(editor.selection, output.selection);
+    assertEqual(editor.children, output.children);
+    assertEqual(editor.selection, output.selection);
   });
 });
