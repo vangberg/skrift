@@ -11,6 +11,7 @@ function createWindow() {
     }
   });
 
+  mainWindow.maximize();
   mainWindow.loadURL("http://localhost:8080");
   mainWindow.webContents.openDevTools();
 
