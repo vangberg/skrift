@@ -22,6 +22,10 @@ function serializeNode(node: Node): string {
       return paragraph(node);
     case "note-link":
       return noteLink(node);
+    case "bulleted-list":
+      return bulletedList(node);
+    case "numbered-list":
+      return numberedList(node);
   }
 
   return "";
@@ -43,4 +47,19 @@ function paragraph(node: Node): string {
 
 function noteLink(node: Node): string {
   return `[[${node.id}]]`;
+}
+
+function bulletedList(node: Node): string {
+  return node.children
+    .map((child: Node) => `* ${serializeChildren(child)}\n`)
+    .join("");
+}
+
+function numberedList(node: Node): string {
+  return node.children
+    .map(
+      (child: Node, index: number) =>
+        `${index + 1}. ${serializeChildren(child)}\n`
+    )
+    .join("");
 }

@@ -3,7 +3,9 @@ import { Editor, Range, Point, Transforms, Location } from "slate";
 const SHORTCUTS = new Map([
   ["#", { type: "heading", level: 1 }],
   ["##", { type: "heading", level: 2 }],
-  ["###", { type: "heading", level: 3 }]
+  ["###", { type: "heading", level: 3 }],
+  ["*", { type: "list-item" }],
+  ["-", { type: "list-item" }]
 ]);
 
 const rangeBefore = (editor: Editor, point: Point): Location => {
@@ -22,14 +24,21 @@ export const withShortcuts = (editor: Editor): Editor => {
     if (text === " " && selection && Range.isCollapsed(selection)) {
       const range = rangeBefore(editor, selection.anchor);
       const text = Editor.string(editor, range);
-      const type = SHORTCUTS.get(text);
+      const shortcut = SHORTCUTS.get(text);
 
-      if (type) {
+      if (shortcut) {
         Transforms.select(editor, range);
         Transforms.delete(editor);
-        Transforms.setNodes(editor, type, {
+        Transforms.setNodes(editor, shortcut, {
           match: n => Editor.isBlock(editor, n)
         });
+
+        if (shortcut.type === "list-item") {
+          const list = { type: "bulleted-list", children: [] };
+          Transforms.wrapNodes(editor, list, {
+            match: n => n.type === "list-item"
+          });
+        }
 
         return;
       }

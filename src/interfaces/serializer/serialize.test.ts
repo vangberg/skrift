@@ -32,4 +32,58 @@ Someone ([[123]]) said.`;
   });
 });
 
+describe("bulleted list", () => {
+  it("serializes", () => {
+    const value = [
+      {
+        type: "bulleted-list",
+        children: [
+          {
+            type: "list-item",
+            children: [{ text: "Item 1" }]
+          },
+          {
+            type: "list-item",
+            children: [{ text: "Item 2" }]
+          }
+        ]
+      }
+    ];
+
+    const expected = `* Item 1
+* Item 2`;
+
+    const result = serialize(value);
+
+    expect(result).toEqual(expected);
+  });
+});
+
+describe("numbered list", () => {
+  it("serializes", () => {
+    const value = [
+      {
+        type: "numbered-list",
+        children: [
+          {
+            type: "list-item",
+            children: [{ text: "Item 1" }]
+          },
+          {
+            type: "list-item",
+            children: [{ text: "Item 2" }]
+          }
+        ]
+      }
+    ];
+
+    const expected = `1. Item 1
+2. Item 2`;
+
+    const result = serialize(value);
+
+    expect(result).toEqual(expected);
+  });
+});
+
 export default {};

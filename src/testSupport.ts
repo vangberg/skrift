@@ -5,7 +5,9 @@ import assert from "assert";
 export const jsx = createHyperscript({
   elements: {
     paragraph: { type: "paragraph" },
-    heading: { type: "heading" }
+    heading: { type: "heading" },
+    "bulleted-list": { type: "bulleted-list" },
+    "list-item": { type: "list-item" }
   }
 });
 

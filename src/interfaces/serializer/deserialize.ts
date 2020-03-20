@@ -22,7 +22,6 @@ md.block.ruler.disable([
   "fences",
   "blockquote",
   "hr",
-  "list",
   "footnote",
   "htmlblock",
   "table",
@@ -77,6 +76,15 @@ export function parse(tokens: Token[]): Node[] {
         break;
       case "paragraph_open":
         nodes.push(...paragraph(tokens));
+        break;
+      case "bullet_list_open":
+        nodes.push(...bulletedList(tokens));
+        break;
+      case "ordered_list_open":
+        nodes.push(...numberedList(tokens));
+        break;
+      case "list_item_open":
+        nodes.push(...listItem(tokens));
         break;
       case "note_link_open":
         nodes.push(...noteLink(tokens));
@@ -174,6 +182,46 @@ function noteLink(tokens: Token[]): Node[] {
       children: [{ text: "" }]
     },
     { text: "" }
+  ];
+}
+
+function bulletedList(tokens: Token[]): Node[] {
+  const children = takeUntil(tokens, "bullet_list_close");
+
+  return [
+    {
+      type: "bulleted-list",
+      children: parse(children)
+    }
+  ];
+}
+
+function numberedList(tokens: Token[]): Node[] {
+  let children = parse(takeUntil(tokens, "ordered_list_close"));
+
+  return [
+    {
+      type: "numbered-list",
+      children
+    }
+  ];
+}
+
+function listItem(tokens: Token[]): Node[] {
+  let children = parse(takeUntil(tokens, "list_item_close"));
+
+  // Everything inside the list item might be wrapped in a paragraph.
+  // We don't want to include that paragraph, so we grab its children
+  // and use those as the children for the list.
+  if (children[0] && children[0].type === "paragraph") {
+    children = children[0].children;
+  }
+
+  return [
+    {
+      type: "list-item",
+      children
+    }
   ];
 }
 

@@ -5,6 +5,9 @@ import { NoteLink } from "./elements/NoteLink";
 import { Heading } from "./elements/Heading";
 import { Paragraph } from "./elements/Paragraph";
 import { Note } from "../../interfaces/note";
+import { BulletList } from "./elements/BulletList";
+import { NumberList } from "./elements/NumberList";
+import { ListItem } from "./elements/ListItem";
 
 const DefaultElement: React.FC<RenderElementProps> = ({
   attributes,
@@ -32,6 +35,12 @@ export function renderElement(options: {
         return <NoteLink getNote={getNote} onOpen={onOpen} {...props} />;
       case "paragraph":
         return <Paragraph {...props} />;
+      case "bulleted-list":
+        return <BulletList {...props} />;
+      case "numbered-list":
+        return <NumberList {...props} />;
+      case "list-item":
+        return <ListItem {...props} />;
       default:
         return <DefaultElement {...props} />;
     }

@@ -53,6 +53,58 @@ describe("deserialize", () => {
     });
   });
 
+  describe("bulleted list", () => {
+    it("deserializes", () => {
+      const note = `* Item 1
+* Item 2
+`;
+      const result = deserialize(note);
+      const expected = [
+        {
+          type: "bulleted-list",
+          children: [
+            {
+              type: "list-item",
+              children: [{ text: "Item 1" }]
+            },
+            {
+              type: "list-item",
+              children: [{ text: "Item 2" }]
+            }
+          ]
+        }
+      ];
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe("numbered list", () => {
+    it("deserializes", () => {
+      const note = `1. Item 1
+2. Item 2
+`;
+      const result = deserialize(note);
+      const expected = [
+        {
+          type: "numbered-list",
+          children: [
+            {
+              type: "list-item",
+              children: [{ text: "Item 1" }]
+            },
+            {
+              type: "list-item",
+              children: [{ text: "Item 2" }]
+            }
+          ]
+        }
+      ];
+
+      expect(result).toEqual(expected);
+    });
+  });
+
   const note = `# A title
 
   Someone ([[123]]) said.`;

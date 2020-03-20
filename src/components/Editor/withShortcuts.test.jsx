@@ -32,4 +32,29 @@ describe("withShortcuts", () => {
     assertEqual(editor.children, output.children);
     assertEqual(editor.selection, output.selection);
   });
+
+  it("inserts bulleted list", () => {
+    // prettier-ignore
+    const input = (
+      <editor>
+        <paragraph>
+          *<cursor />
+        </paragraph>
+      </editor>
+    );
+
+    const editor = withShortcuts(input);
+    editor.insertText(" ");
+
+    // prettier-ignore
+    const output = (
+      <editor>
+        <bulleted-list>
+          <list-item><cursor /></list-item>
+        </bulleted-list>
+      </editor>
+    );
+
+    assertEqual(editor, output);
+  });
 });
