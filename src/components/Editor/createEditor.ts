@@ -7,13 +7,7 @@ import { withHeading } from "./withHeading";
 import { withShortcuts } from "./withShortcuts";
 import { withMarkdown } from "./withMarkdown";
 
-const PLUGINS = [
-  withNoteLink,
-  withHeading,
-  withShortcuts,
-  withMarkdown,
-  withHistory
-];
+const PLUGINS = [withNoteLink, withHeading, withShortcuts, withHistory];
 
 type Plugin = (editor: Editor) => Editor;
 
@@ -24,4 +18,4 @@ const withPlugins = (editor: Editor, plugins: Plugin[]) => {
 };
 
 export const createEditor = () =>
-  withReact(withPlugins(slateCreateEditor(), PLUGINS));
+  withMarkdown(withReact(withPlugins(slateCreateEditor(), PLUGINS)));
