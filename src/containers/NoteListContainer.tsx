@@ -36,7 +36,9 @@ export const NoteListContainer: React.FC = () => {
   const handleOpen = useCallback(
     (id, push) => {
       // cmd/ctrl-click should open note in a new stream
-      const stream = push ? Streams.next(state.streams) : 0;
+      const stream = push
+        ? Streams.next(state.streams)
+        : Streams.last(state.streams);
       dispatch({ type: "streams/OPEN_NOTE", stream, id });
     },
     [dispatch, state.streams]

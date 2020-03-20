@@ -20,6 +20,10 @@ export const Streams = {
     return streams.length;
   },
 
+  last(streams: Streams): StreamIndex {
+    return Math.max(streams.length - 1, 0);
+  },
+
   isEmpty(streams: Streams, idx: StreamIndex): boolean {
     return streams[idx].length === 0;
   },
