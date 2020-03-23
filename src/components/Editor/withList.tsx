@@ -9,9 +9,12 @@ export const withList = (editor: Editor): Editor => {
   editor.normalizeNode = entry => {
     const [node, path] = entry;
 
+    // Normalization only happens for the nodes that are affected by a change,
+    // but a change might cause an unaffected list to become adjacent to a
+    // list affected by the change. Therefore, we need to look both back- and
+    // forward.
     if (Element.isElement(node)) {
       const prev = Editor.previous(editor, { at: path });
-
       if (prev && Element.isElement(prev[0])) {
         if (prev[0].type === "bulleted-list" && node.type === "bulleted-list") {
           Transforms.mergeNodes(editor, { at: path });
@@ -20,7 +23,6 @@ export const withList = (editor: Editor): Editor => {
       }
 
       const next = Editor.next(editor, { at: path });
-
       if (next && Element.isElement(next[0])) {
         if (next[0].type === "bulleted-list" && node.type === "bulleted-list") {
           Transforms.mergeNodes(editor, { at: next[1] });
