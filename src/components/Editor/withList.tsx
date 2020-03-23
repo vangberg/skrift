@@ -1,23 +1,18 @@
 import { Editor, Range, Transforms } from "slate";
-import { SkriftTransforms } from "./transforms";
-
-const isEmptyListItem = (editor: Editor) => {
-  const block = Editor.above(editor, {
-    match: n => Editor.isBlock(editor, n)
-  });
-
-  if (!block || block[0].type !== "list-item") {
-    return false;
-  }
-
-  return Editor.isEmpty(editor, block[0]);
-};
 
 export const withList = (editor: Editor): Editor => {
   const { insertBreak } = editor;
 
   editor.insertBreak = () => {
-    if (isEmptyListItem(editor)) {
+    const block = Editor.above(editor, {
+      match: n => Editor.isBlock(editor, n)
+    });
+
+    if (!block || block[0].type !== "list-item") {
+      return false;
+    }
+
+    if (Editor.isEmpty(editor, block[0])) {
       Transforms.setNodes(editor, {
         type: "paragraph"
       });
