@@ -3,7 +3,7 @@ import { RenderElementProps } from "slate-react";
 
 export const BulletList: React.FC<RenderElementProps> = props => {
   return (
-    <ul className="list-disc list-inside" {...props.attributes}>
+    <ul className="list-disc list-outside ml-5" {...props.attributes}>
       {props.children}
     </ul>
   );
