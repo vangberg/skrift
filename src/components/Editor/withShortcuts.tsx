@@ -63,7 +63,10 @@ export const withShortcuts = (editor: Editor): Editor => {
           block.type !== "paragraph" &&
           Point.equals(selection.anchor, start)
         ) {
-          Transforms.setNodes(editor, { type: "paragraph" });
+          Transforms.setNodes(editor, {
+            type: "paragraph",
+            level: undefined
+          });
 
           return;
         }

@@ -29,8 +29,28 @@ describe("withShortcuts", () => {
       </editor>
     );
 
-    assertEqual(editor.children, output.children);
-    assertEqual(editor.selection, output.selection);
+    assertEqual(editor, output);
+  });
+
+  it("removes header 1", () => {
+    // prettier-ignore
+    const input = (
+      <editor>
+        <heading level={1}><cursor />Line 1</heading>
+      </editor>
+    );
+
+    const editor = withShortcuts(input);
+    editor.deleteBackward();
+
+    // prettier-ignore
+    const output = (
+      <editor>
+        <paragraph><cursor />Line 1</paragraph>
+      </editor>
+    );
+
+    assertEqual(editor, output);
   });
 
   it("inserts bulleted list", () => {
