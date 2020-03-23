@@ -68,6 +68,13 @@ export const withShortcuts = (editor: Editor): Editor => {
             level: undefined
           });
 
+          if (block.type === "list-item") {
+            Transforms.unwrapNodes(editor, {
+              match: n => ["bulleted-list", "numbered-list"].includes(n.type),
+              split: true
+            });
+          }
+
           return;
         }
       }

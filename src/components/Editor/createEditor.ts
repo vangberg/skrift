@@ -6,8 +6,15 @@ import { withNoteLink } from "./withNoteLink";
 import { withHeading } from "./withHeading";
 import { withShortcuts } from "./withShortcuts";
 import { withMarkdown } from "./withMarkdown";
+import { withList } from "./withList";
 
-const PLUGINS = [withNoteLink, withHeading, withShortcuts, withHistory];
+const PLUGINS = [
+  withList,
+  withNoteLink,
+  withHeading,
+  withShortcuts,
+  withHistory
+];
 
 type Plugin = (editor: Editor) => Editor;
 

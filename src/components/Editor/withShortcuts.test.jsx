@@ -77,4 +77,68 @@ describe("withShortcuts", () => {
 
     assertEqual(editor, output);
   });
+
+  describe("<delete> at beginning of empty list item", () => {
+    describe("with no following list items", () => {
+      it("exits list", () => {
+        // prettier-ignore
+        const input = (
+          <editor>
+            <bulleted-list>
+              <list-item>Item 1</list-item>
+              <list-item><cursor /></list-item>
+            </bulleted-list>
+          </editor>
+        );
+
+        const editor = withShortcuts(input);
+        editor.deleteBackward();
+
+        // prettier-ignore
+        const output = (
+          <editor>
+            <bulleted-list>
+              <list-item>Item 1</list-item>
+            </bulleted-list>
+            <paragraph><cursor /></paragraph>
+          </editor>
+        );
+
+        assertEqual(editor, output);
+      });
+    });
+
+    describe("with following list items", () => {
+      it("splits list", () => {
+        // prettier-ignore
+        const input = (
+          <editor>
+            <bulleted-list>
+              <list-item>Item 1</list-item>
+              <list-item><cursor />Item 2</list-item>
+              <list-item>Item 3</list-item>
+            </bulleted-list>
+          </editor>
+        );
+
+        const editor = withShortcuts(input);
+        editor.deleteBackward();
+
+        // prettier-ignore
+        const output = (
+          <editor>
+            <bulleted-list>
+              <list-item>Item 1</list-item>
+            </bulleted-list>
+            <paragraph><cursor />Item 2</paragraph>
+            <bulleted-list>
+              <list-item>Item 3</list-item>
+            </bulleted-list>
+          </editor>
+        );
+
+        assertEqual(editor, output);
+      });
+    });
+  });
 });
