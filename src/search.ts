@@ -26,7 +26,6 @@ export const Search = {
   },
 
   add(index: Index, note: Note) {
-    console.log(`Search: attempting to add ${note.id} with ${note.markdown}`);
     index.add(note.id, note.markdown);
   },
 

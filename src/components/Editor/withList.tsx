@@ -1,6 +1,37 @@
-import { Editor, Range, Transforms } from "slate";
+import { Editor, Node, Transforms, Descendant, Element } from "slate";
+
+const isList = (node: Node) =>
+  ["bulleted-list", "numbered-list"].includes(node.type);
 
 export const withList = (editor: Editor): Editor => {
+  const { normalizeNode } = editor;
+
+  editor.normalizeNode = entry => {
+    const [node, path] = entry;
+
+    if (Element.isElement(node)) {
+      const prev = Editor.previous(editor, { at: path });
+
+      if (prev && Element.isElement(prev[0])) {
+        if (prev[0].type === "bulleted-list" && node.type === "bulleted-list") {
+          Transforms.mergeNodes(editor, { at: path });
+          return;
+        }
+      }
+
+      const next = Editor.next(editor, { at: path });
+
+      if (next && Element.isElement(next[0])) {
+        if (next[0].type === "bulleted-list" && node.type === "bulleted-list") {
+          Transforms.mergeNodes(editor, { at: next[1] });
+          return;
+        }
+      }
+    }
+
+    normalizeNode(entry);
+  };
+
   const { insertBreak } = editor;
 
   editor.insertBreak = () => {
@@ -18,7 +49,7 @@ export const withList = (editor: Editor): Editor => {
       });
 
       Transforms.unwrapNodes(editor, {
-        match: n => ["bulleted-list", "numbered-list"].includes(n.type),
+        match: isList,
         split: true
       });
       return;

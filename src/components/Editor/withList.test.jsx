@@ -1,4 +1,5 @@
 /** @jsx jsx */
+import { Editor } from "slate";
 import { jsx, assertEqual } from "../../testSupport";
 import { withList } from "./withList";
 
@@ -29,6 +30,39 @@ describe("withList", () => {
             <paragraph><cursor /></paragraph>
             <bulleted-list>
               <list-item>Item 3</list-item>
+            </bulleted-list>
+          </editor>
+        );
+
+        assertEqual(editor, output);
+      });
+    });
+  });
+
+  describe("normalization", () => {
+    describe("two adjacent lists of same type", () => {
+      it.only("merges them", () => {
+        // prettier-ignore
+        const input = (
+          <editor>
+            <bulleted-list>
+              <list-item>Item 1</list-item>
+            </bulleted-list>
+            <bulleted-list>
+              <list-item>Item 2</list-item>
+            </bulleted-list>
+          </editor>
+        );
+
+        const editor = withList(input);
+        Editor.normalize(editor, { force: true });
+
+        // prettier-ignore
+        const output = (
+          <editor>
+            <bulleted-list>
+              <list-item>Item 1</list-item>
+              <list-item>Item 2</list-item>
             </bulleted-list>
           </editor>
         );
