@@ -36,9 +36,17 @@ export const SkriftEditable: React.FC<Props> = ({ onOpen, getNote }) => {
       renderLeaf={renderLeaf}
       onKeyDown={event => {
         const { nativeEvent } = event;
+
         if (isHotkey("shift+enter")(nativeEvent)) {
           event.preventDefault();
           SkriftTransforms.insertSoftBreak(editor);
+          return;
+        }
+
+        if (isHotkey("tab")(nativeEvent)) {
+          event.preventDefault();
+          SkriftTransforms.indentListItem(editor);
+          return;
         }
       }}
     />

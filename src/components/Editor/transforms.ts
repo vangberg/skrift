@@ -1,5 +1,4 @@
-import { Transforms, Editor, Element } from "slate";
-import { Transform } from "stream";
+import { Transforms, Editor, Node } from "slate";
 
 export const SkriftTransforms = {
   insertParagraph(editor: Editor) {
