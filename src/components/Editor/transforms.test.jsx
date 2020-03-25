@@ -32,7 +32,7 @@ describe("transforms", () => {
     });
 
     describe("at second list item", () => {
-      it.only("nests list item under first list item", () => {
+      it("nests list item under first list item", () => {
         // prettier-ignore
         const input = (
           <editor>

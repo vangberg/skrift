@@ -6,6 +6,20 @@ export const withList = (editor: Editor): Editor => {
   editor.normalizeNode = entry => {
     const [node, path] = entry;
 
+    // If list item contains a single paragraph, unwrap the children.
+    if (
+      Element.isElement(node) &&
+      node.type === "list-item" &&
+      node.children.length === 1
+    ) {
+      const child = node.children[0];
+      if (Element.isElement(child) && child.type === "paragraph") {
+        Transforms.unwrapNodes(editor, { at: path.concat(0) });
+        return;
+      }
+    }
+
+    // Merge adjacent lists
     if (Editor.isEditor(node) || Element.isElement(node)) {
       for (const [child, childPath] of Node.children(editor, path)) {
         if (Element.isElement(child)) {

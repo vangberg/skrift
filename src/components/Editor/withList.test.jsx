@@ -44,28 +44,57 @@ describe("withList", () => {
       it("merges them", () => {
         // prettier-ignore
         const input = (
-        <editor>
-          <bulleted-list>
-            <list-item>Item 1</list-item>
-          </bulleted-list>
-          <bulleted-list>
-            <list-item>Item 2</list-item>
-          </bulleted-list>
-        </editor>
-      );
+          <editor>
+            <bulleted-list>
+              <list-item>Item 1</list-item>
+            </bulleted-list>
+            <bulleted-list>
+              <list-item>Item 2</list-item>
+            </bulleted-list>
+          </editor>
+        );
 
         const editor = withList(input);
         Editor.normalize(editor, { force: true });
 
         // prettier-ignore
         const output = (
-        <editor>
-          <bulleted-list>
-            <list-item>Item 1</list-item>
-            <list-item>Item 2</list-item>
-          </bulleted-list>
-        </editor>
-      );
+          <editor>
+            <bulleted-list>
+              <list-item>Item 1</list-item>
+              <list-item>Item 2</list-item>
+            </bulleted-list>
+          </editor>
+        );
+
+        assertEqual(editor, output);
+      });
+    });
+
+    describe("with item with a single paragraph", () => {
+      it("removes the paragraph", () => {
+        // prettier-ignore
+        const input = (
+          <editor>
+            <bulleted-list>
+              <list-item>
+                <paragraph>Item 1</paragraph>
+              </list-item>
+            </bulleted-list>
+          </editor>
+        );
+
+        const editor = withList(input);
+        Editor.normalize(editor, { force: true });
+
+        // prettier-ignore
+        const output = (
+          <editor>
+            <bulleted-list>
+              <list-item>Item 1</list-item>
+            </bulleted-list>
+          </editor>
+        );
 
         assertEqual(editor, output);
       });
