@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { Editor } from "slate";
+import { Editor, Transforms } from "slate";
 import { jsx, assertEqual } from "../../testSupport";
 import { withList } from "./withList";
 
@@ -41,7 +41,7 @@ describe("withList", () => {
 
   describe("normalization", () => {
     describe("two adjacent lists of same type", () => {
-      it.only("merges them", () => {
+      it("merges them", () => {
         // prettier-ignore
         const input = (
           <editor>
@@ -56,6 +56,38 @@ describe("withList", () => {
 
         const editor = withList(input);
         Editor.normalize(editor, { force: true });
+
+        // prettier-ignore
+        const output = (
+          <editor>
+            <bulleted-list>
+              <list-item>Item 1</list-item>
+              <list-item>Item 2</list-item>
+            </bulleted-list>
+          </editor>
+        );
+
+        assertEqual(editor, output);
+      });
+    });
+
+    describe("removing a paragraph, causing two lists to become adjacent", () => {
+      it("merges them", () => {
+        // prettier-ignore
+        const input = (
+          <editor>
+            <bulleted-list>
+              <list-item>Item 1</list-item>
+            </bulleted-list>
+            <paragraph>Paragraph</paragraph>
+            <bulleted-list>
+              <list-item>Item 2</list-item>
+            </bulleted-list>
+          </editor>
+        );
+
+        const editor = withList(input);
+        Transforms.removeNodes(editor, { at: [1] });
 
         // prettier-ignore
         const output = (
