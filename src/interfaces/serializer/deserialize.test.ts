@@ -79,6 +79,45 @@ describe("deserialize", () => {
     });
   });
 
+  describe("nested bulleted list", () => {
+    it("deserializes", () => {
+      const note = `* Top 1
+  * Nested 1
+  
+  Nested paragraph
+`;
+      const result = deserialize(note);
+      const expected = [
+        {
+          type: "bulleted-list",
+          children: [
+            {
+              type: "list-item",
+              children: [
+                { type: "paragraph", children: [{ text: "Top 1" }] },
+                {
+                  type: "bulleted-list",
+                  children: [
+                    {
+                      type: "list-item",
+                      children: [{ text: "Nested 1" }]
+                    }
+                  ]
+                },
+                {
+                  type: "paragraph",
+                  children: [{ text: "Nested paragraph" }]
+                }
+              ]
+            }
+          ]
+        }
+      ];
+
+      expect(result).toEqual(expected);
+    });
+  });
+
   describe("numbered list", () => {
     it("deserializes", () => {
       const note = `1. Item 1

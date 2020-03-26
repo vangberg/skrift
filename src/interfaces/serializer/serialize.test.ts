@@ -59,6 +59,40 @@ describe("bulleted list", () => {
   });
 });
 
+describe("bulleted list with nested bulleted list", () => {
+  it("serializes", () => {
+    const value = [
+      {
+        type: "bulleted-list",
+        children: [
+          {
+            type: "list-item",
+            children: [
+              { type: "paragraph", children: [{ text: "Item 1" }] },
+              {
+                type: "bulleted-list",
+                children: [
+                  {
+                    type: "list-item",
+                    children: [{ text: "Item 2" }]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ];
+
+    const expected = `* Item 1
+  * Item 2`;
+
+    const result = serialize(value);
+
+    expect(result).toEqual(expected);
+  });
+});
+
 describe("numbered list", () => {
   it("serializes", () => {
     const value = [

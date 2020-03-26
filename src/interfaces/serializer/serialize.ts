@@ -1,5 +1,13 @@
 import { Node, Text } from "slate";
 
+function indent(level: number, str: string): string {
+  const prepend = " ".repeat(level);
+  return str
+    .split("\n")
+    .map(s => prepend + s)
+    .join("\n");
+}
+
 export function serialize(nodes: Node[]): string {
   let out = "";
 
@@ -51,7 +59,16 @@ function noteLink(node: Node): string {
 
 function bulletedList(node: Node): string {
   return node.children
-    .map((child: Node) => `* ${serializeChildren(child)}\n`)
+    .map((item: Node) => {
+      const [head, ...tail]: Node[] = item.children;
+      if (!head) {
+        return [];
+      }
+      return [
+        `* ${serializeNode(head).trim()}\n`,
+        ...tail.map(node => indent(2, serializeNode(node)).trimRight() + "\n")
+      ].join("");
+    })
     .join("");
 }
 

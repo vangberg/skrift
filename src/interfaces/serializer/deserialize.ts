@@ -75,19 +75,19 @@ export function parse(tokens: Token[]): Node[] {
         nodes.push(...text(token));
         break;
       case "paragraph_open":
-        nodes.push(...paragraph(tokens));
+        nodes.push(...paragraph(token, tokens));
         break;
       case "bullet_list_open":
-        nodes.push(...bulletedList(tokens));
+        nodes.push(...bulletedList(token, tokens));
         break;
       case "ordered_list_open":
-        nodes.push(...numberedList(tokens));
+        nodes.push(...numberedList(token, tokens));
         break;
       case "list_item_open":
-        nodes.push(...listItem(tokens));
+        nodes.push(...listItem(token, tokens));
         break;
       case "note_link_open":
-        nodes.push(...noteLink(tokens));
+        nodes.push(...noteLink(token, tokens));
         break;
     }
   }
@@ -99,13 +99,13 @@ export function parse(tokens: Token[]): Node[] {
   return nodes;
 }
 
-function takeUntil(tokens: Token[], type: string): Token[] {
+function takeUntil(tokens: Token[], type: string, level: number): Token[] {
   const children = [];
 
   while (tokens.length > 0) {
     const next = tokens.shift()!;
 
-    if (next.type === type) {
+    if (next.level === level && next.type === type) {
       break;
     }
 
@@ -123,8 +123,8 @@ function inline(token: BlockContentToken): Node[] {
   return parse(token.children);
 }
 
-function paragraph(tokens: Token[]): Node[] {
-  const children = takeUntil(tokens, "paragraph_close");
+function paragraph(token: Token, tokens: Token[]): Node[] {
+  const children = takeUntil(tokens, "paragraph_close", token.level);
 
   return [
     {
@@ -139,7 +139,7 @@ function heading(token: Token, tokens: Token[]): Node[] {
     throw new Error(`Expected 'heading_open' token, got ${token.type}`);
   }
 
-  const children = takeUntil(tokens, "heading_close");
+  const children = takeUntil(tokens, "heading_close", token.level);
 
   return [
     {
@@ -161,8 +161,8 @@ function text(token: Token): Node[] {
   return [{ text: token.content }];
 }
 
-function noteLink(tokens: Token[]): Node[] {
-  const children = takeUntil(tokens, "note_link_close");
+function noteLink(token: Token, tokens: Token[]): Node[] {
+  const children = takeUntil(tokens, "note_link_close", token.level);
 
   if (children.length > 1) {
     throw new Error(`Expected 1 children, got ${children.length}`);
@@ -185,8 +185,8 @@ function noteLink(tokens: Token[]): Node[] {
   ];
 }
 
-function bulletedList(tokens: Token[]): Node[] {
-  const children = takeUntil(tokens, "bullet_list_close");
+function bulletedList(token: Token, tokens: Token[]): Node[] {
+  const children = takeUntil(tokens, "bullet_list_close", token.level);
 
   return [
     {
@@ -196,8 +196,8 @@ function bulletedList(tokens: Token[]): Node[] {
   ];
 }
 
-function numberedList(tokens: Token[]): Node[] {
-  let children = parse(takeUntil(tokens, "ordered_list_close"));
+function numberedList(token: Token, tokens: Token[]): Node[] {
+  let children = parse(takeUntil(tokens, "ordered_list_close", token.level));
 
   return [
     {
@@ -207,13 +207,17 @@ function numberedList(tokens: Token[]): Node[] {
   ];
 }
 
-function listItem(tokens: Token[]): Node[] {
-  let children = parse(takeUntil(tokens, "list_item_close"));
+function listItem(token: Token, tokens: Token[]): Node[] {
+  let children = parse(takeUntil(tokens, "list_item_close", token.level));
 
   // Everything inside the list item might be wrapped in a paragraph.
   // We don't want to include that paragraph, so we grab its children
   // and use those as the children for the list.
-  if (children[0] && children[0].type === "paragraph") {
+  if (
+    children.length === 1 &&
+    children[0] &&
+    children[0].type === "paragraph"
+  ) {
     children = children[0].children;
   }
 
@@ -229,7 +233,12 @@ export function deserialize(markdown: string): Node[] {
   const tokens = tokenize(markdown);
 
   if (tokens.length === 0) {
-    return paragraph([]);
+    return [
+      {
+        type: "paragraph",
+        children: [{ text: "" }]
+      }
+    ];
   }
 
   return parse(tokens);
