@@ -59,6 +59,35 @@ describe("bulleted list", () => {
   });
 });
 
+describe("bulleted list with note links", () => {
+  it("serializes", () => {
+    const value = [
+      {
+        type: "bulleted-list",
+        children: [
+          {
+            type: "list-item",
+            children: [
+              { text: "A link: " },
+              {
+                type: "note-link",
+                id: "abc",
+                children: [{ text: "" }]
+              }
+            ]
+          }
+        ]
+      }
+    ];
+
+    const expected = `* A link: [[abc]]`;
+
+    const result = serialize(value);
+
+    expect(result).toEqual(expected);
+  });
+});
+
 describe("bulleted list with three paragraphs in item", () => {
   it("serializes", () => {
     const value = [

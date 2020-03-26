@@ -58,18 +58,16 @@ function noteLink(node: Node): string {
 }
 
 function bulletedList(node: Node): string {
-  return node.children
-    .map((item: Node) => {
-      const [head, ...tail]: Node[] = item.children;
-      if (!head) {
-        return [];
-      }
-      return [
-        `* ${serializeNode(head).trim()}\n`,
-        ...tail.map(node => indent(2, serializeNode(node)).trimRight() + "\n")
-      ].join("");
-    })
-    .join("");
+  return (
+    node.children
+      .map((item: Node) => {
+        const [head, ...tail] = serializeChildren(item)
+          .trim()
+          .split("\n");
+        return [`* ${head}`, ...tail.map(line => indent(2, line))].join("\n");
+      })
+      .join("\n") + "\n"
+  );
 }
 
 function numberedList(node: Node): string {
