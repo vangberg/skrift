@@ -1,6 +1,8 @@
 import { Editor, Node, Transforms, Descendant, Element } from "slate";
 
 const handleInsertBreak = (editor: Editor): boolean => {
+  // When inserting a break in an empty list item, break out of the list
+  // and insert a new paragraph.
   const block = Editor.above(editor, {
     match: n => Editor.isBlock(editor, n)
   });

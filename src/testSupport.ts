@@ -1,5 +1,5 @@
 import { createHyperscript } from "slate-hyperscript";
-import { Editor } from "slate";
+import { Editor, Node, Element, Text } from "slate";
 import assert from "assert";
 
 export const jsx = createHyperscript({
@@ -12,15 +12,33 @@ export const jsx = createHyperscript({
 });
 
 export const assertEqual = (actual: Editor, expected: Editor) => {
-  try {
-    assert.deepEqual(actual.children, expected.children);
-  } catch (e) {
-    console.log("Expected:");
-    console.log(JSON.stringify(expected.children, null, 2));
-    console.log("Actual:");
-    console.log(JSON.stringify(actual.children, null, 2));
-
-    throw e;
-  }
+  const expected_hp = hyperprint(expected.children).join("\n");
+  const actual_hp = hyperprint(actual.children).join("\n");
+  expect(expected_hp).toEqual(actual_hp);
   assert.deepEqual(actual.selection, expected.selection);
+};
+
+export const hyperprint = (
+  nodes: Node[],
+  level: number = 0,
+  path: number[] = []
+): string[] => {
+  const lines: string[] = [];
+  const pad = " ".repeat(level);
+
+  nodes.forEach((node, idx) => {
+    if (Text.isText(node)) {
+      lines.push(pad + node.text);
+      return;
+    }
+
+    if (Element.isElement(node)) {
+      const nodePath = path.concat(idx);
+      lines.push(pad + `<${node.type}> [${nodePath.join(", ")}]`);
+      lines.push(...hyperprint(node.children, level + 2, nodePath));
+      lines.push(pad + `</${node.type}>`);
+    }
+  });
+
+  return lines;
 };
