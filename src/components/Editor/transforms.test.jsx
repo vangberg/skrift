@@ -2,6 +2,7 @@
 import { jsx, assertEqual, hyperprint } from "../../testSupport";
 import { SkriftTransforms } from "./transforms";
 import { withList } from "./withList";
+import { withNoteLink } from "./withNoteLink";
 
 describe("transforms", () => {
   describe("indentListItem", () => {
@@ -33,7 +34,7 @@ describe("transforms", () => {
     });
 
     describe("at second list item", () => {
-      describe("with previous item with only text children", () => {
+      describe("with previous item with single text child", () => {
         it("nests list item under first list item", () => {
           // prettier-ignore
           const input = (
@@ -54,6 +55,43 @@ describe("transforms", () => {
               <bulleted-list>
                 <list-item>
                   <paragraph>Item 1</paragraph>
+                  <bulleted-list>
+                    <list-item><cursor />Item 2</list-item>
+                  </bulleted-list>
+                </list-item>
+              </bulleted-list>
+            </editor>
+          );
+
+          assertEqual(editor, output);
+        });
+      });
+
+      describe("with previous item with multiple inline children", () => {
+        it("nests list item under first list item", () => {
+          // prettier-ignore
+          const input = (
+            <editor>
+              <bulleted-list>
+                <list-item>
+                  Item 1 (<note-link id='abc'>Link</note-link>)
+                </list-item>
+                <list-item><cursor />Item 2</list-item>
+              </bulleted-list>
+            </editor>
+          );
+
+          const editor = withNoteLink(withList(input));
+          SkriftTransforms.indentListItem(editor);
+
+          // prettier-ignore
+          const output = (
+            <editor>
+              <bulleted-list>
+                <list-item>
+                  <paragraph>
+                    Item 1 (<note-link id='abc'>Link</note-link>)
+                  </paragraph>
                   <bulleted-list>
                     <list-item><cursor />Item 2</list-item>
                   </bulleted-list>

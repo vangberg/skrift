@@ -1,4 +1,4 @@
-import { Transforms, Editor, Node, Path, Text } from "slate";
+import { Transforms, Element, Editor, Node, Path, Text } from "slate";
 import { hyperprint } from "../../testSupport";
 
 export const SkriftTransforms = {
@@ -38,22 +38,30 @@ export const SkriftTransforms = {
       const list = { type: "bulleted-list", children: [] };
       Transforms.wrapNodes(editor, list, { at: path });
 
-      // If the previous item only has text children, we need to wrap
-      // them in a paragraph, so we can add the indented item to it.
-      if (prev[0].children.length === 1 && Text.isText(prev[0].children[0])) {
-        // Wrap the children of the previous list item in a paragrah
-        Transforms.wrapNodes(
-          editor,
-          { type: "paragraph", children: [] },
-          { at: prev[1].concat(0) }
-        );
+      /*
+      If the previous item only has inline children, we need to wrap them in a
+      paragraph, so we can add the indented item to it.
+      */
+      if (Element.isElement(prev[0]) && Editor.hasInlines(editor, prev[0])) {
+        const wrappedChildren = {
+          type: "paragraph",
+          children: prev[0].children
+        };
+        for (const [, childPath] of Node.children(editor, prev[1], {
+          reverse: true
+        })) {
+          Transforms.removeNodes(editor, { at: childPath });
+        }
+        Transforms.insertNodes(editor, wrappedChildren, {
+          at: prev[1].concat(0)
+        });
       }
 
       // Move the indented item, now wrapped in a list, to the last
       // position in the list item before it.
       Transforms.moveNodes(editor, {
         at: path,
-        to: prev[1].concat(prev[0].children.length)
+        to: prev[1].concat(Node.get(editor, prev[1]).children.length)
       });
     });
   },

@@ -7,14 +7,15 @@ export const jsx = createHyperscript({
     paragraph: { type: "paragraph" },
     heading: { type: "heading" },
     "bulleted-list": { type: "bulleted-list" },
-    "list-item": { type: "list-item" }
+    "list-item": { type: "list-item" },
+    "note-link": { type: "note-link" }
   }
 });
 
 export const assertEqual = (actual: Editor, expected: Editor) => {
-  const expected_hp = hyperprint(expected.children).join("\n");
   const actual_hp = hyperprint(actual.children).join("\n");
-  expect(expected_hp).toEqual(actual_hp);
+  const expected_hp = hyperprint(expected.children).join("\n");
+  assert.deepEqual(actual_hp, expected_hp);
   assert.deepEqual(actual.selection, expected.selection);
 };
 
