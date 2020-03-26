@@ -1,4 +1,6 @@
 import { Editor, Node, Transforms, Descendant, Element } from "slate";
+import { SkriftTransforms } from "./transforms";
+import { hyperprint } from "../../testSupport";
 
 const handleInsertBreak = (editor: Editor): boolean => {
   // When inserting a break in an empty list item, break out of the list
@@ -6,20 +8,41 @@ const handleInsertBreak = (editor: Editor): boolean => {
   const block = Editor.above(editor, {
     match: n => Editor.isBlock(editor, n)
   });
-
   if (!block || block[0].type !== "list-item") {
     return false;
   }
+  const [item, itemPath] = block;
 
-  if (Editor.isEmpty(editor, block[0])) {
-    Transforms.setNodes(editor, {
-      type: "paragraph"
+  const list = Editor.above(editor, {
+    match: n => n.type === "bulleted-list"
+  });
+  if (!list) {
+    return false;
+  }
+
+  if (Editor.isEmpty(editor, item)) {
+    // Check whether this is a nested list or not
+    const parentItem = Editor.above(editor, {
+      at: list[1],
+      match: n => n.type === "list-item"
     });
 
-    Transforms.unwrapNodes(editor, {
-      match: n => ["bulleted-list", "numbered-list"].includes(n.type),
-      split: true
-    });
+    if (parentItem) {
+      // It is a nested list, so we unindent the current item
+      SkriftTransforms.unindentListItem(editor);
+    } else {
+      // It is a top level list, so we turn the item into a paragrah
+      // and lift it out of the list.
+
+      Transforms.setNodes(editor, {
+        type: "paragraph"
+      });
+
+      Transforms.unwrapNodes(editor, {
+        match: n => ["bulleted-list", "numbered-list"].includes(n.type),
+        split: true
+      });
+    }
     return true;
   }
 

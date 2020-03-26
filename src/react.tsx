@@ -5,7 +5,7 @@ import * as serviceWorker from "./serviceWorker";
 import "./styles.css";
 import { App } from "./app";
 
-window.skriftDebug = true;
+window.skriftDebug = false;
 
 ReactDOM.render(<App />, document.getElementById("app"));
 

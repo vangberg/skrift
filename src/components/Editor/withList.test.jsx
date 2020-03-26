@@ -37,6 +37,39 @@ describe("withList", () => {
         assertEqual(editor, output);
       });
     });
+
+    describe("in nested list", () => {
+      it("unindents the list item", () => {
+        // prettier-ignore
+        const input = (
+          <editor>
+            <bulleted-list>
+              <list-item>
+                <paragraph>Top 1</paragraph>
+                <bulleted-list>
+                  <list-item><cursor /></list-item>
+                </bulleted-list>
+              </list-item>
+            </bulleted-list>
+          </editor>
+        );
+
+        const editor = withList(input);
+        editor.insertBreak();
+
+        // prettier-ignore
+        const output = (
+          <editor>
+            <bulleted-list>
+              <list-item>Top 1</list-item>
+              <list-item><cursor/></list-item>
+            </bulleted-list>
+          </editor>
+        );
+
+        assertEqual(editor, output);
+      });
+    });
   });
 
   describe("normalization", () => {
