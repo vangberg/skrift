@@ -43,6 +43,12 @@ export const SkriftEditable: React.FC<Props> = ({ onOpen, getNote }) => {
           return;
         }
 
+        if (isHotkey("shift+tab")(nativeEvent)) {
+          event.preventDefault();
+          SkriftTransforms.unindentListItem(editor);
+          return;
+        }
+
         if (isHotkey("tab")(nativeEvent)) {
           event.preventDefault();
           SkriftTransforms.indentListItem(editor);

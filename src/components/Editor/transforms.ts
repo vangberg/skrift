@@ -94,6 +94,8 @@ export const SkriftTransforms = {
     const itemRef = Editor.pathRef(editor, itemPath);
 
     Editor.withoutNormalizing(editor, () => {
+      // If the item only has text children, we need to wrap them in a paragraph,
+      // so we can add the following siblings to the item.
       if (item.children.length === 1 && Text.isText(item.children[0])) {
         Transforms.wrapNodes(
           editor,
@@ -102,19 +104,28 @@ export const SkriftTransforms = {
         );
       }
 
+      // Move the list item out of the list, splitting the list as a result.
       Transforms.liftNodes(editor, {
         at: itemRef.current!
       });
 
-      const moveTo = itemRef.current!.concat(item.children.length);
-
+      // The parent item has probably changed, so we fetch it again.
       const [parentItem] = Editor.node(editor, parentItemPath);
 
+      // All children in the parent item that comes after the item we
+      // are unindenting, including both following list items as well as
+      // other block nodes, will be moved into the item that we are unindenting.
+
+      // Find all nodes that come after the item.
       const following = parentItem.children.slice(
         Path.relative(itemRef.current!, parentItemPath)[0] + 1
       );
+
+      // Insert the following nodes as children of the item.
+      const moveTo = itemRef.current!.concat(item.children.length);
       Transforms.insertNodes(editor, following, { at: moveTo });
 
+      // Remove all the following nodes from their original location.
       for (const [, childPath] of Node.children(editor, parentItemPath, {
         reverse: true
       })) {
@@ -123,6 +134,7 @@ export const SkriftTransforms = {
         }
       }
 
+      // Lift the item out into the parent list
       Transforms.liftNodes(editor, {
         at: itemRef.current!
       });
