@@ -43,18 +43,12 @@ export const SkriftTransforms = {
       paragraph, so we can add the indented item to it.
       */
       if (Element.isElement(prev[0]) && Editor.hasInlines(editor, prev[0])) {
-        const wrappedChildren = {
-          type: "paragraph",
-          children: prev[0].children
-        };
-        for (const [, childPath] of Node.children(editor, prev[1], {
-          reverse: true
-        })) {
-          Transforms.removeNodes(editor, { at: childPath });
-        }
-        Transforms.insertNodes(editor, wrappedChildren, {
-          at: prev[1].concat(0)
-        });
+        Transforms.setNodes(editor, { type: "paragraph" }, { at: prev[1] });
+        Transforms.wrapNodes(
+          editor,
+          { type: "list-item", children: [] },
+          { at: prev[1] }
+        );
       }
 
       // Move the indented item, now wrapped in a list, to the last
