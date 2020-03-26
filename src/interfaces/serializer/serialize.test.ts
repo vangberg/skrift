@@ -59,6 +59,36 @@ describe("bulleted list", () => {
   });
 });
 
+describe("bulleted list with three paragraphs in item", () => {
+  it("serializes", () => {
+    const value = [
+      {
+        type: "bulleted-list",
+        children: [
+          {
+            type: "list-item",
+            children: [
+              { type: "paragraph", children: [{ text: "Para 1" }] },
+              { type: "paragraph", children: [{ text: "Para 2" }] },
+              { type: "paragraph", children: [{ text: "Para 3" }] }
+            ]
+          }
+        ]
+      }
+    ];
+
+    const expected = `* Para 1
+  
+  Para 2
+  
+  Para 3`;
+
+    const result = serialize(value);
+
+    expect(result).toEqual(expected);
+  });
+});
+
 describe("bulleted list with nested bulleted list", () => {
   it("serializes", () => {
     const value = [
