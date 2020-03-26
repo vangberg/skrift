@@ -85,6 +85,22 @@ export const withList = (editor: Editor): Editor => {
       }
     }
 
+    // Insert empty paragraph in list item with nested list, if missing.
+    if (
+      Element.isElement(node) &&
+      node.type === "list-item" &&
+      node.children.length > 0 &&
+      node.children[0].type === "bulleted-list"
+    ) {
+      Transforms.insertNodes(
+        editor,
+        [{ type: "paragraph", children: [{ text: "" }] }],
+        {
+          at: path.concat(0)
+        }
+      );
+    }
+
     normalizeNode(entry);
   };
 

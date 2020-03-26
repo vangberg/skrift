@@ -132,5 +132,43 @@ describe("withList", () => {
         assertEqual(editor, output);
       });
     });
+
+    describe("with item with a nested list", () => {
+      it("adds a paragraph if missing", () => {
+        // prettier-ignore
+        const input = (
+          <editor>
+            <bulleted-list>
+              <list-item>
+                <bulleted-list>
+                  <list-item>Nested</list-item>
+                </bulleted-list>
+              </list-item>
+            </bulleted-list>
+          </editor>
+        );
+
+        const editor = withList(input);
+        Editor.normalize(editor, { force: true });
+
+        // prettier-ignore
+        const output = (
+          <editor>
+            <bulleted-list>
+              <list-item>
+                <paragraph>
+                  <text></text>
+                </paragraph>
+                <bulleted-list>
+                  <list-item>Nested</list-item>
+                </bulleted-list>
+              </list-item>
+            </bulleted-list>
+          </editor>
+        );
+
+        assertEqual(editor, output);
+      });
+    });
   });
 });

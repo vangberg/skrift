@@ -15,7 +15,11 @@ export const jsx = createHyperscript({
 export const assertEqual = (actual: Editor, expected: Editor) => {
   const actual_hp = hyperprint(actual.children).join("\n");
   const expected_hp = hyperprint(expected.children).join("\n");
-  assert.deepEqual(actual_hp, expected_hp);
+  assert.deepEqual(
+    actual.children,
+    expected.children,
+    `Expected:\n${expected_hp}\nActual:\n${actual_hp}`
+  );
   assert.deepEqual(actual.selection, expected.selection);
 };
 
