@@ -19,10 +19,9 @@ export const SkriftTransforms = {
     }
 
     const block = Editor.above(editor, {
-      match: n => Editor.isBlock(editor, n)
+      match: n => n.type === "list-item"
     });
-
-    if (!block || block[0].type !== "list-item") {
+    if (!block) {
       return;
     }
 
@@ -37,20 +36,24 @@ export const SkriftTransforms = {
     Editor.withoutNormalizing(editor, () => {
       // Wrap the list item to be moved in a new list
       const list = { type: "bulleted-list", children: [] };
-      Transforms.wrapNodes(editor, list);
+      Transforms.wrapNodes(editor, list, { at: path });
 
-      // Wrap the children of the previous list item in a paragrah
-      Transforms.wrapNodes(
-        editor,
-        { type: "paragraph", children: [] },
-        { at: prev[1].concat(0) }
-      );
+      // If the previous item only has text children, we need to wrap
+      // them in a paragraph, so we can add the indented item to it.
+      if (prev[0].children.length === 1 && Text.isText(prev[0].children[0])) {
+        // Wrap the children of the previous list item in a paragrah
+        Transforms.wrapNodes(
+          editor,
+          { type: "paragraph", children: [] },
+          { at: prev[1].concat(0) }
+        );
+      }
 
       // Move the indented item, now wrapped in a list, to the last
       // position in the list item before it.
       Transforms.moveNodes(editor, {
         at: path,
-        to: prev[1].concat(1)
+        to: prev[1].concat(prev[0].children.length)
       });
     });
   },
@@ -62,11 +65,11 @@ export const SkriftTransforms = {
       return;
     }
 
-    // If the current block is not a list item, don't do anything.
+    // If the current block is not in a list item, don't do anything.
     const block = Editor.above(editor, {
-      match: n => Editor.isBlock(editor, n)
+      match: n => n.type === "list-item"
     });
-    if (!block || block[0].type !== "list-item") {
+    if (!block) {
       return;
     }
     const [item, itemPath] = block;

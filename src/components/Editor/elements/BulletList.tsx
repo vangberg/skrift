@@ -4,7 +4,7 @@ import { RenderElementProps } from "slate-react";
 export const BulletList: React.FC<RenderElementProps> = props => {
   return (
     <ul
-      className="list-disc list-outside ml-5 border border-blue-500"
+      className="list-disc list-outside ml-5 children:bg-red-500"
       {...props.attributes}
     >
       {props.children}
