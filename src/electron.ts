@@ -1,6 +1,8 @@
 import { app, BrowserWindow } from "electron";
-
+import isDev from "electron-is-dev";
 let mainWindow: Electron.BrowserWindow;
+
+console.log("dev", isDev);
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -12,8 +14,12 @@ function createWindow() {
   });
 
   mainWindow.maximize();
-  mainWindow.loadURL("http://localhost:8080");
-  mainWindow.webContents.openDevTools();
+  if (isDev) {
+    mainWindow.loadURL("http://localhost:8080");
+    mainWindow.webContents.openDevTools();
+  } else {
+    mainWindow.loadFile("index.html");
+  }
 
   mainWindow.on("closed", () => {
     mainWindow.destroy();

@@ -6,9 +6,11 @@
   "scripts": {
     "build:electron": "webpack --config ./webpack.electron.config.js",
     "build:react": "webpack --config ./webpack.react.config.js",
+    "build": "npm run build:electron && npm run build:react",
     "start:electron": "npm run build:electron && electron ./dist/electron.js",
     "start:react": "webpack-dev-server --config ./webpack.react.config.js",
     "start": "concurrently \"npm:start:*\"",
+    "start:dist": "ELECTRON_IS_DEV=0 electron dist/electron.js",
     "eslint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
     "test-watch": "jest --watch"
@@ -37,6 +39,7 @@
     "concurrently": "^5.1.0",
     "css-loader": "^3.4.2",
     "electron": "^8.0.0",
+    "electron-is-dev": "^1.1.0",
     "eslint": "^6.8.0",
     "eslint-plugin-jest": "^23.8.2",
     "eslint-plugin-react": "^7.18.3",
