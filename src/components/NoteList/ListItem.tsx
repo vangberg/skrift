@@ -27,7 +27,8 @@ export const ListItem: React.FC<Props> = ({ note, onClick }) => {
         className="flex-1 p-1 cursor-pointer hover:bg-gray-300 truncate"
         onClick={handleClick}
       >
-        {note.title || note.id}
+        <span>{note.title || note.id}</span>
+        <span className="ml-1 text-gray-400">{note.body}</span>
       </div>
       <div
         className="p-1 text-blue-400 underline cursor-pointer"

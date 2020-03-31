@@ -13,6 +13,12 @@ describe("parseMarkdown", () => {
       expect(note.title).toEqual("A title");
     });
 
+    it("parses body", () => {
+      expect(note.body).toEqual(
+        "Some content. [[123]].\nAnother link: [[456]]"
+      );
+    });
+
     it("parses links", () => {
       expect(note.links).toEqual(new Set(["123", "456"]));
     });

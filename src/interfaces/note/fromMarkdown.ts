@@ -3,6 +3,7 @@ import { Serializer } from "../serializer";
 
 interface ParsedNote {
   title: string;
+  body: string;
   links: Set<string>;
   markdown: string;
 }
@@ -13,6 +14,17 @@ function parseTitle(nodes: Node[]): string {
   }
 
   return Node.string(nodes[0]);
+}
+
+/** Returns a textual representation of the note, sans the title. */
+function parseBody(nodes: Node[]): string {
+  const [, ...tail] = nodes;
+
+  if (tail.length === 0) {
+    return "";
+  }
+
+  return tail.map(node => Node.string(node)).join(" ");
 }
 
 function parseLinks(nodes: Node[]): Set<string> {
@@ -32,6 +44,7 @@ export function fromMarkdown(markdown: string): ParsedNote {
   return {
     title: parseTitle(nodes),
     links: parseLinks(nodes),
+    body: parseBody(nodes),
     markdown
   };
 }

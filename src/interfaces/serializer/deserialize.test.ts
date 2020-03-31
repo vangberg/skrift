@@ -42,7 +42,7 @@ describe("deserialize", () => {
             {
               type: "note-link",
               id: "123",
-              children: [{ text: "" }]
+              children: [{ text: "[[123]]" }]
             },
             { text: "" }
           ]
@@ -165,7 +165,7 @@ describe("deserialize", () => {
             {
               type: "note-link",
               id: "123",
-              children: [{ text: "" }]
+              children: [{ text: "[[123]]" }]
             },
             { text: "" },
             { text: ") said." }
@@ -201,7 +201,7 @@ describe("desiralizeInline", () => {
         {
           type: "note-link",
           id: "123",
-          children: [{ text: "" }]
+          children: [{ text: "[[123]]" }]
         },
         { text: "" }
       ];

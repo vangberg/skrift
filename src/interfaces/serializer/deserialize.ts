@@ -179,7 +179,7 @@ function noteLink(token: Token, tokens: Token[]): Node[] {
     {
       type: "note-link",
       id: child.content,
-      children: [{ text: "" }]
+      children: [{ text: `[[${child.content}]]` }]
     },
     { text: "" }
   ];

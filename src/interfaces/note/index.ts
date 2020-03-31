@@ -5,6 +5,7 @@ export type NoteID = string;
 export interface Note {
   id: NoteID;
   title: string;
+  body: string;
   links: Set<NoteID>;
   backlinks: Set<NoteID>;
   markdown: string;
@@ -18,6 +19,7 @@ export const Note = {
     return {
       id: "",
       title: "",
+      body: "",
       links: new Set(),
       backlinks: new Set(),
       markdown: "",
