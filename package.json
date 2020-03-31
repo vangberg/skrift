@@ -10,7 +10,7 @@
     "start:electron": "npm run build:electron && electron ./dist/electron.js",
     "start:react": "webpack-dev-server --config ./webpack.react.config.js",
     "start": "concurrently \"npm:start:*\"",
-    "start:dist": "ELECTRON_IS_DEV=0 electron dist/electron.js",
+    "dist": "ELECTRON_IS_DEV=0 electron dist/electron.js",
     "eslint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
     "test-watch": "jest --watch"
