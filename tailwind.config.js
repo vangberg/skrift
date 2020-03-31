@@ -3,5 +3,8 @@ module.exports = {
     minWidth: {
       xs: "20rem"
     }
+  },
+  variants: {
+    padding: ["first"]
   }
 };
