@@ -11,9 +11,8 @@ export const SearchBar: React.FC<Props> = ({ query, onAdd, onSearch }) => {
     (event: React.FormEvent) => {
       event.preventDefault();
       onAdd(query);
-      onSearch("");
     },
-    [query, onAdd, onSearch]
+    [query, onAdd]
   );
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) =>
