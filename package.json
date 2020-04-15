@@ -1,8 +1,8 @@
 {
-  "name": "skrift",
+  "name": "Skrift",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Networked notes",
+  "main": "build/electron.js",
   "scripts": {
     "build:electron": "webpack --config ./webpack.electron.config.js",
     "build:react": "webpack --config ./webpack.react.config.js",
@@ -10,17 +10,29 @@
     "start:electron": "npm run build:electron && electron ./dist/electron.js",
     "start:react": "webpack-dev-server --config ./webpack.react.config.js",
     "start": "concurrently \"npm:start:*\"",
-    "dist": "ELECTRON_IS_DEV=0 electron dist/electron.js",
+    "dist": "npm run build && electron-builder",
     "eslint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
     "test-watch": "jest --watch"
+  },
+  "build": {
+    "appId": "com.halestreet.Skrift",
+    "mac": {
+      "category": "public.app-category.productivity"
+    },
+    "directories": {
+      "buildResources": "assets"
+    },
+    "files": [
+      "build/**/*"
+    ]
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/vangberg/skrift.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Harry Vangberg",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/vangberg/skrift/issues"
@@ -39,6 +51,7 @@
     "concurrently": "^5.1.0",
     "css-loader": "^3.5.2",
     "electron": "^8.2.2",
+    "electron-builder": "^22.4.1",
     "electron-is-dev": "^1.2.0",
     "eslint": "^6.8.0",
     "eslint-plugin-jest": "^23.8.2",

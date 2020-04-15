@@ -1,24 +1,25 @@
 import { app, BrowserWindow } from "electron";
 import isDev from "electron-is-dev";
+import path from "path";
+import { format } from "url";
 let mainWindow: Electron.BrowserWindow;
-
-console.log("dev", isDev);
 
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     webPreferences: {
-      nodeIntegration: true
-    }
+      nodeIntegration: true,
+    },
   });
 
   mainWindow.maximize();
+
   if (isDev) {
     mainWindow.loadURL("http://localhost:8080");
     mainWindow.webContents.openDevTools();
   } else {
-    mainWindow.loadFile("index.html");
+    mainWindow.loadFile("./build/index.html");
   }
 
   mainWindow.on("closed", () => {
@@ -29,9 +30,7 @@ function createWindow() {
 app.on("ready", createWindow);
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
+  app.quit();
 });
 
 app.on("activate", () => {

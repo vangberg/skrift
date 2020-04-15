@@ -8,13 +8,13 @@ module.exports = [
         {
           test: /\.ts$/,
           include: /src/,
-          use: [{ loader: "ts-loader" }]
-        }
-      ]
+          use: [{ loader: "ts-loader" }],
+        },
+      ],
     },
     output: {
-      path: __dirname + "/dist",
-      filename: "electron.js"
-    }
-  }
+      path: __dirname + "/build",
+      filename: "electron.js",
+    },
+  },
 ];
