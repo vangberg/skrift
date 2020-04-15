@@ -9,30 +9,31 @@ import {
   SetNotesAction,
   SaveMarkdownAction,
   DeleteNoteAction,
-  ActionHandler
+  ActionHandler,
 } from "./types";
 import { errorHandler } from "./errorHandler";
 import { Search } from "../search";
 
-export const openFolder: ActionHandler<OpenFolderAction> = state => {
+export const openFolder: ActionHandler<OpenFolderAction> = (state) => {
   return [
     state,
     Effects.dispatchFromPromise<Action>(async () => {
+      await NotesFS.initialize();
       const notes = await NotesFS.readAll();
       return { type: "notes/SET_NOTES", notes };
-    }, errorHandler)
+    }, errorHandler),
   ];
 };
 
 export const setNotes: ActionHandler<SetNotesAction> = (state, action) => {
   return [
-    produce(state, draft => {
+    produce(state, (draft) => {
       draft.notes = action.notes;
     }),
     Effects.attemptFunction(
       () => Search.replaceAll(state.search.index, action.notes),
       errorHandler
-    )
+    ),
   ];
 };
 
@@ -40,7 +41,7 @@ export const saveMarkdown: ActionHandler<SaveMarkdownAction> = (
   state,
   action
 ) => {
-  const next = produce(state, draft => {
+  const next = produce(state, (draft) => {
     Notes.saveMarkdown(draft.notes, action.id, action.markdown);
   });
 
@@ -57,13 +58,13 @@ export const saveMarkdown: ActionHandler<SaveMarkdownAction> = (
         () => Search.add(state.search.index, note),
         errorHandler
       )
-    )
+    ),
   ];
 };
 
 export const deleteNote: ActionHandler<DeleteNoteAction> = (state, action) => {
   return [
-    produce(state, draft => {
+    produce(state, (draft) => {
       Notes.deleteNote(draft.notes, action.id);
     }),
     Effects.combine(
@@ -72,6 +73,6 @@ export const deleteNote: ActionHandler<DeleteNoteAction> = (state, action) => {
         () => Search.remove(state.search.index, action.id),
         errorHandler
       )
-    )
+    ),
   ];
 };

@@ -3,12 +3,17 @@ import path from "path";
 import os from "os";
 import { NoteID, Note } from "../note";
 import { Notes } from "../notes";
+import { app, remote } from "electron";
 
-const PATH = path.join(os.homedir(), "Documents", "zettelkasten");
+const PATH = path.join(remote.app.getPath("documents"), "Skrift");
 
 export const NotesFS = {
   path(id: NoteID): string {
     return path.join(PATH, id + ".md");
+  },
+
+  initialize(): Promise<void> {
+    return fs.promises.mkdir(PATH, { recursive: true });
   },
 
   async readAll(): Promise<Notes> {
@@ -17,25 +22,25 @@ export const NotesFS = {
 
     await Promise.all(
       filenames
-        .filter(filename => filename.endsWith(".md"))
-        .map(async filename => {
+        .filter((filename) => filename.endsWith(".md"))
+        .map(async (filename) => {
           const fullPath = path.join(PATH, filename);
           const [stats, markdown] = await Promise.all([
             fs.promises.stat(fullPath),
-            fs.promises.readFile(fullPath, "utf8")
+            fs.promises.readFile(fullPath, "utf8"),
           ]);
 
           const id = path.basename(filename, ".md");
           const note = Note.empty({
             ...Note.fromMarkdown(markdown),
             id,
-            modifiedAt: stats.mtime
+            modifiedAt: stats.mtime,
           });
 
           Notes.saveNote(notes, note);
         })
     );
-    notes.forEach(note => Notes.addBacklinks(notes, note.id));
+    notes.forEach((note) => Notes.addBacklinks(notes, note.id));
     return notes;
   },
 
@@ -47,7 +52,7 @@ export const NotesFS = {
     }
 
     return new Promise((resolve, reject) => {
-      fs.writeFile(this.path(note.id), note.markdown, err => {
+      fs.writeFile(this.path(note.id), note.markdown, (err) => {
         err ? reject(err) : resolve();
       });
     });
@@ -55,9 +60,9 @@ export const NotesFS = {
 
   delete(id: NoteID): Promise<void> {
     return new Promise((resolve, reject) => {
-      fs.unlink(this.path(id), err => {
+      fs.unlink(this.path(id), (err) => {
         err ? reject(err) : resolve();
       });
     });
-  }
+  },
 };
