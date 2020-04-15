@@ -1,9 +1,8 @@
 import fs from "fs";
 import path from "path";
-import os from "os";
 import { NoteID, Note } from "../note";
 import { Notes } from "../notes";
-import { app, remote } from "electron";
+import { remote } from "electron";
 
 const PATH = path.join(remote.app.getPath("documents"), "Skrift");
 
