@@ -11,8 +11,8 @@ export const NotesFS = {
     return path.join(PATH, id + ".md");
   },
 
-  initialize(): Promise<void> {
-    return fs.promises.mkdir(PATH, { recursive: true });
+  async initialize(): Promise<void> {
+    await fs.promises.mkdir(PATH, { recursive: true });
   },
 
   async readAll(): Promise<Notes> {
