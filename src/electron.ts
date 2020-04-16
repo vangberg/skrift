@@ -1,7 +1,5 @@
 import { app, BrowserWindow } from "electron";
 import isDev from "electron-is-dev";
-import path from "path";
-import { format } from "url";
 let mainWindow: Electron.BrowserWindow;
 
 function createWindow() {
