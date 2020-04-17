@@ -7,7 +7,7 @@
     "build:electron": "webpack --config ./webpack.electron.config.js",
     "build:react": "webpack --config ./webpack.react.config.js",
     "build": "npm run build:electron && npm run build:react",
-    "start:electron": "npm run build:electron && electron ./dist/electron.js",
+    "start:electron": "npm run build:electron && electron ./build/electron.js",
     "start:react": "webpack-dev-server --config ./webpack.react.config.js",
     "start": "concurrently \"npm:start:*\"",
     "dist": "npm run build && electron-builder",
