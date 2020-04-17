@@ -170,5 +170,71 @@ describe("withList", () => {
         assertEqual(editor, output);
       });
     });
+
+    describe("with orphaned list item", () => {
+      describe("at top level", () => {
+        it("wraps it in bulleted-list", () => {
+          // prettier-ignore
+          const input = (
+            <editor>
+              <list-item>Item</list-item>
+            </editor>
+          );
+
+          const editor = withList(input);
+          Editor.normalize(editor, { force: true });
+
+          // prettier-ignore
+          const output = (
+            <editor>
+              <bulleted-list>
+                <list-item>Item</list-item>
+              </bulleted-list>
+            </editor>
+          );
+
+          assertEqual(editor, output);
+        });
+      });
+
+      describe("in item", () => {
+        it("wraps it in bulleted-list", () => {
+          // prettier-ignore
+          const input = (
+            <editor>
+              <bulleted-list>
+                <list-item>
+                  <paragraph>
+                    <text></text>
+                  </paragraph>
+                  <list-item>Nested</list-item>
+                </list-item>
+              </bulleted-list>
+            </editor>
+          );
+
+          const editor = withList(input);
+          Editor.normalize(editor, { force: true });
+
+          // prettier-ignore
+          const output = (
+            <editor>
+              <bulleted-list>
+                <list-item>
+                  <paragraph>
+                    <text></text>
+                  </paragraph>
+                  <bulleted-list>
+                    <list-item>Nested</list-item>
+                  </bulleted-list>
+                </list-item>
+              </bulleted-list>
+            </editor>
+          );
+
+          assertEqual(editor, output);
+        });
+      });
+    });
   });
 });

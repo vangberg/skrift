@@ -6,7 +6,7 @@ const handleInsertBreak = (editor: Editor): boolean => {
   // When inserting a break in an empty list item, break out of the list
   // and insert a new paragraph.
   const block = Editor.above(editor, {
-    match: n => Editor.isBlock(editor, n)
+    match: (n) => Editor.isBlock(editor, n),
   });
   if (!block || block[0].type !== "list-item") {
     return false;
@@ -14,7 +14,7 @@ const handleInsertBreak = (editor: Editor): boolean => {
   const [item, itemPath] = block;
 
   const list = Editor.above(editor, {
-    match: n => n.type === "bulleted-list"
+    match: (n) => n.type === "bulleted-list",
   });
   if (!list) {
     return false;
@@ -24,7 +24,7 @@ const handleInsertBreak = (editor: Editor): boolean => {
     // Check whether this is a nested list or not
     const parentItem = Editor.above(editor, {
       at: list[1],
-      match: n => n.type === "list-item"
+      match: (n) => n.type === "list-item",
     });
 
     if (parentItem) {
@@ -35,12 +35,12 @@ const handleInsertBreak = (editor: Editor): boolean => {
       // and lift it out of the list.
 
       Transforms.setNodes(editor, {
-        type: "paragraph"
+        type: "paragraph",
       });
 
       Transforms.unwrapNodes(editor, {
-        match: n => ["bulleted-list", "numbered-list"].includes(n.type),
-        split: true
+        match: (n) => ["bulleted-list", "numbered-list"].includes(n.type),
+        split: true,
       });
     }
     return true;
@@ -48,10 +48,11 @@ const handleInsertBreak = (editor: Editor): boolean => {
 
   return false;
 };
+
 export const withList = (editor: Editor): Editor => {
   const { normalizeNode } = editor;
 
-  editor.normalizeNode = entry => {
+  editor.normalizeNode = (entry) => {
     const [node, path] = entry;
 
     // If list item contains a single paragraph, unwrap the children.
@@ -96,9 +97,27 @@ export const withList = (editor: Editor): Editor => {
         editor,
         [{ type: "paragraph", children: [{ text: "" }] }],
         {
-          at: path.concat(0)
+          at: path.concat(0),
         }
       );
+      return;
+    }
+
+    // Wrap orphaned list items in bulleted list
+    if (Element.isElement(node) && node.type === "list-item") {
+      const above = Editor.above(editor, { at: path });
+
+      if (!above || above[0].type !== "bulleted-list") {
+        Transforms.wrapNodes(
+          editor,
+          {
+            type: "bulleted-list",
+            children: [],
+          },
+          { at: path }
+        );
+        return;
+      }
     }
 
     normalizeNode(entry);
