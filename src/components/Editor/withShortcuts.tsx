@@ -5,11 +5,13 @@ const SHORTCUTS = new Map([
   ["##", { type: "heading", level: 2 }],
   ["###", { type: "heading", level: 3 }],
   ["*", { type: "list-item" }],
-  ["-", { type: "list-item" }]
+  ["-", { type: "list-item" }],
 ]);
 
 const rangeBefore = (editor: Editor, point: Point): Location => {
-  const block = Editor.above(editor, { match: n => Editor.isBlock(editor, n) });
+  const block = Editor.above(editor, {
+    match: (n) => Editor.isBlock(editor, n),
+  });
   const path = block ? block[1] : [];
   const start = Editor.start(editor, path);
   return { anchor: point, focus: start };
@@ -23,7 +25,7 @@ const handleInsert = (editor: Editor, text: string): boolean => {
   }
 
   const block = Editor.above(editor, {
-    match: n => Editor.isBlock(editor, n)
+    match: (n) => Editor.isBlock(editor, n),
   });
   if (block && block[0].type !== "paragraph") {
     return false;
@@ -37,19 +39,21 @@ const handleInsert = (editor: Editor, text: string): boolean => {
     return false;
   }
 
-  Transforms.select(editor, range);
-  Transforms.delete(editor);
+  Editor.withoutNormalizing(editor, () => {
+    Transforms.select(editor, range);
+    Transforms.delete(editor);
 
-  Transforms.setNodes(editor, shortcutProps, {
-    match: n => Editor.isBlock(editor, n)
-  });
-
-  if (shortcutProps.type === "list-item") {
-    const list = { type: "bulleted-list", children: [] };
-    Transforms.wrapNodes(editor, list, {
-      match: n => n.type === "list-item"
+    Transforms.setNodes(editor, shortcutProps, {
+      match: (n) => Editor.isBlock(editor, n),
     });
-  }
+
+    if (shortcutProps.type === "list-item") {
+      const list = { type: "bulleted-list", children: [] };
+      Transforms.wrapNodes(editor, list, {
+        match: (n) => n.type === "list-item",
+      });
+    }
+  });
 
   return true;
 };
@@ -66,7 +70,7 @@ const handleDelete = (editor: Editor): boolean => {
   }
 
   const parent = Editor.above(editor, {
-    match: n => Editor.isBlock(editor, n)
+    match: (n) => Editor.isBlock(editor, n),
   });
 
   if (!parent) {
@@ -82,13 +86,13 @@ const handleDelete = (editor: Editor): boolean => {
 
   Transforms.setNodes(editor, {
     type: "paragraph",
-    level: undefined
+    level: undefined,
   });
 
   if (block.type === "list-item") {
     Transforms.unwrapNodes(editor, {
-      match: n => ["bulleted-list", "numbered-list"].includes(n.type),
-      split: true
+      match: (n) => ["bulleted-list", "numbered-list"].includes(n.type),
+      split: true,
     });
   }
 
@@ -98,7 +102,7 @@ const handleDelete = (editor: Editor): boolean => {
 export const withShortcuts = (editor: Editor): Editor => {
   const { deleteBackward, insertText } = editor;
 
-  editor.insertText = text => {
+  editor.insertText = (text) => {
     handleInsert(editor, text) || insertText(text);
   };
 
