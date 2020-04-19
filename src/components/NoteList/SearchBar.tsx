@@ -31,7 +31,7 @@ export const SearchBar: React.FC<Props> = ({ query, onAdd, onSearch }) => {
           onChange={handleChange}
         />
         <button className="p-1 border border-blue-200 bg-blue-200 rounded-r">
-          Add
+          Create
         </button>
       </form>
     </div>

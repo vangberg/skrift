@@ -22,19 +22,18 @@ export const ListItem: React.FC<Props> = ({ note, onClick }) => {
   }, [note]);
 
   return (
-    <div className="flex">
+    <div className="flex group">
       <div
-        className="flex-1 p-1 cursor-pointer hover:bg-gray-300 truncate"
+        className="flex-1 p-1 cursor-pointer text-gray-700 hover:text-black truncate"
         onClick={handleClick}
       >
-        <span>{note.title || note.id}</span>
-        <span className="ml-1 text-gray-400">{note.body}</span>
+        {note.title || note.id}
       </div>
       <div
-        className="p-1 text-blue-400 underline cursor-pointer"
+        className="p-1 text-blue-400 underline cursor-pointer invisible group-hover:visible"
         onClick={handleCopy}
       >
-        Copy
+        …
       </div>
     </div>
   );
