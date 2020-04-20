@@ -22,9 +22,9 @@ export const ListItem: React.FC<Props> = ({ note, onClick }) => {
   }, [note]);
 
   return (
-    <div className="flex group">
+    <div className="flex group hover:bg-gray-200 px-2">
       <div
-        className="flex-1 p-1 cursor-pointer text-gray-700 hover:text-black truncate"
+        className="flex-1 p-1 cursor-pointer text-gray-700 truncate"
         onClick={handleClick}
       >
         {note.title || note.id}
