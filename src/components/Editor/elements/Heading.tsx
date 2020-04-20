@@ -15,9 +15,12 @@ const headerClasses = (level: number) => {
 export const Heading: React.FC<RenderElementProps> = ({
   element,
   attributes,
-  children
+  children,
 }) => {
-  const classes = cx(headerClasses(element.level), "pt-2 first:pt-0");
+  const classes = cx(
+    headerClasses(element.level),
+    "pt-2 first:pt-0 tracking-wide"
+  );
 
   return (
     <h1 className={classes} {...attributes}>
