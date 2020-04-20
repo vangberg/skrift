@@ -7,10 +7,10 @@ type Props = {
 export const Item: React.FC<Props> = ({ onClick, children }) => {
   return (
     <div
-      className="ml-1 text-gray-500 hover:text-gray-600 cursor-pointer select-none"
+      className="p-1 text-gray-500 hover:bg-gray-200 rounded cursor-pointer select-none"
       onClick={onClick}
     >
-      [{children}]
+      {children}
     </div>
   );
 };

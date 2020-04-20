@@ -20,8 +20,8 @@ const deserialize = (markdown: string) => {
   return [
     {
       type: "paragraph",
-      children: [{ text: "" }]
-    }
+      children: [{ text: "" }],
+    },
   ];
 };
 
@@ -44,7 +44,7 @@ export const SkriftEditor: React.FC<Props> = ({
   onDelete,
   onOpen,
   onClose,
-  getNote
+  getNote,
 }) => {
   const editor = useMemo(() => createEditor(), []);
   const [value, setValue] = useState(() => deserialize(note.markdown));
@@ -73,7 +73,7 @@ export const SkriftEditor: React.FC<Props> = ({
     const { response } = await remote.dialog.showMessageBox({
       type: "question",
       message: `Are you sure you want to delete the note ${note.title}`,
-      buttons: ["Yes", "No"]
+      buttons: ["Yes", "No"],
     });
     if (response === 0) {
       onDelete();
@@ -85,13 +85,13 @@ export const SkriftEditor: React.FC<Props> = ({
   }, [note]);
 
   return (
-    <div className="shadow mb-2 mx-1 bg-white">
+    <div className="shadow rounded mb-2 mx-1 bg-white">
       <div className="float-right p-2">
         <Toolbar
           onCopy={handleCopy}
           onClose={onClose}
           onDelete={handleDelete}
-        ></Toolbar>
+        />
       </div>
 
       <div className="p-2">

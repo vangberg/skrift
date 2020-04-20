@@ -30,10 +30,10 @@ export const ListItem: React.FC<Props> = ({ note, onClick }) => {
         {note.title || note.id}
       </div>
       <div
-        className="p-1 text-blue-400 underline cursor-pointer invisible group-hover:visible"
+        className="my-1 px-1 text-gray-500 border-gray-500 border hover:bg-gray-300 rounded cursor-pointer invisible group-hover:visible"
         onClick={handleCopy}
       >
-        …
+        ...
       </div>
     </div>
   );
