@@ -11,7 +11,7 @@ export const ListItem: React.FC<Props> = ({ note, onClick }) => {
   const handleClick = useCallback(
     (event: React.MouseEvent) => {
       if (onClick) {
-        onClick(note.id, event.metaKey);
+        onClick(note.id, event.metaKey || event.ctrlKey);
       }
     },
     [onClick, note]
