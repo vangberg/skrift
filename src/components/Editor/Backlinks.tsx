@@ -14,15 +14,17 @@ export const Backlinks: React.FC<Props> = ({ note, onOpen, getNote }) => {
   }
 
   return (
-    <div className="p-2">
-      <span className="bg-gray-600 rounded-lg p-1 text-white mr-1">
+    <div className="px-2 pb-2">
+      <div className="border-b border-gray-400 text-gray-600 italic">
         Backlinks
-      </span>
-      {[...note.backlinks].map(link => (
-        <span key={link} className="pr-1">
-          <NoteLink id={link} onOpen={onOpen} getNote={getNote} />
-        </span>
-      ))}
+      </div>
+      <div className="pt-1">
+        {[...note.backlinks].map((link) => (
+          <span key={link} className="pr-1">
+            <NoteLink id={link} onOpen={onOpen} getNote={getNote} />
+          </span>
+        ))}
+      </div>
     </div>
   );
 };
