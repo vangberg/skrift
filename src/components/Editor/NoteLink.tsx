@@ -1,5 +1,6 @@
 import React, { useMemo, useCallback } from "react";
 import { Note } from "../../interfaces/note";
+import isHotkey from "is-hotkey";
 
 type Props = {
   id: string;
@@ -12,7 +13,7 @@ export const NoteLink: React.FC<Props> = ({ id, getNote, onOpen }) => {
 
   const handleOpen = useCallback(
     (event: React.MouseEvent) => {
-      onOpen(id, event.metaKey);
+      onOpen(id, event.metaKey || event.ctrlKey);
     },
     [onOpen, id]
   );
