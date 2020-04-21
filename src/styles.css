@@ -4,6 +4,6 @@
 
 @import url("https://fonts.googleapis.com/css?family=Roboto");
 
-.skrift-list-item> p: first-child {
+.skrift-list-item > p:first-child {
   @apply py-0;
 }
