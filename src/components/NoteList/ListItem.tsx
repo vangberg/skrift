@@ -1,6 +1,7 @@
 import React, { useCallback } from "react";
 import { Note, NoteID } from "../../interfaces/note";
 import { clipboard } from "electron";
+import { Icon } from "../Icon";
 
 type Props = {
   note: Note;
@@ -29,11 +30,8 @@ export const ListItem: React.FC<Props> = ({ note, onClick }) => {
       >
         {note.title || note.id}
       </div>
-      <div
-        className="my-1 px-1 text-gray-500 border-gray-500 border hover:bg-gray-300 rounded cursor-pointer invisible group-hover:visible"
-        onClick={handleCopy}
-      >
-        ...
+      <div className="px-1 my-1 text-gray-700 cursor-pointer hover:bg-gray-400 rounded flex items-center invisible group-hover:visible">
+        <Icon name="ellipsis-h" className="w-3" />
       </div>
     </div>
   );
