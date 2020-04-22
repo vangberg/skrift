@@ -71,7 +71,6 @@
     "immer": "^5.3.6",
     "is-hotkey": "^0.1.6",
     "jest": "^25.3.0",
-    "minisearch": "^2.2.2",
     "postcss-loader": "^3.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
