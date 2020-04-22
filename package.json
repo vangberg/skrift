@@ -12,6 +12,7 @@
     "start": "concurrently \"npm:start:*\"",
     "dist": "npm run build && electron-builder",
     "install:mac": "rm -rf /Applications/Skrift.app && cp -r dist/mac/Skrift.app /Applications/",
+    "install:linux": "dpkg -i dist/Skrift_1.0.0_amd64.deb",
     "eslint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
     "test-watch": "jest --watch"
