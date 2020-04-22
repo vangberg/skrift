@@ -11,7 +11,7 @@
     "start:react": "webpack-dev-server --config ./webpack.react.config.js",
     "start": "concurrently \"npm:start:*\"",
     "dist": "npm run build && electron-builder",
-    "install": "rm -rf /Applications/Skrift.app && cp -r dist/mac/Skrift.app /Applications/",
+    "install:mac": "rm -rf /Applications/Skrift.app && cp -r dist/mac/Skrift.app /Applications/",
     "eslint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
     "test-watch": "jest --watch"
