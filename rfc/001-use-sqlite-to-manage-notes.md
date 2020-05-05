@@ -144,7 +144,7 @@ all note revisions, and use that as the cache key for searches:
 ```typescript
 const NoteRevisions = {
   sum(revs: NoteRevisions): number {
-    const values = revs.vales();
+    const values = revs.values();
 
     let value,
       done,
