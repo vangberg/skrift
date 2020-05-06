@@ -1,6 +1,6 @@
 import sqlite3 from "sqlite3";
 import { open, Database } from "sqlite";
-import { Note } from "../note";
+import { Note, NoteID } from "../note";
 
 export interface NoteRow {
   id: string;
@@ -48,7 +48,24 @@ export const NotesDB = {
         markdown = excluded.markdown,
         modifiedAt = excluded.modifiedAt
       `,
-      [id, title, markdown, modifiedAt]
+      [id, title, markdown, modifiedAt.toJSON()]
     );
+  },
+
+  async get(db: Database, id: NoteID): Promise<Note> {
+    const row = await db.get<NoteRow>(`SELECT * FROM notes WHERE id = ?`, id);
+
+    if (!row) {
+      return Promise.reject(`Could not find note with id ${id}`);
+    }
+
+    const { title, markdown, modifiedAt } = row;
+
+    return Note.empty({
+      id,
+      title,
+      markdown,
+      modifiedAt: new Date(modifiedAt),
+    });
   },
 };

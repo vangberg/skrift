@@ -1,10 +1,13 @@
+import { Database } from "sqlite";
+import { StateEffectPair } from "react-use-elmish";
+
 import { Notes } from "../interfaces/notes";
 import { NoteID } from "../interfaces/note";
-import { StateEffectPair } from "react-use-elmish";
 import { Index } from "../search";
 import { Streams, StreamIndex, StreamLocation } from "../interfaces/streams";
 
 export interface State {
+  db: Database;
   notes: Notes;
   streams: Streams;
   search: {
