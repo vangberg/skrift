@@ -2,6 +2,13 @@ import sqlite3 from "sqlite3";
 import { open, Database } from "sqlite";
 import { Note } from "../note";
 
+export interface NoteRow {
+  id: string;
+  title: string;
+  markdown: string;
+  modifiedAt: string;
+}
+
 export const NotesDB = {
   async memory(): Promise<Database> {
     return open({
@@ -29,13 +36,17 @@ export const NotesDB = {
     `);
   },
 
-  async add(db: Database, note: Note): Promise<void> {
+  async save(db: Database, note: Note): Promise<void> {
     const { id, title, markdown, modifiedAt } = note;
 
     await db.run(
       `
       INSERT INTO notes (id, title, markdown, modifiedAt)
       VALUES (?, ?, ?, ?)
+      ON CONFLICT (id) DO UPDATE SET
+        title = excluded.title,
+        markdown = excluded.markdown,
+        modifiedAt = excluded.modifiedAt
       `,
       [id, title, markdown, modifiedAt]
     );
