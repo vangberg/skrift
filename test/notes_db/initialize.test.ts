@@ -1,27 +1,26 @@
-import { Database } from "sqlite3";
 import { NotesDB } from "../../src/interfaces/notes_db";
+import { Database } from "sqlite";
 
 describe("NotesDB.initialize()", () => {
-  const db = new Database(":memory:");
-  NotesDB.initialize(db);
+  let db: Database;
 
-  it("creates a notes table", (done) => {
-    db.get(
-      `SELECT * FROM sqlite_master WHERE type = 'table' AND name = 'notes'`,
-      (_, row) => {
-        expect(row).toBeTruthy();
-        done();
-      }
-    );
+  beforeAll(async () => {
+    db = await NotesDB.memory();
+    await NotesDB.initialize(db);
   });
 
-  it("creates a links table", (done) => {
-    db.get(
-      `SELECT * FROM sqlite_master WHERE type = 'table' AND name = 'links'`,
-      (_, row) => {
-        expect(row).toBeTruthy();
-        done();
-      }
+  it("creates a notes table", async () => {
+    const row = await db.get(
+      `SELECT * FROM sqlite_master WHERE type = 'table' AND name = 'notes'`
     );
+
+    expect(row).toBeTruthy();
+  });
+
+  it("creates a links table", async () => {
+    const row = await db.get(
+      `SELECT * FROM sqlite_master WHERE type = 'table' AND name = 'links'`
+    );
+    expect(row).toBeTruthy();
   });
 });
