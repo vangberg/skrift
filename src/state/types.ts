@@ -3,7 +3,6 @@ import { StateEffectPair } from "react-use-elmish";
 
 import { Notes } from "../interfaces/notes";
 import { NoteID } from "../interfaces/note";
-import { Index } from "../search";
 import { Streams, StreamIndex, StreamLocation } from "../interfaces/streams";
 
 export interface State {
@@ -11,7 +10,6 @@ export interface State {
   notes: Notes;
   streams: Streams;
   search: {
-    index: Index;
     query: string;
     results: NoteID[] | null;
   };
