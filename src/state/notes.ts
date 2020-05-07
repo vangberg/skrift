@@ -12,15 +12,12 @@ import {
   ActionHandler,
 } from "./types";
 import { errorHandler } from "./errorHandler";
-import { Search } from "../search";
 
 export const openFolder: ActionHandler<OpenFolderAction> = (state) => {
   return [
     state,
     Effects.dispatchFromPromise<Action>(async () => {
-      await NotesFS.initialize();
-      const notes = await NotesFS.readAll();
-      return { type: "notes/SET_NOTES", notes };
+      return { type: "notes/SET_NOTES", notes: new Map() };
     }, errorHandler),
   ];
 };
@@ -30,10 +27,7 @@ export const setNotes: ActionHandler<SetNotesAction> = (state, action) => {
     produce(state, (draft) => {
       draft.notes = action.notes;
     }),
-    Effects.attemptFunction(
-      () => Search.replaceAll(state.search.index, action.notes),
-      errorHandler
-    ),
+    Effects.none(),
   ];
 };
 
@@ -53,10 +47,6 @@ export const saveMarkdown: ActionHandler<SaveMarkdownAction> = (
       Effects.attemptPromise(
         () => NotesFS.save(next.notes, action.id),
         errorHandler
-      ),
-      Effects.attemptFunction(
-        () => Search.add(state.search.index, note),
-        errorHandler
       )
     ),
   ];
@@ -67,12 +57,6 @@ export const deleteNote: ActionHandler<DeleteNoteAction> = (state, action) => {
     produce(state, (draft) => {
       Notes.deleteNote(draft.notes, action.id);
     }),
-    Effects.combine(
-      Effects.attemptPromise(() => NotesFS.delete(action.id), errorHandler),
-      Effects.attemptFunction(
-        () => Search.remove(state.search.index, action.id),
-        errorHandler
-      )
-    ),
+    Effects.attemptPromise(() => NotesFS.delete(action.id), errorHandler),
   ];
 };

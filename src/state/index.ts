@@ -4,7 +4,6 @@ import { openFolder, setNotes, saveMarkdown, deleteNote } from "./notes";
 import { openNote, closeNote } from "./streams";
 import { setQuery, setResults, clearSearch } from "./search";
 import { State, Action } from "./types";
-import { Search } from "../search";
 
 export const reducer: Reducer<State, Action> = (state, action) => {
   switch (action.type) {
@@ -37,17 +36,16 @@ export const reducer: Reducer<State, Action> = (state, action) => {
 
 export const initialState = (state?: Partial<State>): State => ({
   search: {
-    index: Search.makeIndex(),
     query: "",
-    results: null
+    results: null,
   },
   notes: new Map(),
   streams: [],
-  ...state
+  ...state,
 });
 
 type Context = [State, React.Dispatch<Action>];
 export const StateContext = React.createContext<Context>([
   initialState(),
-  () => {}
+  () => {},
 ]);
