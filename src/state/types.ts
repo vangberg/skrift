@@ -5,6 +5,7 @@ import { NoteID } from "../interfaces/note";
 import { Streams, StreamIndex, StreamLocation } from "../interfaces/streams";
 
 export interface State {
+  path: string;
   notes: Notes;
   streams: Streams;
   search: {

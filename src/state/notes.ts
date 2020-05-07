@@ -14,10 +14,18 @@ import {
 import { errorHandler } from "./errorHandler";
 
 export const openFolder: ActionHandler<OpenFolderAction> = (state) => {
+  const { path } = state;
+
   return [
     state,
     Effects.dispatchFromPromise<Action>(async () => {
-      return { type: "notes/SET_NOTES", notes: new Map() };
+      const notes = new Map();
+
+      for await (let note of NotesFS.readDir(path)) {
+        notes.set(note.id, note);
+      }
+
+      return { type: "notes/SET_NOTES", notes };
     }, errorHandler),
   ];
 };
@@ -35,6 +43,8 @@ export const saveMarkdown: ActionHandler<SaveMarkdownAction> = (
   state,
   action
 ) => {
+  const { path } = state;
+
   const next = produce(state, (draft) => {
     Notes.saveMarkdown(draft.notes, action.id, action.markdown);
   });
@@ -44,19 +54,18 @@ export const saveMarkdown: ActionHandler<SaveMarkdownAction> = (
   return [
     next,
     Effects.combine(
-      Effects.attemptPromise(
-        () => NotesFS.save(next.notes, action.id),
-        errorHandler
-      )
+      Effects.attemptPromise(() => NotesFS.save(path, note), errorHandler)
     ),
   ];
 };
 
 export const deleteNote: ActionHandler<DeleteNoteAction> = (state, action) => {
+  const { path } = state;
+
   return [
     produce(state, (draft) => {
       Notes.deleteNote(draft.notes, action.id);
     }),
-    Effects.attemptPromise(() => NotesFS.delete(action.id), errorHandler),
+    Effects.attemptPromise(() => NotesFS.delete(path, action.id), errorHandler),
   ];
 };

@@ -4,6 +4,8 @@ import { openFolder, setNotes, saveMarkdown, deleteNote } from "./notes";
 import { openNote, closeNote } from "./streams";
 import { setQuery, setResults, clearSearch } from "./search";
 import { State, Action } from "./types";
+import { remote } from "electron";
+import path from "path";
 
 export const reducer: Reducer<State, Action> = (state, action) => {
   switch (action.type) {
@@ -35,6 +37,7 @@ export const reducer: Reducer<State, Action> = (state, action) => {
 };
 
 export const initialState = (state?: Partial<State>): State => ({
+  path: path.join(remote.app.getPath("documents"), "Skrift"),
   search: {
     query: "",
     results: null,
