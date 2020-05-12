@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import isDev from "electron-is-dev";
 let mainWindow: Electron.BrowserWindow;
 
