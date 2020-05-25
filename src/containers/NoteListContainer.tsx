@@ -1,35 +1,34 @@
-import React, { useContext, useCallback, useMemo } from "react";
+import React, { useContext, useCallback, useState, useEffect } from "react";
 import { NoteList } from "../components/NoteList";
 import { StateContext } from "../state";
-import { Notes } from "../interfaces/notes";
 import { Streams } from "../interfaces/streams";
+import { NotesFS } from "../interfaces/notes_fs";
+import { NoteID } from "../interfaces/note";
+import { NoteCacheContext } from "../noteCache";
 
 export const NoteListContainer: React.FC = () => {
   const [state, dispatch] = useContext(StateContext);
   const { search } = state;
 
-  const notes = useMemo(() => {
-    const { notes } = state;
-    const { results } = search;
+  const noteCache = useContext(NoteCacheContext);
 
-    if (results) {
-      return Notes.getByIds(notes, results);
-    }
+  const [ids, setIds] = useState<NoteID[]>([]);
 
-    return Notes.byModifiedAt(state.notes).reverse();
-  }, [state, search]);
+  useEffect(() => {
+    NotesFS.ids(state.path).then((ids) => setIds(ids));
+  }, [state.path]);
 
   const handleAdd = useCallback(
-    title => {
+    (title) => {
       const id = new Date().toJSON();
-      dispatch({ type: "notes/SAVE_MARKDOWN", id, markdown: `# ${title}` });
+      noteCache.setNote(id)(`# ${title}`);
       dispatch({ type: "streams/OPEN_NOTE", stream: 0, id });
     },
-    [dispatch]
+    [noteCache, dispatch]
   );
 
   const handleSearch = useCallback(
-    query => dispatch({ type: "search/SET_QUERY", query }),
+    (query) => dispatch({ type: "search/SET_QUERY", query }),
     [dispatch]
   );
 
@@ -46,7 +45,7 @@ export const NoteListContainer: React.FC = () => {
 
   return (
     <NoteList
-      notes={notes}
+      ids={ids}
       query={search.query}
       onAdd={handleAdd}
       onOpen={handleOpen}

@@ -3,6 +3,7 @@ import path from "path";
 import { NoteID, Note } from "../note";
 import { Notes } from "../notes";
 import { remote } from "electron";
+import { isDOMComment } from "slate-react/dist/utils/dom";
 
 export const NotesFS = {
   path(dirPath: string, id: NoteID): string {
@@ -29,17 +30,21 @@ export const NotesFS = {
   },
 
   async *readDir(dirPath: string): AsyncGenerator<Note, void> {
-    const ids = (await fs.promises.readdir(dirPath))
-      .filter((filename) => filename.endsWith(".md"))
-      .map((filename) => path.basename(filename, ".md"));
+    const ids = await NotesFS.ids(dirPath);
 
     for (let id of ids) {
       yield await NotesFS.read(dirPath, id);
     }
   },
 
-  save(dirPath: string, note: Note): Promise<void> {
-    return fs.promises.writeFile(this.path(dirPath, note.id), note.markdown);
+  async ids(dirPath: string): Promise<NoteID[]> {
+    return (await fs.promises.readdir(dirPath))
+      .filter((filename) => filename.endsWith(".md"))
+      .map((filename) => path.basename(filename, ".md"));
+  },
+
+  save(dirPath: string, id: NoteID, markdown: string): Promise<void> {
+    return fs.promises.writeFile(this.path(dirPath, id), markdown);
   },
 
   delete(dirPath: string, id: NoteID): Promise<void> {

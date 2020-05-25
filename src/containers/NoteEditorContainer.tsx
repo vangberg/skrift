@@ -1,9 +1,10 @@
 import React, { useContext, useMemo, useCallback } from "react";
 import { StateContext } from "../state";
 import { Editor } from "../components/Editor";
-import { NoteID } from "../interfaces/note";
+import { NoteID, Note } from "../interfaces/note";
 import { Notes } from "../interfaces/notes";
 import { StreamLocation } from "../interfaces/streams";
+import { useNote, NoteCacheContext } from "../noteCache";
 
 interface Props {
   id: NoteID;
@@ -13,17 +14,18 @@ interface Props {
 export const NoteEditorContainer: React.FC<Props> = ({ id, location }) => {
   const [state, dispatch] = useContext(StateContext);
   const [stream] = location;
+  const noteCache = useContext(NoteCacheContext);
+  const [note, setNote, deleteNote] = useNote(id);
 
   const handleUpdate = useCallback(
-    (markdown: string) =>
-      dispatch({ type: "notes/SAVE_MARKDOWN", id, markdown }),
-    [dispatch, id]
+    (markdown: string) => noteCache.setNote(id)(markdown),
+    [noteCache, id]
   );
 
   const handleDelete = useCallback(() => {
     dispatch({ type: "streams/CLOSE_NOTE", location });
-    dispatch({ type: "notes/DELETE_NOTE", id });
-  }, [dispatch, id, location]);
+    noteCache.deleteNote(id);
+  }, [dispatch, id, location, noteCache]);
 
   const handleOpen = useCallback(
     (id, push) => {
@@ -38,8 +40,15 @@ export const NoteEditorContainer: React.FC<Props> = ({ id, location }) => {
     [dispatch, location]
   );
 
-  const getNote = useCallback(id => Notes.getNote(state.notes, id), [state]);
-  const note = useMemo(() => Notes.getNote(state.notes, id), [state, id]);
+  const getNote = useCallback(
+    (id) => {
+      const n = noteCache.notes.get(id);
+      if (n) {
+        return { ...Note.empty(), ...Note.fromMarkdown(n) };
+      }
+    },
+    [noteCache.notes]
+  );
 
   if (!note) {
     return <div>Could not find note with ID {id}</div>;

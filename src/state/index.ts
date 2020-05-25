@@ -1,6 +1,5 @@
 import React from "react";
 import { Effects, Reducer } from "react-use-elmish";
-import { openFolder, setNotes, saveMarkdown, deleteNote } from "./notes";
 import { openNote, closeNote } from "./streams";
 import { setQuery, setResults, clearSearch } from "./search";
 import { State, Action } from "./types";
@@ -8,19 +7,11 @@ import { remote } from "electron";
 import path from "path";
 
 export const reducer: Reducer<State, Action> = (state, action) => {
+  console.log(action);
+
   switch (action.type) {
     case "ERROR":
-      console.log(action);
       return [state, Effects.none()];
-
-    case "notes/OPEN_FOLDER":
-      return openFolder(state, action);
-    case "notes/SET_NOTES":
-      return setNotes(state, action);
-    case "notes/SAVE_MARKDOWN":
-      return saveMarkdown(state, action);
-    case "notes/DELETE_NOTE":
-      return deleteNote(state, action);
 
     case "streams/OPEN_NOTE":
       return openNote(state, action);
@@ -42,7 +33,6 @@ export const initialState = (state?: Partial<State>): State => ({
     query: "",
     results: null,
   },
-  notes: new Map(),
   streams: [],
   ...state,
 });

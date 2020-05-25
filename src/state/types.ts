@@ -1,12 +1,10 @@
 import { StateEffectPair } from "react-use-elmish";
 
-import { Notes } from "../interfaces/notes";
 import { NoteID } from "../interfaces/note";
 import { Streams, StreamIndex, StreamLocation } from "../interfaces/streams";
 
 export interface State {
   path: string;
-  notes: Notes;
   streams: Streams;
   search: {
     query: string;
@@ -15,20 +13,6 @@ export interface State {
 }
 
 export type ErrorAction = { type: "ERROR"; message: string };
-
-export type NotesAction =
-  | OpenFolderAction
-  | SetNotesAction
-  | SaveMarkdownAction
-  | DeleteNoteAction;
-export type OpenFolderAction = { type: "notes/OPEN_FOLDER" };
-export type SetNotesAction = { type: "notes/SET_NOTES"; notes: Notes };
-export type SaveMarkdownAction = {
-  type: "notes/SAVE_MARKDOWN";
-  id: NoteID;
-  markdown: string;
-};
-export type DeleteNoteAction = { type: "notes/DELETE_NOTE"; id: NoteID };
 
 export type StreamsAction = OpenNoteAction | CloseNoteAction;
 export type OpenNoteAction = {
@@ -52,7 +36,7 @@ export type SetResultsAction = {
 };
 export type ClearSearchAction = { type: "search/CLEAR" };
 
-export type Action = NotesAction | StreamsAction | SearchAction | ErrorAction;
+export type Action = StreamsAction | SearchAction | ErrorAction;
 
 export type ActionHandler<SubAction> = (
   state: State,
