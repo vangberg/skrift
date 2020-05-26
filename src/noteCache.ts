@@ -44,8 +44,9 @@ const loadNote: ActionHandler<LoadNoteAction> = (state, action) => {
 
   return [
     state,
-    Effects.attemptFunction(
-      () => ipcRenderer.send("load-note", ipcMessage),
+    Effects.fromPromise(
+      () => ipcRenderer.invoke("load-note", ipcMessage),
+      (note: Note) => ({ type: "LOADED_NOTE", note }),
       errorHandler
     ),
   ];
@@ -124,14 +125,6 @@ export const useNoteCache = (path: string): NoteCache => {
     initialState(path),
     Effects.none(),
   ]);
-
-  useEffect(() => {
-    ipcRenderer.on("loaded-note", (event, arg: IpcLoadedNote) => {
-      const { note } = arg;
-
-      dispatch({ type: "LOADED_NOTE", note });
-    });
-  }, [dispatch]);
 
   return {
     notes: state.notes,
