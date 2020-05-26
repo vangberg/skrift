@@ -88,6 +88,8 @@ const deleteNote: ActionHandler<DeleteNoteAction> = (state, action) => {
 };
 
 const reducer: Reducer<State, Action> = (state, action) => {
+  console.log(action);
+
   switch (action.type) {
     case "ERROR":
       return [state, Effects.none()];
@@ -119,15 +121,6 @@ export const useNoteCache = (path: string): NoteCache => {
     initialState(path),
     Effects.none(),
   ]);
-
-  useEffect(() => {
-    (async () => {
-      for await (let note of NotesFS.readDir(path)) {
-        const { id, markdown } = note;
-        dispatch({ type: "SET_NOTE", id, markdown });
-      }
-    })();
-  }, [path, dispatch]);
 
   return {
     notes: state.notes,
