@@ -1,7 +1,7 @@
 module.exports = [
   {
     mode: "development",
-    entry: "./src/electron.ts",
+    entry: "./src/main/index.ts",
     target: "electron-main",
     module: {
       rules: [
