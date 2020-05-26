@@ -1,5 +1,6 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow } from "electron";
 import isDev from "electron-is-dev";
+import { setupIpc } from "./ipc";
 let mainWindow: Electron.BrowserWindow;
 
 function createWindow() {
@@ -36,3 +37,5 @@ app.on("activate", () => {
     createWindow();
   }
 });
+
+setupIpc();

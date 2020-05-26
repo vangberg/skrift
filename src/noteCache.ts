@@ -4,6 +4,8 @@ import produce from "immer";
 import React from "react";
 import { NotesFS } from "./interfaces/notes_fs";
 import useElmish, { Reducer, StateEffectPair, Effects } from "react-use-elmish";
+import { ipcRenderer } from "electron";
+import { IpcLoadedNote, IpcLoadNote } from "./types";
 
 type Notes = Map<NoteID, Note>;
 
@@ -38,11 +40,12 @@ const loadNote: ActionHandler<LoadNoteAction> = (state, action) => {
   const { path } = state;
   const { id } = action;
 
+  const ipcMessage: IpcLoadNote = { path, id };
+
   return [
     state,
-    Effects.fromPromise(
-      () => NotesFS.read(path, id),
-      (note) => ({ type: "LOADED_NOTE", note }),
+    Effects.attemptFunction(
+      () => ipcRenderer.send("load-note", ipcMessage),
       errorHandler
     ),
   ];
@@ -121,6 +124,14 @@ export const useNoteCache = (path: string): NoteCache => {
     initialState(path),
     Effects.none(),
   ]);
+
+  useEffect(() => {
+    ipcRenderer.on("loaded-note", (event, arg: IpcLoadedNote) => {
+      const { note } = arg;
+
+      dispatch({ type: "LOADED_NOTE", note });
+    });
+  }, [dispatch]);
 
   return {
     notes: state.notes,
