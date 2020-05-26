@@ -108,7 +108,7 @@ export const initialState = (path: string): State => ({
 
 interface NoteCache {
   notes: Notes;
-  getNote: (id: NoteID) => void;
+  loadNote: (id: NoteID) => void;
   setNote: (id: NoteID, markdown: string) => void;
   deleteNote: (id: NoteID) => void;
 }
@@ -130,7 +130,7 @@ export const useNoteCache = (path: string): NoteCache => {
 
   return {
     notes: state.notes,
-    getNote: (id) => dispatch({ type: "LOAD_NOTE", id }),
+    loadNote: (id) => dispatch({ type: "LOAD_NOTE", id }),
     setNote: (id, markdown) => dispatch({ type: "SET_NOTE", id, markdown }),
     deleteNote: (id) => dispatch({ type: "DELETE_NOTE", id }),
   };
@@ -140,7 +140,7 @@ export const useNote = (id: NoteID): Note | null => {
   const cache = useContext(NoteCacheContext);
 
   useEffect(() => {
-    cache.getNote(id);
+    cache.loadNote(id);
   }, []);
 
   let note = null;
@@ -154,7 +154,7 @@ export const useNote = (id: NoteID): Note | null => {
 
 export const NoteCacheContext = React.createContext<NoteCache>({
   notes: new Map(),
-  getNote: (id) => Promise.resolve(),
+  loadNote: (id) => Promise.resolve(),
   setNote: (id, markdown) => {},
   deleteNote: (id) => {},
 });
