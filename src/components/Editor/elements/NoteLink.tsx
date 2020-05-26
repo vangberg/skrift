@@ -4,23 +4,21 @@ import {
   useFocused,
   useSelected,
   useEditor,
-  ReactEditor
+  ReactEditor,
 } from "slate-react";
 import { Note } from "../../../interfaces/note";
-import { NoteLink as BaseNoteLink } from "../NoteLink";
 import cx from "classnames";
+import { NoteLinkContainer } from "../../../containers/NoteLinkContainer";
 
 type Props = {
-  getNote: (id: string) => Note | undefined;
   onOpen: (id: string, push: boolean) => void;
 };
 
 export const NoteLink: React.FC<RenderElementProps & Props> = ({
-  getNote,
   onOpen,
   attributes,
   element,
-  children
+  children,
 }) => {
   const selected = useSelected();
   const focused = useFocused();
@@ -39,7 +37,7 @@ export const NoteLink: React.FC<RenderElementProps & Props> = ({
       {...attributes}
       className={cx({ "bg-gray-300": selected && focused })}
     >
-      <BaseNoteLink id={element.id} onOpen={handleOpen} getNote={getNote} />
+      <NoteLinkContainer id={element.id} onOpen={handleOpen} />
       {children}
     </span>
   );

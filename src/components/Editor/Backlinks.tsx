@@ -1,14 +1,13 @@
 import React from "react";
 import { Note } from "../../interfaces/note";
-import { NoteLink } from "./NoteLink";
+import { NoteLinkContainer } from "../../containers/NoteLinkContainer";
 
 type Props = {
   note: Note;
   onOpen: (id: string, push: boolean) => void;
-  getNote: (id: string) => Note | undefined;
 };
 
-export const Backlinks: React.FC<Props> = ({ note, onOpen, getNote }) => {
+export const Backlinks: React.FC<Props> = ({ note, onOpen }) => {
   if (note.backlinks.size === 0) {
     return null;
   }
@@ -21,7 +20,7 @@ export const Backlinks: React.FC<Props> = ({ note, onOpen, getNote }) => {
       <div className="pt-1">
         {[...note.backlinks].map((link) => (
           <span key={link} className="pr-1">
-            <NoteLink id={link} onOpen={onOpen} getNote={getNote} />
+            <NoteLinkContainer id={link} onOpen={onOpen} />
           </span>
         ))}
       </div>

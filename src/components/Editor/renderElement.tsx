@@ -4,14 +4,13 @@ import { RenderElementProps } from "slate-react";
 import { NoteLink } from "./elements/NoteLink";
 import { Heading } from "./elements/Heading";
 import { Paragraph } from "./elements/Paragraph";
-import { Note } from "../../interfaces/note";
 import { BulletList } from "./elements/BulletList";
 import { NumberList } from "./elements/NumberList";
 import { ListItem } from "./elements/ListItem";
 
 const DefaultElement: React.FC<RenderElementProps> = ({
   attributes,
-  children
+  children,
 }) => {
   const className = window.skriftDebug ? "border border-blue-200" : "";
   return (
@@ -22,17 +21,16 @@ const DefaultElement: React.FC<RenderElementProps> = ({
 };
 
 export function renderElement(options: {
-  getNote: (id: string) => Note | undefined;
   onOpen: (id: string, push: boolean) => void;
 }) {
-  const { getNote, onOpen } = options;
+  const { onOpen } = options;
 
   return function RenderElement(props: RenderElementProps) {
     switch (props.element.type) {
       case "heading":
         return <Heading {...props} />;
       case "note-link":
-        return <NoteLink getNote={getNote} onOpen={onOpen} {...props} />;
+        return <NoteLink onOpen={onOpen} {...props} />;
       case "paragraph":
         return <Paragraph {...props} />;
       case "bulleted-list":

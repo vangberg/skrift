@@ -18,23 +18,21 @@ const renderLeaf = ({ attributes, children }: RenderLeafProps) => {
 
 type Props = {
   onOpen: (id: string, push: boolean) => void;
-  getNote: (id: string) => Note | undefined;
 };
 
-export const SkriftEditable: React.FC<Props> = ({ onOpen, getNote }) => {
+export const SkriftEditable: React.FC<Props> = ({ onOpen }) => {
   const editor = useEditor();
 
-  const handleRenderElement = useMemo(
-    () => renderElement({ getNote, onOpen }),
-    [getNote, onOpen]
-  );
+  const handleRenderElement = useMemo(() => renderElement({ onOpen }), [
+    onOpen,
+  ]);
 
   return (
     <Editable
       autoFocus={true}
       renderElement={handleRenderElement}
       renderLeaf={renderLeaf}
-      onKeyDown={event => {
+      onKeyDown={(event) => {
         const { nativeEvent } = event;
 
         if (isHotkey("shift+enter")(nativeEvent)) {

@@ -1,16 +1,13 @@
-import React, { useMemo, useCallback } from "react";
-import { Note } from "../../interfaces/note";
-import isHotkey from "is-hotkey";
+import React, { useCallback } from "react";
+import { Note, NoteID } from "../../interfaces/note";
 
 type Props = {
-  id: string;
-  getNote: (id: string) => Note | undefined;
+  id: NoteID;
+  note: Note | null;
   onOpen: (id: string, push: boolean) => void;
 };
 
-export const NoteLink: React.FC<Props> = ({ id, getNote, onOpen }) => {
-  const note = useMemo(() => getNote(id), [getNote, id]);
-
+export const NoteLink: React.FC<Props> = ({ id, note, onOpen }) => {
   const handleOpen = useCallback(
     (event: React.MouseEvent) => {
       onOpen(id, event.metaKey || event.ctrlKey);

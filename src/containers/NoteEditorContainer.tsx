@@ -40,16 +40,6 @@ export const NoteEditorContainer: React.FC<Props> = ({ id, location }) => {
     [dispatch, location]
   );
 
-  const getNote = useCallback(
-    (id) => {
-      const n = noteCache.notes.get(id);
-      if (n) {
-        return { ...Note.empty(), ...Note.fromMarkdown(n) };
-      }
-    },
-    [noteCache.notes]
-  );
-
   if (!note) {
     return <div>Could not find note with ID {id}</div>;
   }
@@ -57,7 +47,6 @@ export const NoteEditorContainer: React.FC<Props> = ({ id, location }) => {
   return (
     <Editor
       note={note}
-      getNote={getNote}
       onOpen={handleOpen}
       onDelete={handleDelete}
       onClose={handleClose}

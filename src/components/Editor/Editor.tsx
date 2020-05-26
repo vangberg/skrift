@@ -35,7 +35,6 @@ type Props = {
   onDelete: () => void;
   onOpen: (id: string, push: boolean) => void;
   onClose: () => void;
-  getNote: (id: string) => Note | undefined;
 };
 
 export const SkriftEditor: React.FC<Props> = ({
@@ -44,7 +43,6 @@ export const SkriftEditor: React.FC<Props> = ({
   onDelete,
   onOpen,
   onClose,
-  getNote,
 }) => {
   const editor = useMemo(() => createEditor(), []);
   const [value, setValue] = useState(() => deserialize(note.markdown));
@@ -96,7 +94,7 @@ export const SkriftEditor: React.FC<Props> = ({
 
       <div className="p-2">
         <Slate editor={editor} value={value} onChange={handleChange}>
-          <SkriftEditable onOpen={onOpen} getNote={getNote} />
+          <SkriftEditable onOpen={onOpen} />
 
           {window.skriftDebug && (
             <pre className="text-xs">{JSON.stringify(value, undefined, 2)}</pre>
@@ -104,7 +102,7 @@ export const SkriftEditor: React.FC<Props> = ({
         </Slate>
       </div>
 
-      <Backlinks note={note} onOpen={onOpen} getNote={getNote} />
+      <Backlinks note={note} onOpen={onOpen} />
     </div>
   );
 };
