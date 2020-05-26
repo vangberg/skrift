@@ -1,5 +1,5 @@
 import { NoteID, Note } from "./interfaces/note";
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useMemo } from "react";
 import produce from "immer";
 import React from "react";
 import { NotesFS } from "./interfaces/notes_fs";
@@ -146,7 +146,9 @@ export const useNote = (id: NoteID): Note | null => {
     cache.loadNote(id);
   }, []);
 
-  return cache.notes.get(id) || null;
+  const note = useMemo(() => cache.notes.get(id) || null, [cache.notes, id]);
+
+  return note;
 };
 
 export const NoteCacheContext = React.createContext<NoteCache>({

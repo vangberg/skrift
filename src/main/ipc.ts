@@ -1,7 +1,6 @@
 import { ipcMain } from "electron";
 import { NotesFS } from "../interfaces/notes_fs";
 import { IpcLoadNote, IpcSetNote, IpcLoadedNote } from "../types";
-import { NoteID } from "../interfaces/note";
 
 const handleLoadNote = async (
   event: Electron.IpcMainEvent,
