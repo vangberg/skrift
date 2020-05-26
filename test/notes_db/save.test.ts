@@ -11,8 +11,7 @@ describe("NotesDB.save()", () => {
   });
 
   it("inserts a new note", async () => {
-    const note = Note.empty({ title: "Added note" });
-    await NotesDB.save(db, note);
+    await NotesDB.save(db, "a", "# Added note");
 
     const rows = await db.all<NoteRow[]>(
       `SELECT * FROM notes WHERE title = 'Added note'`
@@ -21,11 +20,8 @@ describe("NotesDB.save()", () => {
   });
 
   it("updates an existing note", async () => {
-    const note = Note.empty({ id: "a", title: "New note" });
-    await NotesDB.save(db, note);
-
-    note.title = "Updated note";
-    await NotesDB.save(db, note);
+    await NotesDB.save(db, "a", "New note");
+    await NotesDB.save(db, "a", "Updated note");
 
     const rows = await db.all<NoteRow[]>(`SELECT * FROM notes WHERE id = 'a'`);
     expect(rows.length).toEqual(1);

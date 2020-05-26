@@ -36,8 +36,8 @@ export const NotesDB = {
     `);
   },
 
-  async save(db: Database, note: Note): Promise<void> {
-    const { id, title, markdown, modifiedAt } = note;
+  async save(db: Database, id: NoteID, markdown: string): Promise<void> {
+    const parsedNote = Note.fromMarkdown(markdown);
 
     await db.run(
       `
@@ -48,7 +48,7 @@ export const NotesDB = {
         markdown = excluded.markdown,
         modifiedAt = excluded.modifiedAt
       `,
-      [id, title, markdown, modifiedAt.toJSON()]
+      [id, parsedNote.title, markdown, new Date().toJSON()]
     );
   },
 

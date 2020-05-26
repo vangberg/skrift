@@ -11,15 +11,10 @@ describe("NotesDB.get()", () => {
   });
 
   it("gets a note", async () => {
-    const note = Note.empty({
-      id: "a",
-      title: "Added note",
-      markdown: "# Added note",
-      modifiedAt: new Date(),
-    });
-    await NotesDB.save(db, note);
+    await NotesDB.save(db, "a", "# Added note");
 
     const result = await NotesDB.get(db, "a");
-    expect(result).toEqual(note);
+    expect(result.id).toEqual("a");
+    expect(result.title).toEqual("Added note");
   });
 });
