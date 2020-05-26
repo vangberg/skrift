@@ -5,7 +5,7 @@ import React from "react";
 import { NotesFS } from "./interfaces/notes_fs";
 import useElmish, { Reducer, StateEffectPair, Effects } from "react-use-elmish";
 import { ipcRenderer } from "electron";
-import { IpcLoadedNote, IpcLoadNote } from "./types";
+import { IpcLoadedNote, IpcLoadNote, IpcSetNote } from "./types";
 
 type Notes = Map<NoteID, Note>;
 
@@ -44,9 +44,8 @@ const loadNote: ActionHandler<LoadNoteAction> = (state, action) => {
 
   return [
     state,
-    Effects.fromPromise(
-      () => ipcRenderer.invoke("load-note", ipcMessage),
-      (note: Note) => ({ type: "LOADED_NOTE", note }),
+    Effects.attemptFunction(
+      () => ipcRenderer.send("load-note", ipcMessage),
       errorHandler
     ),
   ];
@@ -66,14 +65,13 @@ const loadedNote: ActionHandler<LoadedNoteAction> = (state, action) => {
 const setNote: ActionHandler<SetNoteAction> = (state, action) => {
   const { path } = state;
   const { id, markdown } = action;
-  const note = { ...Note.empty({ id }), ...Note.fromMarkdown(markdown) };
+
+  const ipcMessage: IpcSetNote = { path, id, markdown };
 
   return [
-    produce(state, (draft) => {
-      draft.notes.set(id, note);
-    }),
-    Effects.attemptPromise(
-      () => NotesFS.save(path, id, markdown),
+    state,
+    Effects.attemptFunction(
+      () => ipcRenderer.send("set-note", ipcMessage),
       errorHandler
     ),
   ];
@@ -92,7 +90,7 @@ const deleteNote: ActionHandler<DeleteNoteAction> = (state, action) => {
 };
 
 const reducer: Reducer<State, Action> = (state, action) => {
-  console.log(action);
+  //console.log(action);
 
   switch (action.type) {
     case "ERROR":
@@ -125,6 +123,13 @@ export const useNoteCache = (path: string): NoteCache => {
     initialState(path),
     Effects.none(),
   ]);
+
+  useEffect(() => {
+    ipcRenderer.on("loaded-note", (event, arg: IpcLoadedNote) => {
+      const { note } = arg;
+      dispatch({ type: "LOADED_NOTE", note });
+    });
+  }, []);
 
   return {
     notes: state.notes,
