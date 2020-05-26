@@ -1,11 +1,11 @@
 import { NoteID, Note } from "./interfaces/note";
-import { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import produce from "immer";
 import React from "react";
 import { NotesFS } from "./interfaces/notes_fs";
 import useElmish, { Reducer, StateEffectPair, Effects } from "react-use-elmish";
 
-type Notes = Map<NoteID, string>;
+type Notes = Map<NoteID, Note>;
 
 interface State {
   path: string;
@@ -53,7 +53,7 @@ const loadedNote: ActionHandler<LoadedNoteAction> = (state, action) => {
 
   return [
     produce(state, (draft) => {
-      draft.notes.set(note.id, note.markdown);
+      draft.notes.set(note.id, note);
     }),
     Effects.none(),
   ];
@@ -62,10 +62,11 @@ const loadedNote: ActionHandler<LoadedNoteAction> = (state, action) => {
 const setNote: ActionHandler<SetNoteAction> = (state, action) => {
   const { path } = state;
   const { id, markdown } = action;
+  const note = { ...Note.empty({ id }), ...Note.fromMarkdown(markdown) };
 
   return [
     produce(state, (draft) => {
-      draft.notes.set(id, markdown);
+      draft.notes.set(id, note);
     }),
     Effects.attemptPromise(
       () => NotesFS.save(path, id, markdown),
@@ -143,13 +144,7 @@ export const useNote = (id: NoteID): Note | null => {
     cache.loadNote(id);
   }, []);
 
-  const markdown = cache.notes.get(id);
-
-  if (markdown) {
-    return { ...Note.empty({ id }), ...Note.fromMarkdown(markdown) };
-  }
-
-  return null;
+  return cache.notes.get(id) || null;
 };
 
 export const NoteCacheContext = React.createContext<NoteCache>({
