@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const NoteListItemContainer: React.FC<Props> = ({ id, onClick }) => {
-  const [note] = useNote(id);
+  const note = useNote(id);
 
   if (!note) {
     return <div>Loading note {id}</div>;

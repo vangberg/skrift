@@ -15,10 +15,10 @@ export const NoteEditorContainer: React.FC<Props> = ({ id, location }) => {
   const [state, dispatch] = useContext(StateContext);
   const [stream] = location;
   const noteCache = useContext(NoteCacheContext);
-  const [note, setNote, deleteNote] = useNote(id);
+  const note = useNote(id);
 
   const handleUpdate = useCallback(
-    (markdown: string) => noteCache.setNote(id)(markdown),
+    (markdown: string) => noteCache.setNote(id, markdown),
     [noteCache, id]
   );
 

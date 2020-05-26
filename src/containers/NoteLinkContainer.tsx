@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const NoteLinkContainer: React.FC<Props> = ({ id, onOpen }) => {
-  const [note] = useNote(id);
+  const note = useNote(id);
 
   return <NoteLink id={id} note={note} onOpen={onOpen} />;
 };
