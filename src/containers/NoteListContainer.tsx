@@ -21,7 +21,7 @@ export const NoteListContainer: React.FC = () => {
   const handleAdd = useCallback(
     (title) => {
       const id = new Date().toJSON();
-      noteCache.setNote(id)(`# ${title}`);
+      noteCache.setNote(id, `# ${title}`);
       dispatch({ type: "streams/OPEN_NOTE", stream: 0, id });
     },
     [noteCache, dispatch]
