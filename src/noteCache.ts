@@ -143,13 +143,13 @@ export const useNote = (id: NoteID): Note | null => {
     cache.loadNote(id);
   }, []);
 
-  let note = null;
   const markdown = cache.notes.get(id);
+
   if (markdown) {
-    note = { ...Note.empty({ id }), ...Note.fromMarkdown(markdown) };
+    return { ...Note.empty({ id }), ...Note.fromMarkdown(markdown) };
   }
 
-  return note;
+  return null;
 };
 
 export const NoteCacheContext = React.createContext<NoteCache>({
