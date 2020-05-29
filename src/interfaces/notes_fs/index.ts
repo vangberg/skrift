@@ -1,9 +1,6 @@
-import fs, { read } from "fs";
+import fs from "fs";
 import path from "path";
 import { NoteID, Note } from "../note";
-import { Notes } from "../notes";
-import { remote } from "electron";
-import { isDOMComment } from "slate-react/dist/utils/dom";
 
 export const NotesFS = {
   path(dirPath: string, id: NoteID): string {
