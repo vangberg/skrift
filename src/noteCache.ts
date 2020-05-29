@@ -157,7 +157,7 @@ export const useNote = (id: NoteID): Note | null => {
   const cache = useContext(NoteCacheContext);
 
   useEffect(() => {
-    cache.loadNote(id);
+    window.requestIdleCallback(() => cache.loadNote(id));
   }, []);
 
   const note = useMemo(() => cache.notes.get(id) || null, [cache.notes, id]);
