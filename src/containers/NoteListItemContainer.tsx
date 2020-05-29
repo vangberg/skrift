@@ -12,7 +12,7 @@ export const NoteListItemContainer: React.FC<Props> = ({ id, onClick }) => {
   const note = useNote(id);
 
   if (!note) {
-    return null;
+    return <div>Loading</div>;
   }
 
   return <ListItem note={note} onClick={onClick} />;

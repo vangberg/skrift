@@ -12,6 +12,10 @@ export const WorkspaceContainer: React.FC = () => {
 
   const noteCache = useNoteCache(state.path);
 
+  if (!noteCache.loaded) {
+    return <h1>Loading</h1>;
+  }
+
   return (
     <StateContext.Provider value={[state, dispatch]}>
       <NoteCacheContext.Provider value={noteCache}>

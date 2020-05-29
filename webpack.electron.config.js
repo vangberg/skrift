@@ -19,5 +19,8 @@ module.exports = [
       path: __dirname + "/build",
       filename: "electron.js",
     },
+    externals: {
+      sqlite3: "commonjs sqlite3",
+    },
   },
 ];
