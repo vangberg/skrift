@@ -35,7 +35,6 @@ const handleLoadNote = async (
   event: Electron.IpcMainEvent,
   arg: IpcLoadNote
 ) => {
-  console.log("loading note", arg);
   const { path, id } = arg;
   const db = await getDB(path);
 
