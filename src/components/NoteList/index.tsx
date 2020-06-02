@@ -1,10 +1,11 @@
 import React from "react";
 import { SearchBar } from "./SearchBar";
 import { NoteID } from "../../interfaces/note";
-import { NoteListItemContainer } from "../../containers/NoteListItemContainer";
+import { ListItem } from "./ListItem";
+import { NoteCacheEntry } from "../../state/types";
 
 type Props = {
-  ids: NoteID[];
+  notes: NoteCacheEntry[];
   query: string;
   onOpen: (id: string, push: boolean) => void;
   onAdd: (title: string) => void;
@@ -12,7 +13,7 @@ type Props = {
 };
 
 export const NoteList: React.FC<Props> = ({
-  ids,
+  notes,
   query,
   onOpen,
   onAdd,
@@ -24,8 +25,8 @@ export const NoteList: React.FC<Props> = ({
 
       <div className="w-full overflow-y-auto">
         <div className="w-full pt-0">
-          {ids.map((id) => (
-            <NoteListItemContainer key={id} id={id} onClick={onOpen} />
+          {notes.map((note) => (
+            <ListItem key={note.id} note={note} onClick={onOpen} />
           ))}
         </div>
       </div>

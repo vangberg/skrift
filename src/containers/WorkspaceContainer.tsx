@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { reducer, StateContext, initialState } from "../state";
 import { Workspace } from "../components/Workspace";
 import useElmish, { Effects } from "react-use-elmish";
-import { useNoteCache, NoteCacheContext } from "../noteCache";
+import { ipcRenderer } from "electron";
+import { IpcLoadedDir } from "../types";
 
 export const WorkspaceContainer: React.FC = () => {
   const [state, dispatch] = useElmish(reducer, () => [
@@ -10,17 +11,16 @@ export const WorkspaceContainer: React.FC = () => {
     Effects.none(),
   ]);
 
-  const noteCache = useNoteCache(state.path);
-
-  if (!noteCache.loaded) {
-    return <h1>Loading</h1>;
-  }
+  useEffect(() => {
+    ipcRenderer.on("loaded-dir", (event, arg: IpcLoadedDir) => {
+      dispatch({ type: "notes/SET_NOTES", notes: arg.notes });
+    });
+    ipcRenderer.send("load-dir", state.path);
+  }, []);
 
   return (
     <StateContext.Provider value={[state, dispatch]}>
-      <NoteCacheContext.Provider value={noteCache}>
-        <Workspace />
-      </NoteCacheContext.Provider>
+      <Workspace />
     </StateContext.Provider>
   );
 };

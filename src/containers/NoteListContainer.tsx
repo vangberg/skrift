@@ -1,31 +1,18 @@
-import React, { useContext, useCallback, useState, useEffect } from "react";
+import React, { useContext, useCallback } from "react";
 import { NoteList } from "../components/NoteList";
 import { StateContext } from "../state";
 import { Streams } from "../interfaces/streams";
-import { NotesFS } from "../interfaces/notes_fs";
-import { NoteID } from "../interfaces/note";
-import { NoteCacheContext } from "../noteCache";
-import { Serializer } from "../interfaces/serializer";
 
 export const NoteListContainer: React.FC = () => {
   const [state, dispatch] = useContext(StateContext);
   const { search } = state;
 
-  const noteCache = useContext(NoteCacheContext);
-
-  const [ids, setIds] = useState<NoteID[]>([]);
-
-  useEffect(() => {
-    NotesFS.ids(state.path).then((ids) => setIds(ids));
-  }, [state.path]);
-
   const handleAdd = useCallback(
     (title) => {
       const id = new Date().toJSON();
-      noteCache.setNote(id, Serializer.deserialize(`# ${title}`));
       dispatch({ type: "streams/OPEN_NOTE", stream: 0, id });
     },
-    [noteCache, dispatch]
+    [dispatch]
   );
 
   const handleSearch = useCallback(
@@ -46,7 +33,7 @@ export const NoteListContainer: React.FC = () => {
 
   return (
     <NoteList
-      ids={ids}
+      notes={Array.from(state.notes.values())}
       query={search.query}
       onAdd={handleAdd}
       onOpen={handleOpen}

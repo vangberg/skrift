@@ -1,9 +1,10 @@
 import React, { useCallback } from "react";
 import { Note, NoteID } from "../../interfaces/note";
+import { NoteCacheEntry } from "../../state/types";
 
 type Props = {
   id: NoteID;
-  note: Note | null;
+  note: NoteCacheEntry | null;
   onOpen: (id: string, push: boolean) => void;
 };
 
@@ -26,7 +27,7 @@ export const NoteLink: React.FC<Props> = ({ id, note, onOpen }) => {
         className="underline text-blue-600 cursor-pointer"
         onClick={handleOpen}
       >
-        {note?.title || id}
+        {note.title || id}
       </span>
       <span className="text-gray-500 tracking-wider">]]</span>
     </span>

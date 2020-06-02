@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NoteID } from "../interfaces/note";
-import { useNote } from "../noteCache";
 import { NoteLink } from "../components/Editor/NoteLink";
+import { useNote } from "../useNote";
+import { StateContext } from "../state";
 
 interface Props {
   id: NoteID;
@@ -9,7 +10,8 @@ interface Props {
 }
 
 export const NoteLinkContainer: React.FC<Props> = ({ id, onOpen }) => {
-  const note = useNote(id);
+  const [state] = useContext(StateContext);
+  const note = state.notes.get(id) || null;
 
   return <NoteLink id={id} note={note} onOpen={onOpen} />;
 };

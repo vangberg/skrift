@@ -1,10 +1,11 @@
 import React, { useCallback } from "react";
-import { Note, NoteID } from "../../interfaces/note";
+import { NoteID } from "../../interfaces/note";
 import { clipboard } from "electron";
 import { Icon } from "../Icon";
+import { NoteCacheEntry } from "../../state/types";
 
 type Props = {
-  note: Note;
+  note: NoteCacheEntry;
   onClick?: (id: NoteID, push: boolean) => void;
 };
 

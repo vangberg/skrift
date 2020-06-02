@@ -39,7 +39,7 @@ export const SkriftEditor: React.FC<Props> = ({
     if (!ReactEditor.isFocused(editor)) {
       setValue(note.slate);
     }
-  }, [editor, note.slate]);
+  }, [editor, value, note.slate]);
 
   const handleChange = useCallback(
     (newValue: Node[]) => {

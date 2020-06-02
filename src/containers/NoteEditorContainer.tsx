@@ -2,10 +2,11 @@ import React, { useContext, useMemo, useCallback } from "react";
 import { StateContext } from "../state";
 import { Editor } from "../components/Editor";
 import { NoteID, Note } from "../interfaces/note";
-import { Notes } from "../interfaces/notes";
 import { StreamLocation } from "../interfaces/streams";
-import { useNote, NoteCacheContext } from "../noteCache";
 import { Node } from "slate";
+import { useNote } from "../useNote";
+import { IpcSetNote } from "../types";
+import { ipcRenderer } from "electron";
 
 interface Props {
   id: NoteID;
@@ -15,18 +16,19 @@ interface Props {
 export const NoteEditorContainer: React.FC<Props> = ({ id, location }) => {
   const [state, dispatch] = useContext(StateContext);
   const [stream] = location;
-  const noteCache = useContext(NoteCacheContext);
   const note = useNote(id);
 
   const handleUpdate = useCallback(
-    (slate: Node[]) => noteCache.setNote(id, slate),
-    [noteCache, id]
+    (slate: Node[]) => {
+      const message: IpcSetNote = { path: state.path, id, slate };
+      ipcRenderer.send("set-note", message);
+    },
+    [state.path, id]
   );
 
   const handleDelete = useCallback(() => {
     dispatch({ type: "streams/CLOSE_NOTE", location });
-    noteCache.deleteNote(id);
-  }, [dispatch, id, location, noteCache]);
+  }, [dispatch, location]);
 
   const handleOpen = useCallback(
     (id, push) => {
@@ -42,7 +44,7 @@ export const NoteEditorContainer: React.FC<Props> = ({ id, location }) => {
   );
 
   if (!note) {
-    return <div>Could not find note with ID {id}</div>;
+    return null;
   }
 
   return (
