@@ -5,6 +5,7 @@ import { NoteID, Note } from "../interfaces/note";
 import { Notes } from "../interfaces/notes";
 import { StreamLocation } from "../interfaces/streams";
 import { useNote, NoteCacheContext } from "../noteCache";
+import { Node } from "slate";
 
 interface Props {
   id: NoteID;
@@ -18,7 +19,7 @@ export const NoteEditorContainer: React.FC<Props> = ({ id, location }) => {
   const note = useNote(id);
 
   const handleUpdate = useCallback(
-    (markdown: string) => noteCache.setNote(id, markdown),
+    (slate: Node[]) => noteCache.setNote(id, slate),
     [noteCache, id]
   );
 

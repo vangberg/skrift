@@ -1,4 +1,5 @@
 import { fromMarkdown } from "./fromMarkdown";
+import { Node } from "slate";
 
 export type NoteID = string;
 
@@ -8,11 +9,19 @@ export interface Note {
   body: string;
   links: Set<NoteID>;
   backlinks: Set<NoteID>;
-  markdown: string;
+  slate: Node[];
   modifiedAt: Date;
 }
 
 export const Note = {
+  title(slate: Node[]): string {
+    if (slate.length === 0) {
+      return "";
+    }
+
+    return Node.string(slate[0]);
+  },
+
   fromMarkdown,
 
   empty(partial?: Partial<Note>): Note {
@@ -22,9 +31,9 @@ export const Note = {
       body: "",
       links: new Set(),
       backlinks: new Set(),
-      markdown: "",
+      slate: [],
       modifiedAt: new Date(),
-      ...(partial || {})
+      ...(partial || {}),
     };
-  }
+  },
 };

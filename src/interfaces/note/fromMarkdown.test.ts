@@ -22,10 +22,6 @@ describe("parseMarkdown", () => {
     it("parses links", () => {
       expect(note.links).toEqual(new Set(["123", "456"]));
     });
-
-    it("stores markdown", () => {
-      expect(note.markdown).toEqual(fullNote);
-    });
   });
 });
 

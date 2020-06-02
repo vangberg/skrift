@@ -22,7 +22,7 @@ const handleLoadDir = async (event: Electron.IpcMainEvent, path: string) => {
   const db = await getDB(path);
 
   for await (let note of NotesFS.readDir(path)) {
-    NotesDB.save(db, note.id, note.markdown, note.modifiedAt);
+    NotesDB.save(db, note.id, note.slate, note.modifiedAt);
   }
 
   event.reply("loaded-dir");
@@ -41,13 +41,11 @@ const handleLoadNote = async (
 };
 
 const handleSetNote = async (event: Electron.IpcMainEvent, arg: IpcSetNote) => {
-  const { path, id, markdown } = arg;
+  const { path, id, slate } = arg;
   const db = await getDB(path);
 
-  await Promise.all([
-    NotesDB.save(db, id, markdown, new Date()),
-    NotesFS.save(path, id, markdown),
-  ]);
+  NotesDB.save(db, id, slate);
+  NotesFS.save(path, id, slate);
 
   const note = await NotesDB.get(db, id);
   const message: IpcLoadedNote = { note };

@@ -5,6 +5,7 @@ import { Streams } from "../interfaces/streams";
 import { NotesFS } from "../interfaces/notes_fs";
 import { NoteID } from "../interfaces/note";
 import { NoteCacheContext } from "../noteCache";
+import { Serializer } from "../interfaces/serializer";
 
 export const NoteListContainer: React.FC = () => {
   const [state, dispatch] = useContext(StateContext);
@@ -21,7 +22,7 @@ export const NoteListContainer: React.FC = () => {
   const handleAdd = useCallback(
     (title) => {
       const id = new Date().toJSON();
-      noteCache.setNote(id, `# ${title}`);
+      noteCache.setNote(id, Serializer.deserialize(`# ${title}`));
       dispatch({ type: "streams/OPEN_NOTE", stream: 0, id });
     },
     [noteCache, dispatch]

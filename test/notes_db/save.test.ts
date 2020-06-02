@@ -1,6 +1,7 @@
 import { Database } from "sqlite";
 import { NotesDB, NoteRow } from "../../src/interfaces/notes_db";
 import { Note } from "../../src/interfaces/note";
+import { Serializer } from "../../src/interfaces/serializer";
 
 describe("NotesDB.save()", () => {
   let db: Database;
@@ -11,7 +12,7 @@ describe("NotesDB.save()", () => {
   });
 
   it("inserts a new note", async () => {
-    await NotesDB.save(db, "a", "# Added note");
+    await NotesDB.save(db, "a", Serializer.deserialize("# Added note"));
 
     const rows = await db.all<NoteRow[]>(
       `SELECT * FROM notes WHERE title = 'Added note'`
@@ -20,8 +21,8 @@ describe("NotesDB.save()", () => {
   });
 
   it("updates an existing note", async () => {
-    await NotesDB.save(db, "a", "New note");
-    await NotesDB.save(db, "a", "Updated note");
+    await NotesDB.save(db, "a", Serializer.deserialize("New note"));
+    await NotesDB.save(db, "a", Serializer.deserialize("Updated note"));
 
     const rows = await db.all<NoteRow[]>(`SELECT * FROM notes WHERE id = 'a'`);
     expect(rows.length).toEqual(1);

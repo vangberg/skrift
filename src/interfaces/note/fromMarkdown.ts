@@ -1,11 +1,12 @@
 import { Node } from "slate";
 import { Serializer } from "../serializer";
+import { Note } from ".";
 
 interface ParsedNote {
   title: string;
   body: string;
   links: Set<string>;
-  markdown: string;
+  slate: Node[];
 }
 
 function parseTitle(nodes: Node[]): string {
@@ -24,7 +25,7 @@ function parseBody(nodes: Node[]): string {
     return "";
   }
 
-  return tail.map(node => Node.string(node)).join(" ");
+  return tail.map((node) => Node.string(node)).join(" ");
 }
 
 function parseLinks(nodes: Node[]): Set<string> {
@@ -34,7 +35,7 @@ function parseLinks(nodes: Node[]): Set<string> {
     Array.from(elements)
       .map(([element]) => element)
       .filter(Serializer.isNoteLink)
-      .map(link => link.id)
+      .map((link) => link.id)
   );
 }
 
@@ -42,9 +43,9 @@ export function fromMarkdown(markdown: string): ParsedNote {
   const nodes = Serializer.deserialize(markdown);
 
   return {
-    title: parseTitle(nodes),
+    title: Note.title(nodes),
     links: parseLinks(nodes),
     body: parseBody(nodes),
-    markdown
+    slate: nodes,
   };
 }

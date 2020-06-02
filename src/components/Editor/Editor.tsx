@@ -10,28 +10,13 @@ import { createEditor } from "./createEditor";
 import { Backlinks } from "./Backlinks";
 import { Toolbar } from "./Toolbar";
 
-const deserialize = (markdown: string) => {
-  const nodes = Serializer.deserialize(markdown);
-
-  if (nodes.length > 0) {
-    return nodes;
-  }
-
-  return [
-    {
-      type: "paragraph",
-      children: [{ text: "" }],
-    },
-  ];
-};
-
 const areEqual = (n1: Node[], n2: Node[]) => {
   return JSON.stringify(n1) === JSON.stringify(n2);
 };
 
 type Props = {
   note: Note;
-  onUpdate: (markdown: string) => void;
+  onUpdate: (slate: Node[]) => void;
   onDelete: () => void;
   onOpen: (id: string, push: boolean) => void;
   onClose: () => void;
@@ -45,16 +30,16 @@ export const SkriftEditor: React.FC<Props> = ({
   onClose,
 }) => {
   const editor = useMemo(() => createEditor(), []);
-  const [value, setValue] = useState(() => deserialize(note.markdown));
+  const [value, setValue] = useState(() => note.slate);
 
   // If the same note is opened multiple times, make sure
   // changes from the focused editor is propagated to the
   // non-focused editors.
   useEffect(() => {
     if (!ReactEditor.isFocused(editor)) {
-      setValue(deserialize(note.markdown));
+      setValue(note.slate);
     }
-  }, [editor, note.markdown]);
+  }, [editor, note.slate]);
 
   const handleChange = useCallback(
     (newValue: Node[]) => {
@@ -62,7 +47,7 @@ export const SkriftEditor: React.FC<Props> = ({
         return;
       }
       setValue(newValue);
-      onUpdate(Serializer.serialize(newValue));
+      onUpdate(newValue);
     },
     [onUpdate, value]
   );

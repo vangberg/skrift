@@ -1,6 +1,6 @@
 import { Database } from "sqlite";
-import { NotesDB, NoteRow } from "../../src/interfaces/notes_db";
-import { Note } from "../../src/interfaces/note";
+import { NotesDB } from "../../src/interfaces/notes_db";
+import { Serializer } from "../../src/interfaces/serializer";
 
 describe("NotesDB.get()", () => {
   let db: Database;
@@ -11,7 +11,7 @@ describe("NotesDB.get()", () => {
   });
 
   it("gets a note", async () => {
-    await NotesDB.save(db, "a", "# Added note");
+    await NotesDB.save(db, "a", Serializer.deserialize("# Added note"));
 
     const result = await NotesDB.get(db, "a");
     expect(result.id).toEqual("a");

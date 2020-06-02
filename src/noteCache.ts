@@ -4,10 +4,19 @@ import produce from "immer";
 import React from "react";
 import { NotesFS } from "./interfaces/notes_fs";
 import useElmish, { Reducer, StateEffectPair, Effects } from "react-use-elmish";
-import { ipcRenderer, webContents } from "electron";
+import { ipcRenderer } from "electron";
 import { IpcLoadedNote, IpcLoadNote, IpcSetNote } from "./types";
+import { Node } from "slate";
 
 type Notes = Map<NoteID, Note>;
+
+interface NoteCache {
+  loaded: boolean;
+  notes: Notes;
+  loadNote: (id: NoteID) => void;
+  setNote: (id: NoteID, slate: Node[]) => void;
+  deleteNote: (id: NoteID) => void;
+}
 
 interface State {
   loaded: boolean;
@@ -18,7 +27,7 @@ interface State {
 type LoadedDirAction = { type: "LOADED_DIR" };
 type LoadNoteAction = { type: "LOAD_NOTE"; id: NoteID };
 type LoadedNoteAction = { type: "LOADED_NOTE"; note: Note };
-type SetNoteAction = { type: "SET_NOTE"; id: NoteID; markdown: string };
+type SetNoteAction = { type: "SET_NOTE"; id: NoteID; slate: Node[] };
 type DeleteNoteAction = { type: "DELETE_NOTE"; id: NoteID };
 type ErrorAction = { type: "ERROR"; message: string };
 
@@ -67,9 +76,9 @@ const loadedNote: ActionHandler<LoadedNoteAction> = (state, action) => {
 
 const setNote: ActionHandler<SetNoteAction> = (state, action) => {
   const { path } = state;
-  const { id, markdown } = action;
+  const { id, slate } = action;
 
-  const ipcMessage: IpcSetNote = { path, id, markdown };
+  const ipcMessage: IpcSetNote = { path, id, slate };
 
   return [
     state,
@@ -117,14 +126,6 @@ export const initialState = (path: string): State => ({
   notes: new Map(),
 });
 
-interface NoteCache {
-  loaded: boolean;
-  notes: Notes;
-  loadNote: (id: NoteID) => void;
-  setNote: (id: NoteID, markdown: string) => void;
-  deleteNote: (id: NoteID) => void;
-}
-
 export const useNoteCache = (path: string): NoteCache => {
   const [state, dispatch] = useElmish(reducer, () => [
     initialState(path),
@@ -148,7 +149,7 @@ export const useNoteCache = (path: string): NoteCache => {
     loaded,
     notes,
     loadNote: (id) => dispatch({ type: "LOAD_NOTE", id }),
-    setNote: (id, markdown) => dispatch({ type: "SET_NOTE", id, markdown }),
+    setNote: (id, slate) => dispatch({ type: "SET_NOTE", id, slate }),
     deleteNote: (id) => dispatch({ type: "DELETE_NOTE", id }),
   };
 };
@@ -169,6 +170,6 @@ export const NoteCacheContext = React.createContext<NoteCache>({
   loaded: false,
   notes: new Map(),
   loadNote: (id) => Promise.resolve(),
-  setNote: (id, markdown) => {},
+  setNote: (id, slate) => {},
   deleteNote: (id) => {},
 });

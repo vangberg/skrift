@@ -1,6 +1,8 @@
 import sqlite3 from "sqlite3";
 import { open, Database } from "sqlite";
 import { Note, NoteID } from "../note";
+import { Serializer } from "../serializer";
+import { Node } from "slate";
 
 export interface NoteRow {
   id: string;
@@ -39,10 +41,11 @@ export const NotesDB = {
   async save(
     db: Database,
     id: NoteID,
-    markdown: string,
+    slate: Node[],
     modifiedAt?: Date
   ): Promise<void> {
-    const parsedNote = Note.fromMarkdown(markdown);
+    const title = Note.title(slate);
+    const markdown = Serializer.serialize(slate);
 
     await db.run(
       `
@@ -53,7 +56,7 @@ export const NotesDB = {
         markdown = excluded.markdown,
         modifiedAt = excluded.modifiedAt
       `,
-      [id, parsedNote.title, markdown, modifiedAt || new Date().toJSON()]
+      [id, title, markdown, modifiedAt || new Date()]
     );
   },
 
@@ -64,13 +67,11 @@ export const NotesDB = {
       return Promise.reject(`Could not find note with id ${id}`);
     }
 
-    const { title, markdown, modifiedAt } = row;
+    const { markdown, modifiedAt } = row;
 
-    return Note.empty({
-      id,
-      title,
-      markdown,
-      modifiedAt: new Date(modifiedAt),
-    });
+    return {
+      ...Note.empty({ id, modifiedAt: new Date(modifiedAt) }),
+      ...Note.fromMarkdown(markdown),
+    };
   },
 };

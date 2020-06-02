@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
 import { NoteID, Note } from "../note";
+import { Serializer } from "../serializer";
+import { Node } from "slate";
 
 export const NotesFS = {
   path(dirPath: string, id: NoteID): string {
@@ -40,7 +42,9 @@ export const NotesFS = {
       .map((filename) => path.basename(filename, ".md"));
   },
 
-  save(dirPath: string, id: NoteID, markdown: string): Promise<void> {
+  save(dirPath: string, id: NoteID, slate: Node[]): Promise<void> {
+    const markdown = Serializer.serialize(slate);
+
     return fs.promises.writeFile(this.path(dirPath, id), markdown);
   },
 
