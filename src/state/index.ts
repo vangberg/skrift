@@ -31,8 +31,6 @@ export const setNotes: ActionHandler<SetNotesAction> = (state, action) => {
 };
 
 export const reducer: Reducer<State, Action> = (state, action) => {
-  console.log(action);
-
   switch (action.type) {
     case "ERROR":
       return [state, Effects.none()];
