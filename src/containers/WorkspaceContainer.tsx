@@ -16,7 +16,7 @@ export const WorkspaceContainer: React.FC = () => {
       dispatch({ type: "notes/SET_NOTES", notes: arg.notes });
     });
     ipcRenderer.send("load-dir", state.path);
-  }, []);
+  }, [dispatch, state.path]);
 
   return (
     <StateContext.Provider value={[state, dispatch]}>
