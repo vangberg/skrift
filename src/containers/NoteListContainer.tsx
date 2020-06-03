@@ -2,18 +2,13 @@ import React, { useContext, useCallback, useMemo } from "react";
 import { NoteList } from "../components/NoteList";
 import { StateContext } from "../state";
 import { Streams } from "../interfaces/streams";
+import { NoteCache } from "../interfaces/noteCache";
 
 export const NoteListContainer: React.FC = () => {
   const [state, dispatch] = useContext(StateContext);
   const { notes, search } = state;
 
-  const sortedNotes = useMemo(
-    () =>
-      Array.from(notes.values())
-        .sort((a, b) => a.modifiedAt.getTime() - b.modifiedAt.getTime())
-        .reverse(),
-    [notes]
-  );
+  const sortedNotes = useMemo(() => NoteCache.byModifiedAt(notes), [notes]);
 
   const handleAdd = useCallback(
     (title) => {

@@ -2,16 +2,11 @@ import React from "react";
 import { Effects, Reducer } from "react-use-elmish";
 import { openNote, closeNote } from "./streams";
 import { setQuery, setResults, clearSearch } from "./search";
-import {
-  State,
-  Action,
-  SetNotesAction,
-  ActionHandler,
-  NoteCache,
-} from "./types";
+import { State, Action, SetNotesAction, ActionHandler } from "./types";
 import { remote } from "electron";
 import path from "path";
 import produce from "immer";
+import { NoteCache } from "../interfaces/noteCache";
 
 export const setNotes: ActionHandler<SetNotesAction> = (state, action) => {
   const notes: NoteCache = new Map();

@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { NoteID } from "../../interfaces/note";
 import { clipboard } from "electron";
 import { Icon } from "../Icon";
-import { NoteCacheEntry } from "../../state/types";
+import { NoteCacheEntry } from "../../interfaces/noteCache";
 
 type Props = {
   note: NoteCacheEntry;

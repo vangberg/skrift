@@ -2,14 +2,7 @@ import { StateEffectPair } from "react-use-elmish";
 
 import { NoteID, Note } from "../interfaces/note";
 import { Streams, StreamIndex, StreamLocation } from "../interfaces/streams";
-
-export interface NoteCacheEntry {
-  id: NoteID;
-  title: string;
-  modifiedAt: Date;
-}
-
-export type NoteCache = Map<NoteID, NoteCacheEntry>;
+import { NoteCache } from "../interfaces/noteCache";
 
 export interface State {
   path: string;

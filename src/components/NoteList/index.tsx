@@ -1,8 +1,7 @@
 import React from "react";
 import { SearchBar } from "./SearchBar";
-import { NoteID } from "../../interfaces/note";
 import { ListItem } from "./ListItem";
-import { NoteCacheEntry } from "../../state/types";
+import { NoteCacheEntry } from "../../interfaces/noteCache";
 
 type Props = {
   notes: NoteCacheEntry[];

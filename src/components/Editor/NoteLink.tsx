@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
-import { Note, NoteID } from "../../interfaces/note";
-import { NoteCacheEntry } from "../../state/types";
+import { NoteID } from "../../interfaces/note";
+import { NoteCacheEntry } from "../../interfaces/noteCache";
 
 type Props = {
   id: NoteID;
