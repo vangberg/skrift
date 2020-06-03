@@ -68,6 +68,7 @@
     "eslint-plugin-jest": "^23.8.2",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^2.5.1",
+    "fast-clone": "^1.5.13",
     "html-webpack-plugin": "^3.2.0",
     "immer": "^5.3.6",
     "is-hotkey": "^0.1.6",
@@ -78,6 +79,7 @@
     "react-use-elmish": "^1.0.0",
     "remarkable": "^1.7.4",
     "slate": "^0.57.1",
+    "slate-history": "^0.57.1",
     "slate-hyperscript": "^0.57.1",
     "slate-react": "^0.57.1",
     "sqlite": "^4.0.7",
@@ -88,8 +90,7 @@
     "typescript": "^3.8.3",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3",
-    "slate-history": "^0.57.1"
+    "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
     "sqlite3": "^4.2.0"

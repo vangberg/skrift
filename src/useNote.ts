@@ -3,6 +3,7 @@ import { useEffect, useContext, useState, useCallback } from "react";
 import { ipcRenderer } from "electron";
 import { IpcLoadedNote, IpcLoadNote } from "./types";
 import { StateContext } from "./state";
+import clone from "fast-clone";
 
 export const useNote = (id: NoteID): Note | null => {
   const [state] = useContext(StateContext);
@@ -11,7 +12,14 @@ export const useNote = (id: NoteID): Note | null => {
   const handleLoadedNote = useCallback(
     (event, arg: IpcLoadedNote) => {
       const { note } = arg;
-      setNote(note);
+      const { slate } = note;
+
+      /*
+      When the same value is used by multiple instances of Slate,
+      the last instance will always steal focus. We fix this at the
+      "root" by cloning the value here, before passing it on to React/Slate.
+      */
+      setNote({ ...note, slate: clone(slate) });
     },
     [setNote]
   );
