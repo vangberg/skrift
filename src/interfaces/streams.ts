@@ -1,7 +1,16 @@
 import { NoteID } from "./note";
 
+let key = 0;
+
 export type StreamID = number;
-export type Stream = NoteID[];
+
+// We need a key that can be used by React when rendering a stream.
+export type StreamEntry = {
+  key: number;
+  noteId: NoteID;
+};
+
+export type Stream = StreamEntry[];
 export type Streams = Stream[];
 export type StreamIndex = number;
 export type StreamNoteIndex = number;
@@ -33,7 +42,10 @@ export const Streams = {
   },
 
   openNote(streams: Streams, streamIdx: StreamIndex, noteId: NoteID) {
-    Streams.at(streams, streamIdx).push(noteId);
+    Streams.at(streams, streamIdx).push({
+      key: key++,
+      noteId,
+    });
   },
 
   closeNote(streams: Streams, location: StreamLocation) {
@@ -44,5 +56,5 @@ export const Streams = {
     if (Streams.isEmpty(streams, streamIdx)) {
       Streams.close(streams, streamIdx);
     }
-  }
+  },
 };
