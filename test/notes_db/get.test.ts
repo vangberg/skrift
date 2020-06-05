@@ -11,10 +11,12 @@ describe("NotesDB.get()", () => {
   });
 
   it("gets a note", async () => {
-    await NotesDB.save(db, "a", Serializer.deserialize("# Added note"));
+    const date = new Date();
+    await NotesDB.save(db, "a", Serializer.deserialize("# Added note"), date);
 
     const result = await NotesDB.get(db, "a");
     expect(result.id).toEqual("a");
     expect(result.title).toEqual("Added note");
+    expect(result.modifiedAt).toEqual(date);
   });
 });

@@ -70,7 +70,7 @@ export const NotesDB = {
     const { markdown, modifiedAt } = row;
 
     return {
-      ...Note.empty({ id, modifiedAt: new Date(modifiedAt) }),
+      ...Note.empty({ id, modifiedAt: new Date(parseFloat(modifiedAt)) }),
       ...Note.fromMarkdown(markdown),
     };
   },
