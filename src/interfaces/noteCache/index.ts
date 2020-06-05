@@ -1,4 +1,4 @@
-import { NoteID } from "../note";
+import { NoteID, Note } from "../note";
 
 export interface NoteCacheEntry {
   id: NoteID;
@@ -9,6 +9,12 @@ export interface NoteCacheEntry {
 export type NoteCache = Map<NoteID, NoteCacheEntry>;
 
 export const NoteCache = {
+  toEntry(note: Note): NoteCacheEntry {
+    const { id, title, modifiedAt } = note;
+
+    return { id, title, modifiedAt };
+  },
+
   byDate(cache: NoteCache): NoteCacheEntry[] {
     return [...cache.values()]
       .sort((a, b) => a.id.localeCompare(b.id))

@@ -52,6 +52,7 @@ const handleSetNote = async (event: Electron.IpcMainEvent, arg: IpcSetNote) => {
 
   const note = await NotesDB.get(db, id);
   const message: IpcLoadedNote = { note };
+  event.reply(`loaded-note`, message);
   event.reply(`loaded-note/${id}`, message);
 };
 

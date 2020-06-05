@@ -16,7 +16,9 @@ export interface State {
 
 export type ErrorAction = { type: "ERROR"; message: string };
 
+export type NotesAction = SetNotesAction | SetNoteAction;
 export type SetNotesAction = { type: "notes/SET_NOTES"; notes: Note[] };
+export type SetNoteAction = { type: "notes/SET_NOTE"; note: Note };
 
 export type StreamsAction = OpenNoteAction | CloseNoteAction;
 export type OpenNoteAction = {
@@ -40,11 +42,7 @@ export type SetResultsAction = {
 };
 export type ClearSearchAction = { type: "search/CLEAR" };
 
-export type Action =
-  | SetNotesAction
-  | StreamsAction
-  | SearchAction
-  | ErrorAction;
+export type Action = NotesAction | StreamsAction | SearchAction | ErrorAction;
 
 export type ActionHandler<SubAction> = (
   state: State,
