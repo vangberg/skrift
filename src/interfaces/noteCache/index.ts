@@ -16,8 +16,8 @@ export const NoteCache = {
   },
 
   byModifiedAt(cache: NoteCache): NoteCacheEntry[] {
-    return [...cache.values()].sort(
-      (a, b) => a.modifiedAt.getTime() - b.modifiedAt.getTime()
-    );
+    return [...cache.values()]
+      .sort((a, b) => a.modifiedAt.getTime() - b.modifiedAt.getTime())
+      .reverse();
   },
 };
