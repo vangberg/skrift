@@ -7,3 +7,7 @@
 .skrift-list-item > p:first-child {
   @apply py-0;
 }
+
+.skrift-flex-empty-0:empty {
+  flex: 0;
+}
