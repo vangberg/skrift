@@ -3,6 +3,7 @@ import { open, Database } from "sqlite";
 import { Note, NoteID } from "../note";
 import { Serializer } from "../serializer";
 import { Node } from "slate";
+import path from "path";
 
 export interface NoteRow {
   id: string;
@@ -15,6 +16,14 @@ export const NotesDB = {
   async memory(): Promise<Database> {
     return open({
       filename: ":memory:",
+      driver: sqlite3.Database,
+    });
+  },
+
+  async file(dirPath: string): Promise<Database> {
+    const dbPath = path.join(dirPath, "skrift.db");
+    return open({
+      filename: dbPath,
       driver: sqlite3.Database,
     });
   },

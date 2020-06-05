@@ -10,7 +10,7 @@ const getDB = async (path: string): Promise<Database> => {
   let db = dbs.get(path);
 
   if (!db) {
-    db = await NotesDB.memory();
+    db = await NotesDB.file(path);
     await NotesDB.initialize(db);
     dbs.set(path, db);
   }
