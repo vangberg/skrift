@@ -1,5 +1,6 @@
 import { fromMarkdown } from "./fromMarkdown";
 import { Node } from "slate";
+import { Serializer } from "../serializer";
 
 export type NoteID = string;
 
@@ -20,6 +21,17 @@ export const Note = {
     }
 
     return Node.string(slate[0]);
+  },
+
+  links(slate: Node[]): Set<string> {
+    const elements = Node.elements({ type: "root", children: slate });
+
+    return new Set(
+      Array.from(elements)
+        .map(([element]) => element)
+        .filter(Serializer.isNoteLink)
+        .map((link) => link.id)
+    );
   },
 
   fromMarkdown,

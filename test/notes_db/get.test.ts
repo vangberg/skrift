@@ -12,11 +12,26 @@ describe("NotesDB.get()", () => {
 
   it("gets a note", async () => {
     const date = new Date();
-    await NotesDB.save(db, "a", Serializer.deserialize("# Added note"), date);
+    await NotesDB.save(
+      db,
+      "a",
+      Serializer.deserialize("# Added note\n\nLinks: [[b]], [[c]]"),
+      date
+    );
 
     const result = await NotesDB.get(db, "a");
     expect(result.id).toEqual("a");
     expect(result.title).toEqual("Added note");
+    expect(result.links).toEqual(new Set(["b", "c"]));
     expect(result.modifiedAt).toEqual(date);
+  });
+
+  it("gets backlinks", async () => {
+    const date = new Date();
+    await NotesDB.save(db, "a", Serializer.deserialize("[[b]]"), date);
+    await NotesDB.save(db, "b", Serializer.deserialize("# B"), date);
+
+    const result = await NotesDB.get(db, "b");
+    expect(result.backlinks).toEqual(new Set(["a"]));
   });
 });

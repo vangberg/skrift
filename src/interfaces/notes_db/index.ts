@@ -12,6 +12,11 @@ export interface NoteRow {
   modifiedAt: string;
 }
 
+export interface LinkRow {
+  fromId: string;
+  toId: string;
+}
+
 export const NotesDB = {
   async memory(): Promise<Database> {
     return open({
@@ -42,7 +47,8 @@ export const NotesDB = {
     await db.run(`
       CREATE TABLE links (
         fromId TEXT NOT NULL,
-        toId TEXT NOT NULL
+        toId TEXT NOT NULL,
+        PRIMARY KEY (fromId, toId)
       )
     `);
   },
@@ -55,6 +61,7 @@ export const NotesDB = {
   ): Promise<void> {
     const title = Note.title(slate);
     const markdown = Serializer.serialize(slate);
+    const links = Note.links(slate);
 
     await db.run(
       `
@@ -67,10 +74,26 @@ export const NotesDB = {
       `,
       [id, title, markdown, modifiedAt || new Date()]
     );
+    await db.run(`DELETE FROM links WHERE fromId = ?`, id);
+    await Promise.all(
+      [...links].map((link) =>
+        db.run(
+          `
+          INSERT INTO links (fromId, toId)
+          VALUES (?, ?)
+          `,
+          [id, link]
+        )
+      )
+    );
   },
 
   async get(db: Database, id: NoteID): Promise<Note> {
     const row = await db.get<NoteRow>(`SELECT * FROM notes WHERE id = ?`, id);
+    const backlinks = await db.all<LinkRow[]>(
+      `SELECT * FROM links WHERE toId = ?`,
+      id
+    );
 
     if (!row) {
       return Promise.reject(`Could not find note with id ${id}`);
@@ -79,7 +102,11 @@ export const NotesDB = {
     const { markdown, modifiedAt } = row;
 
     return {
-      ...Note.empty({ id, modifiedAt: new Date(parseFloat(modifiedAt)) }),
+      ...Note.empty({
+        id,
+        backlinks: new Set(backlinks.map(({ fromId }) => fromId)),
+        modifiedAt: new Date(parseFloat(modifiedAt)),
+      }),
       ...Note.fromMarkdown(markdown),
     };
   },
