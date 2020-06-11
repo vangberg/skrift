@@ -32,6 +32,7 @@ export const reducer: Reducer<State, Action> = (state, action) => {
 };
 
 export const initialState = (state?: Partial<State>): State => ({
+  //path: "/Users/harry/work/10000-markdown-files/10000 markdown files",
   path: path.join(remote.app.getPath("documents"), "Skrift"),
   notes: new Map(),
   search: {

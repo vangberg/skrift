@@ -42,18 +42,8 @@ export const NotesDB = {
 
   async initialize(db: Database): Promise<void> {
     await db.run("DROP TABLE IF EXISTS notes");
-    await db.run(`
-      CREATE TABLE notes (
-        id TEXT PRIMARY KEY NOT NULL,
-        title TEXT NOT NULL,
-        markdown TEXT NOT NULL,
-        modifiedAt TEXT NOT NULL
-      )
-    `);
-
-    await db.run("DROP TABLE IF EXISTS search");
     await db.run(
-      `CREATE VIRTUAL TABLE search USING fts5(
+      `CREATE VIRTUAL TABLE notes USING fts5(
         id UNINDEXED,
         title,
         markdown,
@@ -81,31 +71,20 @@ export const NotesDB = {
     const markdown = Serializer.serialize(slate);
     const links = Note.links(slate);
 
-    await Promise.all([
-      db.run(`DELETE FROM search WHERE id = ?`, id),
-      db.run(`DELETE FROM links WHERE fromId = ?`, id),
-    ]);
+    await db.run(`BEGIN`);
+    await db.run(`DELETE FROM notes WHERE id = ?`, id);
+    await db.run(`DELETE FROM links WHERE fromId = ?`, id);
 
-    await Promise.all([
-      db.run(
-        `
-        INSERT INTO notes (id, title, markdown, modifiedAt)
-        VALUES (?, ?, ?, ?)
-        ON CONFLICT (id) DO UPDATE SET
-          title = excluded.title,
-          markdown = excluded.markdown,
-          modifiedAt = excluded.modifiedAt
-        `,
-        [id, title, markdown, modifiedAt || new Date()]
-      ),
-      db.run(
-        `
-        INSERT INTO search (id, title, markdown, modifiedAt)
-        VALUES (?, ?, ?, ?)
-        `,
-        [id, title, markdown, modifiedAt || new Date()]
-      ),
-      ...[...links].map((link) =>
+    await db.run(
+      `
+      INSERT INTO notes (id, title, markdown, modifiedAt)
+      VALUES (?, ?, ?, ?)
+      `,
+      [id, title, markdown, modifiedAt || new Date()]
+    );
+
+    await Promise.all(
+      [...links].map((link) =>
         db.run(
           `
           INSERT INTO links (fromId, toId)
@@ -113,12 +92,15 @@ export const NotesDB = {
           `,
           [id, link]
         )
-      ),
-    ]);
+      )
+    );
+
+    await db.run(`COMMIT`);
   },
 
   async get(db: Database, id: NoteID): Promise<Note> {
     const row = await db.get<NoteRow>(`SELECT * FROM notes WHERE id = ?`, id);
+
     const backlinks = await db.all<LinkRow[]>(
       `SELECT * FROM links WHERE toId = ?`,
       id
@@ -142,7 +124,7 @@ export const NotesDB = {
 
   async search(db: Database, query: string): Promise<NoteID[]> {
     const rows = await db.all<SearchRow[]>(
-      `SELECT * FROM search WHERE search MATCH ?`,
+      `SELECT * FROM notes WHERE notes MATCH ?`,
       `${query}*`
     );
 

@@ -13,7 +13,7 @@ export const NoteListContainer: React.FC = () => {
     if (results) {
       return NoteCache.byIds(notes, results);
     } else {
-      return NoteCache.byModifiedAt(notes);
+      return NoteCache.byModifiedAt(notes).slice(0, 100);
     }
   }, [results, notes]);
 
