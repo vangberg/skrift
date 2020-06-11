@@ -15,6 +15,19 @@ export const NoteCache = {
     return { id, title, modifiedAt };
   },
 
+  byIds(cache: NoteCache, ids: NoteID[]): NoteCacheEntry[] {
+    const entries: NoteCacheEntry[] = [];
+
+    ids.forEach((id) => {
+      const entry = cache.get(id);
+      if (entry) {
+        entries.push(entry);
+      }
+    });
+
+    return entries;
+  },
+
   byDate(cache: NoteCache): NoteCacheEntry[] {
     return [...cache.values()]
       .sort((a, b) => a.id.localeCompare(b.id))

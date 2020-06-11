@@ -7,8 +7,15 @@ import { NoteCache } from "../interfaces/noteCache";
 export const NoteListContainer: React.FC = () => {
   const [state, dispatch] = useContext(StateContext);
   const { notes, search } = state;
+  const { results } = search;
 
-  const sortedNotes = useMemo(() => NoteCache.byModifiedAt(notes), [notes]);
+  const notes_ = useMemo(() => {
+    if (results) {
+      return NoteCache.byIds(notes, results);
+    } else {
+      return NoteCache.byModifiedAt(notes);
+    }
+  }, [results, notes]);
 
   const handleAdd = useCallback(
     (title) => {
@@ -36,7 +43,7 @@ export const NoteListContainer: React.FC = () => {
 
   return (
     <NoteList
-      notes={sortedNotes}
+      notes={notes_}
       query={search.query}
       onAdd={handleAdd}
       onOpen={handleOpen}

@@ -1,6 +1,13 @@
 import { ipcMain } from "electron";
 import { NotesFS } from "../interfaces/notes_fs";
-import { IpcLoadNote, IpcSetNote, IpcLoadedNote, IpcLoadedDir } from "../types";
+import {
+  IpcLoadNote,
+  IpcSetNote,
+  IpcLoadedNote,
+  IpcLoadedDir,
+  IpcSearch,
+  IpcSearchResults,
+} from "../types";
 import { Database } from "sqlite";
 import { NotesDB } from "../interfaces/notes_db";
 
@@ -56,8 +63,18 @@ const handleSetNote = async (event: Electron.IpcMainEvent, arg: IpcSetNote) => {
   event.reply(`loaded-note/${id}`, message);
 };
 
+const handleSearch = async (event: Electron.IpcMainEvent, arg: IpcSearch) => {
+  const { path, query } = arg;
+  const db = await getDB(path);
+
+  const ids = await NotesDB.search(db, query);
+  const message: IpcSearchResults = { ids };
+  event.reply(`search-results`, message);
+};
+
 export const setupIpc = () => {
   ipcMain.on("load-dir", handleLoadDir);
   ipcMain.on("load-note", handleLoadNote);
   ipcMain.on("set-note", handleSetNote);
+  ipcMain.on("search", handleSearch);
 };

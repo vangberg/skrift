@@ -3,7 +3,7 @@ import { reducer, StateContext, initialState } from "../state";
 import { Workspace } from "../components/Workspace";
 import useElmish, { Effects } from "react-use-elmish";
 import { ipcRenderer } from "electron";
-import { IpcLoadedDir, IpcLoadedNote } from "../types";
+import { IpcLoadedDir, IpcLoadedNote, IpcSearchResults } from "../types";
 
 export const WorkspaceContainer: React.FC = () => {
   const [state, dispatch] = useElmish(reducer, () => [
@@ -17,6 +17,9 @@ export const WorkspaceContainer: React.FC = () => {
     });
     ipcRenderer.on("loaded-note", (event, arg: IpcLoadedNote) => {
       dispatch({ type: "notes/SET_NOTE", note: arg.note });
+    });
+    ipcRenderer.on("search-results", (event, arg: IpcSearchResults) => {
+      dispatch({ type: "search/SET_RESULTS", results: arg.ids });
     });
     ipcRenderer.send("load-dir", state.path);
   }, [dispatch, state.path]);

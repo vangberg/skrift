@@ -12,6 +12,13 @@ export interface NoteRow {
   modifiedAt: string;
 }
 
+export interface SearchRow {
+  id: string;
+  title: string;
+  markdown: string;
+  modifiedAt: string;
+}
+
 export interface LinkRow {
   fromId: string;
   toId: string;
@@ -43,6 +50,17 @@ export const NotesDB = {
         modifiedAt TEXT NOT NULL
       )
     `);
+
+    await db.run("DROP TABLE IF EXISTS search");
+    await db.run(
+      `CREATE VIRTUAL TABLE search USING fts5(
+        id UNINDEXED,
+        title,
+        markdown,
+        modifiedAt UNINDEXED
+      )`
+    );
+
     await db.run("DROP TABLE IF EXISTS links");
     await db.run(`
       CREATE TABLE links (
@@ -63,20 +81,31 @@ export const NotesDB = {
     const markdown = Serializer.serialize(slate);
     const links = Note.links(slate);
 
-    await db.run(
-      `
-      INSERT INTO notes (id, title, markdown, modifiedAt)
-      VALUES (?, ?, ?, ?)
-      ON CONFLICT (id) DO UPDATE SET
-        title = excluded.title,
-        markdown = excluded.markdown,
-        modifiedAt = excluded.modifiedAt
-      `,
-      [id, title, markdown, modifiedAt || new Date()]
-    );
-    await db.run(`DELETE FROM links WHERE fromId = ?`, id);
-    await Promise.all(
-      [...links].map((link) =>
+    await Promise.all([
+      db.run(`DELETE FROM search WHERE id = ?`, id),
+      db.run(`DELETE FROM links WHERE fromId = ?`, id),
+    ]);
+
+    await Promise.all([
+      db.run(
+        `
+        INSERT INTO notes (id, title, markdown, modifiedAt)
+        VALUES (?, ?, ?, ?)
+        ON CONFLICT (id) DO UPDATE SET
+          title = excluded.title,
+          markdown = excluded.markdown,
+          modifiedAt = excluded.modifiedAt
+        `,
+        [id, title, markdown, modifiedAt || new Date()]
+      ),
+      db.run(
+        `
+        INSERT INTO search (id, title, markdown, modifiedAt)
+        VALUES (?, ?, ?, ?)
+        `,
+        [id, title, markdown, modifiedAt || new Date()]
+      ),
+      ...[...links].map((link) =>
         db.run(
           `
           INSERT INTO links (fromId, toId)
@@ -84,8 +113,8 @@ export const NotesDB = {
           `,
           [id, link]
         )
-      )
-    );
+      ),
+    ]);
   },
 
   async get(db: Database, id: NoteID): Promise<Note> {
@@ -109,5 +138,14 @@ export const NotesDB = {
       }),
       ...Note.fromMarkdown(markdown),
     };
+  },
+
+  async search(db: Database, query: string): Promise<NoteID[]> {
+    const rows = await db.all<SearchRow[]>(
+      `SELECT * FROM search WHERE search MATCH ?`,
+      `${query}*`
+    );
+
+    return rows.map((row) => row.id);
   },
 };

@@ -7,8 +7,11 @@ import {
   ClearSearchAction,
 } from "./types";
 import { errorHandler } from "./errorHandler";
+import { ipcRenderer } from "electron";
+import { IpcSearch } from "../types";
 
 export const setQuery: ActionHandler<SetQueryAction> = (state, action) => {
+  const { path } = state;
   const { query } = action;
 
   if (query === "") {
@@ -19,11 +22,10 @@ export const setQuery: ActionHandler<SetQueryAction> = (state, action) => {
     produce(state, (draft) => {
       draft.search.query = query;
     }),
-    Effects.fromPromise(
-      () => Promise.resolve([]),
-      (results) => ({ type: "search/SET_RESULTS", results }),
-      errorHandler
-    ),
+    Effects.attemptFunction(() => {
+      const message: IpcSearch = { path, query };
+      ipcRenderer.send("search", message);
+    }, errorHandler),
   ];
 };
 
