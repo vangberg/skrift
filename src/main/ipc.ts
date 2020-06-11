@@ -30,7 +30,7 @@ const handleLoadDir = async (event: Electron.IpcMainEvent, path: string) => {
   const notes = [];
 
   for await (let note of NotesFS.readDir(path)) {
-    NotesDB.save(db, note.id, note.slate, note.modifiedAt);
+    await NotesDB.save(db, note.id, note.slate, note.modifiedAt);
     notes.push(note);
   }
 
@@ -54,7 +54,7 @@ const handleSetNote = async (event: Electron.IpcMainEvent, arg: IpcSetNote) => {
   const { path, id, slate } = arg;
   const db = await getDB(path);
 
-  NotesDB.save(db, id, slate);
+  await NotesDB.save(db, id, slate);
   NotesFS.save(path, id, slate);
 
   const note = await NotesDB.get(db, id);

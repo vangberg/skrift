@@ -71,7 +71,7 @@ export const NotesDB = {
     const markdown = Serializer.serialize(slate);
     const links = Note.links(slate);
 
-    await db.run(`BEGIN`);
+    await db.exec(`BEGIN`);
     await db.run(`DELETE FROM notes WHERE id = ?`, id);
     await db.run(`DELETE FROM links WHERE fromId = ?`, id);
 
@@ -93,7 +93,7 @@ export const NotesDB = {
       );
     }
 
-    await db.run(`COMMIT`);
+    await db.exec(`COMMIT`);
   },
 
   async get(db: Database, id: NoteID): Promise<Note> {
