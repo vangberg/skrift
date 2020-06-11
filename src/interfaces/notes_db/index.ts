@@ -83,17 +83,15 @@ export const NotesDB = {
       [id, title, markdown, modifiedAt || new Date()]
     );
 
-    await Promise.all(
-      [...links].map((link) =>
-        db.run(
-          `
-          INSERT INTO links (fromId, toId)
-          VALUES (?, ?)
-          `,
-          [id, link]
-        )
-      )
-    );
+    for (const link of links) {
+      await db.run(
+        `
+        INSERT INTO links (fromId, toId)
+        VALUES (?, ?)
+        `,
+        [id, link]
+      );
+    }
 
     await db.run(`COMMIT`);
   },
