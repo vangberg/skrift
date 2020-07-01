@@ -24,6 +24,13 @@ export interface LinkRow {
   toId: string;
 }
 
+export class NoteNotFoundError extends Error {
+  constructor(message?: string) {
+    super(message);
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
+
 export const NotesDB = {
   async memory(): Promise<Database> {
     return open({
@@ -105,7 +112,7 @@ export const NotesDB = {
     );
 
     if (!row) {
-      return Promise.reject(`Could not find note with id ${id}`);
+      throw new NoteNotFoundError("Woop");
     }
 
     const { markdown, modifiedAt } = row;
@@ -118,6 +125,11 @@ export const NotesDB = {
       }),
       ...Note.fromMarkdown(markdown),
     };
+  },
+
+  async delete(db: Database, id: NoteID): Promise<void> {
+    await db.run(`DELETE FROM notes WHERE id = ?`, id);
+    await db.run(`DELETE FROM links WHERE toId = ? OR fromId = ?`, id, id);
   },
 
   async search(db: Database, query: string): Promise<NoteID[]> {

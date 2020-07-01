@@ -1,4 +1,9 @@
-import { ActionHandler, SetNotesAction, SetNoteAction } from "./types";
+import {
+  ActionHandler,
+  SetNotesAction,
+  SetNoteAction,
+  DeleteNoteAction,
+} from "./types";
 import { NoteCache } from "../interfaces/noteCache";
 import produce from "immer";
 import { Effects } from "react-use-elmish";
@@ -24,6 +29,17 @@ export const setNote: ActionHandler<SetNoteAction> = (state, action) => {
   return [
     produce(state, (draft) => {
       draft.notes.set(note.id, NoteCache.toEntry(note));
+    }),
+    Effects.none(),
+  ];
+};
+
+export const deleteNote: ActionHandler<DeleteNoteAction> = (state, action) => {
+  const { id } = action;
+
+  return [
+    produce(state, (draft) => {
+      draft.notes.delete(id);
     }),
     Effects.none(),
   ];

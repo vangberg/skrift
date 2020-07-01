@@ -5,7 +5,7 @@ import { NoteID, Note } from "../interfaces/note";
 import { StreamLocation } from "../interfaces/streams";
 import { Node } from "slate";
 import { useNote } from "../useNote";
-import { IpcSetNote } from "../types";
+import { IpcSetNote, IpcDeleteNote } from "../types";
 import { ipcRenderer } from "electron";
 
 interface Props {
@@ -28,7 +28,10 @@ export const NoteEditorContainer: React.FC<Props> = ({ id, location }) => {
 
   const handleDelete = useCallback(() => {
     dispatch({ type: "streams/CLOSE_NOTE", location });
-  }, [dispatch, location]);
+
+    const message: IpcDeleteNote = { path: state.path, id };
+    ipcRenderer.send("delete-note", message);
+  }, [dispatch, location, state.path, id]);
 
   const handleOpen = useCallback(
     (id, push) => {

@@ -1,5 +1,5 @@
 import { Database } from "sqlite";
-import { NotesDB } from "../../src/interfaces/notes_db";
+import { NotesDB, NoteNotFoundError } from "../../src/interfaces/notes_db";
 import { Serializer } from "../../src/interfaces/serializer";
 
 describe("NotesDB.get()", () => {
@@ -33,5 +33,9 @@ describe("NotesDB.get()", () => {
 
     const result = await NotesDB.get(db, "b");
     expect(result.backlinks).toEqual(new Set(["a"]));
+  });
+
+  it("fails on unknown note", async () => {
+    await expect(NotesDB.get(db, "unknown")).rejects.toThrow(NoteNotFoundError);
   });
 });

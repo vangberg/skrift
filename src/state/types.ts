@@ -16,9 +16,10 @@ export interface State {
 
 export type ErrorAction = { type: "ERROR"; message: string };
 
-export type NotesAction = SetNotesAction | SetNoteAction;
+export type NotesAction = SetNotesAction | SetNoteAction | DeleteNoteAction;
 export type SetNotesAction = { type: "notes/SET_NOTES"; notes: Note[] };
 export type SetNoteAction = { type: "notes/SET_NOTE"; note: Note };
+export type DeleteNoteAction = { type: "notes/DELETE_NOTE"; id: NoteID };
 
 export type StreamsAction = OpenNoteAction | CloseNoteAction;
 export type OpenNoteAction = {

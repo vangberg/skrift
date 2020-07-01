@@ -7,6 +7,7 @@ import {
   IpcLoadedDir,
   IpcSearch,
   IpcSearchResults,
+  IpcDeleteNote,
 } from "../types";
 import { Database } from "sqlite";
 import { NotesDB } from "../interfaces/notes_db";
@@ -50,6 +51,18 @@ const handleLoadNote = async (
   event.reply(`loaded-note/${id}`, message);
 };
 
+const handleDeleteNote = async (
+  event: Electron.IpcMainEvent,
+  arg: IpcDeleteNote
+) => {
+  const { path, id } = arg;
+  const db = await getDB(path);
+
+  await NotesDB.delete(db, id);
+  await NotesFS.delete(path, id);
+  event.reply(`deleted-note`);
+};
+
 const handleSetNote = async (event: Electron.IpcMainEvent, arg: IpcSetNote) => {
   const { path, id, slate } = arg;
   const db = await getDB(path);
@@ -76,5 +89,6 @@ export const setupIpc = () => {
   ipcMain.on("load-dir", handleLoadDir);
   ipcMain.on("load-note", handleLoadNote);
   ipcMain.on("set-note", handleSetNote);
+  ipcMain.on("delete-note", handleDeleteNote);
   ipcMain.on("search", handleSearch);
 };

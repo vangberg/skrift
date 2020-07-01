@@ -8,5 +8,7 @@ export type IpcLoadedNote = { note: Note };
 
 export type IpcSetNote = { path: string; id: NoteID; slate: Node[] };
 
+export type IpcDeleteNote = { path: string; id: NoteID };
+
 export type IpcSearch = { path: string; query: string };
 export type IpcSearchResults = { ids: NoteID[] };
