@@ -28,6 +28,12 @@
         "deb"
       ]
     },
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "icon": "assets/icon.ico"
+    },
     "directories": {
       "buildResources": "assets"
     },
@@ -62,7 +68,7 @@
     "concurrently": "^5.1.0",
     "css-loader": "^3.5.2",
     "electron": "^8.2.2",
-    "electron-builder": "^22.4.1",
+    "electron-builder": "^22.8.0",
     "electron-is-dev": "^1.2.0",
     "eslint": "^6.8.0",
     "eslint-plugin-jest": "^23.8.2",
