@@ -34,6 +34,7 @@ const reply = (event: Electron.IpcMainEvent, reply: IpcReply) => {
 };
 
 const handleLoadDir = async (event: Electron.IpcMainEvent) => {
+  await NotesFS.initialize(_path);
   const db = await getDB();
   const notes = [];
 
