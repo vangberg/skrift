@@ -2,6 +2,11 @@ import { Editor, Node, Transforms, Descendant, Element } from "slate";
 import { SkriftTransforms } from "./transforms";
 import { hyperprint } from "../../testSupport";
 
+const isList = (node: Node) =>
+  ["bulleted-list", "numbered-list"].includes(node.type);
+
+const areListsOfSameType = (a: Node, b: Node) => isList(a) && a.type === b.type;
+
 const handleInsertBreak = (editor: Editor): boolean => {
   // When inserting a break in an empty list item, break out of the list
   // and insert a new paragraph.
@@ -14,7 +19,7 @@ const handleInsertBreak = (editor: Editor): boolean => {
   const [item, itemPath] = block;
 
   const list = Editor.above(editor, {
-    match: (n) => n.type === "bulleted-list",
+    match: (n) => isList(n),
   });
   if (!list) {
     return false;
@@ -39,7 +44,7 @@ const handleInsertBreak = (editor: Editor): boolean => {
       });
 
       Transforms.unwrapNodes(editor, {
-        match: (n) => ["bulleted-list", "numbered-list"].includes(n.type),
+        match: (n) => isList(n),
         split: true,
       });
     }
@@ -74,10 +79,7 @@ export const withList = (editor: Editor): Editor => {
         if (Element.isElement(child)) {
           const prev = Editor.previous(editor, { at: childPath });
           if (prev && Element.isElement(prev[0])) {
-            if (
-              prev[0].type === "bulleted-list" &&
-              child.type === "bulleted-list"
-            ) {
+            if (areListsOfSameType(prev[0], child)) {
               Transforms.mergeNodes(editor, { at: childPath });
               return;
             }
@@ -91,7 +93,7 @@ export const withList = (editor: Editor): Editor => {
       Element.isElement(node) &&
       node.type === "list-item" &&
       node.children.length > 0 &&
-      node.children[0].type === "bulleted-list"
+      isList(node.children[0])
     ) {
       Transforms.insertNodes(
         editor,
@@ -107,7 +109,7 @@ export const withList = (editor: Editor): Editor => {
     if (Element.isElement(node) && node.type === "list-item") {
       const above = Editor.above(editor, { at: path });
 
-      if (!above || above[0].type !== "bulleted-list") {
+      if (!above || !isList(above[0])) {
         Transforms.wrapNodes(
           editor,
           {
