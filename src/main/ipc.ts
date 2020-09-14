@@ -1,4 +1,4 @@
-import { ipcMain } from "electron";
+import { ipcMain, app } from "electron";
 import { NotesFS } from "../interfaces/notes_fs";
 import {
   IpcLoadNote,
@@ -11,26 +11,28 @@ import {
 } from "../types";
 import { Database } from "sqlite";
 import { NotesDB } from "../interfaces/notes_db";
+import path from "path";
 
-const dbs: Map<string, Database> = new Map();
+let _path = path.join(app.getPath("documents"), "Skrift");
 
-const getDB = async (path: string): Promise<Database> => {
-  let db = dbs.get(path);
+const getDB: () => Promise<Database> = (() => {
+  let db: Database;
 
-  if (!db) {
-    db = await NotesDB.file(path);
-    await NotesDB.initialize(db);
-    dbs.set(path, db);
-  }
+  return async (): Promise<Database> => {
+    if (!db) {
+      db = await NotesDB.file(_path);
+      await NotesDB.initialize(db);
+    }
 
-  return db;
-};
+    return db;
+  };
+})();
 
-const handleLoadDir = async (event: Electron.IpcMainEvent, path: string) => {
-  const db = await getDB(path);
+const handleLoadDir = async (event: Electron.IpcMainEvent) => {
+  const db = await getDB();
   const notes = [];
 
-  for await (let note of NotesFS.readDir(path)) {
+  for await (let note of NotesFS.readDir(_path)) {
     await NotesDB.save(db, note.id, note.slate, note.modifiedAt);
     notes.push(note);
   }
@@ -43,8 +45,8 @@ const handleLoadNote = async (
   event: Electron.IpcMainEvent,
   arg: IpcLoadNote
 ) => {
-  const { path, id } = arg;
-  const db = await getDB(path);
+  const { id } = arg;
+  const db = await getDB();
 
   const note = await NotesDB.get(db, id);
   const message: IpcLoadedNote = { note };
@@ -55,20 +57,20 @@ const handleDeleteNote = async (
   event: Electron.IpcMainEvent,
   arg: IpcDeleteNote
 ) => {
-  const { path, id } = arg;
-  const db = await getDB(path);
+  const { id } = arg;
+  const db = await getDB();
 
   await NotesDB.delete(db, id);
-  await NotesFS.delete(path, id);
+  await NotesFS.delete(_path, id);
   event.reply(`deleted-note`);
 };
 
 const handleSetNote = async (event: Electron.IpcMainEvent, arg: IpcSetNote) => {
-  const { path, id, slate } = arg;
-  const db = await getDB(path);
+  const { id, slate } = arg;
+  const db = await getDB();
 
   await NotesDB.save(db, id, slate);
-  NotesFS.save(path, id, slate);
+  NotesFS.save(_path, id, slate);
 
   const note = await NotesDB.get(db, id);
   const message: IpcLoadedNote = { note };
@@ -77,8 +79,8 @@ const handleSetNote = async (event: Electron.IpcMainEvent, arg: IpcSetNote) => {
 };
 
 const handleSearch = async (event: Electron.IpcMainEvent, arg: IpcSearch) => {
-  const { path, query } = arg;
-  const db = await getDB(path);
+  const { query } = arg;
+  const db = await getDB();
 
   const ids = await NotesDB.search(db, query);
   const message: IpcSearchResults = { ids };

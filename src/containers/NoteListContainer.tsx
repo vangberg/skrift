@@ -24,11 +24,11 @@ export const NoteListContainer: React.FC = () => {
     (title) => {
       const id = new Date().toJSON();
       const slate = Serializer.deserialize(`# ${title}`);
-      const message: IpcSetNote = { path: state.path, id, slate };
+      const message: IpcSetNote = { id, slate };
       ipcRenderer.send("set-note", message);
       dispatch({ type: "streams/OPEN_NOTE", stream: 0, id });
     },
-    [dispatch, state.path]
+    [dispatch]
   );
 
   const handleSearch = useCallback(

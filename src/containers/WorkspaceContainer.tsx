@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { reducer, StateContext, initialState } from "../state";
 import { Workspace } from "../components/Workspace";
 import useElmish, { Effects } from "react-use-elmish";
-import { ipcRenderer } from "electron";
+import { ipcRenderer, remote } from "electron";
 import { IpcLoadedDir, IpcLoadedNote, IpcSearchResults } from "../types";
 
 export const WorkspaceContainer: React.FC = () => {
@@ -21,8 +21,8 @@ export const WorkspaceContainer: React.FC = () => {
     ipcRenderer.on("search-results", (event, arg: IpcSearchResults) => {
       dispatch({ type: "search/SET_RESULTS", results: arg.ids });
     });
-    ipcRenderer.send("load-dir", state.path);
-  }, [dispatch, state.path]);
+    ipcRenderer.send("load-dir");
+  }, [dispatch]);
 
   return (
     <StateContext.Provider value={[state, dispatch]}>

@@ -5,7 +5,6 @@ import { Streams, StreamIndex, StreamLocation } from "../interfaces/streams";
 import { NoteCache } from "../interfaces/noteCache";
 
 export interface State {
-  path: string;
   notes: NoteCache;
   streams: Streams;
   search: {

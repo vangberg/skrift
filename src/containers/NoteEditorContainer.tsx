@@ -14,24 +14,24 @@ interface Props {
 }
 
 export const NoteEditorContainer: React.FC<Props> = ({ id, location }) => {
-  const [state, dispatch] = useContext(StateContext);
+  const [, dispatch] = useContext(StateContext);
   const [stream] = location;
   const note = useNote(id);
 
   const handleUpdate = useCallback(
     (slate: Node[]) => {
-      const message: IpcSetNote = { path: state.path, id, slate };
+      const message: IpcSetNote = { id, slate };
       ipcRenderer.send("set-note", message);
     },
-    [state.path, id]
+    [id]
   );
 
   const handleDelete = useCallback(() => {
     dispatch({ type: "streams/CLOSE_NOTE", location });
 
-    const message: IpcDeleteNote = { path: state.path, id };
+    const message: IpcDeleteNote = { id };
     ipcRenderer.send("delete-note", message);
-  }, [dispatch, location, state.path, id]);
+  }, [dispatch, location, id]);
 
   const handleOpen = useCallback(
     (id, push) => {

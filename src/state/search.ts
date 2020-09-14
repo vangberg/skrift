@@ -11,7 +11,6 @@ import { ipcRenderer } from "electron";
 import { IpcSearch } from "../types";
 
 export const setQuery: ActionHandler<SetQueryAction> = (state, action) => {
-  const { path } = state;
   const { query } = action;
 
   if (query === "") {
@@ -23,7 +22,7 @@ export const setQuery: ActionHandler<SetQueryAction> = (state, action) => {
       draft.search.query = query;
     }),
     Effects.attemptFunction(() => {
-      const message: IpcSearch = { path, query };
+      const message: IpcSearch = { query };
       ipcRenderer.send("search", message);
     }, errorHandler),
   ];
