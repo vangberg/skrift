@@ -4,7 +4,7 @@ const value = [
   {
     type: "heading",
     level: 1,
-    children: [{ text: "A title" }]
+    children: [{ text: "A title" }],
   },
   {
     type: "paragraph",
@@ -13,11 +13,11 @@ const value = [
       {
         type: "note-link",
         id: "123",
-        children: [{ text: "[[123]]" }]
+        children: [{ text: "[[123]]" }],
       },
-      { text: ") said." }
-    ]
-  }
+      { text: ") said." },
+    ],
+  },
 ];
 
 describe("slate value", () => {
@@ -40,14 +40,14 @@ describe("bulleted list", () => {
         children: [
           {
             type: "list-item",
-            children: [{ text: "Item 1" }]
+            children: [{ text: "Item 1" }],
           },
           {
             type: "list-item",
-            children: [{ text: "Item 2" }]
-          }
-        ]
-      }
+            children: [{ text: "Item 2" }],
+          },
+        ],
+      },
     ];
 
     const expected = `* Item 1
@@ -72,12 +72,12 @@ describe("bulleted list with note links", () => {
               {
                 type: "note-link",
                 id: "abc",
-                children: [{ text: "" }]
-              }
-            ]
-          }
-        ]
-      }
+                children: [{ text: "" }],
+              },
+            ],
+          },
+        ],
+      },
     ];
 
     const expected = `* A link: [[abc]]`;
@@ -99,11 +99,11 @@ describe("bulleted list with three paragraphs in item", () => {
             children: [
               { type: "paragraph", children: [{ text: "Para 1" }] },
               { type: "paragraph", children: [{ text: "Para 2" }] },
-              { type: "paragraph", children: [{ text: "Para 3" }] }
-            ]
-          }
-        ]
-      }
+              { type: "paragraph", children: [{ text: "Para 3" }] },
+            ],
+          },
+        ],
+      },
     ];
 
     const expected = `* Para 1
@@ -133,14 +133,14 @@ describe("bulleted list with nested bulleted list", () => {
                 children: [
                   {
                     type: "list-item",
-                    children: [{ text: "Item 2" }]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
+                    children: [{ text: "Item 2" }],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
     ];
 
     const expected = `* Item 1
@@ -160,18 +160,52 @@ describe("numbered list", () => {
         children: [
           {
             type: "list-item",
-            children: [{ text: "Item 1" }]
+            children: [{ text: "Item 1" }],
           },
           {
             type: "list-item",
-            children: [{ text: "Item 2" }]
-          }
-        ]
-      }
+            children: [{ text: "Item 2" }],
+          },
+        ],
+      },
     ];
 
     const expected = `1. Item 1
 2. Item 2`;
+
+    const result = serialize(value);
+
+    expect(result).toEqual(expected);
+  });
+});
+
+describe("numbered list with nested numbered list", () => {
+  it("serializes", () => {
+    const value = [
+      {
+        type: "numbered-list",
+        children: [
+          {
+            type: "list-item",
+            children: [
+              { type: "paragraph", children: [{ text: "Item 1" }] },
+              {
+                type: "numbered-list",
+                children: [
+                  {
+                    type: "list-item",
+                    children: [{ text: "Item 2" }],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ];
+
+    const expected = `1. Item 1
+   1. Item 2`;
 
     const result = serialize(value);
 

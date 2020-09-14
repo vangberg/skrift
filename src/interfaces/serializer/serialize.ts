@@ -4,14 +4,14 @@ function indent(level: number, str: string): string {
   const prepend = " ".repeat(level);
   return str
     .split("\n")
-    .map(s => prepend + s)
+    .map((s) => prepend + s)
     .join("\n");
 }
 
 export function serialize(nodes: Node[]): string {
   let out = "";
 
-  nodes.forEach(node => {
+  nodes.forEach((node) => {
     out += serializeNode(node);
   });
 
@@ -61,20 +61,23 @@ function bulletedList(node: Node): string {
   return (
     node.children
       .map((item: Node) => {
-        const [head, ...tail] = serializeChildren(item)
-          .trim()
-          .split("\n");
-        return [`* ${head}`, ...tail.map(line => indent(2, line))].join("\n");
+        const [head, ...tail] = serializeChildren(item).trim().split("\n");
+        return [`* ${head}`, ...tail.map((line) => indent(2, line))].join("\n");
       })
       .join("\n") + "\n"
   );
 }
 
 function numberedList(node: Node): string {
-  return node.children
-    .map(
-      (child: Node, index: number) =>
-        `${index + 1}. ${serializeChildren(child)}\n`
-    )
-    .join("");
+  return (
+    node.children
+      .map((item: Node, index: number) => {
+        const [head, ...tail] = serializeChildren(item).trim().split("\n");
+        return [
+          `${index + 1}. ${head}`,
+          ...tail.map((line) => indent(3, line)),
+        ].join("\n");
+      })
+      .join("\n") + "\n"
+  );
 }
