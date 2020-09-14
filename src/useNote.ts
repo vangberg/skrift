@@ -1,15 +1,15 @@
 import { NoteID, Note } from "./interfaces/note";
-import { useEffect, useContext, useState, useCallback } from "react";
-import { ipcRenderer } from "electron";
-import { IpcLoadedNote, IpcLoadNote } from "./types";
+import { useEffect, useState, useCallback } from "react";
+import { IpcSetNoteEvent } from "./types";
 import clone from "fast-clone";
+import { Ipc } from "./interfaces/ipc";
 
 export const useNote = (id: NoteID): Note | null => {
   const [note, setNote] = useState<Note | null>(null);
 
-  const handleLoadedNote = useCallback(
-    (event, arg: IpcLoadedNote) => {
-      const { note } = arg;
+  const handleSetNote = useCallback(
+    (event: IpcSetNoteEvent) => {
+      const { note } = event;
       const { slate } = note;
 
       /*
@@ -23,15 +23,20 @@ export const useNote = (id: NoteID): Note | null => {
   );
 
   useEffect(() => {
-    ipcRenderer.on(`loaded-note/${id}`, handleLoadedNote);
+    const deregister = Ipc.on((event) => {
+      switch (event.type) {
+        case "event/SET_NOTE":
+          if (event.note.id === id) {
+            handleSetNote(event);
+          }
+          break;
+      }
+    });
 
-    const message: IpcLoadNote = { id };
-    ipcRenderer.send("load-note", message);
+    Ipc.send({ type: "command/LOAD_NOTE", id });
 
-    return () => {
-      ipcRenderer.removeListener(`loaded-note/${id}`, handleLoadedNote);
-    };
-  }, [id, handleLoadedNote]);
+    return deregister;
+  }, [id, handleSetNote]);
 
   return note;
 };

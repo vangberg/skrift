@@ -3,9 +3,8 @@ import { NoteList } from "../components/NoteList";
 import { StateContext } from "../state";
 import { Streams } from "../interfaces/streams";
 import { NoteCache } from "../interfaces/noteCache";
-import { IpcSetNote } from "../types";
 import { Serializer } from "../interfaces/serializer";
-import { ipcRenderer } from "electron";
+import { Ipc } from "../interfaces/ipc";
 
 export const NoteListContainer: React.FC = () => {
   const [state, dispatch] = useContext(StateContext);
@@ -24,8 +23,7 @@ export const NoteListContainer: React.FC = () => {
     (title) => {
       const id = new Date().toJSON();
       const slate = Serializer.deserialize(`# ${title}`);
-      const message: IpcSetNote = { id, slate };
-      ipcRenderer.send("set-note", message);
+      Ipc.send({ type: "command/SET_NOTE", id, slate });
       dispatch({ type: "streams/OPEN_NOTE", stream: 0, id });
     },
     [dispatch]

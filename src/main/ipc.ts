@@ -1,13 +1,13 @@
 import { ipcMain, app } from "electron";
 import { NotesFS } from "../interfaces/notes_fs";
 import {
-  IpcLoadNote,
-  IpcSetNote,
-  IpcLoadedNote,
-  IpcLoadedDir,
   IpcSearch,
   IpcSearchResults,
-  IpcDeleteNote,
+  IpcCommand,
+  IpcEvent,
+  IpcLoadNoteCommand,
+  IpcDeleteNoteCommand,
+  IpcSetNoteCommand,
 } from "../types";
 import { Database } from "sqlite";
 import { NotesDB } from "../interfaces/notes_db";
@@ -28,6 +28,10 @@ const getDB: () => Promise<Database> = (() => {
   };
 })();
 
+const reply = (event: Electron.IpcMainEvent, msg: IpcEvent) => {
+  event.reply("skrift", msg);
+};
+
 const handleLoadDir = async (event: Electron.IpcMainEvent) => {
   const db = await getDB();
   const notes = [];
@@ -37,45 +41,46 @@ const handleLoadDir = async (event: Electron.IpcMainEvent) => {
     notes.push(note);
   }
 
-  const message: IpcLoadedDir = { notes };
-  event.reply("loaded-dir", message);
+  reply(event, { type: "event/LOADED_DIR", notes });
 };
 
 const handleLoadNote = async (
   event: Electron.IpcMainEvent,
-  arg: IpcLoadNote
+  cmd: IpcLoadNoteCommand
 ) => {
-  const { id } = arg;
+  const { id } = cmd;
   const db = await getDB();
 
   const note = await NotesDB.get(db, id);
-  const message: IpcLoadedNote = { note };
-  event.reply(`loaded-note/${id}`, message);
+  reply(event, { type: "event/SET_NOTE", note });
 };
 
 const handleDeleteNote = async (
   event: Electron.IpcMainEvent,
-  arg: IpcDeleteNote
+  cmd: IpcDeleteNoteCommand
 ) => {
-  const { id } = arg;
+  const { id } = cmd;
   const db = await getDB();
 
   await NotesDB.delete(db, id);
   await NotesFS.delete(_path, id);
-  event.reply(`deleted-note`);
+
+  reply(event, { type: "event/DELETED_NOTE", id });
 };
 
-const handleSetNote = async (event: Electron.IpcMainEvent, arg: IpcSetNote) => {
-  const { id, slate } = arg;
+const handleSetNote = async (
+  event: Electron.IpcMainEvent,
+  cmd: IpcSetNoteCommand
+) => {
+  const { id, slate } = cmd;
   const db = await getDB();
 
   await NotesDB.save(db, id, slate);
   NotesFS.save(_path, id, slate);
 
   const note = await NotesDB.get(db, id);
-  const message: IpcLoadedNote = { note };
-  event.reply(`loaded-note`, message);
-  event.reply(`loaded-note/${id}`, message);
+
+  reply(event, { type: "event/SET_NOTE", note });
 };
 
 const handleSearch = async (event: Electron.IpcMainEvent, arg: IpcSearch) => {
@@ -88,9 +93,21 @@ const handleSearch = async (event: Electron.IpcMainEvent, arg: IpcSearch) => {
 };
 
 export const setupIpc = () => {
-  ipcMain.on("load-dir", handleLoadDir);
-  ipcMain.on("load-note", handleLoadNote);
-  ipcMain.on("set-note", handleSetNote);
-  ipcMain.on("delete-note", handleDeleteNote);
+  ipcMain.on("skrift", (event, command: IpcCommand) => {
+    switch (command.type) {
+      case "command/LOAD_DIR":
+        handleLoadDir(event);
+        break;
+      case "command/LOAD_NOTE":
+        handleLoadNote(event, command);
+        break;
+      case "command/SET_NOTE":
+        handleSetNote(event, command);
+        break;
+      case "command/DELETE_NOTE":
+        handleDeleteNote(event, command);
+        break;
+    }
+  });
   ipcMain.on("search", handleSearch);
 };

@@ -1,12 +1,11 @@
-import React, { useContext, useMemo, useCallback } from "react";
+import React, { useContext, useCallback } from "react";
 import { StateContext } from "../state";
 import { Editor } from "../components/Editor";
-import { NoteID, Note } from "../interfaces/note";
+import { NoteID } from "../interfaces/note";
 import { StreamLocation } from "../interfaces/streams";
 import { Node } from "slate";
 import { useNote } from "../useNote";
-import { IpcSetNote, IpcDeleteNote } from "../types";
-import { ipcRenderer } from "electron";
+import { Ipc } from "../interfaces/ipc";
 
 interface Props {
   id: NoteID;
@@ -20,8 +19,7 @@ export const NoteEditorContainer: React.FC<Props> = ({ id, location }) => {
 
   const handleUpdate = useCallback(
     (slate: Node[]) => {
-      const message: IpcSetNote = { id, slate };
-      ipcRenderer.send("set-note", message);
+      Ipc.send({ type: "command/SET_NOTE", id, slate });
     },
     [id]
   );
@@ -29,8 +27,7 @@ export const NoteEditorContainer: React.FC<Props> = ({ id, location }) => {
   const handleDelete = useCallback(() => {
     dispatch({ type: "streams/CLOSE_NOTE", location });
 
-    const message: IpcDeleteNote = { id };
-    ipcRenderer.send("delete-note", message);
+    Ipc.send({ type: "command/DELETE_NOTE", id });
   }, [dispatch, location, id]);
 
   const handleOpen = useCallback(
