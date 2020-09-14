@@ -22,7 +22,7 @@ export const NoteLink: React.FC<Props> = ({ id, note, onOpen }) => {
 
   return (
     <span
-      className="underline text-blue-600 cursor-pointer"
+      className="border-b border-blue-600 text-blue-600 cursor-pointer"
       onClick={handleOpen}
     >
       {note.title || id}
