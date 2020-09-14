@@ -20,7 +20,7 @@ export type IpcCommand =
 
 export type IpcSetNoteEvent = { type: "event/SET_NOTE"; note: Note };
 
-export type IpcEvent =
+export type IpcReply =
   | { type: "event/LOADED_DIR"; notes: Note[] }
   | IpcSetNoteEvent
   | { type: "event/DELETED_NOTE"; id: NoteID }

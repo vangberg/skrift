@@ -4,7 +4,7 @@ import {
   IpcSearch,
   IpcSearchResults,
   IpcCommand,
-  IpcEvent,
+  IpcReply,
   IpcLoadNoteCommand,
   IpcDeleteNoteCommand,
   IpcSetNoteCommand,
@@ -29,8 +29,8 @@ const getDB: () => Promise<Database> = (() => {
   };
 })();
 
-const reply = (event: Electron.IpcMainEvent, msg: IpcEvent) => {
-  event.reply("skrift", msg);
+const reply = (event: Electron.IpcMainEvent, reply: IpcReply) => {
+  event.reply("skrift", reply);
 };
 
 const handleLoadDir = async (event: Electron.IpcMainEvent) => {

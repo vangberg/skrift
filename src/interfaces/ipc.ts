@@ -1,13 +1,13 @@
-import { IpcEvent, IpcCommand } from "../types";
+import { IpcReply, IpcCommand } from "../types";
 import { ipcRenderer } from "electron";
 
 export const Ipc = {
-  on(callback: (event: IpcEvent) => void) {
+  on(callback: (reply: IpcReply) => void) {
     // Create a memoized callback so we have a unique function to
     // de-register from the event listener.
-    const _callback = (event: IpcEvent) => callback(event);
+    const _callback = (reply: IpcReply) => callback(reply);
 
-    ipcRenderer.on("skrift", (_, arg: IpcEvent) => _callback(arg));
+    ipcRenderer.on("skrift", (_, reply: IpcReply) => _callback(reply));
 
     return () => {
       ipcRenderer.removeListener("skrift", _callback);
