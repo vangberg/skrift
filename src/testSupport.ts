@@ -7,9 +7,10 @@ export const jsx = createHyperscript({
     paragraph: { type: "paragraph" },
     heading: { type: "heading" },
     "bulleted-list": { type: "bulleted-list" },
+    "numbered-list": { type: "numbered-list" },
     "list-item": { type: "list-item" },
-    "note-link": { type: "note-link" }
-  }
+    "note-link": { type: "note-link" },
+  },
 });
 
 export const assertEqual = (actual: Editor, expected: Editor) => {

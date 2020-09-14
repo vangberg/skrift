@@ -6,6 +6,7 @@ const SHORTCUTS = new Map([
   ["###", { type: "heading", level: 3 }],
   ["*", { type: "list-item" }],
   ["-", { type: "list-item" }],
+  ["1.", { type: "list-item" }],
 ]);
 
 const rangeBefore = (editor: Editor, point: Point): Location => {
@@ -48,7 +49,8 @@ const handleInsert = (editor: Editor, text: string): boolean => {
     });
 
     if (shortcutProps.type === "list-item") {
-      const list = { type: "bulleted-list", children: [] };
+      const listType = shortcut === "1." ? "numbered-list" : "bulleted-list";
+      const list = { type: listType, children: [] };
       Transforms.wrapNodes(editor, list, {
         match: (n) => n.type === "list-item",
       });

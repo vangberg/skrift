@@ -111,6 +111,34 @@ describe("withShortcuts", () => {
     });
   });
 
+  describe("1. followed by <space>", () => {
+    describe("in paragraph", () => {
+      it("inserts numbered list", () => {
+        // prettier-ignore
+        const input = (
+          <editor>
+            <paragraph>
+              1.<cursor />
+            </paragraph>
+          </editor>
+        );
+
+        const editor = withShortcuts(input);
+        editor.insertText(" ");
+
+        // prettier-ignore
+        const output = (
+          <editor>
+            <numbered-list>
+              <list-item><cursor /></list-item>
+            </numbered-list>
+          </editor>
+        );
+
+        assertEqual(editor, output);
+      });
+    });
+  });
   describe("<delete> at beginning of empty list item", () => {
     describe("with no following list items", () => {
       it("exits list", () => {
