@@ -18,11 +18,13 @@ export const Backlinks: React.FC<Props> = ({ note, onOpen }) => {
         Backlinks
       </div>
       <div className="pt-1">
-        {[...note.backlinks].map((link) => (
-          <span key={link} className="pr-1">
-            <NoteLinkContainer id={link} onOpen={onOpen} />
-          </span>
-        ))}
+        <ul className="list-disc list-outside ml-5">
+          {[...note.backlinks].map((link) => (
+            <li key={link}>
+              <NoteLinkContainer id={link} onOpen={onOpen} />
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
