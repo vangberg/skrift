@@ -62,9 +62,13 @@ const handleDeleteNote = async (
   const { id } = cmd;
   const db = await getDB();
 
+  const note = await NotesDB.get(db, id);
   await NotesDB.delete(db, id);
   await NotesFS.delete(_path, id);
 
+  note.links.forEach((link) => {
+    reply(event, { type: "event/DELETED_LINK", from: id, to: link });
+  });
   reply(event, { type: "event/DELETED_NOTE", id });
 };
 
