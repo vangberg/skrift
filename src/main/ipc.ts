@@ -1,13 +1,12 @@
 import { ipcMain, app } from "electron";
 import { NotesFS } from "../interfaces/notes_fs";
 import {
-  IpcSearch,
-  IpcSearchResults,
   IpcCommand,
   IpcReply,
   IpcLoadNoteCommand,
   IpcDeleteNoteCommand,
   IpcSetNoteCommand,
+  IpcSearchCommand,
 } from "../types";
 import { Database } from "sqlite";
 import { NotesDB } from "../interfaces/notes_db";
@@ -95,13 +94,16 @@ const handleSetNote = async (
   });
 };
 
-const handleSearch = async (event: Electron.IpcMainEvent, arg: IpcSearch) => {
-  const { query } = arg;
+const handleSearch = async (
+  event: Electron.IpcMainEvent,
+  cmd: IpcSearchCommand
+) => {
+  const { query } = cmd;
   const db = await getDB();
 
   const ids = await NotesDB.search(db, query);
-  const message: IpcSearchResults = { ids };
-  event.reply(`search-results`, message);
+
+  reply(event, { type: "event/SEARCH", ids });
 };
 
 export const setupIpc = () => {
@@ -119,7 +121,9 @@ export const setupIpc = () => {
       case "command/DELETE_NOTE":
         handleDeleteNote(event, command);
         break;
+      case "command/SEARCH":
+        handleSearch(event, command);
+        break;
     }
   });
-  ipcMain.on("search", handleSearch);
 };

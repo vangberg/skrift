@@ -7,8 +7,7 @@ import {
   ClearSearchAction,
 } from "./types";
 import { errorHandler } from "./errorHandler";
-import { ipcRenderer } from "electron";
-import { IpcSearch } from "../types";
+import { Ipc } from "../interfaces/ipc";
 
 export const setQuery: ActionHandler<SetQueryAction> = (state, action) => {
   const { query } = action;
@@ -22,8 +21,7 @@ export const setQuery: ActionHandler<SetQueryAction> = (state, action) => {
       draft.search.query = query;
     }),
     Effects.attemptFunction(() => {
-      const message: IpcSearch = { query };
-      ipcRenderer.send("search", message);
+      Ipc.send({ type: "command/SEARCH", query });
     }, errorHandler),
   ];
 };

@@ -2,8 +2,6 @@ import React, { useEffect } from "react";
 import { reducer, StateContext, initialState } from "../state";
 import { Workspace } from "../components/Workspace";
 import useElmish, { Effects } from "react-use-elmish";
-import { ipcRenderer } from "electron";
-import { IpcSearchResults } from "../types";
 import { Ipc } from "../interfaces/ipc";
 
 export const WorkspaceContainer: React.FC = () => {
@@ -13,22 +11,20 @@ export const WorkspaceContainer: React.FC = () => {
   ]);
 
   useEffect(() => {
-    const deregister = Ipc.on((event) => {
-      switch (event.type) {
+    const deregister = Ipc.on((reply) => {
+      switch (reply.type) {
         case "event/LOADED_DIR":
-          dispatch({ type: "notes/SET_NOTES", notes: event.notes });
+          dispatch({ type: "notes/SET_NOTES", notes: reply.notes });
           break;
         case "event/SET_NOTE":
-          dispatch({ type: "notes/SET_NOTE", note: event.note });
+          dispatch({ type: "notes/SET_NOTE", note: reply.note });
           break;
         case "event/DELETED_NOTE":
-          dispatch({ type: "notes/DELETE_NOTE", id: event.id });
+          dispatch({ type: "notes/DELETE_NOTE", id: reply.id });
           break;
+        case "event/SEARCH":
+          dispatch({ type: "search/SET_RESULTS", results: reply.ids });
       }
-    });
-
-    ipcRenderer.on("search-results", (event, arg: IpcSearchResults) => {
-      dispatch({ type: "search/SET_RESULTS", results: arg.ids });
     });
 
     Ipc.send({ type: "command/LOAD_DIR" });
