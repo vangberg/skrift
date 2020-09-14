@@ -12,6 +12,7 @@ import {
 import { Database } from "sqlite";
 import { NotesDB } from "../interfaces/notes_db";
 import path from "path";
+import { TSet } from "../tset";
 
 let _path = path.join(app.getPath("documents"), "Skrift");
 
@@ -75,12 +76,23 @@ const handleSetNote = async (
   const { id, slate } = cmd;
   const db = await getDB();
 
+  const noteBefore = await NotesDB.get(db, id);
+
   await NotesDB.save(db, id, slate);
   NotesFS.save(_path, id, slate);
 
-  const note = await NotesDB.get(db, id);
+  const noteAfter = await NotesDB.get(db, id);
 
-  reply(event, { type: "event/SET_NOTE", note });
+  const linksDeleted = TSet.difference(noteBefore.links, noteAfter.links);
+  const linksAdded = TSet.difference(noteAfter.links, noteBefore.links);
+
+  reply(event, { type: "event/SET_NOTE", note: noteAfter });
+  linksDeleted.forEach((link) => {
+    reply(event, { type: "event/DELETED_LINK", from: id, to: link });
+  });
+  linksAdded.forEach((link) => {
+    reply(event, { type: "event/ADDED_LINK", from: id, to: link });
+  });
 };
 
 const handleSearch = async (event: Electron.IpcMainEvent, arg: IpcSearch) => {

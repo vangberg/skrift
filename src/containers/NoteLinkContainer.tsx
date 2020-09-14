@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { NoteID } from "../interfaces/note";
 import { NoteLink } from "../components/Editor/NoteLink";
-import { useNote } from "../useNote";
 import { StateContext } from "../state";
 
 interface Props {
