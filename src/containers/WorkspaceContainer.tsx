@@ -21,6 +21,9 @@ export const WorkspaceContainer: React.FC = () => {
         case "event/SET_NOTE":
           dispatch({ type: "notes/SET_NOTE", note: event.note });
           break;
+        case "event/DELETED_NOTE":
+          dispatch({ type: "notes/DELETE_NOTE", id: event.id });
+          break;
       }
     });
 
