@@ -23,14 +23,17 @@ export const NoteListContainer: React.FC = () => {
     (title) => {
       const id = new Date().toJSON();
       const slate = Serializer.deserialize(`# ${title}`);
-      Ipc.send({ type: "command/SET_NOTE", id, slate });
+      Ipc.send({ type: "command/ADD_NOTE", id, slate });
       dispatch({ type: "streams/OPEN_NOTE", stream: 0, id });
     },
     [dispatch]
   );
 
   const handleSearch = useCallback(
-    (query) => dispatch({ type: "search/SET_QUERY", query }),
+    (query) => {
+      dispatch({ type: "search/SET_QUERY", query });
+      Ipc.send({ type: "command/SEARCH", query });
+    },
     [dispatch]
   );
 

@@ -4,6 +4,7 @@ import {
   IpcCommand,
   IpcReply,
   IpcLoadNoteCommand,
+  IpcAddNoteCommand,
   IpcDeleteNoteCommand,
   IpcSetNoteCommand,
   IpcSearchCommand,
@@ -72,6 +73,21 @@ const handleDeleteNote = async (
   reply(event, { type: "event/DELETED_NOTE", id });
 };
 
+const handleAddNote = async (
+  event: Electron.IpcMainEvent,
+  cmd: IpcAddNoteCommand
+) => {
+  const { id, slate } = cmd;
+  const db = await getDB();
+
+  await NotesDB.save(db, id, slate);
+  NotesFS.save(_path, id, slate);
+
+  const note = await NotesDB.get(db, id);
+
+  reply(event, { type: "event/SET_NOTE", note });
+};
+
 const handleSetNote = async (
   event: Electron.IpcMainEvent,
   cmd: IpcSetNoteCommand
@@ -118,6 +134,9 @@ export const setupIpc = () => {
         break;
       case "command/LOAD_NOTE":
         handleLoadNote(event, command);
+        break;
+      case "command/ADD_NOTE":
+        handleAddNote(event, command);
         break;
       case "command/SET_NOTE":
         handleSetNote(event, command);
