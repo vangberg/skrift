@@ -1,6 +1,9 @@
 import { Transforms, Element, Editor, Node, Path, Text } from "slate";
 import { hyperprint } from "../../testSupport";
 
+const isList = (node: Node) =>
+  ["bulleted-list", "numbered-list"].includes(node.type);
+
 export const SkriftTransforms = {
   insertParagraph(editor: Editor) {
     const paragraph = { type: "paragraph", children: [{ text: "" }] };
@@ -19,7 +22,7 @@ export const SkriftTransforms = {
     }
 
     const block = Editor.above(editor, {
-      match: n => n.type === "list-item"
+      match: (n) => n.type === "list-item",
     });
     if (!block) {
       return;
@@ -35,7 +38,13 @@ export const SkriftTransforms = {
 
     Editor.withoutNormalizing(editor, () => {
       // Wrap the list item to be moved in a new list
-      const list = { type: "bulleted-list", children: [] };
+      const currentList = Editor.above(editor, {
+        match: (n) => isList(n),
+      });
+      if (!currentList) {
+        return;
+      }
+      const list = { type: currentList[0].type, children: [] };
       Transforms.wrapNodes(editor, list, { at: path });
 
       /*
@@ -55,7 +64,7 @@ export const SkriftTransforms = {
       // position in the list item before it.
       Transforms.moveNodes(editor, {
         at: path,
-        to: prev[1].concat(Node.get(editor, prev[1]).children.length)
+        to: prev[1].concat(Node.get(editor, prev[1]).children.length),
       });
     });
   },
@@ -69,7 +78,7 @@ export const SkriftTransforms = {
 
     // If the current block is not in a list item, don't do anything.
     const block = Editor.above(editor, {
-      match: n => n.type === "list-item"
+      match: (n) => n.type === "list-item",
     });
     if (!block) {
       return;
@@ -78,7 +87,7 @@ export const SkriftTransforms = {
 
     // Find the list for the current list item.
     const listBlock = Editor.above(editor, {
-      match: n => Editor.isBlock(editor, n) && n.type === "bulleted-list"
+      match: (n) => Editor.isBlock(editor, n) && n.type === "bulleted-list",
     });
     if (!listBlock) {
       return;
@@ -89,7 +98,7 @@ export const SkriftTransforms = {
     // item, don't do anything.
     const parentItemBlock = Editor.above(editor, {
       at: listPath,
-      match: n => Editor.isBlock(editor, n)
+      match: (n) => Editor.isBlock(editor, n),
     });
     if (!parentItemBlock || parentItemBlock[0].type !== "list-item") {
       return;
@@ -111,7 +120,7 @@ export const SkriftTransforms = {
 
       // Move the list item out of the list, splitting the list as a result.
       Transforms.liftNodes(editor, {
-        at: itemRef.current!
+        at: itemRef.current!,
       });
 
       // The parent item has probably changed, so we fetch it again.
@@ -132,7 +141,7 @@ export const SkriftTransforms = {
 
       // Remove all the following nodes from their original location.
       for (const [, childPath] of Node.children(editor, parentItemPath, {
-        reverse: true
+        reverse: true,
       })) {
         if (Path.isAfter(childPath, itemRef.current!)) {
           Transforms.removeNodes(editor, { at: childPath });
@@ -141,10 +150,10 @@ export const SkriftTransforms = {
 
       // Lift the item out into the parent list
       Transforms.liftNodes(editor, {
-        at: itemRef.current!
+        at: itemRef.current!,
       });
     });
 
     itemRef.unref();
-  }
+  },
 };
