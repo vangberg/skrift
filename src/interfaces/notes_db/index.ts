@@ -133,9 +133,15 @@ export const NotesDB = {
   },
 
   async search(db: Database, query: string): Promise<NoteID[]> {
+    const cleanQuery = query.replace(/[^a-zA-Z0-9\s]/g, "");
+
+    if (cleanQuery.length === 0) {
+      return [];
+    }
+
     const rows = await db.all<SearchRow[]>(
       `SELECT * FROM notes WHERE notes MATCH ?`,
-      `${query}*`
+      `${cleanQuery}*`
     );
 
     return rows.map((row) => row.id);

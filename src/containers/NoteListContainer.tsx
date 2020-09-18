@@ -9,15 +9,15 @@ import { Ipc } from "../interfaces/ipc";
 export const NoteListContainer: React.FC = () => {
   const [state, dispatch] = useContext(StateContext);
   const { notes, search } = state;
-  const { results } = search;
+  const { query, results } = search;
 
   const notes_ = useMemo(() => {
-    if (results) {
-      return NoteCache.byIds(notes, results);
-    } else {
+    if (query === "") {
       return NoteCache.byModifiedAt(notes).slice(0, 100);
+    } else {
+      return NoteCache.byIds(notes, results);
     }
-  }, [results, notes]);
+  }, [query, results, notes]);
 
   const handleAdd = useCallback(
     (title) => {

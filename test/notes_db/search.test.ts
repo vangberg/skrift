@@ -18,6 +18,12 @@ describe("NotesDB.search()", () => {
     expect(notes).toEqual(["b"]);
   });
 
+  it("ignores special characters", async () => {
+    const notes = await NotesDB.search(db, "Tiger #");
+
+    expect(notes).toEqual(["b"]);
+  });
+
   it("updates an existing note", async () => {
     await NotesDB.save(db, "a", Serializer.deserialize("New note"));
     await NotesDB.save(db, "a", Serializer.deserialize("Updated note"));
