@@ -9,7 +9,7 @@ export interface State {
   streams: Streams;
   search: {
     query: string;
-    results: NoteID[] | null;
+    results: NoteID[];
   };
 }
 
@@ -31,16 +31,12 @@ export type CloseNoteAction = {
   location: StreamLocation;
 };
 
-export type SearchAction =
-  | SetQueryAction
-  | SetResultsAction
-  | ClearSearchAction;
+export type SearchAction = SetQueryAction | SetResultsAction;
 export type SetQueryAction = { type: "search/SET_QUERY"; query: string };
 export type SetResultsAction = {
   type: "search/SET_RESULTS";
   results: NoteID[];
 };
-export type ClearSearchAction = { type: "search/CLEAR" };
 
 export type Action = NotesAction | StreamsAction | SearchAction | ErrorAction;
 
