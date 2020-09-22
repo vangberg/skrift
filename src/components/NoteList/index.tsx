@@ -2,6 +2,7 @@ import React from "react";
 import { SearchBar } from "./SearchBar";
 import { ListItem } from "./ListItem";
 import { NoteCacheEntry } from "../../interfaces/noteCache";
+import { Droppable } from "react-beautiful-dnd";
 
 type Props = {
   notes: NoteCacheEntry[];

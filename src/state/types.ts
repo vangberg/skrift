@@ -20,7 +20,7 @@ export type SetNotesAction = { type: "notes/SET_NOTES"; notes: Note[] };
 export type SetNoteAction = { type: "notes/SET_NOTE"; note: Note };
 export type DeleteNoteAction = { type: "notes/DELETE_NOTE"; id: NoteID };
 
-export type StreamsAction = OpenNoteAction | CloseNoteAction;
+export type StreamsAction = OpenNoteAction | CloseNoteAction | MoveNoteAction;
 export type OpenNoteAction = {
   type: "streams/OPEN_NOTE";
   stream: StreamIndex;
@@ -29,6 +29,11 @@ export type OpenNoteAction = {
 export type CloseNoteAction = {
   type: "streams/CLOSE_NOTE";
   location: StreamLocation;
+};
+export type MoveNoteAction = {
+  type: "streams/MOVE_NOTE";
+  from: StreamLocation;
+  to: StreamLocation;
 };
 
 export type SearchAction = SetQueryAction | SetResultsAction;

@@ -1,7 +1,7 @@
 import React from "react";
 import { Effects, Reducer } from "react-use-elmish";
 import { setNotes, setNote, deleteNote } from "./notes";
-import { openNote, closeNote } from "./streams";
+import { openNote, closeNote, moveNote } from "./streams";
 import { setQuery, setResults } from "./search";
 import { State, Action } from "./types";
 
@@ -21,6 +21,8 @@ export const reducer: Reducer<State, Action> = (state, action) => {
       return openNote(state, action);
     case "streams/CLOSE_NOTE":
       return closeNote(state, action);
+    case "streams/MOVE_NOTE":
+      return moveNote(state, action);
 
     case "search/SET_QUERY":
       return setQuery(state, action);

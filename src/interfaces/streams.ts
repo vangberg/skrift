@@ -57,4 +57,19 @@ export const Streams = {
       Streams.close(streams, streamIdx);
     }
   },
+
+  move(streams: Streams, from: StreamLocation, to: StreamLocation) {
+    if (from[0] === to[0]) {
+      // Reordering within the same stream
+      const stream = streams[from[0]];
+      const [removed] = stream.splice(from[1], 1);
+      stream.splice(to[1], 0, removed);
+    } else {
+      // Move from one stream to another
+      const fromStream = streams[from[0]];
+      const toStream = streams[to[0]];
+      const [removed] = fromStream.splice(from[1], 1);
+      toStream.splice(to[1], 0, removed);
+    }
+  },
 };
