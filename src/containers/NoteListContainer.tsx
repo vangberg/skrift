@@ -8,7 +8,7 @@ import { Ipc } from "../interfaces/ipc";
 
 export const NoteListContainer: React.FC = () => {
   const [state, dispatch] = useContext(StateContext);
-  const { notes, search } = state;
+  const { notes, search, streams } = state;
   const { query, results } = search;
 
   const notes_ = useMemo(() => {
@@ -24,10 +24,10 @@ export const NoteListContainer: React.FC = () => {
       const id = new Date().toJSON();
       const slate = Serializer.deserialize(`# ${title}`);
       Ipc.send({ type: "command/ADD_NOTE", id, slate });
-      dispatch({ type: "streams/OPEN_NOTE", stream: 0, id });
+      dispatch({ type: "streams/OPEN_NOTE", stream: streams.length - 1, id });
       dispatch({ type: "search/SET_QUERY", query: "" });
     },
-    [dispatch]
+    [dispatch, streams]
   );
 
   const handleSearch = useCallback(
