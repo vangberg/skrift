@@ -4,6 +4,9 @@ import ReactDOM from "react-dom";
 import * as serviceWorker from "./serviceWorker";
 import "./styles.css";
 import { App } from "./app";
+import { EventEmitter } from "events";
+
+EventEmitter.defaultMaxListeners = 250;
 
 window.skriftDebug = false;
 
