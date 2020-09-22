@@ -25,7 +25,7 @@ export const closeNote: ActionHandler<CloseNoteAction> = (state, action) => {
 
   return [
     produce(state, (draft) => {
-      Streams.closeNote(draft.streams, location);
+      Streams.closeNote(draft.streams, { location });
     }),
     Effects.none(),
   ];

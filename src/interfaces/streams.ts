@@ -48,14 +48,22 @@ export const Streams = {
     });
   },
 
-  closeNote(streams: Streams, location: StreamLocation) {
-    const [streamIdx, noteIdx] = location;
-    Streams.at(streams, streamIdx).splice(noteIdx, 1);
-
-    // If this was the last note in the stream, close the stream itself.
-    if (Streams.isEmpty(streams, streamIdx)) {
-      Streams.close(streams, streamIdx);
+  closeNote(
+    streams: Streams,
+    options: { location?: StreamLocation; id?: NoteID }
+  ) {
+    if (options.location) {
+      const [streamIdx, noteIdx] = options.location;
+      Streams.at(streams, streamIdx).splice(noteIdx, 1);
     }
+
+    if (options.id) {
+      streams.forEach((stream, idx) => {
+        streams[idx] = stream.filter((entry) => entry.noteId !== options.id);
+      });
+    }
+
+    Streams.collapse(streams);
   },
 
   move(streams: Streams, from: StreamLocation, to: StreamLocation) {
@@ -70,6 +78,16 @@ export const Streams = {
       const toStream = streams[to[0]];
       const [removed] = fromStream.splice(from[1], 1);
       toStream.splice(to[1], 0, removed);
+    }
+
+    Streams.collapse(streams);
+  },
+
+  collapse(streams: Streams) {
+    for (let i = streams.length - 1; i >= 0; i--) {
+      if (Streams.isEmpty(streams, i)) {
+        Streams.close(streams, i);
+      }
     }
   },
 };

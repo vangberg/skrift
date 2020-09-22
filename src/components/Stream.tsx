@@ -29,7 +29,7 @@ export const Stream: React.FC<Props> = ({ index, stream }) => {
         <div
           ref={provided.innerRef}
           {...provided.droppableProps}
-          className="flex-1 skrift-flex-empty-0 overflow-y-auto max-w-2xl"
+          className="border border-red-500 flex-1 skrift-flex-empty-0 overflow-y-auto max-w-2xl"
         >
           {entries}
           {provided.placeholder}

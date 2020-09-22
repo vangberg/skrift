@@ -112,7 +112,7 @@ export const NotesDB = {
     );
 
     if (!row) {
-      throw new NoteNotFoundError("Woop");
+      throw new NoteNotFoundError("Could not find note");
     }
 
     const { markdown, modifiedAt } = row;
