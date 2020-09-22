@@ -25,6 +25,7 @@ export const NoteListContainer: React.FC = () => {
       const slate = Serializer.deserialize(`# ${title}`);
       Ipc.send({ type: "command/ADD_NOTE", id, slate });
       dispatch({ type: "streams/OPEN_NOTE", stream: 0, id });
+      dispatch({ type: "search/SET_QUERY", query: "" });
     },
     [dispatch]
   );
