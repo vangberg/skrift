@@ -65,13 +65,7 @@ export const WorkspaceContainer: React.FC = () => {
 
   return (
     <StateContext.Provider value={[state, dispatch]}>
-      <DragDropContext
-        onDragEnd={handleDragEnd}
-        onDragUpdate={(initial) => {
-          console.log("src:", initial.source);
-          console.log("dst:", initial.destination);
-        }}
-      >
+      <DragDropContext onDragEnd={handleDragEnd}>
         <Workspace />
       </DragDropContext>
     </StateContext.Provider>
