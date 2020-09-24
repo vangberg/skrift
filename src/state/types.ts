@@ -2,10 +2,10 @@ import { StateEffectPair } from "react-use-elmish";
 
 import { NoteID, Note } from "../interfaces/note";
 import { Streams, StreamIndex, StreamLocation } from "../interfaces/streams";
-import { NoteCache } from "../interfaces/noteCache";
+import { NoteIndex } from "../interfaces/noteIndex";
 
 export interface State {
-  notes: NoteCache;
+  notes: NoteIndex;
   streams: Streams;
   search: {
     query: string;

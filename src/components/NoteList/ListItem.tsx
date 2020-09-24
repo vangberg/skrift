@@ -2,10 +2,10 @@ import React, { useCallback } from "react";
 import { NoteID } from "../../interfaces/note";
 import { clipboard } from "electron";
 import { Icon } from "../Icon";
-import { NoteCacheEntry } from "../../interfaces/noteCache";
+import { NoteIndexEntry } from "../../interfaces/noteIndex";
 
 type Props = {
-  note: NoteCacheEntry;
+  note: NoteIndexEntry;
   onClick?: (id: NoteID, push: boolean) => void;
 };
 

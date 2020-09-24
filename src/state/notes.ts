@@ -4,15 +4,15 @@ import {
   SetNoteAction,
   DeleteNoteAction,
 } from "./types";
-import { NoteCache } from "../interfaces/noteCache";
+import { NoteIndex } from "../interfaces/noteIndex";
 import produce from "immer";
 import { Effects } from "react-use-elmish";
 
 export const setNotes: ActionHandler<SetNotesAction> = (state, action) => {
-  const notes: NoteCache = new Map();
+  const notes: NoteIndex = new Map();
 
   action.notes.forEach((note) => {
-    notes.set(note.id, NoteCache.toEntry(note));
+    notes.set(note.id, NoteIndex.toEntry(note));
   });
 
   return [
@@ -28,7 +28,7 @@ export const setNote: ActionHandler<SetNoteAction> = (state, action) => {
 
   return [
     produce(state, (draft) => {
-      draft.notes.set(note.id, NoteCache.toEntry(note));
+      draft.notes.set(note.id, NoteIndex.toEntry(note));
     }),
     Effects.none(),
   ];

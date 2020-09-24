@@ -2,7 +2,7 @@ import React, { useContext, useCallback, useMemo } from "react";
 import { NoteList } from "../components/NoteList";
 import { StateContext } from "../state";
 import { Streams } from "../interfaces/streams";
-import { NoteCache } from "../interfaces/noteCache";
+import { NoteIndex } from "../interfaces/noteIndex";
 import { Serializer } from "../interfaces/serializer";
 import { Ipc } from "../interfaces/ipc";
 
@@ -13,9 +13,9 @@ export const NoteListContainer: React.FC = () => {
 
   const notes_ = useMemo(() => {
     if (query === "") {
-      return NoteCache.byModifiedAt(notes).slice(0, 100);
+      return NoteIndex.byModifiedAt(notes).slice(0, 100);
     } else {
-      return NoteCache.byIds(notes, results);
+      return NoteIndex.byIds(notes, results);
     }
   }, [query, results, notes]);
 

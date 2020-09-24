@@ -1,11 +1,11 @@
 import React from "react";
 import { SearchBar } from "./SearchBar";
 import { ListItem } from "./ListItem";
-import { NoteCacheEntry } from "../../interfaces/noteCache";
+import { NoteIndexEntry } from "../../interfaces/noteIndex";
 import { Droppable } from "react-beautiful-dnd";
 
 type Props = {
-  notes: NoteCacheEntry[];
+  notes: NoteIndexEntry[];
   query: string;
   onOpen: (id: string, push: boolean) => void;
   onAdd: (title: string) => void;
