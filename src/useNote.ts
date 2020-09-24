@@ -133,11 +133,20 @@ export const useNoteCache = (): Context => {
   return [cache, dispatch];
 };
 
+const cloneNote = (note: Note): Note => ({ ...note, slate: clone(note.slate) });
+
 export const useNote = (id: NoteID): Note | null => {
   const [cache, dispatch] = useContext(NoteCacheContext);
   const cachedNote = NoteCache.get(cache, id);
 
-  const [note, setNote] = useState<Note | null>(null);
+  /*
+  When the same value is used by multiple instances of Slate,
+  the last instance will always steal focus. We fix this at the
+  "root" by cloning the value here, before passing it on to React/Slate.
+  */
+  const [note, setNote] = useState<Note | null>(() => {
+    return cachedNote ? cloneNote(cachedNote) : null;
+  });
 
   useEffect(() => {
     dispatch({ type: "CLAIM_NOTE", id });
