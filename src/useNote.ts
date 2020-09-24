@@ -137,7 +137,7 @@ export const useNote = (id: NoteID): Note | null => {
   const [cache, dispatch] = useContext(NoteCacheContext);
   const cachedNote = NoteCache.get(cache, id);
 
-  const [note, setNote] = useState<Note | null>(cachedNote);
+  const [note, setNote] = useState<Note | null>(null);
 
   useEffect(() => {
     dispatch({ type: "CLAIM_NOTE", id });
