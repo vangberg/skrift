@@ -9,7 +9,7 @@ export const Workspace: React.FC = () => {
         <NoteListContainer />
       </div>
 
-      <div className="flex-1 flex flex-row justify-center py-2 px-1">
+      <div className="flex-1 flex flex-row justify-center px-1">
         <StreamsContainer />
       </div>
     </div>
