@@ -10,6 +10,7 @@ import {
 } from "react-beautiful-dnd";
 import { StreamLocation } from "../interfaces/streams";
 import { DroppableIds } from "../droppableIds";
+import { NoteCacheContext, useNoteCache } from "../useNote";
 
 const draggableLocationToStreamLoaction = (
   draggableLocation: DraggableLocation
@@ -28,6 +29,8 @@ export const WorkspaceContainer: React.FC = () => {
     initialState(),
     Effects.none(),
   ]);
+
+  const noteCacheContext = useNoteCache();
 
   useEffect(() => {
     const deregister = Ipc.on((reply) => {
@@ -65,9 +68,11 @@ export const WorkspaceContainer: React.FC = () => {
 
   return (
     <StateContext.Provider value={[state, dispatch]}>
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Workspace />
-      </DragDropContext>
+      <NoteCacheContext.Provider value={noteCacheContext}>
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Workspace />
+        </DragDropContext>
+      </NoteCacheContext.Provider>
     </StateContext.Provider>
   );
 };
