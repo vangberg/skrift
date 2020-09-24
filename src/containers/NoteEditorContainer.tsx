@@ -1,5 +1,4 @@
-import React, { useContext, useCallback } from "react";
-import { StateContext } from "../state";
+import React, { useCallback } from "react";
 import { Editor } from "../components/Editor";
 import { NoteID } from "../interfaces/note";
 import { Node } from "slate";
@@ -12,7 +11,6 @@ interface Props {
 }
 
 export const NoteEditorContainer: React.FC<Props> = ({ id, onOpen }) => {
-  const [, dispatch] = useContext(StateContext);
   const note = useNote(id);
 
   const handleUpdate = useCallback(
