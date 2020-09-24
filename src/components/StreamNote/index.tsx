@@ -48,7 +48,7 @@ export const StreamNote: React.FC<Props> = ({
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          className="shadow rounded m-2 px-2 bg-white"
+          className="shadow rounded mx-2 mb-2 px-2 bg-white"
         >
           <div className="float-right pt-2 pr-2">
             <Toolbar
