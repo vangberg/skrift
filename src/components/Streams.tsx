@@ -10,7 +10,7 @@ export const Streams: React.FC<Props> = ({ streams }) => {
   return (
     <>
       {streams.map((stream, index) => (
-        <Stream key={index} index={index} stream={stream} />
+        <Stream key={stream.key} index={index} stream={stream} />
       ))}
     </>
   );

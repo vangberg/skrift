@@ -10,7 +10,7 @@ type Props = {
 };
 
 export const Stream: React.FC<Props> = ({ index, stream }) => {
-  const entries = stream.map((entry, noteIdx) => (
+  const entries = stream.entries.map((entry, noteIdx) => (
     <StreamNoteContainer
       key={entry.key}
       id={entry.noteId}
