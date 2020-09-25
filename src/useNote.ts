@@ -7,6 +7,7 @@ import { NoteCache } from "./interfaces/noteCache";
 import React from "react";
 import useElmish, { Effects, Reducer, StateEffectPair } from "react-use-elmish";
 
+type ErrorAction = { type: "ERROR"; message: string };
 type ClaimNoteAction = { type: "CLAIM_NOTE"; id: NoteID };
 type ScheduleReleaseNoteAction = { type: "SCHEDULE_RELEASE_NOTE"; id: NoteID };
 type ReleaseNoteAction = { type: "RELEASE_NOTE"; id: NoteID };
@@ -15,6 +16,7 @@ type AddLinkAction = { type: "ADD_LINK"; from: NoteID; to: NoteID };
 type DeleteLinkAction = { type: "DELETE_LINK"; from: NoteID; to: NoteID };
 
 type Action =
+  | ErrorAction
   | ClaimNoteAction
   | ScheduleReleaseNoteAction
   | ReleaseNoteAction
@@ -27,6 +29,10 @@ type ActionHandler<SubAction> = (
   action: SubAction
 ) => StateEffectPair<NoteCache, Action>;
 
+const errorHandler = (error: Error): Action => {
+  return { type: "ERROR", message: error.message };
+};
+
 const handleClaimNote: ActionHandler<ClaimNoteAction> = (cache, action) => {
   const { id } = action;
 
@@ -34,17 +40,28 @@ const handleClaimNote: ActionHandler<ClaimNoteAction> = (cache, action) => {
     produce(cache, (draft) => {
       NoteCache.claim(draft, id);
     }),
-    Effects.none(),
+    Effects.attemptFunction(
+      () => Ipc.send({ type: "command/LOAD_NOTE", id }),
+      errorHandler
+    ),
   ];
 };
 
+/*
+When a note is moved from one stream to another, there is (sometimes)
+a tiny moment where the component for the dragged note is unmounted
+before the component for the note in the destination stream is mounted.
+This means that the note is removed from the cache, and has to be loaded,
+causing a small flicker. By delaying the release a bit, we ensure that
+the new component can claim the note before it is removed from the cache.
+*/
 const handleScheduleReleaseNote: ActionHandler<ScheduleReleaseNoteAction> = (
   cache,
   action
 ) => {
   const { id } = action;
 
-  return [cache, Effects.delay({ type: "RELEASE_NOTE", id }, 5000)];
+  return [cache, Effects.delay({ type: "RELEASE_NOTE", id }, 1000)];
 };
 
 const handleReleaseNote: ActionHandler<ReleaseNoteAction> = (cache, action) => {
@@ -111,6 +128,8 @@ const handleDeleteLink: ActionHandler<DeleteLinkAction> = (cache, action) => {
 
 const reducer: Reducer<NoteCache, Action> = (cache, action) => {
   switch (action.type) {
+    case "ERROR":
+      return [cache, Effects.none()];
     case "CLAIM_NOTE":
       return handleClaimNote(cache, action);
     case "SCHEDULE_RELEASE_NOTE":
@@ -176,16 +195,6 @@ export const useNote = (id: NoteID): Note | null => {
       dispatch({ type: "SCHEDULE_RELEASE_NOTE", id });
     };
   }, [id, dispatch]);
-
-  useEffect(() => {
-    // We don't want to load the note if it has already been loaded.
-    // This could be handled better by using useElmish and have the
-    // CLAIM_NOTE handler send the LOAD_NOTE event.
-    if (!note) {
-      Ipc.send({ type: "command/LOAD_NOTE", id });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     /*
