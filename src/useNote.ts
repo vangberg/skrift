@@ -1,19 +1,14 @@
 import { NoteID, Note } from "./interfaces/note";
-import {
-  useEffect,
-  useState,
-  useCallback,
-  useReducer,
-  useContext,
-} from "react";
-import { IpcSetNoteEvent } from "./types";
+import { useEffect, useState, useContext } from "react";
 import clone from "fast-clone";
 import { Ipc } from "./interfaces/ipc";
 import produce from "immer";
 import { NoteCache } from "./interfaces/noteCache";
 import React from "react";
+import useElmish, { Effects, Reducer, StateEffectPair } from "react-use-elmish";
 
 type ClaimNoteAction = { type: "CLAIM_NOTE"; id: NoteID };
+type ScheduleReleaseNoteAction = { type: "SCHEDULE_RELEASE_NOTE"; id: NoteID };
 type ReleaseNoteAction = { type: "RELEASE_NOTE"; id: NoteID };
 type SetNoteAction = { type: "SET_NOTE"; note: Note };
 type AddLinkAction = { type: "ADD_LINK"; from: NoteID; to: NoteID };
@@ -21,82 +16,106 @@ type DeleteLinkAction = { type: "DELETE_LINK"; from: NoteID; to: NoteID };
 
 type Action =
   | ClaimNoteAction
+  | ScheduleReleaseNoteAction
   | ReleaseNoteAction
   | SetNoteAction
   | AddLinkAction
   | DeleteLinkAction;
 
-const handleClaimNote = (
+type ActionHandler<SubAction> = (
   cache: NoteCache,
-  action: ClaimNoteAction
-): NoteCache => {
+  action: SubAction
+) => StateEffectPair<NoteCache, Action>;
+
+const handleClaimNote: ActionHandler<ClaimNoteAction> = (cache, action) => {
   const { id } = action;
 
-  return produce(cache, (draft) => {
-    NoteCache.claim(draft, id);
-  });
+  return [
+    produce(cache, (draft) => {
+      NoteCache.claim(draft, id);
+    }),
+    Effects.none(),
+  ];
 };
 
-const handleReleaseNote = (
-  cache: NoteCache,
-  action: ReleaseNoteAction
-): NoteCache => {
+const handleScheduleReleaseNote: ActionHandler<ScheduleReleaseNoteAction> = (
+  cache,
+  action
+) => {
   const { id } = action;
 
-  return produce(cache, (draft) => {
-    NoteCache.release(draft, id);
-  });
+  return [cache, Effects.delay({ type: "RELEASE_NOTE", id }, 5000)];
 };
 
-const handleSetNote = (cache: NoteCache, action: SetNoteAction): NoteCache => {
+const handleReleaseNote: ActionHandler<ReleaseNoteAction> = (cache, action) => {
+  const { id } = action;
+
+  return [
+    produce(cache, (draft) => {
+      NoteCache.release(draft, id);
+    }),
+    Effects.none(),
+  ];
+};
+
+const handleSetNote: ActionHandler<SetNoteAction> = (cache, action) => {
   const { note } = action;
 
-  return produce(cache, (draft) => {
-    NoteCache.set(draft, note);
-  });
+  return [
+    produce(cache, (draft) => {
+      NoteCache.set(draft, note);
+    }),
+    Effects.none(),
+  ];
 };
 
-const handleAddLink = (cache: NoteCache, action: AddLinkAction): NoteCache => {
+const handleAddLink: ActionHandler<AddLinkAction> = (cache, action) => {
   // We use this event to manually update backlinks.
   const { from, to } = action;
 
-  return produce(cache, (draft) => {
-    // Check whether we have the note that is linked to.
-    const note = NoteCache.get(draft, to);
+  return [
+    produce(cache, (draft) => {
+      // Check whether we have the note that is linked to.
+      const note = NoteCache.get(draft, to);
 
-    if (!note) {
-      return;
-    }
+      if (!note) {
+        return;
+      }
 
-    // Add the note that is linked from as a backlink.
-    note.backlinks.add(from);
-  });
+      // Add the note that is linked from as a backlink.
+      note.backlinks.add(from);
+    }),
+    Effects.none(),
+  ];
 };
 
-const handleDeleteLink = (
-  cache: NoteCache,
-  action: DeleteLinkAction
-): NoteCache => {
+const handleDeleteLink: ActionHandler<DeleteLinkAction> = (cache, action) => {
   // We use this event to manually update backlinks.
   const { from, to } = action;
 
-  return produce(cache, (draft) => {
-    // Check whether we have the note that is linked to.
-    const note = NoteCache.get(draft, to);
+  return [
+    produce(cache, (draft) => {
+      // Check whether we have the note that is linked to.
+      const note = NoteCache.get(draft, to);
 
-    if (!note) {
-      return;
-    }
+      if (!note) {
+        return;
+      }
 
-    // Remove the note that is linked from as a backlink.
-    note.backlinks.delete(from);
-  });
+      // Remove the note that is linked from as a backlink.
+      note.backlinks.delete(from);
+    }),
+    Effects.none(),
+  ];
 };
 
-const reducer = (cache: NoteCache, action: Action): NoteCache => {
+const reducer: Reducer<NoteCache, Action> = (cache, action) => {
+  console.log(action);
   switch (action.type) {
     case "CLAIM_NOTE":
       return handleClaimNote(cache, action);
+    case "SCHEDULE_RELEASE_NOTE":
+      return handleScheduleReleaseNote(cache, action);
     case "RELEASE_NOTE":
       return handleReleaseNote(cache, action);
     case "SET_NOTE":
@@ -109,7 +128,10 @@ const reducer = (cache: NoteCache, action: Action): NoteCache => {
 };
 
 export const useNoteCache = (): Context => {
-  const [cache, dispatch] = useReducer(reducer, new Map());
+  const [cache, dispatch] = useElmish(reducer, () => [
+    new Map(),
+    Effects.none(),
+  ]);
 
   useEffect(() => {
     const deregister = Ipc.on((event) => {
@@ -152,7 +174,7 @@ export const useNote = (id: NoteID): Note | null => {
     dispatch({ type: "CLAIM_NOTE", id });
 
     return () => {
-      dispatch({ type: "RELEASE_NOTE", id });
+      dispatch({ type: "SCHEDULE_RELEASE_NOTE", id });
     };
   }, [id, dispatch]);
 
