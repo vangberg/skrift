@@ -133,7 +133,7 @@ export const NotesDB = {
   },
 
   async search(db: Database, query: string): Promise<NoteID[]> {
-    const cleanQuery = query.replace(/[^a-zA-Z0-9\s]/g, "");
+    const cleanQuery = query.replace(/[^a-zA-Z0-9\s]/g, " ");
 
     if (cleanQuery.length === 0) {
       return [];
