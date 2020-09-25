@@ -110,7 +110,6 @@ const handleDeleteLink: ActionHandler<DeleteLinkAction> = (cache, action) => {
 };
 
 const reducer: Reducer<NoteCache, Action> = (cache, action) => {
-  console.log(action);
   switch (action.type) {
     case "CLAIM_NOTE":
       return handleClaimNote(cache, action);
