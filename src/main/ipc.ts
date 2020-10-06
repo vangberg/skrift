@@ -99,7 +99,7 @@ const handleSetNote = async (
   const noteBefore = await NotesDB.get(db, id);
 
   await NotesDB.save(db, id, slate);
-  NotesFS.save(_path, id, slate);
+  await NotesFS.save(_path, id, slate);
 
   const noteAfter = await NotesDB.get(db, id);
 

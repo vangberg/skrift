@@ -15,6 +15,10 @@ export interface Note {
 }
 
 export const Note = {
+  idFromDate(date: Date): string {
+    return date.toJSON().replace(/[:\-]/g, '')
+  },
+
   title(slate: Node[]): string {
     if (slate.length === 0) {
       return "";

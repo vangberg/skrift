@@ -5,6 +5,7 @@ import { Streams } from "../interfaces/streams";
 import { NoteIndex } from "../interfaces/noteIndex";
 import { Serializer } from "../interfaces/serializer";
 import { Ipc } from "../interfaces/ipc";
+import { Note } from "../interfaces/note";
 
 export const NoteListContainer: React.FC = () => {
   const [state, dispatch] = useContext(StateContext);
@@ -21,7 +22,7 @@ export const NoteListContainer: React.FC = () => {
 
   const handleAdd = useCallback(
     (title) => {
-      const id = new Date().toJSON();
+      const id = Note.idFromDate(new Date())
       const slate = Serializer.deserialize(`# ${title}`);
       Ipc.send({ type: "command/ADD_NOTE", id, slate });
       dispatch({ type: "streams/OPEN_NOTE", stream: streams.length - 1, id });
