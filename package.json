@@ -1,6 +1,6 @@
 {
   "name": "Skrift",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "Networked notes",
   "main": "build/electron.js",
   "scripts": {
@@ -10,7 +10,8 @@
     "start:electron": "npm run build:electron && electron ./build/electron.js",
     "start:react": "webpack-dev-server --config ./webpack.react.config.js",
     "start": "concurrently \"npm:start:*\"",
-    "dist": "npm run build && electron-builder",
+    "dist:mac": "electron-builder",
+    "dist:win": "electron-builder -w portable",
     "install:mac": "rm -rf /Applications/Skrift.app && cp -r dist/mac/Skrift.app /Applications/",
     "install:linux": "dpkg -i dist/Skrift_1.0.0_amd64.deb",
     "eslint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
