@@ -4,8 +4,8 @@ import { StreamsContainer } from "../containers/StreamsContainer";
 
 export const Workspace: React.FC = () => {
   return (
-    <div className="h-screen w-full flex bg-gray-200 text-sm">
-      <div className="flex bg-white w-1/4 min-w-xs">
+    <div className="h-screen flex-1 flex bg-gray-200 text-sm">
+      <div className="flex bg-white w-80">
         <NoteListContainer />
       </div>
 
