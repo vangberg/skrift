@@ -1,18 +1,22 @@
-import { NoteCache } from "../../../src/interfaces/noteCache";
+import { Cache } from "../../../src/interfaces/cache";
 
-describe("NoteCache.release", () => {
+describe("Cache.release", () => {
   it("decreases claims", () => {
-    let cache: NoteCache = new Map([["a", { claims: 2, note: null }]]);
+    let cache: Cache<string, null> = new Map([
+      ["a", { claims: 2, value: null }],
+    ]);
 
-    NoteCache.release(cache, "a");
+    Cache.release(cache, "a");
 
-    expect(cache.get("a")).toEqual({ claims: 1, note: null });
+    expect(cache.get("a")).toEqual({ claims: 1, value: null });
   });
 
   it("removes entry when there are no claims", () => {
-    let cache: NoteCache = new Map([["a", { claims: 1, note: null }]]);
+    let cache: Cache<string, null> = new Map([
+      ["a", { claims: 1, value: null }],
+    ]);
 
-    NoteCache.release(cache, "a");
+    Cache.release(cache, "a");
 
     expect(cache.has("a")).toEqual(false);
   });

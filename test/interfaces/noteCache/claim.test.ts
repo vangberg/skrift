@@ -1,19 +1,19 @@
-import { NoteCache } from "../../../src/interfaces/noteCache";
+import { Cache } from "../../../src/interfaces/cache";
 
-describe("NoteCache.claim", () => {
+describe("Cache.claim", () => {
   it("sets initial claim", () => {
-    let cache: NoteCache = new Map();
+    let cache: Cache<string, null> = new Map();
 
-    NoteCache.claim(cache, "a");
+    Cache.claim(cache, "a");
 
-    expect(cache.get("a")).toEqual({ claims: 1, note: null });
+    expect(cache.get("a")).toEqual({ claims: 1, value: null });
   });
 
   it("increases existing claims", () => {
-    let cache: NoteCache = new Map();
+    let cache: Cache<string, null> = new Map();
 
-    NoteCache.claim(cache, "a");
-    NoteCache.claim(cache, "a");
+    Cache.claim(cache, "a");
+    Cache.claim(cache, "a");
 
     expect(cache.get("a")).toEqual({ claims: 2, note: null });
   });
