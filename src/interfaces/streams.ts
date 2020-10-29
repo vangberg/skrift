@@ -4,27 +4,39 @@ let key = 0;
 
 export type StreamID = number;
 
-export type StreamEntry = {
+export type StreamCardMeta = {
   // We need a key that can be used by React when rendering a stream.
   key: number;
-  noteId: NoteID;
 };
+
+export type StreamNoteCard = {
+  type: "note";
+  id: NoteID;
+};
+
+export type StreamSearchCard = {
+  type: "search";
+  query: string;
+  results: NoteID[];
+};
+
+export type StreamCard = StreamCardMeta & (StreamNoteCard | StreamSearchCard);
 
 export type Stream = {
   // We need a key that can be used by React when rendering a stream.
   key: number;
-  entries: StreamEntry[];
+  cards: StreamCard[];
 };
 
 export type Streams = Stream[];
 export type StreamIndex = number;
-export type StreamNoteIndex = number;
-export type StreamLocation = [StreamIndex, StreamNoteIndex];
+export type StreamCardIndex = number;
+export type StreamLocation = [StreamIndex, StreamCardIndex];
 
 export const Streams = {
   at(streams: Streams, idx: StreamIndex): Stream {
     if (!streams[idx]) {
-      streams[idx] = { key: key++, entries: [] };
+      streams[idx] = { key: key++, cards: [] };
     }
 
     return streams[idx];
@@ -39,17 +51,18 @@ export const Streams = {
   },
 
   isEmpty(streams: Streams, idx: StreamIndex): boolean {
-    return Streams.at(streams, idx).entries.length === 0;
+    return Streams.at(streams, idx).cards.length === 0;
   },
 
   close(streams: Streams, idx: StreamIndex) {
     streams.splice(idx, 1);
   },
 
-  openNote(streams: Streams, streamIdx: StreamIndex, noteId: NoteID) {
-    Streams.at(streams, streamIdx).entries.push({
+  openNote(streams: Streams, streamIdx: StreamIndex, id: NoteID) {
+    Streams.at(streams, streamIdx).cards.push({
       key: key++,
-      noteId,
+      type: "note",
+      id,
     });
   },
 
@@ -59,13 +72,13 @@ export const Streams = {
   ) {
     if (options.location) {
       const [streamIdx, noteIdx] = options.location;
-      Streams.at(streams, streamIdx).entries.splice(noteIdx, 1);
+      Streams.at(streams, streamIdx).cards.splice(noteIdx, 1);
     }
 
     if (options.id) {
       streams.forEach((stream, idx) => {
-        streams[idx].entries = stream.entries.filter(
-          (entry) => entry.noteId !== options.id
+        streams[idx].cards = stream.cards.filter(
+          (entry) => entry.type === "note" && entry.id !== options.id
         );
       });
     }
@@ -77,15 +90,15 @@ export const Streams = {
     if (from[0] === to[0]) {
       // Reordering within the same stream
       const stream = streams[from[0]];
-      const [removed] = stream.entries.splice(from[1], 1);
-      stream.entries.splice(to[1], 0, removed);
+      const [removed] = stream.cards.splice(from[1], 1);
+      stream.cards.splice(to[1], 0, removed);
     } else {
       // Move from one stream to another
       const fromStream = streams[from[0]];
       // Create stream if it doesn't exist
       const toStream = Streams.at(streams, to[0]);
-      const [removed] = fromStream.entries.splice(from[1], 1);
-      toStream.entries.splice(to[1], 0, removed);
+      const [removed] = fromStream.cards.splice(from[1], 1);
+      toStream.cards.splice(to[1], 0, removed);
     }
 
     Streams.collapse(streams);

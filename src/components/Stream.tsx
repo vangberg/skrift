@@ -10,13 +10,20 @@ type Props = {
 };
 
 export const Stream: React.FC<Props> = ({ index, stream }) => {
-  const entries = stream.entries.map((entry, noteIdx) => (
-    <StreamNoteContainer
-      key={entry.key}
-      id={entry.noteId}
-      location={[index, noteIdx]}
-    />
-  ));
+  const cards = stream.cards.map((card, idx) => {
+    switch (card.type) {
+      case "note":
+        return (
+          <StreamNoteContainer
+            key={card.key}
+            id={card.id}
+            location={[index, idx]}
+          />
+        );
+      case "search":
+        return <div>Search</div>;
+    }
+  });
 
   const droppableId = useMemo(
     () => DroppableIds.serialize({ type: "stream", index }),
@@ -31,7 +38,7 @@ export const Stream: React.FC<Props> = ({ index, stream }) => {
           {...provided.droppableProps}
           className="flex-1 skrift-flex-empty-0 overflow-y-auto min-w-sm max-w-2xl py-2"
         >
-          {entries}
+          {cards}
           {provided.placeholder}
         </div>
       )}

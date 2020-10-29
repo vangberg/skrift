@@ -1,26 +1,26 @@
-import { Streams } from "../../../src/interfaces/streams";
+import { StreamCard, Streams } from "../../../src/interfaces/streams";
 
 describe("Streams.closeNote", () => {
-  let a = { key: 1, noteId: "a" };
-  let b = { key: 2, noteId: "b" };
+  let a: StreamCard = { key: 1, type: "note", id: "a" };
+  let b: StreamCard = { key: 2, type: "note", id: "b" };
 
   it("closes note at location", () => {
-    let streams: Streams = [{ key: 1, entries: [a, b] }];
+    let streams: Streams = [{ key: 1, cards: [a, b] }];
 
     Streams.closeNote(streams, { location: [0, 1] });
 
-    expect(streams[0].entries).toEqual([a]);
+    expect(streams[0].cards).toEqual([a]);
   });
 
   it("closes notes by id", () => {
     let streams: Streams = [
-      { key: 1, entries: [a, a, b] },
-      { key: 2, entries: [a, b] },
+      { key: 1, cards: [a, a, b] },
+      { key: 2, cards: [a, b] },
     ];
 
     Streams.closeNote(streams, { id: "a" });
 
-    expect(streams[0].entries).toEqual([b]);
-    expect(streams[1].entries).toEqual([b]);
+    expect(streams[0].cards).toEqual([b]);
+    expect(streams[1].cards).toEqual([b]);
   });
 });

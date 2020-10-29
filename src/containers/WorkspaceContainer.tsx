@@ -34,7 +34,16 @@ export const WorkspaceContainer: React.FC = () => {
 
   useEffect(() => {
     Ipc.send({ type: "command/LOAD_DIR" });
-  }, []);
+    return Ipc.on((event) => {
+      if (event.type === "event/LOADED_DIR") {
+        event.notes
+          .slice(0, 5)
+          .forEach((note) =>
+            dispatch({ type: "streams/OPEN_NOTE", stream: 0, id: note.id })
+          );
+      }
+    });
+  }, [dispatch]);
 
   const handleDragEnd: OnDragEndResponder = useCallback(
     (result) => {
