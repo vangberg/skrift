@@ -1,10 +1,9 @@
 import React, { useCallback } from "react";
-import { NoteID } from "../../interfaces/note";
-import { NoteIndexEntry } from "../../interfaces/noteIndex";
+import { Note, NoteID } from "../../interfaces/note";
 
 type Props = {
   id: NoteID;
-  note: NoteIndexEntry | null;
+  note: Note | null;
   onOpen: (id: string, push: boolean) => void;
 };
 
