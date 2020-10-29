@@ -1,7 +1,6 @@
 import React from "react";
 import { Effects, Reducer } from "react-use-elmish";
 import { openNote, closeNote, moveNote } from "./streams";
-import { setQuery, setResults } from "./search";
 import { State, Action } from "./types";
 
 export const reducer: Reducer<State, Action> = (state, action) => {
@@ -15,19 +14,10 @@ export const reducer: Reducer<State, Action> = (state, action) => {
       return closeNote(state, action);
     case "streams/MOVE_NOTE":
       return moveNote(state, action);
-
-    case "search/SET_QUERY":
-      return setQuery(state, action);
-    case "search/SET_RESULTS":
-      return setResults(state, action);
   }
 };
 
 export const initialState = (state?: Partial<State>): State => ({
-  search: {
-    query: "",
-    results: [],
-  },
   streams: [],
   ...state,
 });

@@ -24,7 +24,11 @@ export type IpcCommand =
   | IpcSearchCommand;
 
 export type IpcSetNoteEvent = { type: "event/SET_NOTE"; note: Note };
-export type IpcSearchEvent = { type: "event/SEARCH"; ids: NoteID[] };
+export type IpcSearchEvent = {
+  type: "event/SEARCH";
+  query: string;
+  ids: NoteID[];
+};
 
 export type IpcReply =
   | { type: "event/LOADED_DIR"; notes: Note[] }

@@ -124,7 +124,7 @@ const handleSearch = async (
 
   const ids = await NotesDB.search(db, query);
 
-  reply(event, { type: "event/SEARCH", ids });
+  reply(event, { type: "event/SEARCH", query, ids });
 };
 
 export const setupIpc = () => {

@@ -33,17 +33,8 @@ export const WorkspaceContainer: React.FC = () => {
   const noteCacheContext = useNoteCache();
 
   useEffect(() => {
-    const deregister = Ipc.on((reply) => {
-      switch (reply.type) {
-        case "event/SEARCH":
-          dispatch({ type: "search/SET_RESULTS", results: reply.ids });
-      }
-    });
-
     Ipc.send({ type: "command/LOAD_DIR" });
-
-    return deregister;
-  }, [dispatch]);
+  }, []);
 
   const handleDragEnd: OnDragEndResponder = useCallback(
     (result) => {
