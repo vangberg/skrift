@@ -1,6 +1,5 @@
 import React from "react";
 import { Effects, Reducer } from "react-use-elmish";
-import { setNotes, setNote, deleteNote } from "./notes";
 import { openNote, closeNote, moveNote } from "./streams";
 import { setQuery, setResults } from "./search";
 import { State, Action } from "./types";
@@ -9,13 +8,6 @@ export const reducer: Reducer<State, Action> = (state, action) => {
   switch (action.type) {
     case "ERROR":
       return [state, Effects.none()];
-
-    case "notes/SET_NOTES":
-      return setNotes(state, action);
-    case "notes/SET_NOTE":
-      return setNote(state, action);
-    case "notes/DELETE_NOTE":
-      return deleteNote(state, action);
 
     case "streams/OPEN_NOTE":
       return openNote(state, action);
@@ -32,7 +24,6 @@ export const reducer: Reducer<State, Action> = (state, action) => {
 };
 
 export const initialState = (state?: Partial<State>): State => ({
-  notes: new Map(),
   search: {
     query: "",
     results: [],

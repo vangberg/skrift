@@ -35,15 +35,6 @@ export const WorkspaceContainer: React.FC = () => {
   useEffect(() => {
     const deregister = Ipc.on((reply) => {
       switch (reply.type) {
-        case "event/LOADED_DIR":
-          dispatch({ type: "notes/SET_NOTES", notes: reply.notes });
-          break;
-        case "event/SET_NOTE":
-          dispatch({ type: "notes/SET_NOTE", note: reply.note });
-          break;
-        case "event/DELETED_NOTE":
-          dispatch({ type: "notes/DELETE_NOTE", id: reply.id });
-          break;
         case "event/SEARCH":
           dispatch({ type: "search/SET_RESULTS", results: reply.ids });
       }
