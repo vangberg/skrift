@@ -1,27 +1,23 @@
 import React, { useMemo } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { StreamNoteContainer } from "../containers/StreamNoteContainer";
+import { StreamSearchContainer } from "../containers/StreamSearchContainer";
 import { DroppableIds } from "../droppableIds";
 import { Stream as StreamType, StreamIndex } from "../interfaces/streams";
 
 type Props = {
   index: StreamIndex;
   stream: StreamType;
+  onOpenSearch: () => void;
 };
 
-export const Stream: React.FC<Props> = ({ index, stream }) => {
+export const Stream: React.FC<Props> = ({ index, stream, onOpenSearch }) => {
   const cards = stream.cards.map((card, idx) => {
     switch (card.type) {
       case "note":
-        return (
-          <StreamNoteContainer
-            key={card.key}
-            id={card.id}
-            location={[index, idx]}
-          />
-        );
+        return <StreamNoteContainer {...card} location={[index, idx]} />;
       case "search":
-        return <div>Search</div>;
+        return <StreamSearchContainer {...card} location={[index, idx]} />;
     }
   });
 
@@ -40,6 +36,15 @@ export const Stream: React.FC<Props> = ({ index, stream }) => {
         >
           {cards}
           {provided.placeholder}
+
+          <div className="flex justify-center">
+            <span
+              onClick={onOpenSearch}
+              className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
+            >
+              Search
+            </span>
+          </div>
         </div>
       )}
     </Droppable>

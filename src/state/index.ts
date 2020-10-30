@@ -1,6 +1,6 @@
 import React from "react";
 import { Effects, Reducer } from "react-use-elmish";
-import { openNote, closeNote, moveNote } from "./streams";
+import { openNote, closeNote, moveNote, openSearch } from "./streams";
 import { State, Action } from "./types";
 
 export const reducer: Reducer<State, Action> = (state, action) => {
@@ -8,6 +8,8 @@ export const reducer: Reducer<State, Action> = (state, action) => {
     case "ERROR":
       return [state, Effects.none()];
 
+    case "streams/OPEN_SEARCH":
+      return openSearch(state, action);
     case "streams/OPEN_NOTE":
       return openNote(state, action);
     case "streams/CLOSE_NOTE":

@@ -6,8 +6,20 @@ import {
   OpenNoteAction,
   CloseNoteAction,
   MoveNoteAction,
+  OpenSearchAction,
 } from "./types";
 import { Streams } from "../interfaces/streams";
+
+export const openSearch: ActionHandler<OpenSearchAction> = (state, action) => {
+  const { stream } = action;
+
+  return [
+    produce(state, (draft) => {
+      Streams.openSearch(draft.streams, stream);
+    }),
+    Effects.none(),
+  ];
+};
 
 export const openNote: ActionHandler<OpenNoteAction> = (state, action) => {
   const { stream, id } = action;

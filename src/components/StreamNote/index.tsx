@@ -43,7 +43,7 @@ export const StreamNote: React.FC<Props> = ({
 
   return (
     // eslint-disable-next-line react/jsx-key
-    <Draggable draggableId={`stream-note-${draggableId}`} index={location[1]}>
+    <Draggable draggableId={`stream-card-${draggableId}`} index={location[1]}>
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}

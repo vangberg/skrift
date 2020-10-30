@@ -37,7 +37,7 @@ export const WorkspaceContainer: React.FC = () => {
     return Ipc.on((event) => {
       if (event.type === "event/LOADED_DIR") {
         event.notes
-          .slice(0, 5)
+          .slice(0, 1)
           .forEach((note) =>
             dispatch({ type: "streams/OPEN_NOTE", stream: 0, id: note.id })
           );

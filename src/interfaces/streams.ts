@@ -66,6 +66,15 @@ export const Streams = {
     });
   },
 
+  openSearch(streams: Streams, streamIdx: StreamIndex) {
+    Streams.at(streams, streamIdx).cards.push({
+      key: key++,
+      type: "search",
+      query: "",
+      results: [],
+    });
+  },
+
   closeNote(
     streams: Streams,
     options: { location?: StreamLocation; id?: NoteID }

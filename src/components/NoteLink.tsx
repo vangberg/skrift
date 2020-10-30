@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { Note, NoteID } from "../../interfaces/note";
+import { Note, NoteID } from "../interfaces/note";
 
 type Props = {
   id: NoteID;

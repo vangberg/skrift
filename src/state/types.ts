@@ -9,6 +9,11 @@ export interface State {
 
 export type ErrorAction = { type: "ERROR"; message: string };
 
+export type OpenSearchAction = {
+  type: "streams/OPEN_SEARCH";
+  stream: StreamIndex;
+};
+
 export type OpenNoteAction = {
   type: "streams/OPEN_NOTE";
   stream: StreamIndex;
@@ -26,7 +31,11 @@ export type MoveNoteAction = {
   to: StreamLocation;
 };
 
-export type StreamsAction = OpenNoteAction | CloseNoteAction | MoveNoteAction;
+export type StreamsAction =
+  | OpenSearchAction
+  | OpenNoteAction
+  | CloseNoteAction
+  | MoveNoteAction;
 
 export type Action = StreamsAction | ErrorAction;
 

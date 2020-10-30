@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { NoteID } from "../interfaces/note";
-import { NoteLink } from "../components/Editor/NoteLink";
+import { NoteLink } from "../components/NoteLink";
 import { StateContext } from "../state";
 import { useNote } from "../useNote";
 
