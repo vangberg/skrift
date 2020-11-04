@@ -10,7 +10,7 @@ import {
 } from "react-beautiful-dnd";
 import { StreamLocation } from "../interfaces/streams";
 import { DroppableIds } from "../droppableIds";
-import { UseCacheContext } from "../useCache";
+import { CacheContext } from "../useCache";
 import { DevInfo } from "../components/DevInfo";
 
 const draggableLocationToStreamLoaction = (
@@ -53,12 +53,12 @@ export const WorkspaceContainer: React.FC = () => {
 
   return (
     <StateContext.Provider value={[state, dispatch]}>
-      <UseCacheContext.Provider value={cacheContext}>
+      <CacheContext.Provider value={cacheContext}>
         <DragDropContext onDragEnd={handleDragEnd}>
           <DevInfo />
           <Workspace />
         </DragDropContext>
-      </UseCacheContext.Provider>
+      </CacheContext.Provider>
     </StateContext.Provider>
   );
 };

@@ -6,16 +6,13 @@ type Cache = SCache<string, any>;
 
 type Context = [Cache, React.Dispatch<React.SetStateAction<Cache>>];
 
-export const UseCacheContext = React.createContext<Context>([
-  new Map(),
-  () => {},
-]);
+export const CacheContext = React.createContext<Context>([new Map(), () => {}]);
 
 export const useCache = <Value>(
   key: string,
   defaultValue: Value
 ): [Value, (value: Value) => void] => {
-  const [cache, setCache] = useContext(UseCacheContext);
+  const [cache, setCache] = useContext(CacheContext);
 
   useEffect(() => {
     setCache((cache) =>
