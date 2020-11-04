@@ -2,7 +2,7 @@ import React, { useContext, useCallback, useState, useEffect } from "react";
 import { StateContext } from "../state";
 import { Note, NoteID } from "../interfaces/note";
 import { StreamLocation, Streams } from "../interfaces/streams";
-import { StreamSearch } from "../components/StreamSearch";
+import { SearchCard } from "../components/SearchCard";
 import { Ipc } from "../interfaces/ipc";
 import { Serializer } from "../interfaces/serializer";
 
@@ -57,7 +57,7 @@ export const StreamSearchContainer: React.FC<Props> = ({ location }) => {
   );
 
   return (
-    <StreamSearch
+    <SearchCard
       location={location}
       onAdd={handleAdd}
       onOpen={handleOpen}

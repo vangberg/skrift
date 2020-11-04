@@ -6,7 +6,11 @@ type Props = {
   onSearch: (query: string) => void;
 };
 
-export const SearchBar: React.FC<Props> = ({ query, onAdd, onSearch }) => {
+export const SearchCardInput: React.FC<Props> = ({
+  query,
+  onAdd,
+  onSearch,
+}) => {
   const handleSubmit = useCallback(
     (event: React.FormEvent) => {
       event.preventDefault();
