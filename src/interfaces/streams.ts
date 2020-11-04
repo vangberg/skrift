@@ -110,7 +110,7 @@ export const Streams = {
 
   collapse(streams: Streams) {
     for (let i = streams.length - 1; i >= 0; i--) {
-      if (Streams.isEmpty(streams, i)) {
+      if (Streams.isEmpty(streams, i) && streams.length > 1) {
         Streams.close(streams, i);
       }
     }

@@ -14,4 +14,15 @@ describe("Streams.collapse", () => {
 
     expect(streams).toEqual([{ key: 2, cards: [a] }]);
   });
+
+  it("leaves at least 1 stream", () => {
+    let streams: Streams = [
+      { key: 1, cards: [] },
+      { key: 2, cards: [] },
+    ];
+
+    Streams.collapse(streams);
+
+    expect(streams).toEqual([{ key: 1, cards: [] }]);
+  });
 });
