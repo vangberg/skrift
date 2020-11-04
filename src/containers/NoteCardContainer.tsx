@@ -11,7 +11,7 @@ interface Props {
   location: StreamLocation;
 }
 
-export const StreamNoteContainer: React.FC<Props> = ({ id, location }) => {
+export const NoteCardContainer: React.FC<Props> = ({ id, location }) => {
   const [, dispatch] = useContext(StateContext);
   const [stream] = location;
   const note = useNote(id);

@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Droppable } from "react-beautiful-dnd";
-import { StreamNoteContainer } from "../containers/StreamNoteContainer";
+import { NoteCardContainer } from "../containers/NoteCardContainer";
 import { SearchCardContainer } from "../containers/SearchCardContainer";
 import { DroppableIds } from "../droppableIds";
 import { Stream as StreamType, StreamIndex } from "../interfaces/streams";
@@ -15,7 +15,7 @@ export const Stream: React.FC<Props> = ({ index, stream, onOpenSearch }) => {
   const cards = stream.cards.map((card, idx) => {
     switch (card.type) {
       case "note":
-        return <StreamNoteContainer {...card} location={[index, idx]} />;
+        return <NoteCardContainer {...card} location={[index, idx]} />;
       case "search":
         return <SearchCardContainer {...card} location={[index, idx]} />;
     }
