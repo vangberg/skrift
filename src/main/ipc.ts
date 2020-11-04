@@ -12,6 +12,7 @@ import { Database } from "sqlite";
 import { NotesDB } from "../interfaces/notes_db";
 import path from "path";
 import { TSet } from "../tset";
+import { Note, NoteID } from "../interfaces/note";
 
 let _path = path.join(app.getPath("documents"), "Skrift");
 
@@ -114,6 +115,18 @@ const handleSetNote = async (
   });
 };
 
+const handleSearch = async (
+  event: Electron.IpcMainInvokeEvent,
+  query: string
+): Promise<Note[]> => {
+  const db = await getDB();
+
+  const ids = await NotesDB.search(db, query);
+  const notes = await Promise.all(ids.map((id) => NotesDB.get(db, id)));
+
+  return notes;
+};
+
 export const setupIpc = () => {
   ipcMain.on("skrift", (event, command: IpcCommand) => {
     switch (command.type) {
@@ -134,4 +147,6 @@ export const setupIpc = () => {
         break;
     }
   });
+
+  ipcMain.handle("search", handleSearch);
 };

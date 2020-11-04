@@ -16,8 +16,6 @@ export type StreamNoteCard = {
 
 export type StreamSearchCard = {
   type: "search";
-  query: string;
-  results: NoteID[];
 };
 
 export type StreamCard = StreamCardMeta & (StreamNoteCard | StreamSearchCard);
@@ -70,8 +68,6 @@ export const Streams = {
     Streams.at(streams, streamIdx).cards.push({
       key: key++,
       type: "search",
-      query: "",
-      results: [],
     });
   },
 

@@ -1,5 +1,6 @@
 import { IpcReply, IpcCommand } from "../types";
 import { IpcRenderer, ipcRenderer, IpcRendererEvent } from "electron";
+import { Note, NoteID } from "./note";
 
 export const Ipc = {
   on(callback: (reply: IpcReply) => void) {
@@ -17,5 +18,9 @@ export const Ipc = {
 
   send(command: IpcCommand) {
     ipcRenderer.send("skrift", command);
+  },
+
+  search(query: String): Promise<Note[]> {
+    return ipcRenderer.invoke("search", query);
   },
 };

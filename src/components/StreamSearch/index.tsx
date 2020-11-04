@@ -1,16 +1,16 @@
 import React from "react";
 import { SearchBar } from "./SearchBar";
-import { NoteID } from "../../interfaces/note";
-import { NoteLinkContainer } from "../../containers/NoteLinkContainer";
+import { Note, NoteID } from "../../interfaces/note";
 import { Draggable } from "react-beautiful-dnd";
 import { useUniqueId } from "../../useUniqueId";
 import { StreamLocation } from "../../interfaces/streams";
 import { Toolbar } from "./Toolbar";
+import { NoteLink } from "../NoteLink";
 
 type Props = {
   location: StreamLocation;
   query: string;
-  results: NoteID[];
+  results: Note[];
   onOpen: (id: string, push: boolean) => void;
   onClose: () => void;
   onAdd: (title: string) => void;
@@ -48,8 +48,10 @@ export const StreamSearch: React.FC<Props> = ({
             <SearchBar query={query} onAdd={onAdd} onSearch={onSearch} />
 
             <div className="overflow-y-auto">
-              {results.map((id) => (
-                <NoteLinkContainer key={id} id={id} onOpen={onOpen} />
+              {results.map((note) => (
+                <div key={note.id}>
+                  <NoteLink id={note.id} note={note} onOpen={onOpen} />
+                </div>
               ))}
             </div>
           </div>
