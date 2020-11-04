@@ -1,22 +1,22 @@
-import { Cache } from "../../../src/interfaces/cache";
+import { SCache } from "../../../src/interfaces/scache";
 
-describe("Cache.release", () => {
+describe("SCache.release", () => {
   it("decreases claims", () => {
-    let cache: Cache<string, null> = new Map([
+    let cache: SCache<string, null> = new Map([
       ["a", { claims: 2, value: null }],
     ]);
 
-    Cache.release(cache, "a");
+    SCache.release(cache, "a");
 
     expect(cache.get("a")).toEqual({ claims: 1, value: null });
   });
 
   it("removes entry when there are no claims", () => {
-    let cache: Cache<string, null> = new Map([
+    let cache: SCache<string, null> = new Map([
       ["a", { claims: 1, value: null }],
     ]);
 
-    Cache.release(cache, "a");
+    SCache.release(cache, "a");
 
     expect(cache.has("a")).toEqual(false);
   });

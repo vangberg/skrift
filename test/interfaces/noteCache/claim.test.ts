@@ -1,19 +1,19 @@
-import { Cache } from "../../../src/interfaces/cache";
+import { SCache } from "../../../src/interfaces/scache";
 
-describe("Cache.claim", () => {
+describe("SCache.claim", () => {
   it("sets initial claim", () => {
-    let cache: Cache<string, null> = new Map();
+    let cache: SCache<string, null> = new Map();
 
-    Cache.claim(cache, "a");
+    SCache.claim(cache, "a");
 
     expect(cache.get("a")).toEqual({ claims: 1, value: null });
   });
 
   it("increases existing claims", () => {
-    let cache: Cache<string, null> = new Map();
+    let cache: SCache<string, null> = new Map();
 
-    Cache.claim(cache, "a");
-    Cache.claim(cache, "a");
+    SCache.claim(cache, "a");
+    SCache.claim(cache, "a");
 
     expect(cache.get("a")).toEqual({ claims: 2, value: null });
   });

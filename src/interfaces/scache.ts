@@ -1,14 +1,12 @@
-import { Note, NoteID } from "./note";
-
 export interface CacheEntry<Value> {
   claims: number;
   value: Value | null;
 }
 
-export type Cache<Key, Value> = Map<Key, CacheEntry<Value>>;
+export type SCache<Key, Value> = Map<Key, CacheEntry<Value>>;
 
-export const Cache = {
-  claim<Key, Value>(cache: Cache<Key, Value>, key: Key) {
+export const SCache = {
+  claim<Key, Value>(cache: SCache<Key, Value>, key: Key) {
     let entry = cache.get(key);
 
     if (entry) {
@@ -18,7 +16,7 @@ export const Cache = {
     }
   },
 
-  release<Key, Value>(cache: Cache<Key, Value>, key: Key) {
+  release<Key, Value>(cache: SCache<Key, Value>, key: Key) {
     let entry = cache.get(key);
 
     if (!entry) {
@@ -32,7 +30,7 @@ export const Cache = {
     }
   },
 
-  set<Key, Value>(cache: Cache<Key, Value>, key: Key, value: Value) {
+  set<Key, Value>(cache: SCache<Key, Value>, key: Key, value: Value) {
     let entry = cache.get(key);
 
     if (entry) {
@@ -40,7 +38,7 @@ export const Cache = {
     }
   },
 
-  get<Key, Value>(cache: Cache<Key, Value>, key: Key): Value | null {
+  get<Key, Value>(cache: SCache<Key, Value>, key: Key): Value | null {
     const entry = cache.get(key);
 
     if (!entry) {

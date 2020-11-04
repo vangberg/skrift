@@ -3,7 +3,7 @@ import { useEffect, useState, useContext } from "react";
 import clone from "fast-clone";
 import { Ipc } from "./interfaces/ipc";
 import produce from "immer";
-import { Cache } from "./interfaces/cache";
+import { SCache } from "./interfaces/scache";
 import React from "react";
 import useElmish, { Effects, Reducer, StateEffectPair } from "react-use-elmish";
 
@@ -24,7 +24,7 @@ type Action =
   | AddLinkAction
   | DeleteLinkAction;
 
-type NoteCache = Cache<NoteID, Note>;
+type NoteCache = SCache<NoteID, Note>;
 
 type ActionHandler<SubAction> = (
   cache: NoteCache,
@@ -40,7 +40,7 @@ const handleClaimNote: ActionHandler<ClaimNoteAction> = (cache, action) => {
 
   return [
     produce(cache, (draft) => {
-      Cache.claim(draft, id);
+      SCache.claim(draft, id);
     }),
     Effects.attemptFunction(
       () => Ipc.send({ type: "command/LOAD_NOTE", id }),
@@ -71,7 +71,7 @@ const handleReleaseNote: ActionHandler<ReleaseNoteAction> = (cache, action) => {
 
   return [
     produce(cache, (draft) => {
-      Cache.release(draft, id);
+      SCache.release(draft, id);
     }),
     Effects.none(),
   ];
@@ -82,7 +82,7 @@ const handleSetNote: ActionHandler<SetNoteAction> = (cache, action) => {
 
   return [
     produce(cache, (draft) => {
-      Cache.set(draft, note.id, note);
+      SCache.set(draft, note.id, note);
     }),
     Effects.none(),
   ];
@@ -95,7 +95,7 @@ const handleAddLink: ActionHandler<AddLinkAction> = (cache, action) => {
   return [
     produce(cache, (draft) => {
       // Check whether we have the note that is linked to.
-      const note = Cache.get(draft, to);
+      const note = SCache.get(draft, to);
 
       if (!note) {
         return;
@@ -115,7 +115,7 @@ const handleDeleteLink: ActionHandler<DeleteLinkAction> = (cache, action) => {
   return [
     produce(cache, (draft) => {
       // Check whether we have the note that is linked to.
-      const note = Cache.get(draft, to);
+      const note = SCache.get(draft, to);
 
       if (!note) {
         return;
@@ -179,7 +179,7 @@ const cloneNote = (note: Note): Note => ({ ...note, slate: clone(note.slate) });
 
 export const useNote = (id: NoteID): Note | null => {
   const [cache, dispatch] = useContext(NoteCacheContext);
-  const cachedNote = Cache.get(cache, id);
+  const cachedNote = SCache.get(cache, id);
 
   /*
   When the same value is used by multiple instances of Slate,
