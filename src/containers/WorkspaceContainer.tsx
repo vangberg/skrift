@@ -10,8 +10,8 @@ import {
 } from "react-beautiful-dnd";
 import { StreamLocation } from "../interfaces/streams";
 import { DroppableIds } from "../droppableIds";
-import { NoteCacheContext, useNoteCache } from "../useNote";
 import { UseCacheContext } from "../useCache";
+import { DevInfo } from "../components/DevInfo";
 
 const draggableLocationToStreamLoaction = (
   draggableLocation: DraggableLocation
@@ -32,7 +32,6 @@ export const WorkspaceContainer: React.FC = () => {
   ]);
 
   const cacheContext = useState(new Map());
-  const noteCacheContext = useNoteCache();
 
   useEffect(() => {
     Ipc.send({ type: "command/LOAD_DIR" });
@@ -55,11 +54,10 @@ export const WorkspaceContainer: React.FC = () => {
   return (
     <StateContext.Provider value={[state, dispatch]}>
       <UseCacheContext.Provider value={cacheContext}>
-        <NoteCacheContext.Provider value={noteCacheContext}>
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <Workspace />
-          </DragDropContext>
-        </NoteCacheContext.Provider>
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <DevInfo />
+          <Workspace />
+        </DragDropContext>
       </UseCacheContext.Provider>
     </StateContext.Provider>
   );
