@@ -35,16 +35,14 @@ export const StreamSearch: React.FC<Props> = ({
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          className="shadow rounded mx-2 mb-2 px-2 bg-white"
+          className="shadow-md mx-2 mb-2"
         >
-          <div className="float-right pt-2 pr-2">
-            <Toolbar
-              onClose={onClose}
-              draggableProps={provided.dragHandleProps}
-            />
-          </div>
+          <Toolbar
+            onClose={onClose}
+            draggableProps={provided.dragHandleProps}
+          />
 
-          <div className="p-2 flex flex-col overflow-hidden">
+          <div className="rounded-b  bg-white p-2 flex flex-col overflow-hidden">
             <SearchBar query={query} onAdd={onAdd} onSearch={onSearch} />
 
             <div className="overflow-y-auto">

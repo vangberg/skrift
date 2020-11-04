@@ -9,7 +9,7 @@ type Props = {
 
 export const Toolbar: React.FC<Props> = ({ onClose, draggableProps }) => {
   return (
-    <div className="flex">
+    <div className="flex px-2 py-1 justify-end bg-orange-300 rounded-t">
       <Item onClick={onClose}>Close</Item>
       <Item {...draggableProps}>Move</Item>
     </div>
