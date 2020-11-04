@@ -12,17 +12,13 @@ type ClaimNoteAction = { type: "CLAIM_NOTE"; id: NoteID };
 type ScheduleReleaseNoteAction = { type: "SCHEDULE_RELEASE_NOTE"; id: NoteID };
 type ReleaseNoteAction = { type: "RELEASE_NOTE"; id: NoteID };
 type SetNoteAction = { type: "SET_NOTE"; note: Note };
-type AddLinkAction = { type: "ADD_LINK"; from: NoteID; to: NoteID };
-type DeleteLinkAction = { type: "DELETE_LINK"; from: NoteID; to: NoteID };
 
 type Action =
   | ErrorAction
   | ClaimNoteAction
   | ScheduleReleaseNoteAction
   | ReleaseNoteAction
-  | SetNoteAction
-  | AddLinkAction
-  | DeleteLinkAction;
+  | SetNoteAction;
 
 type NoteCache = SCache<NoteID, Note>;
 
@@ -88,46 +84,6 @@ const handleSetNote: ActionHandler<SetNoteAction> = (cache, action) => {
   ];
 };
 
-const handleAddLink: ActionHandler<AddLinkAction> = (cache, action) => {
-  // We use this event to manually update backlinks.
-  const { from, to } = action;
-
-  return [
-    produce(cache, (draft) => {
-      // Check whether we have the note that is linked to.
-      const note = SCache.get(draft, to);
-
-      if (!note) {
-        return;
-      }
-
-      // Add the note that is linked from as a backlink.
-      note.backlinks.add(from);
-    }),
-    Effects.none(),
-  ];
-};
-
-const handleDeleteLink: ActionHandler<DeleteLinkAction> = (cache, action) => {
-  // We use this event to manually update backlinks.
-  const { from, to } = action;
-
-  return [
-    produce(cache, (draft) => {
-      // Check whether we have the note that is linked to.
-      const note = SCache.get(draft, to);
-
-      if (!note) {
-        return;
-      }
-
-      // Remove the note that is linked from as a backlink.
-      note.backlinks.delete(from);
-    }),
-    Effects.none(),
-  ];
-};
-
 const reducer: Reducer<NoteCache, Action> = (cache, action) => {
   switch (action.type) {
     case "ERROR":
@@ -140,10 +96,6 @@ const reducer: Reducer<NoteCache, Action> = (cache, action) => {
       return handleReleaseNote(cache, action);
     case "SET_NOTE":
       return handleSetNote(cache, action);
-    case "ADD_LINK":
-      return handleAddLink(cache, action);
-    case "DELETE_LINK":
-      return handleDeleteLink(cache, action);
   }
 };
 
@@ -158,14 +110,6 @@ export const useNoteCache = (): Context => {
       switch (event.type) {
         case "event/SET_NOTE":
           return dispatch({ type: "SET_NOTE", note: event.note });
-        case "event/ADDED_LINK":
-          return dispatch({ type: "ADD_LINK", from: event.from, to: event.to });
-        case "event/DELETED_LINK":
-          return dispatch({
-            type: "DELETE_LINK",
-            from: event.from,
-            to: event.to,
-          });
       }
     });
 
