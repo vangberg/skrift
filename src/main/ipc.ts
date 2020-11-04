@@ -7,7 +7,6 @@ import {
   IpcAddNoteCommand,
   IpcDeleteNoteCommand,
   IpcSetNoteCommand,
-  IpcSearchCommand,
 } from "../types";
 import { Database } from "sqlite";
 import { NotesDB } from "../interfaces/notes_db";
@@ -115,18 +114,6 @@ const handleSetNote = async (
   });
 };
 
-const handleSearch = async (
-  event: Electron.IpcMainEvent,
-  cmd: IpcSearchCommand
-) => {
-  const { query } = cmd;
-  const db = await getDB();
-
-  const ids = await NotesDB.search(db, query);
-
-  reply(event, { type: "event/SEARCH", query, ids });
-};
-
 export const setupIpc = () => {
   ipcMain.on("skrift", (event, command: IpcCommand) => {
     switch (command.type) {
@@ -144,9 +131,6 @@ export const setupIpc = () => {
         break;
       case "command/DELETE_NOTE":
         handleDeleteNote(event, command);
-        break;
-      case "command/SEARCH":
-        handleSearch(event, command);
         break;
     }
   });
