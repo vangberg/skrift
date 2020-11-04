@@ -12,6 +12,6 @@ describe("Streams.collapse", () => {
 
     Streams.collapse(streams);
 
-    expect(streams).toEqual([{ key: 2, entries: [a] }]);
+    expect(streams).toEqual([{ key: 2, cards: [a] }]);
   });
 });

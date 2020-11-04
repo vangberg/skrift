@@ -15,6 +15,6 @@ describe("Cache.claim", () => {
     Cache.claim(cache, "a");
     Cache.claim(cache, "a");
 
-    expect(cache.get("a")).toEqual({ claims: 2, note: null });
+    expect(cache.get("a")).toEqual({ claims: 2, value: null });
   });
 });
