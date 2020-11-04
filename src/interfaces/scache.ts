@@ -6,13 +6,13 @@ export interface CacheEntry<Value> {
 export type SCache<Key, Value> = Map<Key, CacheEntry<Value>>;
 
 export const SCache = {
-  claim<Key, Value>(cache: SCache<Key, Value>, key: Key) {
+  claim<Key, Value>(cache: SCache<Key, Value>, key: Key, defaultValue?: Value) {
     let entry = cache.get(key);
 
     if (entry) {
       entry.claims++;
     } else {
-      cache.set(key, { value: null, claims: 1 });
+      cache.set(key, { value: defaultValue || null, claims: 1 });
     }
   },
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { reducer, StateContext, initialState } from "../state";
 import { Workspace } from "../components/Workspace";
 import useElmish, { Effects } from "react-use-elmish";
@@ -11,6 +11,7 @@ import {
 import { StreamLocation } from "../interfaces/streams";
 import { DroppableIds } from "../droppableIds";
 import { NoteCacheContext, useNoteCache } from "../useNote";
+import { UseCacheContext } from "../useCache";
 
 const draggableLocationToStreamLoaction = (
   draggableLocation: DraggableLocation
@@ -30,6 +31,7 @@ export const WorkspaceContainer: React.FC = () => {
     Effects.none(),
   ]);
 
+  const cacheContext = useState(new Map());
   const noteCacheContext = useNoteCache();
 
   useEffect(() => {
@@ -52,11 +54,13 @@ export const WorkspaceContainer: React.FC = () => {
 
   return (
     <StateContext.Provider value={[state, dispatch]}>
-      <NoteCacheContext.Provider value={noteCacheContext}>
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Workspace />
-        </DragDropContext>
-      </NoteCacheContext.Provider>
+      <UseCacheContext.Provider value={cacheContext}>
+        <NoteCacheContext.Provider value={noteCacheContext}>
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <Workspace />
+          </DragDropContext>
+        </NoteCacheContext.Provider>
+      </UseCacheContext.Provider>
     </StateContext.Provider>
   );
 };

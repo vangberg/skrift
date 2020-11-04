@@ -4,21 +4,20 @@ let key = 0;
 
 export type StreamID = number;
 
-export type StreamCardMeta = {
+export type StreamNoteCard = {
   // We need a key that can be used by React when rendering a stream.
   key: number;
-};
-
-export type StreamNoteCard = {
   type: "note";
   id: NoteID;
 };
 
 export type StreamSearchCard = {
+  // We need a key that can be used by React when rendering a stream.
+  key: number;
   type: "search";
 };
 
-export type StreamCard = StreamCardMeta & (StreamNoteCard | StreamSearchCard);
+export type StreamCard = StreamNoteCard | StreamSearchCard;
 
 export type Stream = {
   // We need a key that can be used by React when rendering a stream.

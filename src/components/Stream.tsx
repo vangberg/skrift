@@ -17,7 +17,13 @@ export const Stream: React.FC<Props> = ({ index, stream, onOpenSearch }) => {
       case "note":
         return <NoteCardContainer {...card} location={[index, idx]} />;
       case "search":
-        return <SearchCardContainer {...card} location={[index, idx]} />;
+        return (
+          <SearchCardContainer
+            key={card.key}
+            card={card}
+            location={[index, idx]}
+          />
+        );
     }
   });
 
