@@ -4,7 +4,7 @@ import { NoteID } from "../interfaces/note";
 import { StreamLocation } from "../interfaces/streams";
 import { useNote } from "../useNote";
 import { Ipc } from "../interfaces/ipc";
-import { StreamNote } from "../components/StreamNote";
+import { NoteCard } from "../components/NoteCard";
 
 interface Props {
   id: NoteID;
@@ -40,7 +40,7 @@ export const StreamNoteContainer: React.FC<Props> = ({ id, location }) => {
   }
 
   return (
-    <StreamNote
+    <NoteCard
       location={location}
       note={note}
       onOpen={handleOpen}

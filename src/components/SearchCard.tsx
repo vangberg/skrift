@@ -31,7 +31,7 @@ export const SearchCard: React.FC<Props> = ({
     <Card location={location}>
       {(provided) => (
         <>
-          <CardToolbar>
+          <CardToolbar backgroundColor="bg-orange-300">
             <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>
             <CardToolbarItem {...provided.dragHandleProps}>
               Move

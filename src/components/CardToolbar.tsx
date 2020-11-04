@@ -1,8 +1,11 @@
 import React from "react";
 
-export const CardToolbar: React.FC = ({ children }) => {
+interface Props {
+  backgroundColor: string;
+}
+export const CardToolbar: React.FC<Props> = ({ backgroundColor, children }) => {
   return (
-    <div className="flex px-2 py-1 justify-end bg-orange-300 rounded-t">
+    <div className={`flex px-2 py-1 justify-end ${backgroundColor} rounded-t`}>
       {children}
     </div>
   );
