@@ -13,6 +13,7 @@ import { NotesDB } from "../interfaces/notes_db";
 import path from "path";
 import { TSet } from "../tset";
 import { Note, NoteID } from "../interfaces/note";
+import { Ipc } from "../interfaces/ipc";
 
 let _path = path.join(app.getPath("documents"), "Skrift");
 
@@ -36,14 +37,19 @@ const reply = (event: Electron.IpcMainEvent, reply: IpcReply) => {
 const handleLoadDir = async (event: Electron.IpcMainEvent) => {
   await NotesFS.initialize(_path);
   const db = await getDB();
-  const notes = [];
 
-  for await (let note of NotesFS.readDir(_path)) {
-    await NotesDB.save(db, note.id, note.slate, note.modifiedAt);
-    notes.push(note);
-  }
+  await NotesDB.transaction(db, async () => {
+    let loaded = 0;
+    for await (let note of NotesFS.readDir(_path)) {
+      await NotesDB.save(db, note.id, note.slate, note.modifiedAt);
+      loaded += 1;
+      if (loaded % 100 === 0) {
+        reply(event, { type: "event/LOADING_DIR", loaded });
+      }
+    }
+  });
 
-  reply(event, { type: "event/LOADED_DIR", notes });
+  reply(event, { type: "event/LOADED_DIR" });
 };
 
 const handleLoadNote = async (
@@ -83,8 +89,9 @@ const handleAddNote = async (
   const { id, slate } = cmd;
   const db = await getDB();
 
-  await NotesDB.save(db, id, slate);
-  NotesFS.save(_path, id, slate);
+  await NotesDB.transaction(db, () => NotesDB.save(db, id, slate));
+
+  await NotesFS.save(_path, id, slate);
 
   const note = await NotesDB.get(db, id);
 
@@ -100,7 +107,8 @@ const handleSetNote = async (
 
   const noteBefore = await NotesDB.get(db, id);
 
-  await NotesDB.save(db, id, slate);
+  await NotesDB.transaction(db, () => NotesDB.save(db, id, slate));
+
   await NotesFS.save(_path, id, slate);
 
   const noteAfter = await NotesDB.get(db, id);

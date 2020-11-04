@@ -12,6 +12,7 @@ import { StreamLocation } from "../interfaces/streams";
 import { DroppableIds } from "../droppableIds";
 import { CacheContext } from "../useCache";
 import { DevInfo } from "../components/DevInfo";
+import { Splash } from "../components/Splash";
 
 const draggableLocationToStreamLoaction = (
   draggableLocation: DraggableLocation
@@ -33,8 +34,24 @@ export const WorkspaceContainer: React.FC = () => {
 
   const cacheContext = useState(new Map());
 
+  const [loading, setLoading] = useState(true);
+  const [loaded, setLoaded] = useState(0);
+
   useEffect(() => {
     Ipc.send({ type: "command/LOAD_DIR" });
+
+    const deregister = Ipc.on((event) => {
+      switch (event.type) {
+        case "event/LOADED_DIR":
+          setLoading(false);
+          break;
+        case "event/LOADING_DIR":
+          setLoaded(event.loaded);
+          break;
+      }
+    });
+
+    return deregister;
   }, [dispatch]);
 
   useEffect(() => dispatch({ type: "streams/OPEN_SEARCH", stream: 0 }), []);
@@ -56,7 +73,7 @@ export const WorkspaceContainer: React.FC = () => {
       <CacheContext.Provider value={cacheContext}>
         <DragDropContext onDragEnd={handleDragEnd}>
           <DevInfo />
-          <Workspace />
+          {loading ? <Splash loaded={loaded} /> : <Workspace />}
         </DragDropContext>
       </CacheContext.Provider>
     </StateContext.Provider>

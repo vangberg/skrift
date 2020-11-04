@@ -4,6 +4,7 @@ import { Note, NoteID } from "../note";
 import { Serializer } from "../serializer";
 import { Node } from "slate";
 import path from "path";
+import { callbackify } from "util";
 
 export interface NoteRow {
   id: string;
@@ -68,6 +69,12 @@ export const NotesDB = {
     `);
   },
 
+  async transaction(db: Database, callback: () => Promise<void>) {
+    await db.exec("BEGIN");
+    await callback();
+    await db.exec("COMMIT");
+  },
+
   async save(
     db: Database,
     id: NoteID,
@@ -78,7 +85,6 @@ export const NotesDB = {
     const markdown = Serializer.serialize(slate);
     const links = Note.links(slate);
 
-    await db.exec(`BEGIN`);
     await db.run(`DELETE FROM notes WHERE id = ?`, id);
     await db.run(`DELETE FROM links WHERE fromId = ?`, id);
 
@@ -99,8 +105,6 @@ export const NotesDB = {
         [id, link]
       );
     }
-
-    await db.exec(`COMMIT`);
   },
 
   async get(db: Database, id: NoteID): Promise<Note> {

@@ -26,7 +26,7 @@ export const SearchCardContainer: React.FC<Props> = ({ location, card }) => {
       return setResults([]);
     }
 
-    Ipc.search(query).then(setResults);
+    Ipc.search(query).then((results) => setResults(results.slice(0, 100)));
   }, [query, setResults]);
 
   const handleSearch = useCallback((query: string) => setQuery(query), [
