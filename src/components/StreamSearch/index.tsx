@@ -44,15 +44,19 @@ export const StreamSearch: React.FC<Props> = ({
             />
           </div>
 
-          <div className="flex flex-col overflow-hidden">
+          <div className="p-2 flex flex-col overflow-hidden">
             <SearchBar query={query} onAdd={onAdd} onSearch={onSearch} />
 
             <div className="overflow-y-auto">
-              {results.map((note) => (
-                <div key={note.id}>
-                  <NoteLink id={note.id} note={note} onOpen={onOpen} />
-                </div>
-              ))}
+              {results.length > 0 && (
+                <ul className="list-disc list-outside ml-5 mt-2">
+                  {results.map((note) => (
+                    <li key={note.id} className="skrift-list-item">
+                      <NoteLink id={note.id} note={note} onOpen={onOpen} />
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         </div>

@@ -21,7 +21,7 @@ export const SearchBar: React.FC<Props> = ({ query, onAdd, onSearch }) => {
   );
 
   return (
-    <div className="flex p-2">
+    <div className="flex">
       <form className="flex flex-1" onSubmit={handleSubmit}>
         <input
           type="search"
