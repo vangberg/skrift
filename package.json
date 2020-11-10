@@ -102,6 +102,7 @@
     "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
-    "sqlite3": "^4.2.0"
+    "sqlite3": "^4.2.0",
+    "use-immer": "^0.4.1"
   }
 }

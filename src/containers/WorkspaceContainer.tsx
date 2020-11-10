@@ -13,6 +13,7 @@ import { DroppableIds } from "../droppableIds";
 import { CacheContext } from "../useCache";
 import { DevInfo } from "../components/DevInfo";
 import { Splash } from "../components/Splash";
+import { useImmer } from "use-immer";
 
 const draggableLocationToStreamLoaction = (
   draggableLocation: DraggableLocation
@@ -32,7 +33,7 @@ export const WorkspaceContainer: React.FC = () => {
     Effects.none(),
   ]);
 
-  const cacheContext = useState(new Map());
+  const cacheContext = useImmer(new Map());
 
   const [loading, setLoading] = useState(true);
   const [loaded, setLoaded] = useState(0);

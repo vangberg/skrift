@@ -1,12 +1,13 @@
-import produce from "immer";
 import React, { useCallback, useContext, useEffect, useMemo } from "react";
+import { ImmerHook } from "use-immer";
 import { SCache } from "./interfaces/scache";
 
 type Cache = SCache<string, any>;
 
-type Context = [Cache, React.Dispatch<React.SetStateAction<Cache>>];
-
-export const CacheContext = React.createContext<Context>([new Map(), () => {}]);
+export const CacheContext = React.createContext<ImmerHook<Cache>>([
+  new Map(),
+  () => {},
+]);
 
 export const useCache = <Value>(
   key: string,
@@ -15,11 +16,9 @@ export const useCache = <Value>(
   const [cache, setCache] = useContext(CacheContext);
 
   useEffect(() => {
-    setCache((cache) =>
-      produce(cache, (draft) => {
-        SCache.claim(draft, key, defaultValue);
-      })
-    );
+    setCache((draft) => {
+      SCache.claim(draft, key, defaultValue);
+    });
 
     /*
     When a card is moved from one stream to another, there is (sometimes)
@@ -31,22 +30,18 @@ export const useCache = <Value>(
     */
     return () => {
       setTimeout(() => {
-        setCache((cache) =>
-          produce(cache, (draft) => {
-            SCache.release(draft, key);
-          })
-        );
+        setCache((draft) => {
+          SCache.release(draft, key);
+        });
       }, 1500);
     };
   }, []);
 
   const setValue = useCallback(
     (value: Value) => {
-      setCache((cache) =>
-        produce(cache, (draft) => {
-          SCache.set(draft, key, value);
-        })
-      );
+      setCache((draft) => {
+        SCache.set(draft, key, value);
+      });
     },
     [setCache, key]
   );
