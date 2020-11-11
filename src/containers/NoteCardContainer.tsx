@@ -1,10 +1,10 @@
 import React, { useContext, useCallback } from "react";
-import { StateContext } from "../state";
 import { NoteID } from "../interfaces/note";
 import { StreamLocation } from "../interfaces/streams";
 import { useNote } from "../useNote";
 import { Ipc } from "../interfaces/ipc";
 import { NoteCard } from "../components/NoteCard";
+import { StreamsContext } from "../useStreams";
 
 interface Props {
   id: NoteID;
@@ -12,28 +12,28 @@ interface Props {
 }
 
 export const NoteCardContainer: React.FC<Props> = ({ id, location }) => {
-  const [, dispatch] = useContext(StateContext);
-  const [stream] = location;
+  const [, { openNote, closeNote }] = useContext(StreamsContext);
+  const [streamIdx] = location;
   const note = useNote(id);
 
   const handleDelete = useCallback(() => {
-    dispatch({ type: "streams/CLOSE_NOTE", location });
+    closeNote(location);
 
     Ipc.send({ type: "command/DELETE_NOTE", id });
-  }, [dispatch, location, id]);
+  }, [closeNote, location, id]);
 
   const handleOpen = useCallback(
     (id, push) => {
-      const idx = push ? stream + 1 : stream;
-      dispatch({ type: "streams/OPEN_NOTE", stream: idx, id });
+      const idx = push ? streamIdx + 1 : streamIdx;
+      openNote(idx, id);
     },
-    [dispatch, stream]
+    [openNote, streamIdx]
   );
 
-  const handleClose = useCallback(
-    () => dispatch({ type: "streams/CLOSE_NOTE", location }),
-    [dispatch, location]
-  );
+  const handleClose = useCallback(() => closeNote(location), [
+    closeNote,
+    location,
+  ]);
 
   if (!note) {
     return null;

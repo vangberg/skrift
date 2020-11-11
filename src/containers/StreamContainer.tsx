@@ -1,7 +1,7 @@
 import React, { useCallback, useContext } from "react";
 import { Stream as StreamType, StreamIndex } from "../interfaces/streams";
 import { Stream } from "../components/Stream";
-import { StateContext } from "../state";
+import { StreamsContext } from "../useStreams";
 
 interface Props {
   index: StreamIndex;
@@ -9,12 +9,12 @@ interface Props {
 }
 
 export const StreamContainer: React.FC<Props> = ({ index, stream }) => {
-  const [, dispatch] = useContext(StateContext);
+  const [, { openSearch }] = useContext(StreamsContext);
 
-  const handleOpenSearch = useCallback(
-    () => dispatch({ type: "streams/OPEN_SEARCH", stream: index }),
-    [dispatch, index]
-  );
+  const handleOpenSearch = useCallback(() => openSearch(index), [
+    openSearch,
+    index,
+  ]);
 
   return (
     <Stream index={index} stream={stream} onOpenSearch={handleOpenSearch} />
