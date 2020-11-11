@@ -1,7 +1,7 @@
 module.exports = [
   {
     mode: "development",
-    entry: "./src/main/index.ts",
+    entry: "./src/skrift-electron/main/index.ts",
     target: "electron-main",
     resolve: {
       extensions: [".tsx", ".ts", ".js"],
