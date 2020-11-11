@@ -1,7 +1,7 @@
 import path from "path";
 import { NotesFS } from ".";
 
-const PATH = path.join(__dirname, "../fixtures");
+const PATH = path.join(__dirname, "fixtures");
 
 describe("NotesFS.read", () => {
   it("reads note", async () => {

@@ -2,7 +2,7 @@ import path from "path";
 import { NotesFS } from ".";
 import { Note } from "../note";
 
-const PATH = path.join(__dirname, "../fixtures");
+const PATH = path.join(__dirname, "fixtures");
 
 describe("NotesFS.readDir", () => {
   it("reads notes one at a time", async () => {
