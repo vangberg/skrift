@@ -21,7 +21,7 @@ export const SearchCardContainer: React.FC<Props> = ({ location, card }) => {
   );
 
   useEffect(() => {
-    if (query.length <= 1) {
+    if (query !== "*" && query.length <= 1) {
       return setResults([]);
     }
 

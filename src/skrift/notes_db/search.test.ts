@@ -18,6 +18,12 @@ describe("NotesDB.search()", () => {
     expect(notes).toEqual(["b"]);
   });
 
+  it("returns all results", async () => {
+    const notes = await NotesDB.search(db, "*");
+
+    expect(notes).toEqual(["a", "b"]);
+  });
+
   it("ignores special characters", async () => {
     const notes = await NotesDB.search(db, "Tiger #");
 

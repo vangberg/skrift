@@ -5,6 +5,7 @@ import { Serializer } from "../serializer";
 import { Node } from "slate";
 import path from "path";
 import { callbackify } from "util";
+import { allowedNodeEnvironmentFlags } from "process";
 
 export interface NoteRow {
   id: string;
@@ -137,9 +138,13 @@ export const NotesDB = {
   },
 
   async search(db: Database, query: string): Promise<NoteID[]> {
+    if (query === "*") {
+      return NotesDB.all(db)
+    }
+
     const cleanQuery = query.replace(/[^a-zA-Z0-9\s]/g, " ");
 
-    if (cleanQuery.length === 0) {
+    if (cleanQuery.trim().length === 0) {
       return [];
     }
 
@@ -150,4 +155,10 @@ export const NotesDB = {
 
     return rows.map((row) => row.id);
   },
+
+  async all(db: Database): Promise<NoteID[]> {
+    const rows = await db.all<SearchRow[]>("SELECT * FROM notes ORDER BY modifiedAt DESC")
+
+    return rows.map(row => row.id)
+  }
 };
