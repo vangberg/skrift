@@ -3,7 +3,7 @@ import { StreamCard, Streams } from ".";
 describe("Streams.move", () => {
   let a: StreamCard = { key: 1, type: "note", id: "a" };
   let b: StreamCard = { key: 2, type: "note", id: "b" };
-  let c: StreamCard = { key: 3, type: "search" };
+  let c: StreamCard = { key: 3, type: "search", initialQuery: "" };
 
   it("moves within a stream", () => {
     let streams: Streams = [{ key: 1, cards: [a, b, c] }];

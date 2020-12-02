@@ -11,7 +11,7 @@ interface Props {
 export const StreamContainer: React.FC<Props> = ({ index, stream }) => {
   const [, { openSearch }] = useContext(StreamsContext);
 
-  const handleOpenSearch = useCallback(() => openSearch(index), [
+  const handleOpenSearch = useCallback((query?: string) => openSearch(index, query), [
     openSearch,
     index,
   ]);

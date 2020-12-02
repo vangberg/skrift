@@ -15,6 +15,7 @@ export type StreamSearchCard = {
   // We need a key that can be used by React when rendering a stream.
   key: number;
   type: "search";
+  initialQuery: string;
 };
 
 export type StreamCard = StreamNoteCard | StreamSearchCard;
@@ -63,10 +64,11 @@ export const Streams = {
     });
   },
 
-  openSearch(streams: Streams, streamIdx: StreamIndex) {
+  openSearch(streams: Streams, streamIdx: StreamIndex, query?: string) {
     Streams.at(streams, streamIdx).cards.push({
       key: key++,
       type: "search",
+      initialQuery: query || ""
     });
   },
 

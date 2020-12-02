@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { NoteCardContainer } from "../containers/NoteCardContainer";
 import { SearchCardContainer } from "../containers/SearchCardContainer";
@@ -8,7 +8,7 @@ import { Stream as StreamType, StreamIndex } from "../interfaces/streams";
 type Props = {
   index: StreamIndex;
   stream: StreamType;
-  onOpenSearch: () => void;
+  onOpenSearch: (query?: string) => void;
 };
 
 export const Stream: React.FC<Props> = ({ index, stream, onOpenSearch }) => {
@@ -32,6 +32,9 @@ export const Stream: React.FC<Props> = ({ index, stream, onOpenSearch }) => {
     [index]
   );
 
+  const handleOpenSearch = useCallback(() => onOpenSearch(), [onOpenSearch])
+  const handleOpenAll = useCallback(() => onOpenSearch("*"), [onOpenSearch])
+
   return (
     <Droppable droppableId={droppableId}>
       {(provided, snapshot) => (
@@ -45,7 +48,13 @@ export const Stream: React.FC<Props> = ({ index, stream, onOpenSearch }) => {
 
           <div className="flex justify-center">
             <span
-              onClick={onOpenSearch}
+              onClick={handleOpenAll}
+              className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
+            >
+              All
+            </span>
+            <span
+              onClick={handleOpenSearch}
               className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
             >
               Search

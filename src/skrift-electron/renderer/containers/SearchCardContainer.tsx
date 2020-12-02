@@ -13,8 +13,9 @@ interface Props {
 }
 
 export const SearchCardContainer: React.FC<Props> = ({ location, card }) => {
+  const { initialQuery } = card
   const [streams, { closeNote, openNote }] = useContext(StreamsContext);
-  const [query, setQuery] = useCache(`card/${card.key}/query`, "");
+  const [query, setQuery] = useCache(`card/${card.key}/query`, initialQuery);
   const [results, setResults] = useCache<Note[]>(
     `card/${card.key}/results`,
     []
