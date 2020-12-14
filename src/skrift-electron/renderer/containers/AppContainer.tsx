@@ -6,7 +6,7 @@ import { useImmer } from "use-immer";
 import { CacheContext } from "../hooks/useCache";
 import { Ipc } from "../ipc";
 
-export const WorkspaceContainer: React.FC = () => {
+export const AppContainer: React.FC = () => {
   const cacheContext = useImmer(new Map());
 
   const [loading, setLoading] = useState(true);
