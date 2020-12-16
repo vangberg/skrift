@@ -15,5 +15,5 @@ export const MiniStream: React.FC<Props> = ({ stream }) => {
     [stream]
   );
 
-  return <div>{cards}</div>;
+  return <div className="flex-1">{cards}</div>;
 };
