@@ -5,9 +5,11 @@ import { Splash } from "../components/Splash";
 import { useImmer } from "use-immer";
 import { CacheContext } from "../hooks/useCache";
 import { Ipc } from "../ipc";
+import { StreamsContext, useStreams } from "../hooks/useStreams";
 
 export const AppContainer: React.FC = () => {
   const cacheContext = useImmer(new Map());
+  const [streams, actions] = useStreams();
 
   const [loading, setLoading] = useState(true);
   const [loaded, setLoaded] = useState(0);
@@ -31,8 +33,10 @@ export const AppContainer: React.FC = () => {
 
   return (
     <CacheContext.Provider value={cacheContext}>
-      <DevInfo />
-      {loading ? <Splash loaded={loaded} /> : <Workspace />}
+      <StreamsContext.Provider value={[streams, actions]}>
+        <DevInfo />
+        {loading ? <Splash loaded={loaded} /> : <Workspace />}
+      </StreamsContext.Provider>
     </CacheContext.Provider>
   );
 };

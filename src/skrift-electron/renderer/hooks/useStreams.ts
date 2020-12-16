@@ -5,6 +5,7 @@ import { NoteID } from "../../../skrift/note";
 import { StreamIndex, StreamLocation, Streams } from "../interfaces/streams";
 
 interface StreamActions {
+  openWorkspace: (streamIdx: StreamIndex) => void;
   openSearch: (streamIdx: StreamIndex, query?: string) => void;
   openNote: (streamIdx: StreamIndex, noteId: NoteID) => void;
   closeNote: (location: StreamLocation) => void;
@@ -14,10 +15,11 @@ interface StreamActions {
 export const StreamsContext = React.createContext<[Streams, StreamActions]>([
   [],
   {
-    openSearch: () => { },
-    openNote: () => { },
-    closeNote: () => { },
-    moveNote: () => { },
+    openWorkspace: () => {},
+    openSearch: () => {},
+    openNote: () => {},
+    closeNote: () => {},
+    moveNote: () => {},
   },
 ]);
 
@@ -26,6 +28,11 @@ export const useStreams = (): [Streams, StreamActions] => {
 
   const actions: StreamActions = useMemo(
     () => ({
+      openWorkspace: (idx) => {
+        setStreams((draft) => {
+          Streams.openWorkspace(draft, idx);
+        });
+      },
       openSearch: (idx, query) => {
         setStreams((draft) => {
           Streams.openSearch(draft, idx, query);

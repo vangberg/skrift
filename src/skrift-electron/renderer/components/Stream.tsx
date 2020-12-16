@@ -2,6 +2,7 @@ import React, { useCallback, useMemo } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { NoteCardContainer } from "../containers/NoteCardContainer";
 import { SearchCardContainer } from "../containers/SearchCardContainer";
+import { WorkspaceCardContainer } from "../containers/WorkspaceCardContainer";
 import { DroppableIds } from "../interfaces/droppableIds";
 import { Stream as StreamType, StreamIndex } from "../interfaces/streams";
 
@@ -9,9 +10,15 @@ type Props = {
   index: StreamIndex;
   stream: StreamType;
   onOpenSearch: (query?: string) => void;
+  onOpenWorkspace: () => void;
 };
 
-export const Stream: React.FC<Props> = ({ index, stream, onOpenSearch }) => {
+export const Stream: React.FC<Props> = ({
+  index,
+  stream,
+  onOpenSearch,
+  onOpenWorkspace,
+}) => {
   const cards = stream.cards.map((card, idx) => {
     switch (card.type) {
       case "note":
@@ -19,6 +26,14 @@ export const Stream: React.FC<Props> = ({ index, stream, onOpenSearch }) => {
       case "search":
         return (
           <SearchCardContainer
+            key={card.key}
+            card={card}
+            location={[index, idx]}
+          />
+        );
+      case "workspace":
+        return (
+          <WorkspaceCardContainer
             key={card.key}
             card={card}
             location={[index, idx]}
@@ -32,8 +47,11 @@ export const Stream: React.FC<Props> = ({ index, stream, onOpenSearch }) => {
     [index]
   );
 
-  const handleOpenSearch = useCallback(() => onOpenSearch(), [onOpenSearch])
-  const handleOpenAll = useCallback(() => onOpenSearch("*"), [onOpenSearch])
+  const handleOpenSearch = useCallback(() => onOpenSearch(), [onOpenSearch]);
+  const handleOpenAll = useCallback(() => onOpenSearch("*"), [onOpenSearch]);
+  const handleOpenWorkspace = useCallback(() => onOpenWorkspace(), [
+    onOpenWorkspace,
+  ]);
 
   return (
     <Droppable droppableId={droppableId}>
@@ -58,6 +76,12 @@ export const Stream: React.FC<Props> = ({ index, stream, onOpenSearch }) => {
               className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
             >
               Search
+            </span>
+            <span
+              onClick={handleOpenWorkspace}
+              className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
+            >
+              Workspace
             </span>
           </div>
         </div>

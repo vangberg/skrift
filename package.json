@@ -101,6 +101,7 @@
     "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
+    "clsx": "^1.1.1",
     "sqlite3": "^4.2.0",
     "use-immer": "^0.4.1"
   }

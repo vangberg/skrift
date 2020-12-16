@@ -4,6 +4,13 @@ let key = 0;
 
 export type StreamID = number;
 
+export type StreamWorkspaceCard = {
+  // We need a key that can be used by React when rendering a stream.
+  key: number;
+  type: "workspace";
+  id: NoteID;
+};
+
 export type StreamNoteCard = {
   // We need a key that can be used by React when rendering a stream.
   key: number;
@@ -18,7 +25,10 @@ export type StreamSearchCard = {
   initialQuery: string;
 };
 
-export type StreamCard = StreamNoteCard | StreamSearchCard;
+export type StreamCard =
+  | StreamWorkspaceCard
+  | StreamNoteCard
+  | StreamSearchCard;
 
 export type Stream = {
   // We need a key that can be used by React when rendering a stream.
@@ -30,6 +40,12 @@ export type Streams = Stream[];
 export type StreamIndex = number;
 export type StreamCardIndex = number;
 export type StreamLocation = [StreamIndex, StreamCardIndex];
+
+export const StreamCard = {
+  isNote(card: StreamCard): card is StreamNoteCard {
+    return card.type === "note";
+  },
+};
 
 export const Streams = {
   at(streams: Streams, idx: StreamIndex): Stream {
@@ -68,7 +84,15 @@ export const Streams = {
     Streams.at(streams, streamIdx).cards.push({
       key: key++,
       type: "search",
-      initialQuery: query || ""
+      initialQuery: query || "",
+    });
+  },
+
+  openWorkspace(streams: Streams, streamIdx: StreamIndex) {
+    Streams.at(streams, streamIdx).cards.push({
+      key: key++,
+      type: "workspace",
+      id: "",
     });
   },
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import { Streams } from "../components/Streams";
 import {
   DragDropContext,
@@ -23,7 +23,7 @@ const draggableLocationToStreamLoaction = (
 };
 
 export const StreamsContainer: React.FC = () => {
-  const [streams, actions] = useStreams();
+  const [streams, actions] = useContext(StreamsContext);
   const { moveNote, openSearch } = actions;
 
   useEffect(() => openSearch(0), []);
@@ -41,9 +41,7 @@ export const StreamsContainer: React.FC = () => {
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
-      <StreamsContext.Provider value={[streams, actions]}>
-        <Streams streams={streams} />
-      </StreamsContext.Provider>
+      <Streams streams={streams} />
     </DragDropContext>
   );
 };

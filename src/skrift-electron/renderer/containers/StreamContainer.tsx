@@ -9,14 +9,24 @@ interface Props {
 }
 
 export const StreamContainer: React.FC<Props> = ({ index, stream }) => {
-  const [, { openSearch }] = useContext(StreamsContext);
+  const [, { openSearch, openWorkspace }] = useContext(StreamsContext);
 
-  const handleOpenSearch = useCallback((query?: string) => openSearch(index, query), [
-    openSearch,
+  const handleOpenSearch = useCallback(
+    (query?: string) => openSearch(index, query),
+    [openSearch, index]
+  );
+
+  const handleOpenWorkspace = useCallback(() => openWorkspace(index), [
+    openWorkspace,
     index,
   ]);
 
   return (
-    <Stream index={index} stream={stream} onOpenSearch={handleOpenSearch} />
+    <Stream
+      index={index}
+      stream={stream}
+      onOpenSearch={handleOpenSearch}
+      onOpenWorkspace={handleOpenWorkspace}
+    />
   );
 };
