@@ -8,7 +8,7 @@ export type StreamWorkspaceCard = {
   // We need a key that can be used by React when rendering a stream.
   key: number;
   type: "workspace";
-  id: NoteID;
+  streams: Streams;
 };
 
 export type StreamNoteCard = {
@@ -92,7 +92,7 @@ export const Streams = {
     Streams.at(streams, streamIdx).cards.push({
       key: key++,
       type: "workspace",
-      id: "",
+      streams: [],
     });
   },
 
