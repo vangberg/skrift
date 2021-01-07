@@ -102,6 +102,7 @@
   },
   "dependencies": {
     "clsx": "^1.1.1",
+    "react-use-elmish": "^1.0.0",
     "sqlite3": "^4.2.0",
     "use-immer": "^0.4.1"
   }
