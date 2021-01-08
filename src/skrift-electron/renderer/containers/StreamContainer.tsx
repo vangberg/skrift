@@ -1,29 +1,29 @@
 import React, { useCallback, useContext } from "react";
-import { Stream as StreamType, StreamIndex } from "../interfaces/streams";
 import { Stream } from "../components/Stream";
-import { StreamsContext } from "../hooks/useStreams";
+import { Stream as StreamType, StateContext } from "../interfaces/state";
+import { Path } from "../interfaces/path";
 
 interface Props {
-  index: StreamIndex;
+  path: Path;
   stream: StreamType;
 }
 
-export const StreamContainer: React.FC<Props> = ({ index, stream }) => {
-  const [, { openSearch, openWorkspace }] = useContext(StreamsContext);
+export const StreamContainer: React.FC<Props> = ({ path, stream }) => {
+  const [, { openCard }] = useContext(StateContext);
 
   const handleOpenSearch = useCallback(
-    (query?: string) => openSearch(index, query),
-    [openSearch, index]
+    (query?: string) => openCard(path, { type: "search", query: query || "" }),
+    [openCard, path]
   );
 
-  const handleOpenWorkspace = useCallback(() => openWorkspace(index), [
-    openWorkspace,
-    index,
-  ]);
+  const handleOpenWorkspace = useCallback(
+    () => openCard(path, { type: "workspace", streams: [] }),
+    [openCard, path]
+  );
 
   return (
     <Stream
-      index={index}
+      path={path}
       stream={stream}
       onOpenSearch={handleOpenSearch}
       onOpenWorkspace={handleOpenWorkspace}

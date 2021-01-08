@@ -1,17 +1,15 @@
 import React, { useCallback, useState } from "react";
-import { StreamLocation, StreamWorkspaceCard } from "../interfaces/streams";
 import { WorkspaceCard } from "../components/WorkspaceCard";
 import { Workspace } from "../components/Workspace";
-import { StreamsContext, useStreams } from "../hooks/useStreams";
+import { Path } from "../interfaces/path";
+import { WorkspaceCard as WorkspaceCardType } from "../interfaces/state";
 
 interface Props {
-  location: StreamLocation;
-  card: StreamWorkspaceCard;
+  path: Path;
+  card: WorkspaceCardType;
 }
 
-export const WorkspaceCardContainer: React.FC<Props> = ({ location, card }) => {
-  const [streams, actions] = useStreams();
-
+export const WorkspaceCardContainer: React.FC<Props> = ({ path, card }) => {
   const [zoom, setZoom] = useState(false);
 
   const handleZoomIn = useCallback(() => {
@@ -23,13 +21,14 @@ export const WorkspaceCardContainer: React.FC<Props> = ({ location, card }) => {
   }, []);
 
   return (
-    <StreamsContext.Provider value={[streams, actions]}>
-      <Workspace hidden={!zoom} onZoomOut={handleZoomOut} />
-      <WorkspaceCard
-        streams={streams}
-        location={location}
-        onZoom={handleZoomIn}
+    <>
+      <Workspace
+        path={path}
+        card={card}
+        hidden={!zoom}
+        onZoomOut={handleZoomOut}
       />
-    </StreamsContext.Provider>
+      <WorkspaceCard card={card} path={path} onZoom={handleZoomIn} />
+    </>
   );
 };

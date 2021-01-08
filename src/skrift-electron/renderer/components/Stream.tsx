@@ -4,17 +4,18 @@ import { NoteCardContainer } from "../containers/NoteCardContainer";
 import { SearchCardContainer } from "../containers/SearchCardContainer";
 import { WorkspaceCardContainer } from "../containers/WorkspaceCardContainer";
 import { DroppableIds } from "../interfaces/droppableIds";
-import { Stream as StreamType, StreamIndex } from "../interfaces/streams";
+import { Path } from "../interfaces/path";
+import { Stream as StreamType } from "../interfaces/state";
 
 type Props = {
-  index: StreamIndex;
+  path: Path;
   stream: StreamType;
   onOpenSearch: (query?: string) => void;
   onOpenWorkspace: () => void;
 };
 
 export const Stream: React.FC<Props> = ({
-  index,
+  path,
   stream,
   onOpenSearch,
   onOpenWorkspace,
@@ -22,13 +23,13 @@ export const Stream: React.FC<Props> = ({
   const cards = stream.cards.map((card, idx) => {
     switch (card.type) {
       case "note":
-        return <NoteCardContainer {...card} location={[index, idx]} />;
+        return <NoteCardContainer card={card} path={[...path, idx]} />;
       case "search":
         return (
           <SearchCardContainer
             key={card.key}
             card={card}
-            location={[index, idx]}
+            path={[...path, idx]}
           />
         );
       case "workspace":
@@ -36,15 +37,15 @@ export const Stream: React.FC<Props> = ({
           <WorkspaceCardContainer
             key={card.key}
             card={card}
-            location={[index, idx]}
+            path={[...path, idx]}
           />
         );
     }
   });
 
   const droppableId = useMemo(
-    () => DroppableIds.serialize({ type: "stream", index }),
-    [index]
+    () => DroppableIds.serialize({ type: "stream", path }),
+    [path]
   );
 
   const handleOpenSearch = useCallback(() => onOpenSearch(), [onOpenSearch]);

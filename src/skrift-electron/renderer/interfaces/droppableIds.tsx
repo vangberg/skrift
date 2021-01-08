@@ -1,6 +1,6 @@
-import { StreamIndex } from "./streams";
+import { Path } from "./path";
 
-type Id = { type: "stream"; index: StreamIndex };
+type Id = { type: "stream"; path: Path };
 
 export const DroppableIds = {
   serialize(id: Id): string {

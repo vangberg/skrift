@@ -1,15 +1,15 @@
 import React from "react";
 import { SearchCardInput } from "./SearchCardInput";
 import { Note } from "../../../skrift/note";
-import { StreamLocation } from "../interfaces/streams";
 import { CardToolbar } from "./CardToolbar";
 import { Card } from "./Card";
 import { CardBody } from "./CardBody";
 import { CardToolbarItem } from "./CardToolbarItem";
 import { SearchCardResults } from "./SearchCardResults";
+import { Path } from "../interfaces/path";
 
 type Props = {
-  location: StreamLocation;
+  path: Path;
   query: string;
   results: Note[];
   onOpen: (id: string, push: boolean) => void;
@@ -19,7 +19,7 @@ type Props = {
 };
 
 export const SearchCard: React.FC<Props> = ({
-  location,
+  path,
   query,
   results,
   onOpen,
@@ -28,7 +28,7 @@ export const SearchCard: React.FC<Props> = ({
   onSearch,
 }) => {
   return (
-    <Card location={location}>
+    <Card path={path}>
       {(provided) => (
         <>
           <CardToolbar backgroundColor="bg-orange-300">

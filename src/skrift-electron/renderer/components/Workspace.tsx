@@ -1,13 +1,22 @@
 import clsx from "clsx";
 import React, { useCallback } from "react";
-import { StreamsContainer } from "../containers/StreamsContainer";
+import { StreamContainer } from "../containers/StreamContainer";
+import { Path } from "../interfaces/path";
+import { WorkspaceCard } from "../interfaces/state";
 
 type Props = {
+  path: Path;
   hidden?: boolean;
   onZoomOut?: () => void;
+  card: WorkspaceCard;
 };
 
-export const Workspace: React.FC<Props> = ({ hidden, onZoomOut }) => {
+export const Workspace: React.FC<Props> = ({
+  path,
+  card,
+  hidden,
+  onZoomOut,
+}) => {
   const handleZoomOut = useCallback(() => {
     if (onZoomOut) onZoomOut();
   }, [onZoomOut]);
@@ -31,7 +40,13 @@ export const Workspace: React.FC<Props> = ({ hidden, onZoomOut }) => {
       )}
 
       <div className="flex-1 flex flex-row justify-center px-1">
-        <StreamsContainer />
+        {card.streams.map((stream, index) => (
+          <StreamContainer
+            key={stream.key}
+            path={[...path, index]}
+            stream={stream}
+          />
+        ))}
       </div>
     </div>
   );

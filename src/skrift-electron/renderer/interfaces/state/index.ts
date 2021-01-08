@@ -1,3 +1,7 @@
+import produce from "immer";
+import React from "react";
+import { SetStateAction } from "react";
+import { Updater } from "use-immer";
 import { NoteID } from "../../../../skrift/note";
 import { Path } from "../path";
 
@@ -23,12 +27,20 @@ export const Card = {
   isCard(card: any): card is Card {
     return (
       card.type &&
-      (Card.isWorkspace(card) || card.type === "note" || card.type === "search")
+      (Card.isWorkspace(card) || Card.isNote(card) || Card.isSearch(card))
     );
+  },
+
+  isNote(card: Card): card is NoteCard {
+    return card.type === "note";
   },
 
   isWorkspace(card: Card): card is WorkspaceCard {
     return card.type === "workspace";
+  },
+
+  isSearch(card: Card): card is SearchCard {
+    return card.type === "search";
   },
 };
 
@@ -54,9 +66,30 @@ type CloseOptions =
   | { path: Path; match?: never }
   | { match: Partial<Card>; path?: never };
 
+type OpenCard =
+  | Omit<WorkspaceCard, "key">
+  | Omit<NoteCard, "key">
+  | Omit<SearchCard, "key">;
+
 let key = 0;
 
 export const State = {
+  initial(): State {
+    return {
+      workspace: {
+        key: key++,
+        type: "workspace",
+        streams: [
+          {
+            key: key++,
+            type: "stream",
+            cards: [],
+          },
+        ],
+      },
+    };
+  },
+
   at(state: State, path: Path): Card | Stream {
     let entry: Card | Stream = state.workspace;
 
@@ -71,14 +104,7 @@ export const State = {
     return entry;
   },
 
-  openCard(
-    state: State,
-    path: Path,
-    card:
-      | Omit<WorkspaceCard, "key">
-      | Omit<NoteCard, "key">
-      | Omit<SearchCard, "key">
-  ) {
+  openCard(state: State, path: Path, card: OpenCard) {
     const stream = State.at(state, path);
 
     if (!Stream.isStream(stream)) {
@@ -150,3 +176,34 @@ export const State = {
     }
   },
 };
+
+interface StateActions {
+  openCard: (path: Path, card: OpenCard) => void;
+  move: (from: Path, to: Path) => void;
+  close: (options: CloseOptions) => void;
+}
+
+export const createStateActions = (setState: Updater<State>): StateActions => {
+  return {
+    openCard(path: Path, card: OpenCard) {
+      setState((draft) => {
+        State.openCard(draft, path, card);
+      });
+    },
+    move(from: Path, to: Path) {
+      setState((draft) => {
+        State.move(draft, from, to);
+      });
+    },
+    close(options: CloseOptions) {
+      setState((draft) => {
+        State.close(draft, options);
+      });
+    },
+  };
+};
+
+export const StateContext = React.createContext<[State, StateActions]>([
+  State.initial(),
+  createStateActions(() => {}),
+]);

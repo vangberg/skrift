@@ -4,14 +4,14 @@ import { remote, clipboard } from "electron";
 import { NoteCardBacklinks } from "./NoteCardBacklinks";
 import { Note } from "../../../skrift/note";
 import { NoteEditorContainer } from "../containers/NoteEditorContainer";
-import { StreamLocation } from "../interfaces/streams";
 import { Card } from "./Card";
 import { CardToolbar } from "./CardToolbar";
 import { CardBody } from "./CardBody";
 import { CardToolbarItem } from "./CardToolbarItem";
+import { Path } from "../interfaces/path";
 
 type Props = {
-  location: StreamLocation;
+  path: Path;
   note: Note;
   onOpen: (id: string, push: boolean) => void;
   onDelete: () => void;
@@ -19,7 +19,7 @@ type Props = {
 };
 
 export const NoteCard: React.FC<Props> = ({
-  location,
+  path,
   note,
   onOpen,
   onDelete,
@@ -41,7 +41,7 @@ export const NoteCard: React.FC<Props> = ({
   }, [note]);
 
   return (
-    <Card location={location}>
+    <Card path={path}>
       {(provided) => (
         <>
           <CardToolbar backgroundColor="bg-green-300">

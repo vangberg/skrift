@@ -1,21 +1,23 @@
 import React, { useContext, useCallback, useEffect } from "react";
-import { StreamLocation, StreamSearchCard } from "../interfaces/streams";
 import { SearchCard } from "../components/SearchCard";
 import { Note, NoteID } from "../../../skrift/note";
 import { useCache } from "../hooks/useCache";
-import { StreamsContext } from "../hooks/useStreams";
 import { Ipc } from "../ipc";
 import { Serializer } from "../../../skrift/serializer";
+import { Path } from "../interfaces/path";
+import {
+  SearchCard as SearchCardType,
+  StateContext,
+} from "../interfaces/state";
 
 interface Props {
-  location: StreamLocation;
-  card: StreamSearchCard;
+  path: Path;
+  card: SearchCardType;
 }
 
-export const SearchCardContainer: React.FC<Props> = ({ location, card }) => {
-  const { initialQuery } = card
-  const [streams, { closeNote, openNote }] = useContext(StreamsContext);
-  const [query, setQuery] = useCache(`card/${card.key}/query`, initialQuery);
+export const SearchCardContainer: React.FC<Props> = ({ path, card }) => {
+  const { query } = card;
+  const [, { openCard, close }] = useContext(StateContext);
   const [results, setResults] = useCache<Note[]>(
     `card/${card.key}/results`,
     []
@@ -29,21 +31,18 @@ export const SearchCardContainer: React.FC<Props> = ({ location, card }) => {
     Ipc.search(query).then((results) => setResults(results));
   }, [query, setResults]);
 
-  const handleSearch = useCallback((query: string) => setQuery(query), [
-    setQuery,
-  ]);
+  // FIX
+  const handleSearch = useCallback((query: string) => {}, []);
 
-  const handleClose = useCallback(() => closeNote(location), [
-    closeNote,
-    location,
-  ]);
+  const handleClose = useCallback(() => close({ path }), [close, path]);
 
   const handleOpen = useCallback(
     (id: NoteID, push: boolean) => {
-      const stream = push ? location[0] + 1 : location[0];
-      openNote(stream, id);
+      // FIX
+      // const stream = push ? location[0] + 1 : location[0];
+      openCard(Path.ancestor(path), { type: "note", id });
     },
-    [location, openNote]
+    [openCard, path]
   );
 
   const handleAdd = useCallback(
@@ -51,14 +50,14 @@ export const SearchCardContainer: React.FC<Props> = ({ location, card }) => {
       const id = Note.idFromDate(new Date());
       const slate = Serializer.deserialize(`# ${title}`);
       Ipc.send({ type: "command/ADD_NOTE", id, slate });
-      openNote(streams.length - 1, id);
+      openCard(Path.ancestor(path), { type: "note", id });
     },
-    [openNote, streams]
+    [openCard, path]
   );
 
   return (
     <SearchCard
-      location={location}
+      path={path}
       onAdd={handleAdd}
       onOpen={handleOpen}
       onClose={handleClose}

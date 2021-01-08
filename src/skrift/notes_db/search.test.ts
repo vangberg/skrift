@@ -21,7 +21,7 @@ describe("NotesDB.search()", () => {
   it("returns all results", async () => {
     const notes = await NotesDB.search(db, "*");
 
-    expect(notes).toEqual(["a", "b"]);
+    expect(notes.sort()).toEqual(["a", "b"].sort());
   });
 
   it("ignores special characters", async () => {

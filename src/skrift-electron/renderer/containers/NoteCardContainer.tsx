@@ -1,39 +1,36 @@
 import React, { useContext, useCallback } from "react";
-import { StreamLocation } from "../interfaces/streams";
 import { NoteCard } from "../components/NoteCard";
-import { NoteID } from "../../../skrift/note";
 import { useNote } from "../hooks/useNote";
-import { StreamsContext } from "../hooks/useStreams";
 import { Ipc } from "../ipc";
+import { Path } from "../interfaces/path";
+import { NoteCard as NoteCardType, StateContext } from "../interfaces/state";
 
 interface Props {
-  id: NoteID;
-  location: StreamLocation;
+  card: NoteCardType;
+  path: Path;
 }
 
-export const NoteCardContainer: React.FC<Props> = ({ id, location }) => {
-  const [, { openNote, closeNote }] = useContext(StreamsContext);
-  const [streamIdx] = location;
+export const NoteCardContainer: React.FC<Props> = ({ card, path }) => {
+  const [, { openCard, close }] = useContext(StateContext);
+  const { id } = card;
   const note = useNote(id);
 
   const handleDelete = useCallback(() => {
-    closeNote(location);
+    close({ match: { type: "note", id } });
 
     Ipc.send({ type: "command/DELETE_NOTE", id });
-  }, [closeNote, location, id]);
+  }, [close, id]);
 
   const handleOpen = useCallback(
     (id, push) => {
-      const idx = push ? streamIdx + 1 : streamIdx;
-      openNote(idx, id);
+      // FIX
+      // const idx = push ? streamIdx + 1 : streamIdx;
+      openCard(Path.ancestor(path), { type: "note", id });
     },
-    [openNote, streamIdx]
+    [openCard, path]
   );
 
-  const handleClose = useCallback(() => closeNote(location), [
-    closeNote,
-    location,
-  ]);
+  const handleClose = useCallback(() => close({ path }), [close, path]);
 
   if (!note) {
     return null;
@@ -41,7 +38,7 @@ export const NoteCardContainer: React.FC<Props> = ({ id, location }) => {
 
   return (
     <NoteCard
-      location={location}
+      path={path}
       note={note}
       onOpen={handleOpen}
       onDelete={handleDelete}
