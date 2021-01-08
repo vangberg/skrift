@@ -1,8 +1,11 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext } from "react";
 import { WorkspaceCard } from "../components/WorkspaceCard";
 import { Workspace } from "../components/Workspace";
 import { Path } from "../interfaces/path";
-import { WorkspaceCard as WorkspaceCardType } from "../interfaces/state";
+import {
+  StateContext,
+  WorkspaceCard as WorkspaceCardType,
+} from "../interfaces/state";
 
 interface Props {
   path: Path;
@@ -10,25 +13,22 @@ interface Props {
 }
 
 export const WorkspaceCardContainer: React.FC<Props> = ({ path, card }) => {
-  const [zoom, setZoom] = useState(false);
+  const [, { updateCard }] = useContext(StateContext);
 
   const handleZoomIn = useCallback(() => {
-    setZoom(true);
-  }, []);
+    updateCard(path, { zoom: true });
+  }, [updateCard, path]);
 
   const handleZoomOut = useCallback(() => {
-    setZoom(false);
-  }, []);
+    updateCard(path, { zoom: false });
+  }, [updateCard, path]);
 
   return (
     <>
-      <Workspace
-        path={path}
-        card={card}
-        hidden={!zoom}
-        onZoomOut={handleZoomOut}
-      />
-      <WorkspaceCard card={card} path={path} onZoom={handleZoomIn} />
+      <Workspace path={path} card={card} onZoomOut={handleZoomOut} />
+      {Path.isRoot(path) || (
+        <WorkspaceCard card={card} path={path} onZoom={handleZoomIn} />
+      )}
     </>
   );
 };

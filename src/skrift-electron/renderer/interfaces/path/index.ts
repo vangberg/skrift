@@ -1,6 +1,10 @@
 export type Path = number[];
 
 export const Path = {
+  isRoot(path: Path): boolean {
+    return path.length === 0;
+  },
+
   last(path: Path): number {
     return path[path.length - 1];
   },

@@ -1,34 +1,28 @@
 import clsx from "clsx";
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { StreamContainer } from "../containers/StreamContainer";
 import { Path } from "../interfaces/path";
 import { WorkspaceCard } from "../interfaces/state";
 
 type Props = {
   path: Path;
-  hidden?: boolean;
-  onZoomOut?: () => void;
   card: WorkspaceCard;
+  onZoomOut: () => void;
 };
 
-export const Workspace: React.FC<Props> = ({
-  path,
-  card,
-  hidden,
-  onZoomOut,
-}) => {
-  const handleZoomOut = useCallback(() => {
-    if (onZoomOut) onZoomOut();
-  }, [onZoomOut]);
+export const Workspace: React.FC<Props> = ({ path, card, onZoomOut }) => {
+  const { zoom } = card;
+
+  const handleZoomOut = useCallback(() => onZoomOut(), [onZoomOut]);
 
   return (
     <div
       className={clsx(
         "fixed top-0 bottom-0 left-0 right-0 h-screen flex-1 flex flex-col bg-gray-200 text-sm",
-        { hidden }
+        { hidden: !zoom }
       )}
     >
-      {onZoomOut && (
+      {Path.isRoot(path) || (
         <div className="flex-none flex justify-center pt-2">
           <span
             onClick={handleZoomOut}

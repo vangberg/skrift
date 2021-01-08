@@ -1,17 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Workspace } from "../components/Workspace";
 import { DevInfo } from "../components/DevInfo";
 import { Splash } from "../components/Splash";
 import { useImmer } from "use-immer";
 import { CacheContext } from "../hooks/useCache";
 import { Ipc } from "../ipc";
 import { createStateActions, State, StateContext } from "../interfaces/state";
-import {
-  DragDropContext,
-  DraggableLocation,
-  OnDragEndResponder,
-} from "react-beautiful-dnd";
+import { DragDropContext, OnDragEndResponder } from "react-beautiful-dnd";
 import { DroppableIds } from "../interfaces/droppableIds";
+import { WorkspaceCardContainer } from "./WorkspaceCardContainer";
 
 export const AppContainer: React.FC = () => {
   const cacheContext = useImmer(new Map());
@@ -67,7 +63,7 @@ export const AppContainer: React.FC = () => {
           <Splash loaded={loaded} />
         ) : (
           <DragDropContext onDragEnd={handleDragEnd}>
-            <Workspace path={[]} card={state.workspace} />
+            <WorkspaceCardContainer path={[]} card={state.workspace} />
           </DragDropContext>
         )}
       </StateContext.Provider>

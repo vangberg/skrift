@@ -9,6 +9,7 @@ export const getState = (): State => ({
   workspace: {
     key: 0,
     type: "workspace",
+    zoom: true,
     streams: [
       {
         // [0]
@@ -36,6 +37,7 @@ export const getState = (): State => ({
             // [2, 0]
             key: 4,
             type: "workspace",
+            zoom: false,
             streams: [
               {
                 // [2, 0, 0]

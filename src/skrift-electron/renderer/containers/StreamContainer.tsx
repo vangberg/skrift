@@ -17,7 +17,7 @@ export const StreamContainer: React.FC<Props> = ({ path, stream }) => {
   );
 
   const handleOpenWorkspace = useCallback(
-    () => openCard(path, { type: "workspace", streams: [] }),
+    () => openCard(path, { type: "workspace", zoom: false, streams: [] }),
     [openCard, path]
   );
 
