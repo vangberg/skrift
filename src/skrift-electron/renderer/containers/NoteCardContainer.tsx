@@ -23,9 +23,11 @@ export const NoteCardContainer: React.FC<Props> = ({ card, path }) => {
 
   const handleOpen = useCallback(
     (id, push) => {
-      // FIX
-      // const idx = push ? streamIdx + 1 : streamIdx;
-      openCard(Path.ancestor(path), { type: "note", id });
+      const currentStreamPath = Path.ancestor(path);
+      const streamPath = push
+        ? Path.next(currentStreamPath)
+        : currentStreamPath;
+      openCard(streamPath, { type: "note", id });
     },
     [openCard, path]
   );

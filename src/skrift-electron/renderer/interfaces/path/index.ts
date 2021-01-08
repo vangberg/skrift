@@ -5,6 +5,12 @@ export const Path = {
     return path.length === 0;
   },
 
+  next(path: Path): Path {
+    const head = path.slice(0, -1);
+    const tail = Path.last(path);
+    return [...head, tail + 1];
+  },
+
   last(path: Path): number {
     return path[path.length - 1];
   },

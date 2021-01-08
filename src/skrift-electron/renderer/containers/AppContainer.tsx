@@ -58,7 +58,6 @@ export const AppContainer: React.FC = () => {
   return (
     <CacheContext.Provider value={cacheContext}>
       <StateContext.Provider value={[state, actions]}>
-        <DevInfo />
         {loading ? (
           <Splash loaded={loaded} />
         ) : (
@@ -66,6 +65,7 @@ export const AppContainer: React.FC = () => {
             <WorkspaceCardContainer path={[]} card={state.workspace} />
           </DragDropContext>
         )}
+        <DevInfo />
       </StateContext.Provider>
     </CacheContext.Provider>
   );

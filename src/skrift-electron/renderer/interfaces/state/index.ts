@@ -106,7 +106,32 @@ export const State = {
     return entry;
   },
 
+  openStream(state: State, path: Path) {
+    const workspace = State.at(state, path);
+
+    if (!Card.isCard(workspace) || !Card.isWorkspace(workspace)) {
+      return;
+    }
+
+    workspace.streams.push({
+      key: key++,
+      type: "stream",
+      cards: [],
+    });
+  },
+
   openCard(state: State, path: Path, card: OpenCard) {
+    const workspace = State.at(state, Path.ancestor(path));
+
+    if (!Card.isCard(workspace) || !Card.isWorkspace(workspace)) {
+      return;
+    }
+
+    if (!State.at(state, path)) {
+      // Stream doesn't exist, but workspace does. Create stream.
+      State.openStream(state, Path.ancestor(path));
+    }
+
     const stream = State.at(state, path);
 
     if (!Stream.isStream(stream)) {

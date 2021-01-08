@@ -42,9 +42,11 @@ export const SearchCardContainer: React.FC<Props> = ({ path, card }) => {
 
   const handleOpen = useCallback(
     (id: NoteID, push: boolean) => {
-      // FIX
-      // const stream = push ? location[0] + 1 : location[0];
-      openCard(Path.ancestor(path), { type: "note", id });
+      const currentStreamPath = Path.ancestor(path);
+      const streamPath = push
+        ? Path.next(currentStreamPath)
+        : currentStreamPath;
+      openCard(streamPath, { type: "note", id });
     },
     [openCard, path]
   );
