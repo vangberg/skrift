@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const NoteCardContainer: React.FC<Props> = ({ card, path }) => {
-  const [, { openCard, close }] = useContext(StateContext);
+  const [, { openCard, zoomCard, close }] = useContext(StateContext);
   const { id } = card;
   const note = useNote(id);
 
@@ -30,6 +30,11 @@ export const NoteCardContainer: React.FC<Props> = ({ card, path }) => {
     [openCard, path]
   );
 
+  const handleZoom = useCallback(() => {
+    console.log("zoom ", path);
+    zoomCard(path);
+  }, [zoomCard, path]);
+
   const handleClose = useCallback(() => close({ path }), [close, path]);
 
   if (!note) {
@@ -41,6 +46,7 @@ export const NoteCardContainer: React.FC<Props> = ({ card, path }) => {
       path={path}
       note={note}
       onOpen={handleOpen}
+      onZoom={handleZoom}
       onDelete={handleDelete}
       onClose={handleClose}
     />

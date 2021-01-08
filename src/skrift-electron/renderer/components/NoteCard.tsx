@@ -14,6 +14,7 @@ type Props = {
   path: Path;
   note: Note;
   onOpen: (id: string, push: boolean) => void;
+  onZoom: () => void;
   onDelete: () => void;
   onClose: () => void;
 };
@@ -22,6 +23,7 @@ export const NoteCard: React.FC<Props> = ({
   path,
   note,
   onOpen,
+  onZoom,
   onDelete,
   onClose,
 }) => {
@@ -47,6 +49,7 @@ export const NoteCard: React.FC<Props> = ({
           <CardToolbar backgroundColor="bg-green-300">
             <CardToolbarItem onClick={handleDelete}>Delete</CardToolbarItem>
             <CardToolbarItem onClick={handleCopy}>Copy link</CardToolbarItem>
+            <CardToolbarItem onClick={onZoom}>Zoom</CardToolbarItem>
             <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>
             <CardToolbarItem {...provided.dragHandleProps}>
               Move

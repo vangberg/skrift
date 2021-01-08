@@ -10,16 +10,23 @@ import { Path } from "../interfaces/path";
 type Props = {
   card: WorkspaceCardType;
   path: Path;
+  onClose: () => void;
   onZoom: () => void;
 };
 
-export const WorkspaceCard: React.FC<Props> = ({ card, path, onZoom }) => {
+export const WorkspaceCard: React.FC<Props> = ({
+  card,
+  path,
+  onClose,
+  onZoom,
+}) => {
   return (
     <Card path={path}>
       {(provided) => (
         <>
-          <CardToolbar backgroundColor="bg-orange-300">
+          <CardToolbar backgroundColor="bg-blue-300">
             <CardToolbarItem onClick={onZoom}>Zoom</CardToolbarItem>
+            <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>
             <CardToolbarItem {...provided.dragHandleProps}>
               Move
             </CardToolbarItem>

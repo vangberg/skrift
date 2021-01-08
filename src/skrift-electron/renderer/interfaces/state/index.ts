@@ -137,6 +137,33 @@ export const State = {
     stream.cards[idx] = { ...card, ...props };
   },
 
+  zoomCard(state: State, path: Path) {
+    const stream = State.at(state, Path.ancestor(path));
+
+    if (!Stream.isStream(stream)) {
+      return;
+    }
+
+    const card = State.at(state, path);
+
+    if (!Card.isCard(card)) {
+      return;
+    }
+
+    stream.cards[Path.last(path)] = {
+      key: key++,
+      type: "workspace",
+      zoom: true,
+      streams: [
+        {
+          key: key++,
+          type: "stream",
+          cards: [card],
+        },
+      ],
+    };
+  },
+
   move(state: State, from: Path, to: Path) {
     const fromElem = State.at(state, from);
 
@@ -200,6 +227,7 @@ export const State = {
 interface StateActions {
   openCard: (path: Path, card: OpenCard) => void;
   updateCard: <T extends Card>(path: Path, card: Partial<T>) => void;
+  zoomCard: (path: Path) => void;
   move: (from: Path, to: Path) => void;
   close: (options: CloseOptions) => void;
 }
@@ -214,6 +242,11 @@ export const createStateActions = (setState: Updater<State>): StateActions => {
     updateCard<T extends Card>(path: Path, props: Partial<T>) {
       setState((draft) => {
         State.updateCard(draft, path, props);
+      });
+    },
+    zoomCard(path: Path) {
+      setState((draft) => {
+        State.zoomCard(draft, path);
       });
     },
     move(from: Path, to: Path) {
