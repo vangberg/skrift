@@ -17,7 +17,7 @@ interface Props {
 
 export const SearchCardContainer: React.FC<Props> = ({ path, card }) => {
   const { query } = card;
-  const [, { openCard, close }] = useContext(StateContext);
+  const [, { openCard, updateCard, close }] = useContext(StateContext);
   const [results, setResults] = useCache<Note[]>(
     `card/${card.key}/results`,
     []
@@ -31,8 +31,12 @@ export const SearchCardContainer: React.FC<Props> = ({ path, card }) => {
     Ipc.search(query).then((results) => setResults(results));
   }, [query, setResults]);
 
-  // FIX
-  const handleSearch = useCallback((query: string) => {}, []);
+  const handleSearch = useCallback(
+    (query: string) => {
+      updateCard(path, { query });
+    },
+    [updateCard, path]
+  );
 
   const handleClose = useCallback(() => close({ path }), [close, path]);
 
