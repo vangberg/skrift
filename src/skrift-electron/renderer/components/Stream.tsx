@@ -23,7 +23,9 @@ export const Stream: React.FC<Props> = ({
   const cards = stream.cards.map((card, idx) => {
     switch (card.type) {
       case "note":
-        return <NoteCardContainer card={card} path={[...path, idx]} />;
+        return (
+          <NoteCardContainer key={card.key} card={card} path={[...path, idx]} />
+        );
       case "search":
         return (
           <SearchCardContainer
@@ -43,10 +45,7 @@ export const Stream: React.FC<Props> = ({
     }
   });
 
-  const droppableId = useMemo(
-    () => DroppableIds.serialize({ type: "stream", path }),
-    [path]
-  );
+  const droppableId = useMemo(() => DroppableIds.serialize(path), [path]);
 
   const handleOpenSearch = useCallback(() => onOpenSearch(), [onOpenSearch]);
   const handleOpenAll = useCallback(() => onOpenSearch("*"), [onOpenSearch]);

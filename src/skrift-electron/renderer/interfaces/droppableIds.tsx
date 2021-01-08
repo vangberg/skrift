@@ -1,13 +1,11 @@
 import { Path } from "./path";
 
-type Id = { type: "stream"; path: Path };
-
 export const DroppableIds = {
-  serialize(id: Id): string {
-    return JSON.stringify(id);
+  serialize(path: Path): string {
+    return JSON.stringify(path);
   },
 
-  deserialize(str: string): Id {
+  deserialize(str: string): Path {
     return JSON.parse(str);
   },
 };

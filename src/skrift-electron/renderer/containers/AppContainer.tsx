@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Workspace } from "../components/Workspace";
 import { DevInfo } from "../components/DevInfo";
 import { Splash } from "../components/Splash";
@@ -6,7 +6,12 @@ import { useImmer } from "use-immer";
 import { CacheContext } from "../hooks/useCache";
 import { Ipc } from "../ipc";
 import { createStateActions, State, StateContext } from "../interfaces/state";
-import { DragDropContext } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  DraggableLocation,
+  OnDragEndResponder,
+} from "react-beautiful-dnd";
+import { DroppableIds } from "../interfaces/droppableIds";
 
 export const AppContainer: React.FC = () => {
   const cacheContext = useImmer(new Map());
@@ -34,6 +39,26 @@ export const AppContainer: React.FC = () => {
     return deregister;
   }, []);
 
+  const handleDragEnd: OnDragEndResponder = useCallback(
+    (result) => {
+      if (!result.destination) {
+        return;
+      }
+
+      const from = [
+        ...DroppableIds.deserialize(result.source.droppableId),
+        result.source.index,
+      ];
+      const to = [
+        ...DroppableIds.deserialize(result.destination.droppableId),
+        result.destination.index,
+      ];
+
+      actions.move(from, to);
+    },
+    [actions]
+  );
+
   return (
     <CacheContext.Provider value={cacheContext}>
       <StateContext.Provider value={[state, actions]}>
@@ -41,7 +66,7 @@ export const AppContainer: React.FC = () => {
         {loading ? (
           <Splash loaded={loaded} />
         ) : (
-          <DragDropContext onDragEnd={() => {}}>
+          <DragDropContext onDragEnd={handleDragEnd}>
             <Workspace path={[]} card={state.workspace} />
           </DragDropContext>
         )}
