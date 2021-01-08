@@ -24,7 +24,7 @@ export const Workspace: React.FC<Props> = ({
   return (
     <div
       className={clsx(
-        "fixed top-0 bottom-0 left-0 right-0 h-screen flex-1 flex flex-col bg-gray-200 text-sm",
+        "fixed top-0 bottom-0 left-0 right-0 h-screen flex-1 flex bg-gray-200 text-sm",
         { hidden }
       )}
     >
