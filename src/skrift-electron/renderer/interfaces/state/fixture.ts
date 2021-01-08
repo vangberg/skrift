@@ -11,6 +11,7 @@ export const getState = (): State => ({
     type: "workspace",
     streams: [
       {
+        // [0]
         key: 1,
         type: "stream",
         cards: [
@@ -19,6 +20,7 @@ export const getState = (): State => ({
         ],
       },
       {
+        // [1]
         key: 2,
         type: "stream",
         cards: [
@@ -26,14 +28,17 @@ export const getState = (): State => ({
         ],
       },
       {
+        // [2]
         key: 3,
         type: "stream",
         cards: [
           {
+            // [2, 0]
             key: 4,
             type: "workspace",
             streams: [
               {
+                // [2, 0, 0]
                 key: 5,
                 type: "stream",
                 cards: [
