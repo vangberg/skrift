@@ -206,6 +206,8 @@ export const State = {
 
     const [removed] = fromStream.cards.splice(Path.last(from), 1);
     toStream.cards.splice(Path.last(to), 0, removed);
+
+    State.collapse(state);
   },
 
   close(state: State, options: CloseOptions) {
@@ -246,6 +248,27 @@ export const State = {
 
       closeInWorkspace(state.workspace, match);
     }
+
+    State.collapse(state);
+  },
+
+  collapse(state: State) {
+    const collapseInWorkspace = (workspace: WorkspaceCard) => {
+      const { streams } = workspace;
+
+      for (let i = streams.length - 1; i >= 0; i--) {
+        const stream = streams[i];
+        const { cards } = stream;
+
+        if (cards.length === 0 && streams.length > 1) {
+          streams.splice(i, 1);
+        } else {
+          cards.filter(Card.isWorkspace).forEach(collapseInWorkspace);
+        }
+      }
+    };
+
+    collapseInWorkspace(state.workspace);
   },
 };
 
