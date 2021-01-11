@@ -33,6 +33,7 @@ export const SearchCardInput: React.FC<Props> = ({
           placeholder="Type to search…"
           value={query}
           onChange={handleChange}
+          autoFocus={true}
         />
         <button className="p-1 border border-blue-200 bg-blue-200 rounded-r">
           Create
