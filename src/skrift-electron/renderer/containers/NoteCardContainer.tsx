@@ -33,7 +33,6 @@ export const NoteCardContainer: React.FC<Props> = ({ card, path }) => {
   );
 
   const handleZoom = useCallback(() => {
-    console.log("zoom ", path);
     zoomCard(path);
   }, [zoomCard, path]);
 

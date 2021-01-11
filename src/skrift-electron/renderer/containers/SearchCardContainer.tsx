@@ -17,7 +17,9 @@ interface Props {
 
 export const SearchCardContainer: React.FC<Props> = ({ path, card }) => {
   const { query } = card;
-  const [, { openCard, updateCard, close }] = useContext(StateContext);
+  const [, { openCard, zoomCard, updateCard, close }] = useContext(
+    StateContext
+  );
   const [results, setResults] = useCache<Note[]>(
     `card/${card.key}/results`,
     []
@@ -61,6 +63,10 @@ export const SearchCardContainer: React.FC<Props> = ({ path, card }) => {
     [openCard, path]
   );
 
+  const handleZoom = useCallback(() => {
+    zoomCard(path);
+  }, [zoomCard, path]);
+
   return (
     <SearchCard
       path={path}
@@ -68,6 +74,7 @@ export const SearchCardContainer: React.FC<Props> = ({ path, card }) => {
       onOpen={handleOpen}
       onClose={handleClose}
       onSearch={handleSearch}
+      onZoom={handleZoom}
       query={query}
       results={results}
     />
