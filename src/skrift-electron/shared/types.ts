@@ -1,16 +1,15 @@
 import { NoteID, Note } from "../../skrift/note";
-import { Node } from "slate";
 
 export type IpcAddNoteCommand = {
   type: "command/ADD_NOTE";
   id: NoteID;
-  slate: Node[];
+  markdown: string;
 };
 export type IpcLoadNoteCommand = { type: "command/LOAD_NOTE"; id: NoteID };
 export type IpcSetNoteCommand = {
   type: "command/SET_NOTE";
   id: NoteID;
-  slate: Node[];
+  markdown: string;
 };
 export type IpcDeleteNoteCommand = { type: "command/DELETE_NOTE"; id: NoteID };
 

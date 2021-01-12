@@ -40,7 +40,7 @@ const handleLoadDir = async (event: Electron.IpcMainEvent) => {
   await NotesDB.transaction(db, async () => {
     let loaded = 0;
     for await (let note of NotesFS.readDir(_path)) {
-      await NotesDB.save(db, note.id, note.slate, note.modifiedAt);
+      await NotesDB.save(db, note.id, note.markdown, note.modifiedAt);
       loaded += 1;
       if (loaded % 100 === 0) {
         reply(event, { type: "event/LOADING_DIR", loaded });
@@ -85,12 +85,12 @@ const handleAddNote = async (
   event: Electron.IpcMainEvent,
   cmd: IpcAddNoteCommand
 ) => {
-  const { id, slate } = cmd;
+  const { id, markdown } = cmd;
   const db = await getDB();
 
-  await NotesDB.transaction(db, () => NotesDB.save(db, id, slate));
+  await NotesDB.transaction(db, () => NotesDB.save(db, id, markdown));
 
-  await NotesFS.save(_path, id, slate);
+  await NotesFS.save(_path, id, markdown);
 
   const note = await NotesDB.get(db, id);
 
@@ -101,14 +101,14 @@ const handleSetNote = async (
   event: Electron.IpcMainEvent,
   cmd: IpcSetNoteCommand
 ) => {
-  const { id, slate } = cmd;
+  const { id, markdown } = cmd;
   const db = await getDB();
 
   const noteBefore = await NotesDB.get(db, id);
 
-  await NotesDB.transaction(db, () => NotesDB.save(db, id, slate));
+  await NotesDB.transaction(db, () => NotesDB.save(db, id, markdown));
 
-  await NotesFS.save(_path, id, slate);
+  await NotesFS.save(_path, id, markdown);
 
   const noteAfter = await NotesDB.get(db, id);
 

@@ -1,6 +1,5 @@
 import { Database } from "sqlite";
 import { NotesDB, NoteNotFoundError } from ".";
-import { Serializer } from "../serializer";
 
 describe("NotesDB.delete()", () => {
   let db: Database;
@@ -14,7 +13,7 @@ describe("NotesDB.delete()", () => {
     await NotesDB.save(
       db,
       "a",
-      Serializer.deserialize("# Added note\n\nLinks: [[b]], [[c]]"),
+      "# Added note\n\nLinks: [[b]], [[c]]",
       new Date()
     );
 

@@ -1,6 +1,5 @@
 import { Database } from "sqlite";
 import { NotesDB, NoteRow, LinkRow } from ".";
-import { Serializer } from "../serializer";
 
 describe("NotesDB.save()", () => {
   let db: Database;
@@ -11,7 +10,7 @@ describe("NotesDB.save()", () => {
   });
 
   it("inserts a new note", async () => {
-    await NotesDB.save(db, "a", Serializer.deserialize("# Added note"));
+    await NotesDB.save(db, "a", "# Added note");
 
     const rows = await db.all<NoteRow[]>(
       `SELECT * FROM notes WHERE title = 'Added note'`
@@ -20,8 +19,8 @@ describe("NotesDB.save()", () => {
   });
 
   it("updates an existing note", async () => {
-    await NotesDB.save(db, "a", Serializer.deserialize("New note"));
-    await NotesDB.save(db, "a", Serializer.deserialize("Updated note"));
+    await NotesDB.save(db, "a", "New note");
+    await NotesDB.save(db, "a", "Updated note");
 
     const rows = await db.all<NoteRow[]>(`SELECT * FROM notes WHERE id = 'a'`);
     expect(rows.length).toEqual(1);
@@ -29,7 +28,7 @@ describe("NotesDB.save()", () => {
   });
 
   it("inserts new links", async () => {
-    await NotesDB.save(db, "a", Serializer.deserialize("[[b]] [[c]]"));
+    await NotesDB.save(db, "a", "[b]] [[c]]");
 
     const rows = await db.all<LinkRow[]>(
       `SELECT * FROM links WHERE fromId = 'a'`
@@ -39,8 +38,8 @@ describe("NotesDB.save()", () => {
   });
 
   it("deletes and updates existing links", async () => {
-    await NotesDB.save(db, "a", Serializer.deserialize("[[b]] [[c]]"));
-    await NotesDB.save(db, "a", Serializer.deserialize("[[b]] [[d]]"));
+    await NotesDB.save(db, "a", "[b]] [[c]]");
+    await NotesDB.save(db, "a", "[b]] [[d]]");
 
     const rows = await db.all<LinkRow[]>(
       `SELECT * FROM links WHERE fromId = 'a'`

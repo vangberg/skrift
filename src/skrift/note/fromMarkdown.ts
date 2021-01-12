@@ -1,51 +1,17 @@
-import { Node } from "slate";
-import { Serializer } from "../serializer";
-import { Note } from ".";
-
 interface ParsedNote {
+  markdown: string;
   title: string;
   body: string;
   links: Set<string>;
-  slate: Node[];
-}
-
-function parseTitle(nodes: Node[]): string {
-  if (nodes.length === 0) {
-    return "";
-  }
-
-  return Node.string(nodes[0]);
-}
-
-/** Returns a textual representation of the note, sans the title. */
-function parseBody(nodes: Node[]): string {
-  const [, ...tail] = nodes;
-
-  if (tail.length === 0) {
-    return "";
-  }
-
-  return tail.map((node) => Node.string(node)).join(" ");
-}
-
-function parseLinks(nodes: Node[]): Set<string> {
-  const elements = Node.elements({ type: "root", children: nodes });
-
-  return new Set(
-    Array.from(elements)
-      .map(([element]) => element)
-      .filter(Serializer.isNoteLink)
-      .map((link) => link.id)
-  );
 }
 
 export function fromMarkdown(markdown: string): ParsedNote {
-  const nodes = Serializer.deserialize(markdown);
+  const lines = markdown.split(/\r?\n/);
 
   return {
-    title: Note.title(nodes),
-    links: parseLinks(nodes),
-    body: parseBody(nodes),
-    slate: nodes,
+    markdown,
+    title: lines[0],
+    links: new Set(),
+    body: lines.slice(1, -1).join("\n"),
   };
 }

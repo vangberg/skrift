@@ -3,7 +3,6 @@ import { SearchCard } from "../components/SearchCard";
 import { Note } from "../../../skrift/note";
 import { useCache } from "../hooks/useCache";
 import { Ipc } from "../ipc";
-import { Serializer } from "../../../skrift/serializer";
 import { Path } from "../interfaces/path";
 import {
   OpenCardMode,
@@ -44,8 +43,8 @@ export const SearchCardContainer: React.FC<Props> = ({ path, card }) => {
   const handleAdd = useCallback(
     (title: string, mode: OpenCardMode) => {
       const id = Note.idFromDate(new Date());
-      const slate = Serializer.deserialize(`# ${title}`);
-      Ipc.send({ type: "command/ADD_NOTE", id, slate });
+      const markdown = `# ${title}`;
+      Ipc.send({ type: "command/ADD_NOTE", id, markdown });
       onOpenNote(id, mode);
     },
     [onOpenNote]

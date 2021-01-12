@@ -1,10 +1,6 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Node } from "slate";
-import clone from "fast-clone";
-import { Editor } from "../components/Editor";
+import React from "react";
 import { useNote } from "../hooks/useNote";
-import { Note, NoteID } from "../../../skrift/note";
-import { Ipc } from "../ipc";
+import { NoteID } from "../../../skrift/note";
 import { OpenCardMode } from "../interfaces/state";
 
 interface Props {
@@ -13,30 +9,16 @@ interface Props {
 }
 
 export const NoteEditorContainer: React.FC<Props> = ({ id, onOpen }) => {
-  const cachedNote = useNote(id);
-
-  /*
-  When the same value is used by multiple instances of Slate,
-  the last instance will always steal focus. We fix this at the
-  "root" by cloning the value here, before passing it on to React/Slate.
-  */
-  const [note, setNote] = useState<Note | null>(null);
-  useEffect(() => {
-    if (cachedNote) {
-      setNote({ ...cachedNote, slate: clone(cachedNote.slate) });
-    }
-  }, [cachedNote]);
-
-  const handleUpdate = useCallback(
-    (slate: Node[]) => {
-      Ipc.send({ type: "command/SET_NOTE", id, slate });
-    },
-    [id]
-  );
+  const note = useNote(id);
 
   if (!note) {
     return null;
   }
 
-  return <Editor note={note} onOpen={onOpen} onUpdate={handleUpdate} />;
+  return (
+    <div>
+      <h1>{note.title}</h1>
+      {note.body}
+    </div>
+  );
 };

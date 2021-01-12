@@ -1,11 +1,7 @@
 import sqlite3 from "sqlite3";
 import { open, Database } from "sqlite";
 import { Note, NoteID } from "../note";
-import { Serializer } from "../serializer";
-import { Node } from "slate";
 import path from "path";
-import { callbackify } from "util";
-import { allowedNodeEnvironmentFlags } from "process";
 
 export interface NoteRow {
   id: string;
@@ -79,12 +75,10 @@ export const NotesDB = {
   async save(
     db: Database,
     id: NoteID,
-    slate: Node[],
+    markdown: string,
     modifiedAt?: Date
   ): Promise<void> {
-    const title = Note.title(slate);
-    const markdown = Serializer.serialize(slate);
-    const links = Note.links(slate);
+    const note = Note.fromMarkdown(markdown);
 
     await db.run(`DELETE FROM notes WHERE id = ?`, id);
     await db.run(`DELETE FROM links WHERE fromId = ?`, id);
@@ -94,10 +88,10 @@ export const NotesDB = {
       INSERT INTO notes (id, title, markdown, modifiedAt)
       VALUES (?, ?, ?, ?)
       `,
-      [id, title, markdown, modifiedAt || new Date()]
+      [id, note.title, markdown, modifiedAt || new Date()]
     );
 
-    for (const link of links) {
+    for (const link of note.links) {
       await db.run(
         `
         INSERT INTO links (fromId, toId)
@@ -139,7 +133,7 @@ export const NotesDB = {
 
   async search(db: Database, query: string): Promise<NoteID[]> {
     if (query === "*") {
-      return NotesDB.all(db)
+      return NotesDB.all(db);
     }
 
     const cleanQuery = query.replace(/[^a-zA-Z0-9\s]/g, " ");
@@ -157,8 +151,10 @@ export const NotesDB = {
   },
 
   async all(db: Database): Promise<NoteID[]> {
-    const rows = await db.all<SearchRow[]>("SELECT * FROM notes ORDER BY modifiedAt DESC")
+    const rows = await db.all<SearchRow[]>(
+      "SELECT * FROM notes ORDER BY modifiedAt DESC"
+    );
 
-    return rows.map(row => row.id)
-  }
+    return rows.map((row) => row.id);
+  },
 };
