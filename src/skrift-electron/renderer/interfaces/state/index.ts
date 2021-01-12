@@ -130,7 +130,16 @@ export const State = {
   ) {
     const { mode } = options;
 
-    const stream = State.at(state, Path.ancestor(path));
+    const atPath = State.at(state, path);
+
+    let stream;
+
+    if (Stream.isStream(atPath)) {
+      stream = atPath;
+      path = [...path, stream.cards.length - 1];
+    } else if (Card.isCard(atPath)) {
+      stream = State.at(state, Path.ancestor(path));
+    }
 
     if (!Stream.isStream(stream)) {
       return;

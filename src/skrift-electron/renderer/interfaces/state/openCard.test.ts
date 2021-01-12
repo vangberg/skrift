@@ -2,7 +2,18 @@ import { NoteCard, State } from ".";
 import { getState } from "./fixture";
 
 describe("State.openCard", () => {
-  it("opens card below path", () => {
+  it("opens card in stream", () => {
+    let state = getState();
+
+    State.openCard(state, [0], { mode: "below" }, { type: "note", id: "x" });
+
+    const card = State.at(state, [0, 2]);
+
+    expect(card.type).toEqual("note");
+    expect((card as NoteCard).id).toEqual("x");
+  });
+
+  it("opens card below card path", () => {
     let state = getState();
 
     State.openCard(state, [0, 0], { mode: "below" }, { type: "note", id: "x" });
@@ -15,7 +26,6 @@ describe("State.openCard", () => {
 
   it("opens card in next stream", () => {
     let state = getState();
-
     State.openCard(state, [0, 0], { mode: "push" }, { type: "note", id: "x" });
 
     const card = State.at(state, [1, 1]);
