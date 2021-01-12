@@ -1,6 +1,6 @@
 import React from "react";
 import { Note } from "../../../skrift/note";
-import { NoteLink } from "./NoteLink";
+import { NoteLinkContainer } from "../containers/NoteLinkContainer";
 
 type Props = {
   results: Note[];
@@ -14,7 +14,11 @@ export const SearchCardResults: React.FC<Props> = ({ results, onOpen }) => {
         <ul className="list-disc list-outside ml-5 mt-2">
           {results.map((note) => (
             <li key={note.id} className="skrift-list-item">
-              <NoteLink id={note.id} note={note} onOpen={onOpen} />
+              <NoteLinkContainer
+                id={note.id}
+                initialNote={note}
+                onOpen={onOpen}
+              />
             </li>
           ))}
         </ul>
