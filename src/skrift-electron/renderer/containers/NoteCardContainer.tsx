@@ -1,9 +1,9 @@
-import React, { useContext, useCallback } from "react";
+import React, { useCallback } from "react";
 import { NoteCard } from "../components/NoteCard";
 import { useNote } from "../hooks/useNote";
-import { Ipc } from "../ipc";
 import { Path } from "../interfaces/path";
-import { NoteCard as NoteCardType, StateContext } from "../interfaces/state";
+import { NoteCard as NoteCardType } from "../interfaces/state";
+import { useCardActions } from "../hooks/useCardActions";
 
 interface Props {
   card: NoteCardType;
@@ -11,32 +11,14 @@ interface Props {
 }
 
 export const NoteCardContainer: React.FC<Props> = ({ card, path }) => {
-  const [, { openCard, zoomCard, close }] = useContext(StateContext);
+  const { onOpenNote, onDeleteNote, onZoom, onClose } = useCardActions(
+    card,
+    path
+  );
   const { id } = card;
   const note = useNote(id);
 
-  const handleDelete = useCallback(() => {
-    close({ match: { type: "note", id } });
-
-    Ipc.send({ type: "command/DELETE_NOTE", id });
-  }, [close, id]);
-
-  const handleOpen = useCallback(
-    (id, push) => {
-      const currentStreamPath = Path.ancestor(path);
-      const streamPath = push
-        ? Path.next(currentStreamPath)
-        : currentStreamPath;
-      openCard(streamPath, { type: "note", id });
-    },
-    [openCard, path]
-  );
-
-  const handleZoom = useCallback(() => {
-    zoomCard(path);
-  }, [zoomCard, path]);
-
-  const handleClose = useCallback(() => close({ path }), [close, path]);
+  const handleDelete = useCallback(() => onDeleteNote(id), [onDeleteNote, id]);
 
   if (!note) {
     return null;
@@ -46,10 +28,10 @@ export const NoteCardContainer: React.FC<Props> = ({ card, path }) => {
     <NoteCard
       path={path}
       note={note}
-      onOpen={handleOpen}
-      onZoom={handleZoom}
+      onOpen={onOpenNote}
+      onZoom={onZoom}
       onDelete={handleDelete}
-      onClose={handleClose}
+      onClose={onClose}
     />
   );
 };

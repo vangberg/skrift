@@ -11,15 +11,9 @@ type Props = {
   path: Path;
   stream: StreamType;
   onOpenSearch: (query?: string) => void;
-  onOpenWorkspace: () => void;
 };
 
-export const Stream: React.FC<Props> = ({
-  path,
-  stream,
-  onOpenSearch,
-  onOpenWorkspace,
-}) => {
+export const Stream: React.FC<Props> = ({ path, stream, onOpenSearch }) => {
   const cards = stream.cards.map((card, idx) => {
     switch (card.type) {
       case "note":
@@ -49,9 +43,6 @@ export const Stream: React.FC<Props> = ({
 
   const handleOpenSearch = useCallback(() => onOpenSearch(), [onOpenSearch]);
   const handleOpenAll = useCallback(() => onOpenSearch("*"), [onOpenSearch]);
-  const handleOpenWorkspace = useCallback(() => onOpenWorkspace(), [
-    onOpenWorkspace,
-  ]);
 
   return (
     <Droppable droppableId={droppableId}>
@@ -76,12 +67,6 @@ export const Stream: React.FC<Props> = ({
               className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
             >
               Search
-            </span>
-            <span
-              onClick={handleOpenWorkspace}
-              className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
-            >
-              Workspace
             </span>
           </div>
         </div>

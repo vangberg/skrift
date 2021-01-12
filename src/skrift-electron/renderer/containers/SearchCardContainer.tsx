@@ -1,14 +1,12 @@
-import React, { useContext, useCallback, useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { SearchCard } from "../components/SearchCard";
-import { Note, NoteID } from "../../../skrift/note";
+import { Note } from "../../../skrift/note";
 import { useCache } from "../hooks/useCache";
 import { Ipc } from "../ipc";
 import { Serializer } from "../../../skrift/serializer";
 import { Path } from "../interfaces/path";
-import {
-  SearchCard as SearchCardType,
-  StateContext,
-} from "../interfaces/state";
+import { SearchCard as SearchCardType } from "../interfaces/state";
+import { useCardActions } from "../hooks/useCardActions";
 
 interface Props {
   path: Path;
@@ -17,9 +15,9 @@ interface Props {
 
 export const SearchCardContainer: React.FC<Props> = ({ path, card }) => {
   const { query } = card;
-  const [, { openCard, zoomCard, updateCard, close }] = useContext(
-    StateContext
-  );
+
+  const { onOpenNote, onZoom, onClose, onUpdate } = useCardActions(card, path);
+
   const [results, setResults] = useCache<Note[]>(
     `card/${card.key}/results`,
     []
@@ -35,22 +33,9 @@ export const SearchCardContainer: React.FC<Props> = ({ path, card }) => {
 
   const handleSearch = useCallback(
     (query: string) => {
-      updateCard(path, { query });
+      onUpdate({ query });
     },
-    [updateCard, path]
-  );
-
-  const handleClose = useCallback(() => close({ path }), [close, path]);
-
-  const handleOpen = useCallback(
-    (id: NoteID, push: boolean) => {
-      const currentStreamPath = Path.ancestor(path);
-      const streamPath = push
-        ? Path.next(currentStreamPath)
-        : currentStreamPath;
-      openCard(streamPath, { type: "note", id });
-    },
-    [openCard, path]
+    [onUpdate]
   );
 
   const handleAdd = useCallback(
@@ -58,23 +43,19 @@ export const SearchCardContainer: React.FC<Props> = ({ path, card }) => {
       const id = Note.idFromDate(new Date());
       const slate = Serializer.deserialize(`# ${title}`);
       Ipc.send({ type: "command/ADD_NOTE", id, slate });
-      openCard(Path.ancestor(path), { type: "note", id });
+      onOpenNote(id, false);
     },
-    [openCard, path]
+    [onOpenNote]
   );
-
-  const handleZoom = useCallback(() => {
-    zoomCard(path);
-  }, [zoomCard, path]);
 
   return (
     <SearchCard
       path={path}
       onAdd={handleAdd}
-      onOpen={handleOpen}
-      onClose={handleClose}
+      onOpen={onOpenNote}
+      onClose={onClose}
       onSearch={handleSearch}
-      onZoom={handleZoom}
+      onZoom={onZoom}
       query={query}
       results={results}
     />

@@ -6,6 +6,7 @@ import {
   StateContext,
   WorkspaceCard as WorkspaceCardType,
 } from "../interfaces/state";
+import { useCardActions } from "../hooks/useCardActions";
 
 interface Props {
   path: Path;
@@ -13,17 +14,15 @@ interface Props {
 }
 
 export const WorkspaceCardContainer: React.FC<Props> = ({ path, card }) => {
-  const [, { close, updateCard }] = useContext(StateContext);
+  const { onClose, onUpdate } = useCardActions(card, path);
 
   const handleZoomIn = useCallback(() => {
-    updateCard(path, { zoom: true });
-  }, [updateCard, path]);
+    onUpdate({ zoom: true });
+  }, [onUpdate]);
 
   const handleZoomOut = useCallback(() => {
-    updateCard(path, { zoom: false });
-  }, [updateCard, path]);
-
-  const handleClose = useCallback(() => close({ path }), [close, path]);
+    onUpdate({ zoom: false });
+  }, [onUpdate]);
 
   return (
     <>
@@ -32,7 +31,7 @@ export const WorkspaceCardContainer: React.FC<Props> = ({ path, card }) => {
         <WorkspaceCard
           card={card}
           path={path}
-          onClose={handleClose}
+          onClose={onClose}
           onZoom={handleZoomIn}
         />
       )}
