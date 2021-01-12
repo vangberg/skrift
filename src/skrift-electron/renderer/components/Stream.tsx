@@ -5,12 +5,13 @@ import { SearchCardContainer } from "../containers/SearchCardContainer";
 import { WorkspaceCardContainer } from "../containers/WorkspaceCardContainer";
 import { DroppableIds } from "../interfaces/droppableIds";
 import { Path } from "../interfaces/path";
-import { Stream as StreamType } from "../interfaces/state";
+import { OpenCardMode, Stream as StreamType } from "../interfaces/state";
+import { mouseEventToMode } from "../mouseEventToMode";
 
 type Props = {
   path: Path;
   stream: StreamType;
-  onOpenSearch: (query?: string) => void;
+  onOpenSearch: (query: string, mode: OpenCardMode) => void;
 };
 
 export const Stream: React.FC<Props> = ({ path, stream, onOpenSearch }) => {
@@ -41,8 +42,14 @@ export const Stream: React.FC<Props> = ({ path, stream, onOpenSearch }) => {
 
   const droppableId = useMemo(() => DroppableIds.serialize(path), [path]);
 
-  const handleOpenSearch = useCallback(() => onOpenSearch(), [onOpenSearch]);
-  const handleOpenAll = useCallback(() => onOpenSearch("*"), [onOpenSearch]);
+  const handleOpenSearch = useCallback(
+    (event: React.MouseEvent) => onOpenSearch("", mouseEventToMode(event)),
+    [onOpenSearch]
+  );
+  const handleOpenAll = useCallback(
+    (event: React.MouseEvent) => onOpenSearch("*", mouseEventToMode(event)),
+    [onOpenSearch]
+  );
 
   return (
     <Droppable droppableId={droppableId}>

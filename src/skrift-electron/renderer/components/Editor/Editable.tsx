@@ -5,6 +5,7 @@ import { renderElement } from "./renderElement";
 import { isHotkey } from "is-hotkey";
 import { SkriftTransforms } from "./transforms";
 import { Note } from "../../../../skrift/note";
+import { OpenCardMode } from "../../interfaces/state";
 
 const renderLeaf = ({ attributes, children }: RenderLeafProps) => {
   const className = window.skriftDebug ? "border border-green-200" : "";
@@ -17,7 +18,7 @@ const renderLeaf = ({ attributes, children }: RenderLeafProps) => {
 };
 
 type Props = {
-  onOpen: (id: string, push: boolean) => void;
+  onOpen: (id: string, mode: OpenCardMode) => void;
 };
 
 export const SkriftEditable: React.FC<Props> = ({ onOpen }) => {

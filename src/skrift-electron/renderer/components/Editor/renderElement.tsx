@@ -7,6 +7,7 @@ import { Paragraph } from "./elements/Paragraph";
 import { BulletList } from "./elements/BulletList";
 import { NumberList } from "./elements/NumberList";
 import { ListItem } from "./elements/ListItem";
+import { OpenCardMode } from "../../interfaces/state";
 
 const DefaultElement: React.FC<RenderElementProps> = ({
   attributes,
@@ -21,7 +22,7 @@ const DefaultElement: React.FC<RenderElementProps> = ({
 };
 
 export function renderElement(options: {
-  onOpen: (id: string, push: boolean) => void;
+  onOpen: (id: string, mode: OpenCardMode) => void;
 }) {
   const { onOpen } = options;
 

@@ -5,7 +5,10 @@ import { useCache } from "../hooks/useCache";
 import { Ipc } from "../ipc";
 import { Serializer } from "../../../skrift/serializer";
 import { Path } from "../interfaces/path";
-import { SearchCard as SearchCardType } from "../interfaces/state";
+import {
+  OpenCardMode,
+  SearchCard as SearchCardType,
+} from "../interfaces/state";
 import { useCardActions } from "../hooks/useCardActions";
 
 interface Props {
@@ -39,11 +42,11 @@ export const SearchCardContainer: React.FC<Props> = ({ path, card }) => {
   );
 
   const handleAdd = useCallback(
-    (title) => {
+    (title: string, mode: OpenCardMode) => {
       const id = Note.idFromDate(new Date());
       const slate = Serializer.deserialize(`# ${title}`);
       Ipc.send({ type: "command/ADD_NOTE", id, slate });
-      onOpenNote(id, false);
+      onOpenNote(id, mode);
     },
     [onOpenNote]
   );

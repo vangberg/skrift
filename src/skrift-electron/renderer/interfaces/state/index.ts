@@ -67,6 +67,8 @@ type CloseOptions =
   | { path: Path; match?: never }
   | { match: Partial<Card>; path?: never };
 
+export type OpenCardMode = "below" | "push" | "replace";
+
 type OpenCard =
   | Omit<WorkspaceCard, "key">
   | Omit<NoteCard, "key">
@@ -120,28 +122,57 @@ export const State = {
     });
   },
 
-  openCard(state: State, path: Path, card: OpenCard) {
-    const workspace = State.at(state, Path.ancestor(path));
+  openCard(
+    state: State,
+    path: Path,
+    options: { mode: OpenCardMode },
+    props: OpenCard
+  ) {
+    const { mode } = options;
 
-    if (!Card.isCard(workspace) || !Card.isWorkspace(workspace)) {
-      return;
-    }
-
-    if (!State.at(state, path)) {
-      // Stream doesn't exist, but workspace does. Create stream.
-      State.openStream(state, Path.ancestor(path));
-    }
-
-    const stream = State.at(state, path);
+    const stream = State.at(state, Path.ancestor(path));
 
     if (!Stream.isStream(stream)) {
       return;
     }
 
-    stream.cards.push({
-      key: key++,
-      ...card,
-    });
+    const card = { key: key++, ...props };
+
+    if (mode === "below") {
+      // Insert card in stream after the card at path.
+      stream.cards.splice(Path.last(path) + 1, 0, card);
+
+      return;
+    }
+
+    if (mode === "push") {
+      // Append the card to the next stream, creating the stream
+      // if it does not exist.
+
+      const nextPath = Path.next(Path.ancestor(path));
+
+      // If the stream does not exist, create it.
+      if (!State.at(state, nextPath)) {
+        State.openStream(state, Path.ancestor(nextPath));
+      }
+
+      const nextStream = State.at(state, Path.next(Path.ancestor(path)));
+
+      if (!Stream.isStream(nextStream)) {
+        return;
+      }
+
+      nextStream.cards.push(card);
+
+      return;
+    }
+
+    if (mode === "replace") {
+      // Replace the card at the path with the new card.
+      stream.cards.splice(Path.last(path), 1, card);
+
+      return;
+    }
   },
 
   updateCard<T extends Card>(state: State, path: Path, props: Partial<T>) {
@@ -273,7 +304,7 @@ export const State = {
 };
 
 interface StateActions {
-  openCard: (path: Path, card: OpenCard) => void;
+  openCard: (path: Path, mode: OpenCardMode, card: OpenCard) => void;
   updateCard: <T extends Card>(path: Path, card: Partial<T>) => void;
   zoomCard: (path: Path) => void;
   move: (from: Path, to: Path) => void;
@@ -282,9 +313,9 @@ interface StateActions {
 
 export const createStateActions = (setState: Updater<State>): StateActions => {
   return {
-    openCard(path: Path, card: OpenCard) {
+    openCard(path: Path, mode: OpenCardMode, card: OpenCard) {
       setState((draft) => {
-        State.openCard(draft, path, card);
+        State.openCard(draft, path, { mode }, card);
       });
     },
     updateCard<T extends Card>(path: Path, props: Partial<T>) {

@@ -1,16 +1,18 @@
 import React, { useCallback } from "react";
 import { Note, NoteID } from "../../../skrift/note";
+import { OpenCardMode } from "../interfaces/state";
+import { mouseEventToMode } from "../mouseEventToMode";
 
 type Props = {
   id: NoteID;
   note: Note | null;
-  onOpen: (id: string, push: boolean) => void;
+  onOpen: (id: string, mode: OpenCardMode) => void;
 };
 
 export const NoteLink: React.FC<Props> = ({ id, note, onOpen }) => {
   const handleOpen = useCallback(
     (event: React.MouseEvent) => {
-      onOpen(id, event.metaKey || event.ctrlKey);
+      onOpen(id, mouseEventToMode(event));
     },
     [onOpen, id]
   );

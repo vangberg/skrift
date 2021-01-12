@@ -1,6 +1,10 @@
 import React, { useCallback, useContext } from "react";
 import { Stream } from "../components/Stream";
-import { Stream as StreamType, StateContext } from "../interfaces/state";
+import {
+  Stream as StreamType,
+  StateContext,
+  OpenCardMode,
+} from "../interfaces/state";
 import { Path } from "../interfaces/path";
 
 interface Props {
@@ -12,7 +16,8 @@ export const StreamContainer: React.FC<Props> = ({ path, stream }) => {
   const [, { openCard }] = useContext(StateContext);
 
   const handleOpenSearch = useCallback(
-    (query?: string) => openCard(path, { type: "search", query: query || "" }),
+    (query: string, mode: OpenCardMode) =>
+      openCard(path, mode, { type: "search", query: query || "" }),
     [openCard, path]
   );
 

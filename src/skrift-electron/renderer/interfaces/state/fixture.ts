@@ -25,7 +25,7 @@ export const getState = (): State => ({
         key: 2,
         type: "stream",
         cards: [
-          cardC, // [1,0]
+          cardC, // [1, 0]
         ],
       },
       {

@@ -5,10 +5,11 @@ import { Editor } from "../components/Editor";
 import { useNote } from "../hooks/useNote";
 import { Note, NoteID } from "../../../skrift/note";
 import { Ipc } from "../ipc";
+import { OpenCardMode } from "../interfaces/state";
 
 interface Props {
   id: NoteID;
-  onOpen: (id: string, push: boolean) => void;
+  onOpen: (id: string, mode: OpenCardMode) => void;
 }
 
 export const NoteEditorContainer: React.FC<Props> = ({ id, onOpen }) => {

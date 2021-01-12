@@ -9,11 +9,12 @@ import { CardToolbar } from "./CardToolbar";
 import { CardBody } from "./CardBody";
 import { CardToolbarItem } from "./CardToolbarItem";
 import { Path } from "../interfaces/path";
+import { OpenCardMode } from "../interfaces/state";
 
 type Props = {
   path: Path;
   note: Note;
-  onOpen: (id: string, push: boolean) => void;
+  onOpen: (id: string, mode: OpenCardMode) => void;
   onZoom: () => void;
   onDelete: () => void;
   onClose: () => void;

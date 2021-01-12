@@ -1,10 +1,11 @@
 import React from "react";
 import { Note } from "../../../skrift/note";
 import { NoteLinkContainer } from "../containers/NoteLinkContainer";
+import { OpenCardMode } from "../interfaces/state";
 
 type Props = {
   results: Note[];
-  onOpen: (id: string, push: boolean) => void;
+  onOpen: (id: string, mode: OpenCardMode) => void;
 };
 
 export const SearchCardResults: React.FC<Props> = ({ results, onOpen }) => {

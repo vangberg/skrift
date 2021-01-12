@@ -1,8 +1,9 @@
 import React, { useCallback } from "react";
+import { OpenCardMode } from "../interfaces/state";
 
 type Props = {
   query: string;
-  onAdd: (title: string) => void;
+  onAdd: (title: string, mode: OpenCardMode) => void;
   onSearch: (query: string) => void;
 };
 
@@ -14,7 +15,7 @@ export const SearchCardInput: React.FC<Props> = ({
   const handleSubmit = useCallback(
     (event: React.FormEvent) => {
       event.preventDefault();
-      onAdd(query);
+      onAdd(query, "below");
     },
     [query, onAdd]
   );

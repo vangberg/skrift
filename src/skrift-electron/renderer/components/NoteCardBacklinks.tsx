@@ -1,10 +1,11 @@
 import React from "react";
 import { Note } from "../../../skrift/note";
 import { NoteLinkContainer } from "../containers/NoteLinkContainer";
+import { OpenCardMode } from "../interfaces/state";
 
 type Props = {
   note: Note;
-  onOpen: (id: string, push: boolean) => void;
+  onOpen: (id: string, mode: OpenCardMode) => void;
 };
 
 export const NoteCardBacklinks: React.FC<Props> = ({ note, onOpen }) => {

@@ -1,13 +1,13 @@
 import { useCallback, useContext } from "react";
 import { NoteID } from "../../../skrift/note";
 import { Path } from "../interfaces/path";
-import { Card, StateContext } from "../interfaces/state";
+import { Card, OpenCardMode, StateContext } from "../interfaces/state";
 import { Ipc } from "../ipc";
 
 interface CardActions<T extends Card> {
   onDeleteNote: (id: NoteID) => void;
-  onOpenNote: (id: NoteID, push: boolean) => void;
-  onOpenSearch: (query: string, push: boolean) => void;
+  onOpenNote: (id: NoteID, mode: OpenCardMode) => void;
+  onOpenSearch: (query: string, mode: OpenCardMode) => void;
   onZoom: () => void;
   onClose: () => void;
   onUpdate: (card: Partial<T>) => void;
@@ -31,23 +31,15 @@ export const useCardActions = <T extends Card>(
   );
 
   const onOpenNote = useCallback(
-    (id, push) => {
-      const currentStreamPath = Path.ancestor(path);
-      const streamPath = push
-        ? Path.next(currentStreamPath)
-        : currentStreamPath;
-      openCard(streamPath, { type: "note", id });
+    (id: NoteID, mode: OpenCardMode) => {
+      openCard(path, mode, { type: "note", id });
     },
     [openCard, path]
   );
 
   const onOpenSearch = useCallback(
-    (query, push) => {
-      const currentStreamPath = Path.ancestor(path);
-      const streamPath = push
-        ? Path.next(currentStreamPath)
-        : currentStreamPath;
-      openCard(streamPath, { type: "search", query });
+    (query: string, mode: OpenCardMode) => {
+      openCard(path, mode, { type: "search", query });
     },
     [openCard, path]
   );

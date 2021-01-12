@@ -7,14 +7,15 @@ import { CardBody } from "./CardBody";
 import { CardToolbarItem } from "./CardToolbarItem";
 import { SearchCardResults } from "./SearchCardResults";
 import { Path } from "../interfaces/path";
+import { OpenCardMode } from "../interfaces/state";
 
 type Props = {
   path: Path;
   query: string;
   results: Note[];
-  onOpen: (id: string, push: boolean) => void;
+  onOpen: (id: string, mode: OpenCardMode) => void;
   onClose: () => void;
-  onAdd: (title: string) => void;
+  onAdd: (title: string, mode: OpenCardMode) => void;
   onSearch: (query: string) => void;
   onZoom: () => void;
 };

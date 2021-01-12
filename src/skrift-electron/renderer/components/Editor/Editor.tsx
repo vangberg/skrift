@@ -5,6 +5,7 @@ import { Slate, ReactEditor } from "slate-react";
 import { SkriftEditable } from "./Editable";
 import { Note } from "../../../../skrift/note";
 import { createEditor } from "./createEditor";
+import { OpenCardMode } from "../../interfaces/state";
 
 const areEqual = (n1: Node[], n2: Node[]) => {
   return JSON.stringify(n1) === JSON.stringify(n2);
@@ -12,7 +13,7 @@ const areEqual = (n1: Node[], n2: Node[]) => {
 
 type Props = {
   note: Note;
-  onOpen: (id: string, push: boolean) => void;
+  onOpen: (id: string, mode: OpenCardMode) => void;
   onUpdate: (slate: Node[]) => void;
 };
 

@@ -6,12 +6,13 @@ import {
   useEditor,
   ReactEditor,
 } from "slate-react";
-import { Note } from "../../../../../skrift/note";
+import { NoteID } from "../../../../../skrift/note";
 import cx from "classnames";
 import { NoteLinkContainer } from "../../../containers/NoteLinkContainer";
+import { OpenCardMode } from "../../../interfaces/state";
 
 type Props = {
-  onOpen: (id: string, push: boolean) => void;
+  onOpen: (id: string, mode: OpenCardMode) => void;
 };
 
 export const NoteLink: React.FC<RenderElementProps & Props> = ({
@@ -25,9 +26,9 @@ export const NoteLink: React.FC<RenderElementProps & Props> = ({
   const editor = useEditor();
 
   const handleOpen = useCallback(
-    (id, push) => {
+    (id: NoteID, mode: OpenCardMode) => {
       ReactEditor.blur(editor);
-      onOpen(id, push);
+      onOpen(id, mode);
     },
     [editor, onOpen]
   );
