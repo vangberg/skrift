@@ -11,3 +11,43 @@
 .skrift-flex-empty-0:empty {
   flex: 0;
 }
+
+.xxx {
+  flex: 1;
+}
+
+.markdown {
+  h1 {
+    @apply text-2xl pt-4 font-semibold;
+  }
+
+  h2 {
+    @apply text-xl pt-4 font-semibold;
+  }
+
+  h3,
+  h4,
+  h5 {
+    @apply text-lg pt-2 font-semibold;
+  }
+
+  p {
+    @apply py-3;
+  }
+
+  li {
+    @apply list-decimal list-inside;
+  }
+
+  ul {
+    @apply list-disc list-inside;
+  }
+
+  a {
+    @apply underline text-blue-500;
+  }
+
+  pre {
+    @apply p-2 text-sm bg-red-200;
+  }
+}

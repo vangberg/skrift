@@ -1,7 +1,10 @@
+import "prosemirror-view/style/prosemirror.css";
+
 import React from "react";
 import { useNote } from "../hooks/useNote";
 import { NoteID } from "../../../skrift/note";
 import { OpenCardMode } from "../interfaces/state";
+import { NoteEditor } from "../components/NoteEditor";
 
 interface Props {
   id: NoteID;
@@ -15,10 +18,5 @@ export const NoteEditorContainer: React.FC<Props> = ({ id, onOpen }) => {
     return null;
   }
 
-  return (
-    <div>
-      <h1>{note.title}</h1>
-      {note.body}
-    </div>
-  );
+  return <NoteEditor note={note} onOpen={onOpen} />;
 };
