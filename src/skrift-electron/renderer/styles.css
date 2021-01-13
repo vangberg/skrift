@@ -12,10 +12,6 @@
   flex: 0;
 }
 
-.xxx {
-  flex: 1;
-}
-
 .markdown {
   h1 {
     @apply text-2xl pt-4 font-semibold;
@@ -35,12 +31,17 @@
     @apply py-3;
   }
 
-  li {
-    @apply list-decimal list-inside;
+  ol p,
+  ul p {
+    @apply py-0;
+  }
+
+  ol {
+    @apply list-decimal list-outside ml-5;
   }
 
   ul {
-    @apply list-disc list-inside;
+    @apply list-disc list-outside ml-5;
   }
 
   a {
