@@ -1,6 +1,6 @@
 import "prosemirror-view/style/prosemirror.css";
 
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Note, NoteID } from "../../../../skrift/note";
 import { OpenCardMode } from "../../interfaces/state";
 import { ProseMirror, useProseMirror } from "use-prosemirror";
@@ -13,6 +13,7 @@ import { buildKeymap } from "./keymap";
 import { history } from "prosemirror-history";
 import { EditorProps, EditorView } from "prosemirror-view";
 import { markdownParser, schema } from "../../../../skrift-markdown/parser";
+import { Plugin, PluginKey } from "prosemirror-state";
 
 interface Props {
   note: Note;
@@ -52,17 +53,23 @@ const clickToMode = (event: MouseEvent): OpenCardMode | false => {
   return false;
 };
 
-const nodeViews: EditorProps["nodeViews"] = {
-  link: (node) => {
-    const dom = document.createElement("a");
-    dom.setAttribute("href", node.attrs["href"]);
-    dom.innerText = node.content.firstChild!.text || "#";
-    dom.addEventListener("click", (event) => {
-      event.stopPropagation();
-      event.preventDefault();
-    });
-    return { dom };
-  },
+const nodeViews = (): EditorProps["nodeViews"] => {
+  return {
+    link: (node, view) => {
+      const dom = document.createElement("a");
+      dom.setAttribute("href", node.attrs["href"]);
+
+      const text = node.content.firstChild!.text;
+      dom.innerText =
+        text === "#" ? node.attrs["title"] || node.attrs["href"] : text;
+
+      dom.addEventListener("click", (event) => {
+        event.stopPropagation();
+        event.preventDefault();
+      });
+      return { dom };
+    },
+  };
 };
 
 export const NoteEditor: React.FC<Props> = ({ note, onOpen }) => {
@@ -75,6 +82,23 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen }) => {
     schema,
     plugins,
   });
+
+  const nv = useMemo(nodeViews, []);
+
+  useEffect(() => {
+    console.log("set interval");
+    const i = setInterval(() => {
+      const m = Math.random().toString();
+      const tr = state.tr;
+      state.doc.descendants((n, p) => {
+        if (n.type.name === "link") {
+          tr.setNodeMarkup(p, undefined, { href: n.attrs["href"], title: m });
+        }
+      });
+      setState(state.apply(tr));
+    }, 1000);
+    return () => clearInterval(i);
+  }, [state, setState]);
 
   const handleClick = useCallback(
     (view: EditorView, pos: number, event: MouseEvent) => {
@@ -105,7 +129,7 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen }) => {
         handleClick={handleClick}
         state={state}
         onChange={setState}
-        nodeViews={nodeViews}
+        nodeViews={nv}
       />
     </div>
   );
