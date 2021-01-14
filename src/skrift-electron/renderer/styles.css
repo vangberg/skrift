@@ -12,6 +12,10 @@
   flex: 0;
 }
 
+.ProseMirror-focused {
+  @apply outline-none;
+}
+
 .markdown {
   h1 {
     @apply pt-2 text-xl font-semibold tracking-wide;
