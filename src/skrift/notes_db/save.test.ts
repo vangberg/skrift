@@ -10,7 +10,7 @@ describe("NotesDB.save()", () => {
   });
 
   it("inserts a new note", async () => {
-    await NotesDB.save(db, "a", "# Added note");
+    await NotesDB.save(db, "a.md", "# Added note");
 
     const rows = await db.all<NoteRow[]>(
       `SELECT * FROM notes WHERE title = 'Added note'`
@@ -19,30 +19,32 @@ describe("NotesDB.save()", () => {
   });
 
   it("updates an existing note", async () => {
-    await NotesDB.save(db, "a", "New note");
-    await NotesDB.save(db, "a", "Updated note");
+    await NotesDB.save(db, "a.md", "New note");
+    await NotesDB.save(db, "a.md", "Updated note");
 
-    const rows = await db.all<NoteRow[]>(`SELECT * FROM notes WHERE id = 'a'`);
+    const rows = await db.all<NoteRow[]>(
+      `SELECT * FROM notes WHERE id = 'a.md"`
+    );
     expect(rows.length).toEqual(1);
     expect(rows[0].title).toEqual("Updated note");
   });
 
   it("inserts new links", async () => {
-    await NotesDB.save(db, "a", "[b]] [[c]]");
+    await NotesDB.save(db, "a.md", "[#](b.md) [#](c.md)");
 
     const rows = await db.all<LinkRow[]>(
-      `SELECT * FROM links WHERE fromId = 'a'`
+      `SELECT * FROM links WHERE fromId = 'a.md"`
     );
     expect(rows.length).toEqual(2);
     expect(rows.map((row) => row.toId).sort()).toEqual(["b", "c"]);
   });
 
   it("deletes and updates existing links", async () => {
-    await NotesDB.save(db, "a", "[b]] [[c]]");
-    await NotesDB.save(db, "a", "[b]] [[d]]");
+    await NotesDB.save(db, "a.md", "[#](b.md) [#](c.md)");
+    await NotesDB.save(db, "a.md", "[#](b.md) [#](d.md)");
 
     const rows = await db.all<LinkRow[]>(
-      `SELECT * FROM links WHERE fromId = 'a'`
+      `SELECT * FROM links WHERE fromId = 'a.md"`
     );
     expect(rows.length).toEqual(2);
     expect(rows.map((row) => row.toId).sort()).toEqual(["b", "d"]);

@@ -11,22 +11,27 @@ describe("NotesDB.get()", () => {
 
   it("gets a note", async () => {
     const date = new Date();
-    await NotesDB.save(db, "a", "# Added note\n\nLinks: [[b]], [[c]]", date);
+    await NotesDB.save(
+      db,
+      "a.md",
+      "# Added note\n\nLinks: [#](b.md), [#](c.md)",
+      date
+    );
 
-    const result = await NotesDB.get(db, "a");
-    expect(result.id).toEqual("a");
+    const result = await NotesDB.get(db, "a.md");
+    expect(result.id).toEqual("a.md");
     expect(result.title).toEqual("Added note");
-    expect(result.links).toEqual(new Set(["b", "c"]));
+    expect(result.links).toEqual(new Set(["b.md", "c.md"]));
     expect(result.modifiedAt).toEqual(date);
   });
 
   it("gets backlinks", async () => {
     const date = new Date();
-    await NotesDB.save(db, "a", "[[b]]", date);
-    await NotesDB.save(db, "b", "# B", date);
+    await NotesDB.save(db, "a.md", "[#](b.md)", date);
+    await NotesDB.save(db, "b.md", "# B", date);
 
-    const result = await NotesDB.get(db, "b");
-    expect(result.backlinks).toEqual(new Set(["a"]));
+    const result = await NotesDB.get(db, "b.md");
+    expect(result.backlinks).toEqual(new Set(["a.md"]));
   });
 
   it("fails on unknown note", async () => {

@@ -12,12 +12,12 @@ describe("NotesDB.delete()", () => {
   it("deletes a note", async () => {
     await NotesDB.save(
       db,
-      "a",
-      "# Added note\n\nLinks: [[b]], [[c]]",
+      "a.md",
+      "# Added note\n\nLinks: [#](b.md), [#](c.md)",
       new Date()
     );
 
-    await NotesDB.delete(db, "a");
-    await expect(NotesDB.get(db, "a")).rejects.toThrow(NoteNotFoundError);
+    await NotesDB.delete(db, "a.md");
+    await expect(NotesDB.get(db, "a.md")).rejects.toThrow(NoteNotFoundError);
   });
 });

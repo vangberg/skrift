@@ -4,7 +4,7 @@ import { NoteID, Note } from "../note";
 
 export const NotesFS = {
   path(dirPath: string, id: NoteID): string {
-    return path.join(dirPath, id + ".md");
+    return path.join(dirPath, id);
   },
 
   async initialize(dirPath: string): Promise<void> {
@@ -35,9 +35,9 @@ export const NotesFS = {
   },
 
   async ids(dirPath: string): Promise<NoteID[]> {
-    return (await fs.promises.readdir(dirPath))
-      .filter((filename) => filename.endsWith(".md"))
-      .map((filename) => path.basename(filename, ".md"));
+    return (await fs.promises.readdir(dirPath)).filter((filename) =>
+      filename.endsWith(".md")
+    );
   },
 
   save(dirPath: string, id: NoteID, markdown: string): Promise<void> {
