@@ -14,7 +14,6 @@ import { keymap } from "prosemirror-keymap";
 import { buildKeymap } from "./keymap";
 import { history } from "prosemirror-history";
 import { EditorView } from "prosemirror-view";
-import { shift } from "../../../../../webpack.react.config";
 
 interface Props {
   note: Note;
