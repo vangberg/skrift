@@ -4,8 +4,6 @@ import React, { useCallback, useMemo } from "react";
 import { Note, NoteID } from "../../../../skrift/note";
 import { OpenCardMode } from "../../interfaces/state";
 import { ProseMirror, useProseMirror } from "use-prosemirror";
-// @ts-ignore
-import { schema } from "prosemirror-markdown";
 import {
   defaultMarkdownParser,
   defaultMarkdownSerializer,
@@ -13,7 +11,8 @@ import {
 import { keymap } from "prosemirror-keymap";
 import { buildKeymap } from "./keymap";
 import { history } from "prosemirror-history";
-import { EditorView } from "prosemirror-view";
+import { EditorProps, EditorView } from "prosemirror-view";
+import { markdownParser, schema } from "../../../../skrift-markdown/parser";
 
 interface Props {
   note: Note;
@@ -53,10 +52,23 @@ const clickToMode = (event: MouseEvent): OpenCardMode | false => {
   return false;
 };
 
+const nodeViews: EditorProps["nodeViews"] = {
+  link: (node) => {
+    const dom = document.createElement("a");
+    dom.setAttribute("href", node.attrs["href"]);
+    dom.innerText = node.content.firstChild!.text || "#";
+    dom.addEventListener("click", (event) => {
+      event.stopPropagation();
+      event.preventDefault();
+    });
+    return { dom };
+  },
+};
+
 export const NoteEditor: React.FC<Props> = ({ note, onOpen }) => {
   const plugins = useMemo(() => [history(), keymap(buildKeymap(schema))], []);
 
-  const doc = useMemo(() => defaultMarkdownParser.parse(note.markdown), [note]);
+  const doc = useMemo(() => markdownParser.parse(note.markdown), [note]);
 
   const [state, setState] = useProseMirror({
     doc,
@@ -67,8 +79,6 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen }) => {
   const handleClick = useCallback(
     (view: EditorView, pos: number, event: MouseEvent) => {
       const { target } = event;
-      const { ctrlKey, shiftKey, button } = event;
-      console.log({ ctrlKey, shiftKey, button });
       if (!target) return false;
 
       const noteId = getNoteID(target);
@@ -95,6 +105,7 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen }) => {
         handleClick={handleClick}
         state={state}
         onChange={setState}
+        nodeViews={nodeViews}
       />
     </div>
   );
