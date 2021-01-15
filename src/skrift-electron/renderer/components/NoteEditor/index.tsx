@@ -1,9 +1,16 @@
 import "prosemirror-view/style/prosemirror.css";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Note, NoteID } from "../../../../skrift/note";
 import { OpenCardMode } from "../../interfaces/state";
-import { ProseMirror, useProseMirror } from "use-prosemirror";
+import { Handle, ProseMirror, useProseMirror } from "use-prosemirror";
 import {
   defaultMarkdownParser,
   defaultMarkdownSerializer,
@@ -11,9 +18,16 @@ import {
 import { keymap } from "prosemirror-keymap";
 import { buildKeymap } from "./keymap";
 import { history } from "prosemirror-history";
-import { EditorProps, EditorView } from "prosemirror-view";
+import {
+  Decoration,
+  DecorationSet,
+  EditorProps,
+  EditorView,
+} from "prosemirror-view";
 import { markdownParser, schema } from "../../../../skrift-markdown/parser";
 import { Plugin, PluginKey } from "prosemirror-state";
+// @ts-ignore
+import applyDevTools from "prosemirror-dev-tools";
 
 interface Props {
   note: Note;
@@ -55,13 +69,15 @@ const clickToMode = (event: MouseEvent): OpenCardMode | false => {
 
 const nodeViews = (): EditorProps["nodeViews"] => {
   return {
-    link: (node, view) => {
+    link: (node, view, getPos, decos) => {
       const dom = document.createElement("a");
       dom.setAttribute("href", node.attrs["href"]);
 
-      const text = node.content.firstChild!.text;
-      dom.innerText =
-        text === "#" ? node.attrs["title"] || node.attrs["href"] : text;
+      const deco = decos.find((deco) => deco.spec.noteTitle);
+
+      dom.innerText = deco
+        ? deco.spec.noteTitle
+        : node.content.firstChild!.text;
 
       dom.addEventListener("click", (event) => {
         event.stopPropagation();
@@ -72,8 +88,49 @@ const nodeViews = (): EditorProps["nodeViews"] => {
   };
 };
 
+const noteLinkPlugin = new Plugin<DecorationSet>({
+  state: {
+    init() {
+      return DecorationSet.empty;
+    },
+    apply(tr, set) {
+      console.log("calc");
+      set = DecorationSet.empty;
+
+      const decos: Decoration[] = [];
+
+      tr.doc.descendants((node, pos) => {
+        if (node.type.name === "link") {
+          decos.push(
+            Decoration.node(
+              pos,
+              pos + node.nodeSize,
+              {
+                style: "border: 1px solid red;",
+              },
+              { noteTitle: Math.random().toString() }
+            )
+          );
+        }
+      });
+
+      set = set.add(tr.doc, decos);
+
+      return set;
+    },
+  },
+  props: {
+    decorations(state) {
+      return this.getState(state);
+    },
+  },
+});
+
 export const NoteEditor: React.FC<Props> = ({ note, onOpen }) => {
-  const plugins = useMemo(() => [history(), keymap(buildKeymap(schema))], []);
+  const plugins = useMemo(
+    () => [history(), keymap(buildKeymap(schema)), noteLinkPlugin],
+    []
+  );
 
   const doc = useMemo(() => markdownParser.parse(note.markdown), [note]);
 
@@ -83,22 +140,15 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen }) => {
     plugins,
   });
 
-  const nv = useMemo(nodeViews, []);
+  const nv = useMemo(() => nodeViews(), []);
+
+  const viewRef = useRef() as RefObject<Handle>;
 
   useEffect(() => {
-    console.log("set interval");
-    const i = setInterval(() => {
-      const m = Math.random().toString();
-      const tr = state.tr;
-      state.doc.descendants((n, p) => {
-        if (n.type.name === "link") {
-          tr.setNodeMarkup(p, undefined, { href: n.attrs["href"], title: m });
-        }
-      });
-      setState(state.apply(tr));
-    }, 1000);
-    return () => clearInterval(i);
-  }, [state, setState]);
+    if (viewRef.current) {
+      applyDevTools(viewRef.current.view);
+    }
+  }, [viewRef]);
 
   const handleClick = useCallback(
     (view: EditorView, pos: number, event: MouseEvent) => {
@@ -126,6 +176,7 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen }) => {
   return (
     <div className="markdown">
       <ProseMirror
+        ref={viewRef}
         handleClick={handleClick}
         state={state}
         onChange={setState}
