@@ -14,7 +14,11 @@ describe("Parser", () => {
           content: [
             {
               type: "link",
-              href: "https://abc.com",
+              attrs: {
+                href: "https://abc.com",
+                title: null,
+              },
+              content: [{ type: "text", text: "ABC" }],
             },
           ],
         },
