@@ -1,6 +1,6 @@
 import sqlite3 from "sqlite3";
 import { open, Database } from "sqlite";
-import { Note, NoteID } from "../note";
+import { Note, NoteID, NoteLink, NoteWithLinks } from "../note";
 import path from "path";
 
 export interface NoteRow {
@@ -8,6 +8,11 @@ export interface NoteRow {
   title: string;
   markdown: string;
   modifiedAt: string;
+}
+
+export interface NoteLinkRow {
+  id: string;
+  title: string;
 }
 
 export interface SearchRow {
@@ -123,6 +128,25 @@ export const NotesDB = {
         modifiedAt: new Date(parseFloat(modifiedAt)),
       }),
       ...Note.fromMarkdown(markdown),
+    };
+  },
+
+  async getNoteLinks(db: Database, ids: NoteID[]): Promise<NoteLink[]> {
+    return db.all<NoteLinkRow[]>(
+      `SELECT id, title FROM notes WHERE id IN (?)`,
+      ids
+    );
+  },
+
+  async getWithLinks(db: Database, id: NoteID): Promise<NoteWithLinks> {
+    const note = await NotesDB.get(db, id);
+    const links = await NotesDB.getNoteLinks(db, [...note.linkIds]);
+    const backlinks = await NotesDB.getNoteLinks(db, [...note.backlinkIds]);
+
+    return {
+      ...note,
+      links,
+      backlinks,
     };
   },
 

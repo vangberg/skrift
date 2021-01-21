@@ -12,6 +12,16 @@ export interface Note {
   modifiedAt: Date;
 }
 
+export interface NoteLink {
+  id: NoteID;
+  title: string;
+}
+
+export interface NoteWithLinks extends Note {
+  links: NoteLink[];
+  backlinks: NoteLink[];
+}
+
 export const Note = {
   idFromDate(date: Date): string {
     return date.toJSON().replace(/[:-]/g, "");

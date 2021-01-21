@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { NoteID, Note } from "../../../skrift/note";
+import { NoteID, Note, NoteWithLinks } from "../../../skrift/note";
 import { Ipc } from "../ipc";
 import { useCache } from "./useCache";
 
-export const useNote = (id: NoteID): Note | null => {
-  const [note, setNote] = useCache<Note | null>(`note/${id}`, null);
+export const useNote = (id: NoteID): NoteWithLinks | null => {
+  const [note, setNote] = useCache<NoteWithLinks | null>(`note/${id}`, null);
 
   useEffect(() => {
     Ipc.send({ type: "command/LOAD_NOTE", id });

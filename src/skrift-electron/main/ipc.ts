@@ -58,7 +58,7 @@ const handleLoadNote = async (
   const { id } = cmd;
   const db = await getDB();
 
-  const note = await NotesDB.get(db, id);
+  const note = await NotesDB.getWithLinks(db, id);
   reply(event, { type: "event/SET_NOTE", note });
 };
 
@@ -74,7 +74,7 @@ const handleDeleteNote = async (
   await NotesFS.delete(_path, id);
 
   note.linkIds.forEach(async (linkId) => {
-    const note = await NotesDB.get(db, linkId);
+    const note = await NotesDB.getWithLinks(db, linkId);
     reply(event, { type: "event/SET_NOTE", note });
   });
 
@@ -92,7 +92,7 @@ const handleAddNote = async (
 
   await NotesFS.save(_path, id, markdown);
 
-  const note = await NotesDB.get(db, id);
+  const note = await NotesDB.getWithLinks(db, id);
 
   reply(event, { type: "event/SET_NOTE", note });
 };
@@ -110,7 +110,7 @@ const handleSetNote = async (
 
   await NotesFS.save(_path, id, markdown);
 
-  const noteAfter = await NotesDB.get(db, id);
+  const noteAfter = await NotesDB.getWithLinks(db, id);
 
   const linksDeleted = TSet.difference(noteBefore.linkIds, noteAfter.linkIds);
   const linksAdded = TSet.difference(noteAfter.linkIds, noteBefore.linkIds);
@@ -119,7 +119,7 @@ const handleSetNote = async (
   reply(event, { type: "event/SET_NOTE", note: noteAfter });
 
   linksAffected.forEach(async (link) => {
-    const note = await NotesDB.get(db, link);
+    const note = await NotesDB.getWithLinks(db, link);
     reply(event, { type: "event/SET_NOTE", note });
   });
 };
