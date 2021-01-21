@@ -91,7 +91,7 @@ export const NotesDB = {
       [id, note.title, markdown, modifiedAt || new Date()]
     );
 
-    for (const link of note.links) {
+    for (const link of note.linkIds) {
       await db.run(
         `
         INSERT INTO links (fromId, toId)
@@ -105,7 +105,7 @@ export const NotesDB = {
   async get(db: Database, id: NoteID): Promise<Note> {
     const row = await db.get<NoteRow>(`SELECT * FROM notes WHERE id = ?`, id);
 
-    const backlinks = await db.all<LinkRow[]>(
+    const backlinkIds = await db.all<LinkRow[]>(
       `SELECT * FROM links WHERE toId = ?`,
       id
     );
@@ -119,7 +119,7 @@ export const NotesDB = {
     return {
       ...Note.empty({
         id,
-        backlinks: new Set(backlinks.map(({ fromId }) => fromId)),
+        backlinkIds: new Set(backlinkIds.map(({ fromId }) => fromId)),
         modifiedAt: new Date(parseFloat(modifiedAt)),
       }),
       ...Note.fromMarkdown(markdown),

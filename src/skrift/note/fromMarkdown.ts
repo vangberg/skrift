@@ -2,7 +2,7 @@ interface ParsedNote {
   markdown: string;
   title: string;
   body: string;
-  links: Set<string>;
+  linkIds: Set<string>;
 }
 
 export function fromMarkdown(markdown: string): ParsedNote {
@@ -11,7 +11,7 @@ export function fromMarkdown(markdown: string): ParsedNote {
   return {
     markdown,
     title: lines[0],
-    links: new Set(),
+    linkIds: new Set(),
     body: lines.slice(1, -1).join("\n"),
   };
 }

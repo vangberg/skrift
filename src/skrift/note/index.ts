@@ -7,8 +7,8 @@ export interface Note {
   markdown: string;
   title: string;
   body: string;
-  links: Set<NoteID>;
-  backlinks: Set<NoteID>;
+  linkIds: Set<NoteID>;
+  backlinkIds: Set<NoteID>;
   modifiedAt: Date;
 }
 
@@ -25,8 +25,8 @@ export const Note = {
       markdown: "",
       title: "",
       body: "",
-      links: new Set(),
-      backlinks: new Set(),
+      linkIds: new Set(),
+      backlinkIds: new Set(),
       modifiedAt: new Date(),
       ...(partial || {}),
     };

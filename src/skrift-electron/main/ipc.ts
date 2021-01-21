@@ -73,8 +73,8 @@ const handleDeleteNote = async (
   await NotesDB.delete(db, id);
   await NotesFS.delete(_path, id);
 
-  note.links.forEach(async (link) => {
-    const note = await NotesDB.get(db, link);
+  note.linkIds.forEach(async (linkId) => {
+    const note = await NotesDB.get(db, linkId);
     reply(event, { type: "event/SET_NOTE", note });
   });
 
@@ -112,8 +112,8 @@ const handleSetNote = async (
 
   const noteAfter = await NotesDB.get(db, id);
 
-  const linksDeleted = TSet.difference(noteBefore.links, noteAfter.links);
-  const linksAdded = TSet.difference(noteAfter.links, noteBefore.links);
+  const linksDeleted = TSet.difference(noteBefore.linkIds, noteAfter.linkIds);
+  const linksAdded = TSet.difference(noteAfter.linkIds, noteBefore.linkIds);
   const linksAffected = TSet.union(linksDeleted, linksAdded);
 
   reply(event, { type: "event/SET_NOTE", note: noteAfter });

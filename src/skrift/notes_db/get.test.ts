@@ -21,7 +21,7 @@ describe("NotesDB.get()", () => {
     const result = await NotesDB.get(db, "a.md");
     expect(result.id).toEqual("a.md");
     expect(result.title).toEqual("Added note");
-    expect(result.links).toEqual(new Set(["b.md", "c.md"]));
+    expect(result.linkIds).toEqual(new Set(["b.md", "c.md"]));
     expect(result.modifiedAt).toEqual(date);
   });
 
@@ -31,7 +31,7 @@ describe("NotesDB.get()", () => {
     await NotesDB.save(db, "b.md", "# B", date);
 
     const result = await NotesDB.get(db, "b.md");
-    expect(result.backlinks).toEqual(new Set(["a.md"]));
+    expect(result.backlinkIds).toEqual(new Set(["a.md"]));
   });
 
   it("fails on unknown note", async () => {

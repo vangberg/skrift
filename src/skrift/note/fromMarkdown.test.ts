@@ -21,7 +21,7 @@ describe("parseMarkdown", () => {
 
     // FIX
     it("parses links", () => {
-      expect(note.links).toEqual(new Set([]));
+      expect(note.linkIds).toEqual(new Set([]));
     });
   });
 });

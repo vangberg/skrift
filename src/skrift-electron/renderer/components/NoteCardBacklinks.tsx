@@ -9,7 +9,7 @@ type Props = {
 };
 
 export const NoteCardBacklinks: React.FC<Props> = ({ note, onOpen }) => {
-  if (note.backlinks.size === 0) {
+  if (note.backlinkIds.size === 0) {
     return null;
   }
 
@@ -20,7 +20,7 @@ export const NoteCardBacklinks: React.FC<Props> = ({ note, onOpen }) => {
       </div>
       <div className="pt-1">
         <ul className="list-disc list-outside ml-5">
-          {[...note.backlinks].map((link) => (
+          {[...note.backlinkIds].map((link) => (
             <li key={link}>
               <NoteLinkContainer id={link} onOpen={onOpen} />
             </li>
