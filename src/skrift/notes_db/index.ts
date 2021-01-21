@@ -133,7 +133,7 @@ export const NotesDB = {
 
   async getNoteLinks(db: Database, ids: NoteID[]): Promise<NoteLink[]> {
     return db.all<NoteLinkRow[]>(
-      `SELECT id, title FROM notes WHERE id IN (?)`,
+      `SELECT id, title FROM notes WHERE id IN (${[...ids].fill("?")})`,
       ids
     );
   },
