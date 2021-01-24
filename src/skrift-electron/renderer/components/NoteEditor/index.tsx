@@ -6,15 +6,10 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useState,
 } from "react";
 import { Note, NoteID } from "../../../../skrift/note";
 import { OpenCardMode } from "../../interfaces/state";
 import { Handle, ProseMirror, useProseMirror } from "use-prosemirror";
-import {
-  defaultMarkdownParser,
-  defaultMarkdownSerializer,
-} from "prosemirror-markdown";
 import { keymap } from "prosemirror-keymap";
 import { buildKeymap } from "./keymap";
 import { history } from "prosemirror-history";
@@ -26,8 +21,6 @@ import {
 } from "prosemirror-view";
 import { markdownParser, schema } from "../../../../skrift-markdown/parser";
 import { Plugin, PluginKey } from "prosemirror-state";
-// @ts-ignore
-import applyDevTools from "prosemirror-dev-tools";
 
 interface Props {
   note: Note;
@@ -142,14 +135,6 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen }) => {
 
   const nv = useMemo(() => nodeViews(), []);
 
-  const viewRef = useRef() as RefObject<Handle>;
-
-  useEffect(() => {
-    if (viewRef.current) {
-      applyDevTools(viewRef.current.view);
-    }
-  }, [viewRef]);
-
   const handleClick = useCallback(
     (view: EditorView, pos: number, event: MouseEvent) => {
       const { target } = event;
@@ -176,7 +161,6 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen }) => {
   return (
     <div className="markdown">
       <ProseMirror
-        ref={viewRef}
         handleClick={handleClick}
         state={state}
         onChange={setState}
