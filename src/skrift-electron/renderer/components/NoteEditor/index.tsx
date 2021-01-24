@@ -22,6 +22,7 @@ import {
 import { markdownParser, schema } from "../../../../skrift-markdown/parser";
 import { EditorState, Plugin, PluginKey } from "prosemirror-state";
 import { defaultMarkdownSerializer } from "prosemirror-markdown";
+import { markdownSerializer } from "../../../../skrift-markdown/serializer";
 
 interface Props {
   note: NoteWithLinks;
@@ -162,11 +163,6 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen, onUpdate }) => {
   const viewRef = useRef() as RefObject<Handle>;
 
   useEffect(() => {
-    console.log("links changed");
-  }, [note.links]);
-
-  useEffect(() => {
-    console.log("note changed!");
     const view = viewRef.current?.view;
     if (!view) return;
 
@@ -175,11 +171,13 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen, onUpdate }) => {
     setState(view.state.apply(tr));
   }, [note, viewRef, setState]);
 
-  useEffect(() => {
-    console.log("state changed");
-    // const tr = state.tr
-    // tr.setMeta(noteLinkPlugin, note.links)
-  }, [state]);
+  const handleChange = useCallback(
+    (state: EditorState) => {
+      setState(state);
+      onUpdate(markdownSerializer.serialize(state.doc));
+    },
+    [setState, onUpdate]
+  );
 
   const handleClick = useCallback(
     (view: EditorView, pos: number, event: MouseEvent) => {
@@ -210,7 +208,7 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen, onUpdate }) => {
         ref={viewRef}
         handleClick={handleClick}
         state={state}
-        onChange={setState}
+        onChange={handleChange}
         nodeViews={_nodeViews}
       />
     </div>
