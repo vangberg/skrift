@@ -7,7 +7,7 @@ import React, {
   useMemo,
   useRef,
 } from "react";
-import { Note, NoteID } from "../../../../skrift/note";
+import { Note, NoteID, NoteWithLinks } from "../../../../skrift/note";
 import { OpenCardMode } from "../../interfaces/state";
 import { Handle, ProseMirror, useProseMirror } from "use-prosemirror";
 import { keymap } from "prosemirror-keymap";
@@ -23,9 +23,11 @@ import { markdownParser, schema } from "../../../../skrift-markdown/parser";
 import { Plugin, PluginKey } from "prosemirror-state";
 
 interface Props {
-  note: Note;
+  note: NoteWithLinks;
   onOpen: (id: string, mode: OpenCardMode) => void;
 }
+
+const isNoteLink = (href: string): boolean => href.indexOf("://") < 0;
 
 const getNoteID = (target: EventTarget): NoteID | false => {
   if (!(target instanceof HTMLAnchorElement)) {
@@ -37,7 +39,7 @@ const getNoteID = (target: EventTarget): NoteID | false => {
 
   if (!href) return false;
 
-  if (href.indexOf("://") >= 0) return false;
+  if (!isNoteLink(href)) return false;
 
   return href;
 };
@@ -81,40 +83,60 @@ const nodeViews = (): EditorProps["nodeViews"] => {
   };
 };
 
-const noteLinkPlugin = new Plugin<DecorationSet>({
+interface NoteLinkPluginState {
+  decorationSet: DecorationSet;
+  note: NoteWithLinks | null;
+}
+
+const noteLinkPlugin = new Plugin<NoteLinkPluginState>({
   state: {
     init() {
-      return DecorationSet.empty;
+      return {
+        decorationSet: DecorationSet.empty,
+        note: null,
+      };
     },
-    apply(tr, set) {
-      console.log("calc");
-      set = DecorationSet.empty;
+    apply(tr, state) {
+      let meta = tr.getMeta(noteLinkPlugin) as NoteWithLinks | undefined;
+      let note = meta || state.note;
 
+      if (!note) {
+        return state;
+      }
+
+      let set = DecorationSet.empty;
       const decos: Decoration[] = [];
 
       tr.doc.descendants((node, pos) => {
-        if (node.type.name === "link") {
-          decos.push(
-            Decoration.node(
-              pos,
-              pos + node.nodeSize,
-              {
-                style: "border: 1px solid red;",
-              },
-              { noteTitle: Math.random().toString() }
-            )
-          );
-        }
+        const href: string | undefined = node.attrs["href"];
+
+        if (!href) return;
+        if (!isNoteLink(href)) return;
+        if (node.type.name !== "link") return;
+
+        const link = note!.links.find((link) => link.id === href);
+        if (!link) return;
+
+        decos.push(
+          Decoration.node(
+            pos,
+            pos + node.nodeSize,
+            {
+              style: "border: 1px solid red;",
+            },
+            { noteTitle: link.title }
+          )
+        );
       });
 
       set = set.add(tr.doc, decos);
 
-      return set;
+      return { note, decorationSet: set };
     },
   },
   props: {
     decorations(state) {
-      return this.getState(state);
+      return this.getState(state).decorationSet;
     },
   },
 });
@@ -133,7 +155,24 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen }) => {
     plugins,
   });
 
-  const nv = useMemo(() => nodeViews(), []);
+  const _nodeViews = useMemo(() => nodeViews(), []);
+
+  const viewRef = useRef() as RefObject<Handle>;
+
+  useEffect(() => {
+    const view = viewRef.current?.view;
+    if (!view) return;
+
+    const tr = view.state.tr;
+    tr.setMeta(noteLinkPlugin, note);
+    setState(view.state.apply(tr));
+  }, [note, viewRef, setState]);
+
+  useEffect(() => {
+    console.log("state changed");
+    // const tr = state.tr
+    // tr.setMeta(noteLinkPlugin, note.links)
+  }, [state]);
 
   const handleClick = useCallback(
     (view: EditorView, pos: number, event: MouseEvent) => {
@@ -161,10 +200,11 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen }) => {
   return (
     <div className="markdown">
       <ProseMirror
+        ref={viewRef}
         handleClick={handleClick}
         state={state}
         onChange={setState}
-        nodeViews={nv}
+        nodeViews={_nodeViews}
       />
     </div>
   );
