@@ -1,10 +1,11 @@
 import "prosemirror-view/style/prosemirror.css";
 
-import React from "react";
+import React, { useCallback } from "react";
 import { useNote } from "../hooks/useNote";
 import { NoteID } from "../../../skrift/note";
 import { OpenCardMode } from "../interfaces/state";
 import { NoteEditor } from "../components/NoteEditor";
+import { Ipc } from "../ipc";
 
 interface Props {
   id: NoteID;
@@ -14,9 +15,16 @@ interface Props {
 export const NoteEditorContainer: React.FC<Props> = ({ id, onOpen }) => {
   const note = useNote(id);
 
+  const handleUpdate = useCallback(
+    (markdown: string) => {
+      Ipc.send({ type: "command/SET_NOTE", id, markdown });
+    },
+    [id]
+  );
+
   if (!note) {
     return null;
   }
 
-  return <NoteEditor note={note} onOpen={onOpen} />;
+  return <NoteEditor note={note} onOpen={onOpen} onUpdate={handleUpdate} />;
 };

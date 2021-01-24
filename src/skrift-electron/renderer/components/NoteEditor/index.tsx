@@ -20,11 +20,13 @@ import {
   EditorView,
 } from "prosemirror-view";
 import { markdownParser, schema } from "../../../../skrift-markdown/parser";
-import { Plugin, PluginKey } from "prosemirror-state";
+import { EditorState, Plugin, PluginKey } from "prosemirror-state";
+import { defaultMarkdownSerializer } from "prosemirror-markdown";
 
 interface Props {
   note: NoteWithLinks;
   onOpen: (id: string, mode: OpenCardMode) => void;
+  onUpdate: (markdown: string) => void;
 }
 
 const isNoteLink = (href: string): boolean => href.indexOf("://") < 0;
@@ -141,7 +143,7 @@ const noteLinkPlugin = new Plugin<NoteLinkPluginState>({
   },
 });
 
-export const NoteEditor: React.FC<Props> = ({ note, onOpen }) => {
+export const NoteEditor: React.FC<Props> = ({ note, onOpen, onUpdate }) => {
   const plugins = useMemo(
     () => [history(), keymap(buildKeymap(schema)), noteLinkPlugin],
     []
@@ -160,6 +162,11 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen }) => {
   const viewRef = useRef() as RefObject<Handle>;
 
   useEffect(() => {
+    console.log("links changed");
+  }, [note.links]);
+
+  useEffect(() => {
+    console.log("note changed!");
     const view = viewRef.current?.view;
     if (!view) return;
 

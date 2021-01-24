@@ -112,9 +112,17 @@ const handleSetNote = async (
 
   const noteAfter = await NotesDB.getWithLinks(db, id);
 
+  const linksAffected = [];
+
+  // If the title is changed, we need to push new versions of all notes
+  // that are linking to this note, so they can get the new title.
+  if (noteBefore.title !== noteAfter.title) {
+    linksAffected.push(...noteAfter.backlinkIds);
+  }
+
   const linksDeleted = TSet.difference(noteBefore.linkIds, noteAfter.linkIds);
   const linksAdded = TSet.difference(noteAfter.linkIds, noteBefore.linkIds);
-  const linksAffected = TSet.union(linksDeleted, linksAdded);
+  linksAffected.push(...TSet.union(linksDeleted, linksAdded));
 
   reply(event, { type: "event/SET_NOTE", note: noteAfter });
 
