@@ -49,10 +49,16 @@ const getNoteID = (target: EventTarget): NoteID | false => {
 
 const nodeViews = (): EditorProps["nodeViews"] => {
   return {
+    // We use a custom node view to render links, so
+    // we can enrich note links with their actual title.
     link: (node, view, getPos, decos) => {
       const dom = document.createElement("a");
       dom.setAttribute("href", node.attrs["href"]);
 
+      // The title of the note is injected into ProseMirror
+      // by adding it as a spec on an otherwise empty decoration.
+      // Using decorations is the only way to force the node to
+      // re-render when the note data changes.
       const deco = decos.find((deco) => deco.spec.noteTitle);
 
       dom.innerText = deco
@@ -60,7 +66,7 @@ const nodeViews = (): EditorProps["nodeViews"] => {
         : node.content.firstChild!.text;
 
       dom.addEventListener("click", (event) => {
-        // Do not follow the link in the browser.
+        // If we don't, the link will be followed to /note-id.md.
         event.preventDefault();
       });
       return { dom };
@@ -73,6 +79,9 @@ interface NoteLinkPluginState {
   note: NoteWithLinks | null;
 }
 
+// This plugin is responsible for storing the note (and link titles)
+// in its state, as well as generating decorations with the note titles
+// for links.
 const noteLinkPlugin = new Plugin<NoteLinkPluginState>({
   state: {
     init() {
@@ -82,7 +91,11 @@ const noteLinkPlugin = new Plugin<NoteLinkPluginState>({
       };
     },
     apply(tr, state) {
+      // Whenever the note data updates, we apply a transaction with the
+      // note as the meta data for this plugin.
       let meta = tr.getMeta(noteLinkPlugin) as NoteWithLinks | undefined;
+
+      // Otherwise, fall back to previously injected note from the state.
       let note = meta || state.note;
 
       if (!note) {
@@ -106,9 +119,7 @@ const noteLinkPlugin = new Plugin<NoteLinkPluginState>({
           Decoration.node(
             pos,
             pos + node.nodeSize,
-            {
-              style: "border: 1px solid red;",
-            },
+            {},
             { noteTitle: link.title }
           )
         );
@@ -145,6 +156,10 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen, onUpdate }) => {
   const viewRef = useRef() as RefObject<Handle>;
 
   useEffect(() => {
+    // We need to use the viewRef instead of directly referencing
+    // `state`, as that would require us to add `state` as a dependency
+    // to this hook, making it re-run everytime there was any change in
+    // the editor. We only want this to run when the note itself changes.
     const view = viewRef.current?.view;
     if (!view) return;
 
@@ -163,7 +178,6 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen, onUpdate }) => {
 
   const handleClick = useCallback(
     (view: EditorView, pos: number, event: MouseEvent) => {
-      console.log("handle click");
       const { target } = event;
       if (!target) return false;
 
