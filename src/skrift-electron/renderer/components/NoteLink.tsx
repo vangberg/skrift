@@ -12,7 +12,7 @@ type Props = {
 export const NoteLink: React.FC<Props> = ({ id, note, onOpen }) => {
   const handleOpen = useCallback(
     (event: React.MouseEvent) => {
-      onOpen(id, mouseEventToMode(event));
+      onOpen(id, mouseEventToMode(event.nativeEvent));
     },
     [onOpen, id]
   );

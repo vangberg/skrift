@@ -22,6 +22,7 @@ import {
 import { markdownParser, schema } from "../../../../skrift-markdown/parser";
 import { EditorState, Plugin } from "prosemirror-state";
 import { markdownSerializer } from "../../../../skrift-markdown/serializer";
+import { mouseEventToMode } from "../../mouseEventToMode";
 
 interface Props {
   note: NoteWithLinks;
@@ -44,24 +45,6 @@ const getNoteID = (target: EventTarget): NoteID | false => {
   if (!isNoteLink(href)) return false;
 
   return href;
-};
-
-const clickToMode = (event: MouseEvent): OpenCardMode | false => {
-  const { ctrlKey, metaKey, button } = event;
-  const superKey = ctrlKey || metaKey;
-
-  //if (!superKey) return false;
-
-  switch (button) {
-    case 0:
-      return "below";
-    case 1:
-      return "replace";
-    case 2:
-      return "push";
-  }
-
-  return false;
 };
 
 const nodeViews = (): EditorProps["nodeViews"] => {
@@ -187,8 +170,7 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen, onUpdate }) => {
       const noteId = getNoteID(target);
       if (!noteId) return false;
 
-      const openMode = clickToMode(event);
-      if (!openMode) return false;
+      const openMode = mouseEventToMode(event);
 
       event.stopPropagation();
       event.preventDefault();

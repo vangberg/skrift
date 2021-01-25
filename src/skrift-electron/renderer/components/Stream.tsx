@@ -43,11 +43,13 @@ export const Stream: React.FC<Props> = ({ path, stream, onOpenSearch }) => {
   const droppableId = useMemo(() => DroppableIds.serialize(path), [path]);
 
   const handleOpenSearch = useCallback(
-    (event: React.MouseEvent) => onOpenSearch("", "below"),
+    (event: React.MouseEvent) =>
+      onOpenSearch("", mouseEventToMode(event.nativeEvent)),
     [onOpenSearch]
   );
   const handleOpenAll = useCallback(
-    (event: React.MouseEvent) => onOpenSearch("*", "below"),
+    (event: React.MouseEvent) =>
+      onOpenSearch("*", mouseEventToMode(event.nativeEvent)),
     [onOpenSearch]
   );
 
