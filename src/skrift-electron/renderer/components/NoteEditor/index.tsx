@@ -13,16 +13,14 @@ import { Handle, ProseMirror, useProseMirror } from "use-prosemirror";
 import { keymap } from "prosemirror-keymap";
 import { buildKeymap } from "./keymap";
 import { history } from "prosemirror-history";
-import {
-  Decoration,
-  DecorationSet,
-  EditorProps,
-  EditorView,
-} from "prosemirror-view";
+import { EditorView } from "prosemirror-view";
 import { markdownParser, schema } from "../../../../skrift-markdown/parser";
-import { EditorState, Plugin } from "prosemirror-state";
+import { EditorState } from "prosemirror-state";
 import { markdownSerializer } from "../../../../skrift-markdown/serializer";
 import { mouseEventToMode } from "../../mouseEventToMode";
+import { nodeViews } from "./nodeViews";
+import { noteLinkPlugin } from "./noteLinkPlugin";
+import { buildInputRules } from "./inputrules";
 
 interface Props {
   note: NoteWithLinks;
@@ -47,99 +45,14 @@ const getNoteID = (target: EventTarget): NoteID | false => {
   return href;
 };
 
-const nodeViews = (): EditorProps["nodeViews"] => {
-  return {
-    // We use a custom node view to render links, so
-    // we can enrich note links with their actual title.
-    link: (node, view, getPos, decos) => {
-      const dom = document.createElement("a");
-      dom.setAttribute("href", node.attrs["href"]);
-
-      // The title of the note is injected into ProseMirror
-      // by adding it as a spec on an otherwise empty decoration.
-      // Using decorations is the only way to force the node to
-      // re-render when the note data changes.
-      const deco = decos.find((deco) => deco.spec.noteTitle);
-
-      dom.innerText = deco
-        ? deco.spec.noteTitle
-        : node.content.firstChild!.text;
-
-      dom.addEventListener("click", (event) => {
-        // If we don't, the link will be followed to /note-id.md.
-        event.preventDefault();
-      });
-      return { dom };
-    },
-  };
-};
-
-interface NoteLinkPluginState {
-  decorationSet: DecorationSet;
-  note: NoteWithLinks | null;
-}
-
-// This plugin is responsible for storing the note (and link titles)
-// in its state, as well as generating decorations with the note titles
-// for links.
-const noteLinkPlugin = new Plugin<NoteLinkPluginState>({
-  state: {
-    init() {
-      return {
-        decorationSet: DecorationSet.empty,
-        note: null,
-      };
-    },
-    apply(tr, state) {
-      // Whenever the note data updates, we apply a transaction with the
-      // note as the meta data for this plugin.
-      let meta = tr.getMeta(noteLinkPlugin) as NoteWithLinks | undefined;
-
-      // Otherwise, fall back to previously injected note from the state.
-      let note = meta || state.note;
-
-      if (!note) {
-        return state;
-      }
-
-      let set = DecorationSet.empty;
-      const decos: Decoration[] = [];
-
-      tr.doc.descendants((node, pos) => {
-        const href: string | undefined = node.attrs["href"];
-
-        if (!href) return;
-        if (!isNoteLink(href)) return;
-        if (node.type.name !== "link") return;
-
-        const link = note!.links.find((link) => link.id === href);
-        if (!link) return;
-
-        decos.push(
-          Decoration.node(
-            pos,
-            pos + node.nodeSize,
-            {},
-            { noteTitle: link.title }
-          )
-        );
-      });
-
-      set = set.add(tr.doc, decos);
-
-      return { note, decorationSet: set };
-    },
-  },
-  props: {
-    decorations(state) {
-      return this.getState(state).decorationSet;
-    },
-  },
-});
-
 export const NoteEditor: React.FC<Props> = ({ note, onOpen, onUpdate }) => {
   const plugins = useMemo(
-    () => [history(), keymap(buildKeymap(schema)), noteLinkPlugin],
+    () => [
+      history(),
+      keymap(buildKeymap(schema)),
+      buildInputRules(schema),
+      noteLinkPlugin,
+    ],
     []
   );
 

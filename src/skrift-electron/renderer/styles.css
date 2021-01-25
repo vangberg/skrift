@@ -55,4 +55,12 @@
   pre {
     @apply p-2 text-sm bg-red-200;
   }
+
+  blockquote {
+    @apply border-l-4 border-gray-300 pl-2 bg-gray-100 italic;
+  }
+
+  hr {
+    @apply my-2;
+  }
 }
