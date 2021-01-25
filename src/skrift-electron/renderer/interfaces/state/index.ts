@@ -87,13 +87,7 @@ export const State = {
           {
             key: key++,
             type: "stream",
-            cards: [
-              {
-                key: key++,
-                type: "note",
-                id: "20210113T102413.066Z.md",
-              },
-            ],
+            cards: [],
           },
         ],
       },
