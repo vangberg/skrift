@@ -10,7 +10,6 @@ export const schema = new Schema({
     group: "inline",
     content: "inline*",
     atom: true,
-    selectable: false,
     draggable: false,
     attrs: {
       href: {},

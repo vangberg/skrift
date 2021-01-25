@@ -7,7 +7,7 @@ import React, {
   useMemo,
   useRef,
 } from "react";
-import { Note, NoteID, NoteWithLinks } from "../../../../skrift/note";
+import { NoteID, NoteWithLinks } from "../../../../skrift/note";
 import { OpenCardMode } from "../../interfaces/state";
 import { Handle, ProseMirror, useProseMirror } from "use-prosemirror";
 import { keymap } from "prosemirror-keymap";
@@ -20,8 +20,7 @@ import {
   EditorView,
 } from "prosemirror-view";
 import { markdownParser, schema } from "../../../../skrift-markdown/parser";
-import { EditorState, Plugin, PluginKey } from "prosemirror-state";
-import { defaultMarkdownSerializer } from "prosemirror-markdown";
+import { EditorState, Plugin } from "prosemirror-state";
 import { markdownSerializer } from "../../../../skrift-markdown/serializer";
 
 interface Props {
@@ -51,7 +50,7 @@ const clickToMode = (event: MouseEvent): OpenCardMode | false => {
   const { ctrlKey, metaKey, button } = event;
   const superKey = ctrlKey || metaKey;
 
-  if (!superKey) return false;
+  //if (!superKey) return false;
 
   switch (button) {
     case 0:
@@ -78,7 +77,7 @@ const nodeViews = (): EditorProps["nodeViews"] => {
         : node.content.firstChild!.text;
 
       dom.addEventListener("click", (event) => {
-        event.stopPropagation();
+        // Do not follow the link in the browser.
         event.preventDefault();
       });
       return { dom };
@@ -181,6 +180,7 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen, onUpdate }) => {
 
   const handleClick = useCallback(
     (view: EditorView, pos: number, event: MouseEvent) => {
+      console.log("handle click");
       const { target } = event;
       if (!target) return false;
 
@@ -207,6 +207,10 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen, onUpdate }) => {
       <ProseMirror
         ref={viewRef}
         handleClick={handleClick}
+        handlePaste={(view, event, slice) => {
+          console.log({ view, event, slice });
+          return false;
+        }}
         state={state}
         onChange={handleChange}
         nodeViews={_nodeViews}
