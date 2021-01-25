@@ -116,10 +116,6 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen, onUpdate }) => {
       <ProseMirror
         ref={viewRef}
         handleClick={handleClick}
-        handlePaste={(view, event, slice) => {
-          console.log({ view, event, slice });
-          return false;
-        }}
         state={state}
         onChange={handleChange}
         nodeViews={_nodeViews}
