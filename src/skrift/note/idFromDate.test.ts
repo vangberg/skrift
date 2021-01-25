@@ -5,6 +5,6 @@ describe("Note.idFromDate", () => {
     let date = new Date(Date.UTC(2020, 0, 2, 3, 4, 5, 6));
     let id = Note.idFromDate(date);
 
-    expect(id).toEqual("20200102T030405.006Z");
+    expect(id).toEqual("20200102T030405.006Z.md");
   });
 });

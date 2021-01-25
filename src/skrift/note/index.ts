@@ -24,7 +24,7 @@ export interface NoteWithLinks extends Note {
 
 export const Note = {
   idFromDate(date: Date): string {
-    return date.toJSON().replace(/[:-]/g, "");
+    return date.toJSON().replace(/[:-]/g, "") + ".md";
   },
 
   fromMarkdown,
