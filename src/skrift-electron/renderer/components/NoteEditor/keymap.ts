@@ -11,8 +11,12 @@ import {
   splitBlock,
 } from "prosemirror-commands";
 import { redo, undo } from "prosemirror-history";
-import { Schema } from "prosemirror-model";
-import { splitListItem } from "prosemirror-schema-list";
+import { NodeType, Schema } from "prosemirror-model";
+import {
+  liftListItem,
+  sinkListItem,
+  splitListItem,
+} from "prosemirror-schema-list";
 
 export function buildKeymap<S extends Schema>(schema: S) {
   let keys: Keymap<S> = {};
@@ -20,9 +24,7 @@ export function buildKeymap<S extends Schema>(schema: S) {
 
   let enter: Command[] = [];
 
-  if ((type = schema.nodes.list_item)) {
-    enter.push(splitListItem(type));
-  }
+  enter.push(splitListItem(schema.nodes.list_item));
 
   keys["Enter"] = chainCommands(
     ...enter,
@@ -40,6 +42,11 @@ export function buildKeymap<S extends Schema>(schema: S) {
 
   keys["Mod-z"] = undo;
   keys["Mod-y"] = redo;
+
+  if ((type = schema.nodes.list_item as NodeType<S>)) {
+    keys["Mod-]"] = sinkListItem(type);
+    keys["Mod-["] = liftListItem(type);
+  }
 
   return keys;
 }
