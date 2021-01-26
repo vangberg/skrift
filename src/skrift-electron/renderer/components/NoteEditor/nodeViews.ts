@@ -18,10 +18,6 @@ export const nodeViews = (): EditorProps["nodeViews"] => {
         ? deco.spec.noteTitle
         : node.content.firstChild!.text;
 
-      dom.addEventListener("click", (event) => {
-        // If we don't, the link will be followed to /note-id.md.
-        event.preventDefault();
-      });
       return { dom };
     },
   };

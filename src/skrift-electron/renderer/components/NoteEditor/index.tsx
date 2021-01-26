@@ -30,13 +30,9 @@ interface Props {
 
 const isNoteLink = (href: string): boolean => href.indexOf("://") < 0;
 
-const getNoteID = (target: EventTarget): NoteID | false => {
-  if (!(target instanceof HTMLAnchorElement)) {
-    return false;
-  }
-
+const getNoteID = (anchor: HTMLAnchorElement): NoteID | false => {
   // HTMLAnchorElement.href prepends localhost://
-  const href = target.getAttribute("href");
+  const href = anchor.getAttribute("href");
 
   if (!href) return false;
 
@@ -90,9 +86,14 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen, onUpdate }) => {
   );
 
   const handleClick = useCallback(
-    (view: EditorView, pos: number, event: MouseEvent) => {
+    (view: EditorView, event: MouseEvent) => {
       const { target } = event;
-      if (!target) return false;
+
+      if (!(target instanceof HTMLAnchorElement)) {
+        return false;
+      }
+
+      event.preventDefault();
 
       const noteId = getNoteID(target);
       if (!noteId) return false;
@@ -102,9 +103,17 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen, onUpdate }) => {
       event.stopPropagation();
       event.preventDefault();
       onOpen(noteId, openMode);
+
       return true;
     },
     [onOpen]
+  );
+
+  const domEvents = useMemo(
+    () => ({
+      click: handleClick,
+    }),
+    [handleClick]
   );
 
   if (!note) {
@@ -115,7 +124,7 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen, onUpdate }) => {
     <div className="markdown">
       <ProseMirror
         ref={viewRef}
-        handleClick={handleClick}
+        handleDOMEvents={domEvents}
         state={state}
         onChange={handleChange}
         nodeViews={_nodeViews}
