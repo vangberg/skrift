@@ -1,13 +1,23 @@
 import { Schema } from "prosemirror-model";
 import {
   ellipsis,
-  emDash,
+  InputRule,
   inputRules,
   textblockTypeInputRule,
   wrappingInputRule,
 } from "prosemirror-inputrules";
 
 export const buildInputRules = <S extends Schema>(schema: S) => {
+  const hr = new InputRule(/^(---)$/, (state, match, start, end) => {
+    const { tr } = state;
+
+    if (match[0]) {
+      tr.replaceWith(start - 1, end, schema.nodes.horizontal_rule.create({}));
+    }
+
+    return tr;
+  });
+
   const blockquote = wrappingInputRule(/^\s*>\s$/, schema.nodes.blockquote);
 
   const orderedList = wrappingInputRule(
@@ -29,6 +39,6 @@ export const buildInputRules = <S extends Schema>(schema: S) => {
   );
 
   return inputRules({
-    rules: [ellipsis, emDash, blockquote, orderedList, bulletList, heading],
+    rules: [ellipsis, hr, blockquote, orderedList, bulletList, heading],
   });
 };
