@@ -148,8 +148,7 @@ export const State = {
     const card = { key: key++, ...props };
 
     if (mode === "below") {
-      // Insert card in stream after the card at path.
-      stream.cards.splice(Path.last(path) + 1, 0, card);
+      stream.cards.push(card);
 
       return;
     }

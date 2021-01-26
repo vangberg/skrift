@@ -13,12 +13,12 @@ describe("State.openCard", () => {
     expect((card as NoteCard).id).toEqual("x");
   });
 
-  it("opens card below card path", () => {
+  it("opens card at end of stream", () => {
     let state = getState();
 
     State.openCard(state, [0, 0], { mode: "below" }, { type: "note", id: "x" });
 
-    const card = State.at(state, [0, 1]);
+    const card = State.at(state, [0, 2]);
 
     expect(card.type).toEqual("note");
     expect((card as NoteCard).id).toEqual("x");
