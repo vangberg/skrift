@@ -10,7 +10,7 @@ import {
 import { Database } from "sqlite";
 import path from "path";
 import { TSet } from "../../skrift/tset";
-import { Note } from "../../skrift/note";
+import { Note, NoteWithLinks } from "../../skrift/note";
 import { NotesDB } from "../../skrift/notes_db";
 import { NotesFS } from "../../skrift/notes_fs";
 
@@ -48,7 +48,13 @@ const handleLoadDir = async (event: Electron.IpcMainEvent) => {
     }
   });
 
-  reply(event, { type: "event/LOADED_DIR" });
+  const initialNoteID = "20210108T145053.970Z.md";
+
+  if (await NotesDB.exists(db, initialNoteID)) {
+    reply(event, { type: "event/LOADED_DIR", initialNoteID });
+  } else {
+    reply(event, { type: "event/LOADED_DIR", initialNoteID: null });
+  }
 };
 
 const handleLoadNote = async (

@@ -24,7 +24,7 @@ export type IpcSetNoteEvent = { type: "event/SET_NOTE"; note: NoteWithLinks };
 
 export type IpcReply =
   | { type: "event/LOADING_DIR"; loaded: number }
-  | { type: "event/LOADED_DIR" }
+  | { type: "event/LOADED_DIR"; initialNoteID: NoteID | null }
   | IpcSetNoteEvent
   | { type: "event/DELETED_NOTE"; id: NoteID }
   | { type: "event/ADDED_LINK"; from: NoteID; to: NoteID };

@@ -25,6 +25,13 @@ export const AppContainer: React.FC = () => {
       switch (event.type) {
         case "event/LOADED_DIR":
           setLoading(false);
+
+          if (event.initialNoteID) {
+            actions.openCard([0], "below", {
+              type: "note",
+              id: event.initialNoteID,
+            });
+          }
           break;
         case "event/LOADING_DIR":
           setLoaded(event.loaded);
@@ -33,7 +40,7 @@ export const AppContainer: React.FC = () => {
     });
 
     return deregister;
-  }, []);
+  }, [actions]);
 
   const handleDragEnd: OnDragEndResponder = useCallback(
     (result) => {

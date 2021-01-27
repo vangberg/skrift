@@ -2,6 +2,7 @@ import sqlite3 from "sqlite3";
 import { open, Database } from "sqlite";
 import { Note, NoteID, NoteLink, NoteWithLinks } from "../note";
 import path from "path";
+import { exists } from "fs";
 
 export interface NoteRow {
   id: string;
@@ -105,6 +106,12 @@ export const NotesDB = {
         [id, link]
       );
     }
+  },
+
+  async exists(db: Database, id: NoteID): Promise<boolean> {
+    const row = await db.get<NoteID>(`SELECT id FROM notes WHERE id = ?`, id);
+
+    return !!row;
   },
 
   async get(db: Database, id: NoteID): Promise<Note> {
