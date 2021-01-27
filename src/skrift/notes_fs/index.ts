@@ -8,7 +8,27 @@ export const NotesFS = {
   },
 
   async initialize(dirPath: string): Promise<void> {
-    await fs.promises.mkdir(dirPath, { recursive: true });
+    if (!fs.existsSync(dirPath)) {
+      await fs.promises.mkdir(dirPath, { recursive: true });
+
+      const docsPath = path.join(process.resourcesPath, "docs");
+
+      if (fs.existsSync(docsPath)) {
+        const notes = (await fs.promises.readdir(docsPath)).filter((filename) =>
+          filename.endsWith(".md")
+        );
+
+        await Promise.all(
+          notes.map(async (note) => {
+            const from = path.join(docsPath, note);
+            const to = path.join(dirPath, note);
+            return fs.promises.copyFile(from, to);
+          })
+        );
+      }
+    }
+
+    return Promise.resolve();
   },
 
   async read(dirPath: string, id: NoteID): Promise<Note> {

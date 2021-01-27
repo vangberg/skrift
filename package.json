@@ -40,6 +40,9 @@
     },
     "files": [
       "build/**/*"
+    ],
+    "extraResources": [
+      "docs/*"
     ]
   },
   "repository": {
