@@ -15,7 +15,7 @@ export const NoteCardBacklinks: React.FC<Props> = ({ note, onOpen }) => {
 
   return (
     <details className="p-2 bg-gray-100">
-      <summary className="cursor-pointer">
+      <summary className="cursor-pointer select-none">
         Backlinks ({note.backlinkIds.size})
       </summary>
       <div>
