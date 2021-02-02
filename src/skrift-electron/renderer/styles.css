@@ -49,8 +49,16 @@
     @apply list-disc list-outside ml-5;
   }
 
-  a {
+  a.known {
     @apply underline text-blue-500;
+  }
+
+  a.unknown {
+    @apply underline text-red-500;
+  }
+
+  a.external {
+    @apply no-underline text-blue-500;
   }
 
   pre {
