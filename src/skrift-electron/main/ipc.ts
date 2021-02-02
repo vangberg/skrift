@@ -10,7 +10,7 @@ import {
 import { Database } from "sqlite";
 import path from "path";
 import { TSet } from "../../skrift/tset";
-import { Note, NoteWithLinks } from "../../skrift/note";
+import { Note, NoteLink, NoteWithLinks } from "../../skrift/note";
 import { NotesDB } from "../../skrift/notes_db";
 import { NotesFS } from "../../skrift/notes_fs";
 
@@ -141,13 +141,13 @@ const handleSetNote = async (
 const handleSearch = async (
   event: Electron.IpcMainInvokeEvent,
   query: string
-): Promise<Note[]> => {
+): Promise<NoteLink[]> => {
   const db = await getDB();
 
   const ids = await NotesDB.search(db, query);
-  const notes = await Promise.all(ids.map((id) => NotesDB.get(db, id)));
+  const links = await NotesDB.getNoteLinks(db, ids);
 
-  return notes;
+  return links;
 };
 
 export const setupIpc = () => {

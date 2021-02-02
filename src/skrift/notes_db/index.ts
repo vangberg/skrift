@@ -174,7 +174,7 @@ export const NotesDB = {
     }
 
     const rows = await db.all<SearchRow[]>(
-      `SELECT * FROM notes WHERE notes MATCH ?`,
+      `SELECT * FROM notes WHERE notes MATCH ? LIMIT 50`,
       `${cleanQuery}*`
     );
 

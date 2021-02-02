@@ -1,28 +1,28 @@
 import React from "react";
-import { Note } from "../../../skrift/note";
-import { NoteLinkContainer } from "../containers/NoteLinkContainer";
+import { NoteWithLinks } from "../../../skrift/note";
 import { OpenCardMode } from "../interfaces/state";
+import { NoteLink } from "./NoteLink";
 
 type Props = {
-  note: Note;
+  note: NoteWithLinks;
   onOpen: (id: string, mode: OpenCardMode) => void;
 };
 
 export const NoteCardBacklinks: React.FC<Props> = ({ note, onOpen }) => {
-  if (note.backlinkIds.size === 0) {
+  if (note.backlinks.length === 0) {
     return null;
   }
 
   return (
     <details className="p-2 bg-gray-100">
       <summary className="cursor-pointer select-none">
-        Backlinks ({note.backlinkIds.size})
+        Backlinks ({note.backlinks.length})
       </summary>
       <div>
         <ul className="list-disc list-outside ml-5">
-          {[...note.backlinkIds].map((link) => (
-            <li key={link}>
-              <NoteLinkContainer id={link} onOpen={onOpen} />
+          {note.backlinks.map((link) => (
+            <li key={link.id}>
+              <NoteLink link={link} onOpen={onOpen} />
             </li>
           ))}
         </ul>

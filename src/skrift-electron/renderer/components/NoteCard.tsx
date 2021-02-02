@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { remote, clipboard } from "electron";
 
 import { NoteCardBacklinks } from "./NoteCardBacklinks";
-import { Note } from "../../../skrift/note";
+import { NoteWithLinks } from "../../../skrift/note";
 import { NoteEditorContainer } from "../containers/NoteEditorContainer";
 import { Card } from "./Card";
 import { CardToolbar } from "./CardToolbar";
@@ -13,7 +13,7 @@ import { OpenCardMode } from "../interfaces/state";
 
 type Props = {
   path: Path;
-  note: Note;
+  note: NoteWithLinks;
   onOpen: (id: string, mode: OpenCardMode) => void;
   onZoom: () => void;
   onDelete: () => void;
