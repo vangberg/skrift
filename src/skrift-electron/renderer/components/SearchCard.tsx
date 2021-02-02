@@ -34,7 +34,7 @@ export const SearchCard: React.FC<Props> = ({
     <Card path={path}>
       {(provided) => (
         <>
-          <CardToolbar backgroundColor="bg-orange-300">
+          <CardToolbar backgroundColor="bg-yellow-300">
             <CardToolbarItem onClick={onZoom}>Zoom</CardToolbarItem>
 
             <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>

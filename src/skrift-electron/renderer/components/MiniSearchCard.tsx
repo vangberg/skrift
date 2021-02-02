@@ -12,7 +12,7 @@ type Props = {
 export const MiniSearchCard: React.FC<Props> = ({ card }) => {
   return (
     <MiniCard>
-      <MiniCardToolbar backgroundColor="bg-orange-300" />
+      <MiniCardToolbar backgroundColor="bg-yellow-300" />
       <MiniCardBody>{card.query}</MiniCardBody>
     </MiniCard>
   );

@@ -13,7 +13,8 @@
 }
 
 .ProseMirror-focused {
-  @apply outline-none;
+  @apply outline-none ring-2 ring-yellow-400 ring-opacity-30 rounded-sm
+  /* @apply opacity-10 bg-yellow-100; */;
 }
 
 .markdown {
