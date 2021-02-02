@@ -47,7 +47,7 @@ export const Stream: React.FC<Props> = ({ path, stream, onOpenSearch }) => {
       onOpenSearch("", mouseEventToMode(event.nativeEvent)),
     [onOpenSearch]
   );
-  const handleOpenAll = useCallback(
+  const handleOpenRecent = useCallback(
     (event: React.MouseEvent) =>
       onOpenSearch("*", mouseEventToMode(event.nativeEvent)),
     [onOpenSearch]
@@ -66,10 +66,10 @@ export const Stream: React.FC<Props> = ({ path, stream, onOpenSearch }) => {
 
           <div className="flex justify-center">
             <span
-              onClick={handleOpenAll}
+              onClick={handleOpenRecent}
               className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
             >
-              All
+              Recent
             </span>
             <span
               onClick={handleOpenSearch}

@@ -164,7 +164,7 @@ export const NotesDB = {
 
   async search(db: Database, query: string): Promise<NoteID[]> {
     if (query === "*") {
-      return NotesDB.all(db);
+      return NotesDB.recent(db);
     }
 
     const cleanQuery = query.replace(/[^a-zA-Z0-9\s]/g, " ");
@@ -181,9 +181,9 @@ export const NotesDB = {
     return rows.map((row) => row.id);
   },
 
-  async all(db: Database): Promise<NoteID[]> {
+  async recent(db: Database): Promise<NoteID[]> {
     const rows = await db.all<SearchRow[]>(
-      "SELECT * FROM notes ORDER BY modifiedAt DESC"
+      "SELECT * FROM notes ORDER BY modifiedAt DESC LIMIT 50"
     );
 
     return rows.map((row) => row.id);
