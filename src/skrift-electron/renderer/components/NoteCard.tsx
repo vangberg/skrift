@@ -49,7 +49,7 @@ export const NoteCard: React.FC<Props> = ({
     <Card path={path}>
       {(provided) => (
         <>
-          <CardToolbar backgroundColor="bg-green-300">
+          <CardToolbar backgroundColor="bg-green-400">
             <CardToolbarItem onClick={handleDelete}>Delete</CardToolbarItem>
             <CardToolbarItem onClick={handleCopy}>Copy link</CardToolbarItem>
             <CardToolbarItem onClick={onZoom}>Zoom</CardToolbarItem>
