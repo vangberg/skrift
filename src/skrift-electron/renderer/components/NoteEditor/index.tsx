@@ -121,7 +121,7 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen, onUpdate }) => {
   }
 
   return (
-    <div className="markdown">
+    <div className="p-2 markdown">
       <ProseMirror
         ref={viewRef}
         handleDOMEvents={domEvents}

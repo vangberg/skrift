@@ -44,8 +44,14 @@ export const SearchCard: React.FC<Props> = ({
           </CardToolbar>
 
           <CardBody>
-            <SearchCardInput query={query} onAdd={onAdd} onSearch={onSearch} />
-            <SearchCardResults onOpen={onOpen} results={results} />
+            <div className="p-2">
+              <SearchCardInput
+                query={query}
+                onAdd={onAdd}
+                onSearch={onSearch}
+              />
+              <SearchCardResults onOpen={onOpen} results={results} />
+            </div>
           </CardBody>
         </>
       )}

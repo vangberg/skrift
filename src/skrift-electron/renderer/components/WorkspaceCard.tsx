@@ -33,7 +33,7 @@ export const WorkspaceCard: React.FC<Props> = ({
           </CardToolbar>
 
           <CardBody>
-            <div className="flex-1 flex flex-row justify-center px-1">
+            <div className="flex-1 flex flex-row justify-center py-2 px-1">
               {card.streams.map((stream) => (
                 <MiniStream key={stream.key} stream={stream} />
               ))}

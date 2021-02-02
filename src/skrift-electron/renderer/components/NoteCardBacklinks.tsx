@@ -14,11 +14,11 @@ export const NoteCardBacklinks: React.FC<Props> = ({ note, onOpen }) => {
   }
 
   return (
-    <div>
-      <div className="border-b border-gray-400 text-gray-600 italic">
-        Backlinks
-      </div>
-      <div className="pt-1">
+    <details className="p-2 bg-gray-100">
+      <summary className="cursor-pointer">
+        Backlinks ({note.backlinkIds.size})
+      </summary>
+      <div>
         <ul className="list-disc list-outside ml-5">
           {[...note.backlinkIds].map((link) => (
             <li key={link}>
@@ -27,6 +27,6 @@ export const NoteCardBacklinks: React.FC<Props> = ({ note, onOpen }) => {
           ))}
         </ul>
       </div>
-    </div>
+    </details>
   );
 };
