@@ -1,11 +1,7 @@
 module.exports = {
   theme: {
     minWidth: {
-      'xs': '20rem',
-      'sm': '24rem'
-    },
-    width: {
-      '80': '20rem',
+      sm: "24rem",
     },
     fontFamily: {
       sans: ["Roboto"],

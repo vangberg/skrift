@@ -3,6 +3,7 @@ import { open, Database } from "sqlite";
 import { Note, NoteID, NoteLink, NoteWithLinks } from "../note";
 import path from "path";
 import { exists } from "fs";
+import { Fts } from "./fts";
 
 export interface NoteRow {
   id: string;
@@ -167,15 +168,15 @@ export const NotesDB = {
       return NotesDB.recent(db);
     }
 
-    const cleanQuery = query.replace(/[^a-zA-Z0-9\s]/g, " ");
+    const tokens = Fts.parse(query);
 
-    if (cleanQuery.trim().length === 0) {
+    if (tokens.length === 0) {
       return [];
     }
 
     const rows = await db.all<SearchRow[]>(
       `SELECT * FROM notes WHERE notes MATCH ? LIMIT 50`,
-      `${cleanQuery}*`
+      Fts.toMatch(tokens)
     );
 
     return rows.map((row) => row.id);

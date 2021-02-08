@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { DevInfo } from "../components/DevInfo";
+import { Feedback } from "../components/Feedback";
 import { Splash } from "../components/Splash";
 import { useImmer } from "use-immer";
 import { CacheContext } from "../hooks/useCache";
@@ -72,6 +73,7 @@ export const AppContainer: React.FC = () => {
             <WorkspaceCardContainer path={[]} card={state.workspace} />
           </DragDropContext>
         )}
+        <Feedback />
         <DevInfo />
       </StateContext.Provider>
     </CacheContext.Provider>

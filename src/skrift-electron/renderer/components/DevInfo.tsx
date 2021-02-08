@@ -16,7 +16,7 @@ export const DevInfo: React.FC = () => {
   }, []);
 
   return (
-    <div className="absolute bottom-0 right-0 bg-white p-1 z-50">
+    <div className="absolute bottom-0 left-0 bg-white p-1 z-50">
       RSS: {Math.round(bToMb(memUsage.rss))} MB | Cache: {cache.size}
     </div>
   );
