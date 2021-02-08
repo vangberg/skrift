@@ -40,9 +40,9 @@ export const Parser = P.createLanguage({
     return (
       P.regex(/[\w+\u0080-\uFFFF\u005F]+/)
         /*
-      Without this lookahead, bareword() would match the `Que` part of `Que#ry`,
-      which should be matched bystring()
-      */
+        Without this lookahead, bareword() would match the `Que` part of `Que#ry`,
+        which should be matched bystring()
+        */
         .lookahead(P.alt(P.whitespace, P.eof))
         .map(Bareword)
     );
