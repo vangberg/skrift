@@ -16,10 +16,10 @@ function createWindow() {
   mainWindow.maximize();
 
   if (isDev) {
-    mainWindow.loadURL("http://localhost:8080");
+    mainWindow.loadURL("http://localhost:8080/app.html");
     mainWindow.webContents.openDevTools();
   } else {
-    mainWindow.loadFile("./build/index.html");
+    mainWindow.loadFile("./build/app.html");
   }
 
   mainWindow.on("closed", () => {

@@ -3,7 +3,9 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 module.exports = [
   {
     mode: "development",
-    entry: "./src/skrift-electron/renderer/react.tsx",
+    entry: {
+      app: "./src/skrift-electron/renderer/app.tsx",
+    },
     target: "electron-renderer",
     devtool: "source-map",
     resolve: {
@@ -30,11 +32,13 @@ module.exports = [
     },
     output: {
       path: __dirname + "/build",
-      filename: "react.js",
+      filename: "[name].js",
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: "./src/skrift-electron/renderer/index.html",
+        template: "./src/skrift-electron/renderer/app.html",
+        chunks: ["app"],
+        filename: "app.html",
       }),
     ],
   },
