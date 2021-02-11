@@ -8,6 +8,7 @@ import {
   liftEmptyBlock,
   newlineInCode,
   selectNodeBackward,
+  selectParentNode,
   splitBlock,
 } from "prosemirror-commands";
 import { redo, undo } from "prosemirror-history";
@@ -25,6 +26,8 @@ export function buildKeymap<S extends Schema>(schema: S) {
   let enter: Command[] = [];
 
   enter.push(splitListItem(schema.nodes.list_item));
+
+  keys["Escape"] = selectParentNode;
 
   keys["Enter"] = chainCommands(
     ...enter,
