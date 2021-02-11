@@ -140,10 +140,16 @@ export const NotesDB = {
   },
 
   async getNoteLinks(db: Database, ids: NoteID[]): Promise<NoteLink[]> {
-    return db.all<NoteLinkRow[]>(
+    const links = await db.all<NoteLinkRow[]>(
       `SELECT id, title FROM notes WHERE id IN (${[...ids].fill("?")})`,
       ids
     );
+
+    // `WHERE id IN (2, 1)` returns rows sorted by id, and not in the
+    // specified order, so we need to do that manually.
+    const positions = new Map<string, number>();
+    ids.forEach((id, idx) => positions.set(id, idx));
+    return links.sort((a, b) => positions.get(a.id)! - positions.get(b.id)!);
   },
 
   async getWithLinks(db: Database, id: NoteID): Promise<NoteWithLinks> {
