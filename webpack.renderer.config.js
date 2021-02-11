@@ -5,6 +5,7 @@ module.exports = [
     mode: "development",
     entry: {
       app: "./src/skrift-electron/renderer/app.tsx",
+      about: "./src/skrift-electron/renderer/about.tsx",
     },
     target: "electron-renderer",
     devtool: "source-map",
@@ -39,6 +40,12 @@ module.exports = [
         template: "./src/skrift-electron/renderer/app.html",
         chunks: ["app"],
         filename: "app.html",
+      }),
+      new HtmlWebpackPlugin({
+        template: "./src/skrift-electron/renderer/about.html",
+        chunks: ["about"],
+        filename: "about.html",
+        inject: "head",
       }),
     ],
   },

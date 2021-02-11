@@ -1,4 +1,5 @@
 import { app, Menu, MenuItem, MenuItemConstructorOptions } from "electron";
+import { createAboutWindow } from "./about";
 
 const isMac = process.platform === "darwin";
 
@@ -107,10 +108,9 @@ const template: (MenuItemConstructorOptions | MenuItem)[] = [
     role: "help",
     submenu: [
       {
-        label: "Learn More",
+        label: "About Skrift",
         click: async () => {
-          const { shell } = require("electron");
-          await shell.openExternal("https://electronjs.org");
+          await shell.openExternal("https://skrift.app");
         },
       },
     ],
