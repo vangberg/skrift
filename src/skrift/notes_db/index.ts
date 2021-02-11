@@ -73,12 +73,6 @@ export const NotesDB = {
     `);
   },
 
-  async transaction(db: Database, callback: () => Promise<void>) {
-    await db.exec("BEGIN");
-    await callback();
-    await db.exec("COMMIT");
-  },
-
   async save(
     db: Database,
     id: NoteID,

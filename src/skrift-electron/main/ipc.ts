@@ -8,6 +8,7 @@ import {
   IpcSetNoteCommand,
 } from "../shared/types";
 import { Database } from "sqlite";
+import isDev from "electron-is-dev";
 import path from "path";
 import { TSet } from "../../skrift/tset";
 import { Note, NoteLink, NoteWithLinks } from "../../skrift/note";
@@ -37,16 +38,14 @@ const handleLoadDir = async (event: Electron.IpcMainEvent) => {
   await NotesFS.initialize(_path);
   const db = await getDB();
 
-  await NotesDB.transaction(db, async () => {
-    let loaded = 0;
-    for await (let note of NotesFS.readDir(_path)) {
-      await NotesDB.save(db, note.id, note.markdown, note.modifiedAt);
-      loaded += 1;
-      if (loaded % 100 === 0) {
-        reply(event, { type: "event/LOADING_DIR", loaded });
-      }
+  let loaded = 0;
+  for await (let note of NotesFS.readDir(_path)) {
+    await NotesDB.save(db, note.id, note.markdown, note.modifiedAt);
+    loaded += 1;
+    if (loaded % 100 === 0) {
+      reply(event, { type: "event/LOADING_DIR", loaded });
     }
-  });
+  }
 
   const initialNoteID = "20210108T145053.970Z.md";
 
@@ -94,7 +93,7 @@ const handleAddNote = async (
   const { id, markdown } = cmd;
   const db = await getDB();
 
-  await NotesDB.transaction(db, () => NotesDB.save(db, id, markdown));
+  await NotesDB.save(db, id, markdown);
 
   await NotesFS.save(_path, id, markdown);
 
@@ -112,7 +111,7 @@ const handleSetNote = async (
 
   const noteBefore = await NotesDB.get(db, id);
 
-  await NotesDB.transaction(db, () => NotesDB.save(db, id, markdown));
+  await NotesDB.save(db, id, markdown);
 
   await NotesFS.save(_path, id, markdown);
 
@@ -152,6 +151,9 @@ const handleSearch = async (
 
 export const setupIpc = () => {
   ipcMain.on("skrift", (event, command: IpcCommand) => {
+    if (isDev) {
+      console.log("IPC: ", command);
+    }
     switch (command.type) {
       case "command/LOAD_DIR":
         handleLoadDir(event);
