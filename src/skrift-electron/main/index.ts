@@ -1,7 +1,11 @@
 import { app, BrowserWindow, Menu } from "electron";
 import isDev from "electron-is-dev";
+import { setupErrors } from "../errors";
 import { setupIpc } from "./ipc";
 import { menu } from "./menu";
+
+setupErrors();
+
 let mainWindow: Electron.BrowserWindow;
 
 function createWindow() {

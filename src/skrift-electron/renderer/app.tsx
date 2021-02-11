@@ -4,6 +4,9 @@ import ReactDOM from "react-dom";
 import { EventEmitter } from "events";
 
 import "./styles.css";
+import { setupErrors } from "../errors";
+
+setupErrors();
 
 EventEmitter.defaultMaxListeners = 250;
 
