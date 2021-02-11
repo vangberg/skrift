@@ -31,6 +31,11 @@ export const AppContainer: React.FC = () => {
               type: "note",
               id: event.initialNoteID,
             });
+          } else {
+            actions.openCard([0], "below", {
+              type: "search",
+              query: "*",
+            });
           }
           break;
         case "event/LOADING_DIR":
