@@ -1,4 +1,10 @@
-import { app, Menu, MenuItem, MenuItemConstructorOptions } from "electron";
+import {
+  app,
+  Menu,
+  MenuItem,
+  MenuItemConstructorOptions,
+  shell,
+} from "electron";
 import { createAboutWindow } from "./about";
 
 const isMac = process.platform === "darwin";
