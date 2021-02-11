@@ -1,6 +1,7 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, Menu } from "electron";
 import isDev from "electron-is-dev";
 import { setupIpc } from "./ipc";
+import { menu } from "./menu";
 let mainWindow: Electron.BrowserWindow;
 
 function createWindow() {
@@ -25,6 +26,8 @@ function createWindow() {
     mainWindow.destroy();
   });
 }
+
+Menu.setApplicationMenu(menu);
 
 app.on("ready", createWindow);
 
