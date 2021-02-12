@@ -4,6 +4,8 @@ import { Note, NoteID, NoteLink, NoteWithLinks } from "../note";
 import path from "path";
 import { exists } from "fs";
 import { Fts } from "./fts";
+import utils from "markdown-it/lib/common/utils";
+import { promisify } from "util";
 
 export interface NoteRow {
   id: string;
@@ -80,27 +82,29 @@ export const NotesDB = {
     modifiedAt?: Date
   ): Promise<void> {
     const note = Note.fromMarkdown(markdown);
+    const driver = db.getDatabaseInstance();
 
-    await db.run(`DELETE FROM notes WHERE id = ?`, id);
-    await db.run(`DELETE FROM links WHERE fromId = ?`, id);
+    return new Promise((resolve, reject) => {
+      driver.serialize(() => {
+        const promises = [
+          db.run("BEGIN"),
+          db.run(`DELETE FROM notes WHERE id = ?`, id),
+          db.run(`DELETE FROM links WHERE fromId = ?`, id),
+          db.run(
+            `INSERT INTO notes (id, title, markdown, modifiedAt) VALUES (?, ?, ?, ?)`,
+            [id, note.title, markdown, modifiedAt || new Date()]
+          ),
+          ...[...note.linkIds].map((link) =>
+            db.run(`INSERT INTO links (fromId, toId) VALUES (?, ?)`, [id, link])
+          ),
+          db.run("COMMIT"),
+        ];
 
-    await db.run(
-      `
-      INSERT INTO notes (id, title, markdown, modifiedAt)
-      VALUES (?, ?, ?, ?)
-      `,
-      [id, note.title, markdown, modifiedAt || new Date()]
-    );
-
-    for (const link of note.linkIds) {
-      await db.run(
-        `
-        INSERT INTO links (fromId, toId)
-        VALUES (?, ?)
-        `,
-        [id, link]
-      );
-    }
+        Promise.all(promises)
+          .then(() => resolve())
+          .catch(reject);
+      });
+    });
   },
 
   async exists(db: Database, id: NoteID): Promise<boolean> {
