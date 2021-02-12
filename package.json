@@ -25,9 +25,16 @@
       "category": "public.app-category.productivity"
     },
     "linux": {
-      "category": "Office"
+      "category": "Office",
+      "target": [
+        "AppImage"
+      ]
     },
     "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
       "icon": "assets/icon.ico"
     },
     "directories": {
