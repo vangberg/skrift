@@ -118,13 +118,13 @@
     "use-prosemirror": "^1.2.1",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
-  },
-  "dependencies": {
+    "webpack-dev-server": "^3.10.3",
     "@types/markdown-it": "^12.0.1",
     "@types/parsimmon": "^1.10.6",
     "autoprefixer": "^10.2.4",
-    "parsimmon": "^1.16.0",
+    "parsimmon": "^1.16.0"
+  },
+  "dependencies": {
     "sqlite3": "^4.2.0"
   }
 }
