@@ -5,7 +5,7 @@ describe("State.collapse", () => {
   it("does not collapse the last stream in the root workspace", () => {
     let state: State = {
       workspace: {
-        key: 0,
+        meta: { key: 0 },
         type: "workspace",
         zoom: true,
         streams: [
@@ -26,7 +26,7 @@ describe("State.collapse", () => {
   it("collapses surplus empty streams in the root workspace", () => {
     let state: State = {
       workspace: {
-        key: 0,
+        meta: { key: 0 },
         type: "workspace",
         zoom: true,
         streams: [
@@ -52,7 +52,7 @@ describe("State.collapse", () => {
   it("collapses empty streams in the root workspace", () => {
     let state: State = {
       workspace: {
-        key: 0,
+        meta: { key: 0 },
         type: "workspace",
         zoom: true,
         streams: [
@@ -78,7 +78,7 @@ describe("State.collapse", () => {
   it("does not collapse the last stream in nested workspaces", () => {
     let state: State = {
       workspace: {
-        key: 0,
+        meta: { key: 0 },
         type: "workspace",
         zoom: true,
         streams: [
@@ -87,7 +87,7 @@ describe("State.collapse", () => {
             type: "stream",
             cards: [
               {
-                key: 2,
+                meta: { key: 2 },
                 type: "workspace",
                 zoom: true,
                 streams: [{ key: 2, type: "stream", cards: [] }],
@@ -108,7 +108,7 @@ describe("State.collapse", () => {
   it("collapses empty streams in nested workspaces", () => {
     let state: State = {
       workspace: {
-        key: 0,
+        meta: { key: 0 },
         type: "workspace",
         zoom: true,
         streams: [
@@ -117,7 +117,7 @@ describe("State.collapse", () => {
             type: "stream",
             cards: [
               {
-                key: 2,
+                meta: { key: 2 },
                 type: "workspace",
                 zoom: true,
                 streams: [

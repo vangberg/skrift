@@ -15,11 +15,11 @@ export const MiniStream: React.FC<Props> = ({ stream }) => {
         .map((card) => {
           switch (card.type) {
             case "note":
-              return <MiniNoteCardContainer key={card.key} id={card.id} />;
+              return <MiniNoteCardContainer key={card.meta.key} id={card.id} />;
             case "workspace":
-              return <MiniWorkspace key={card.key} card={card} />;
+              return <MiniWorkspace key={card.meta.key} card={card} />;
             case "search":
-              return <MiniSearchCard key={card.key} card={card} />;
+              return <MiniSearchCard key={card.meta.key} card={card} />;
             default:
               return null;
           }

@@ -44,21 +44,25 @@ export const Card = {
   },
 };
 
-export interface WorkspaceCard {
+export interface CardMeta {
   key: number;
+}
+
+export interface WorkspaceCard {
+  meta: CardMeta;
   type: "workspace";
   zoom: boolean;
   streams: Stream[];
 }
 
 export interface NoteCard {
-  key: number;
+  meta: CardMeta;
   type: "note";
   id: NoteID;
 }
 
 export interface SearchCard {
-  key: number;
+  meta: CardMeta;
   type: "search";
   query: string;
 }
@@ -70,9 +74,9 @@ type CloseOptions =
 export type OpenCardMode = "below" | "push" | "replace";
 
 type OpenCard =
-  | Omit<WorkspaceCard, "key">
-  | Omit<NoteCard, "key">
-  | Omit<SearchCard, "key">;
+  | Omit<WorkspaceCard, "meta">
+  | Omit<NoteCard, "meta">
+  | Omit<SearchCard, "meta">;
 
 let key = 0;
 
@@ -80,7 +84,7 @@ export const State = {
   initial(): State {
     return {
       workspace: {
-        key: key++,
+        meta: { key: key++ },
         type: "workspace",
         zoom: true,
         streams: [
@@ -145,7 +149,7 @@ export const State = {
       return;
     }
 
-    const card = { key: key++, ...props };
+    const card = { meta: { key: key++ }, ...props };
 
     if (mode === "below") {
       stream.cards.push(card);
@@ -215,7 +219,7 @@ export const State = {
     }
 
     stream.cards[Path.last(path)] = {
-      key: key++,
+      meta: { key: key++ },
       type: "workspace",
       zoom: true,
       streams: [

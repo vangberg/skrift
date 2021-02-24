@@ -1,13 +1,13 @@
 import { State, Card } from ".";
 
-export const cardA: Card = { key: 1, type: "note", id: "a" };
-export const cardB: Card = { key: 2, type: "note", id: "b" };
-export const cardC: Card = { key: 3, type: "note", id: "c" };
-export const cardD: Card = { key: 4, type: "note", id: "d" };
+export const cardA: Card = { meta: { key: 1 }, type: "note", id: "a" };
+export const cardB: Card = { meta: { key: 2 }, type: "note", id: "b" };
+export const cardC: Card = { meta: { key: 3 }, type: "note", id: "c" };
+export const cardD: Card = { meta: { key: 4 }, type: "note", id: "d" };
 
 export const getState = (): State => ({
   workspace: {
-    key: 0,
+    meta: { key: 0 },
     type: "workspace",
     zoom: true,
     streams: [
@@ -35,7 +35,7 @@ export const getState = (): State => ({
         cards: [
           {
             // [2, 0]
-            key: 4,
+            meta: { key: 4 },
             type: "workspace",
             zoom: false,
             streams: [

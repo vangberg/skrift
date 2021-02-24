@@ -33,7 +33,7 @@ export const WorkspaceCardContainer: React.FC<Props> = ({ path, card }) => {
   if (!portal.current) {
     const workspacesEl = document.getElementById("workspaces")!;
     portal.current = document.createElement("div");
-    portal.current.id = `workspace-portal-${card.key}`;
+    portal.current.id = `workspace-portal-${card.meta.key}`;
     workspacesEl.append(portal.current);
   }
 

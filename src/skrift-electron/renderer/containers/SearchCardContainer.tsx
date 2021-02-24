@@ -21,7 +21,7 @@ export const SearchCardContainer: React.FC<Props> = ({ path, card }) => {
   const { onOpenNote, onZoom, onClose, onUpdate } = useCardActions(card, path);
 
   const [results, setResults] = useCache<Note[]>(
-    `card/${card.key}/results`,
+    `card/${card.meta.key}/results`,
     []
   );
 

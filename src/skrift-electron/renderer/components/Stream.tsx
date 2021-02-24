@@ -19,12 +19,16 @@ export const Stream: React.FC<Props> = ({ path, stream, onOpenSearch }) => {
     switch (card.type) {
       case "note":
         return (
-          <NoteCardContainer key={card.key} card={card} path={[...path, idx]} />
+          <NoteCardContainer
+            key={card.meta.key}
+            card={card}
+            path={[...path, idx]}
+          />
         );
       case "search":
         return (
           <SearchCardContainer
-            key={card.key}
+            key={card.meta.key}
             card={card}
             path={[...path, idx]}
           />
@@ -32,7 +36,7 @@ export const Stream: React.FC<Props> = ({ path, stream, onOpenSearch }) => {
       case "workspace":
         return (
           <WorkspaceCardContainer
-            key={card.key}
+            key={card.meta.key}
             card={card}
             path={[...path, idx]}
           />
