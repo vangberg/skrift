@@ -1,7 +1,7 @@
 import { State, Card, Stream, WorkspaceCard } from ".";
 import { cardA, cardB, cardC, cardD, getState } from "./fixture";
 
-describe("State.collapse", () => {
+describe("State.normalize", () => {
   it("does not collapse the last stream in the root workspace", () => {
     let state: State = {
       workspace: {
@@ -18,7 +18,7 @@ describe("State.collapse", () => {
       },
     };
 
-    State.collapse(state);
+    State.normalize(state);
 
     expect(state.workspace.streams.length).toEqual(1);
   });
@@ -44,7 +44,7 @@ describe("State.collapse", () => {
       },
     };
 
-    State.collapse(state);
+    State.normalize(state);
 
     expect(state.workspace.streams.length).toEqual(1);
   });
@@ -70,7 +70,7 @@ describe("State.collapse", () => {
       },
     };
 
-    State.collapse(state);
+    State.normalize(state);
 
     expect(state.workspace.streams.length).toEqual(1);
   });
@@ -98,7 +98,7 @@ describe("State.collapse", () => {
       },
     };
 
-    State.collapse(state);
+    State.normalize(state);
 
     expect((State.at(state, [0, 0]) as WorkspaceCard).streams.length).toEqual(
       1
@@ -131,7 +131,7 @@ describe("State.collapse", () => {
       },
     };
 
-    State.collapse(state);
+    State.normalize(state);
 
     expect((State.at(state, [0, 0]) as WorkspaceCard).streams.length).toEqual(
       1

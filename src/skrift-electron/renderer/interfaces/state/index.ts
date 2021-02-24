@@ -250,7 +250,7 @@ export const State = {
     const [removed] = fromStream.cards.splice(Path.last(from), 1);
     toStream.cards.splice(Path.last(to), 0, removed);
 
-    State.collapse(state);
+    State.normalize(state);
   },
 
   close(state: State, options: CloseOptions) {
@@ -292,26 +292,49 @@ export const State = {
       closeInWorkspace(state.workspace, match);
     }
 
-    State.collapse(state);
+    State.normalize(state);
   },
 
-  collapse(state: State) {
-    const collapseInWorkspace = (workspace: WorkspaceCard) => {
-      const { streams } = workspace;
+  /*
+  normalizeWorkspace, normalizeStream etc. performs exactly
+  one normalization, and returns true. If no normalization
+  were needed, they return false. This allows the normalization
+  pass to do destructive things to i.e. arrays, without thinking
+  too much over it. We simply call it repeatedly until there 
+  is nothing left to do.
+  */
+  normalize(state: State) {
+    while (State.normalizeWorkspace(state.workspace)) {
+      null;
+    }
+  },
 
-      for (let i = streams.length - 1; i >= 0; i--) {
-        const stream = streams[i];
-        const { cards } = stream;
+  normalizeWorkspace(workspace: WorkspaceCard): boolean {
+    const { streams } = workspace;
 
-        if (cards.length === 0 && streams.length > 1) {
-          streams.splice(i, 1);
-        } else {
-          cards.filter(Card.isWorkspace).forEach(collapseInWorkspace);
-        }
+    // Can any of the streams be normalized?
+    if (streams.some(State.normalizeStream)) return true;
+
+    // We always want at least 1 stream, empty or not.
+    if (streams.length === 1) return false;
+
+    // Find the first empty stream and remove it.
+    streams.forEach((stream, index) => {
+      if (stream.cards.length === 0) {
+        streams.splice(index, 1);
+        return true;
       }
-    };
+    });
 
-    collapseInWorkspace(state.workspace);
+    return false;
+  },
+
+  normalizeStream(stream: Stream): boolean {
+    const { cards } = stream;
+
+    const workspaces = cards.filter(Card.isWorkspace);
+
+    return workspaces.some(State.normalizeWorkspace);
   },
 };
 
