@@ -15,7 +15,10 @@ interface Props {
 }
 
 export const WorkspaceCardContainer: React.FC<Props> = ({ path, card }) => {
-  const { onClose, onUpdate } = useCardActions(card, path);
+  const { onClose, onUpdate, onSelect, onDeselect } = useCardActions(
+    card,
+    path
+  );
 
   const handleZoomIn = useCallback(() => {
     onUpdate({ zoom: true });
@@ -58,6 +61,8 @@ export const WorkspaceCardContainer: React.FC<Props> = ({ path, card }) => {
           path={path}
           onClose={onClose}
           onZoom={handleZoomIn}
+          onSelect={onSelect}
+          onDeselect={onDeselect}
         />
       )}
     </>

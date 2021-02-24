@@ -7,7 +7,7 @@ describe("State.move", () => {
 
     State.move(state, [0, 0], [0, 1]);
 
-    expect(state.workspace.streams[0].cards).toEqual([cardB, cardA]);
+    expect(state.workspace.streams[0].cards).toEqual([cardB(), cardA()]);
   });
 
   it("moves between streams", () => {
@@ -15,8 +15,8 @@ describe("State.move", () => {
 
     State.move(state, [0, 0], [1, 1]);
 
-    expect(state.workspace.streams[0].cards).toEqual([cardB]);
-    expect(state.workspace.streams[1].cards).toEqual([cardC, cardA]);
+    expect(state.workspace.streams[0].cards).toEqual([cardB()]);
+    expect(state.workspace.streams[1].cards).toEqual([cardC(), cardA()]);
   });
 
   it("moves between workspaces", () => {
@@ -24,9 +24,9 @@ describe("State.move", () => {
 
     State.move(state, [0, 0], [2, 0, 0, 1]);
 
-    expect(state.workspace.streams[0].cards).toEqual([cardB]);
+    expect(state.workspace.streams[0].cards).toEqual([cardB()]);
     expect(
       (State.at(state, [2, 0]) as WorkspaceCard).streams[0].cards
-    ).toEqual([cardD, cardA]);
+    ).toEqual([cardD(), cardA()]);
   });
 });

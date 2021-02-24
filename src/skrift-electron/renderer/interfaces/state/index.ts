@@ -3,6 +3,7 @@ import React from "react";
 import { SetStateAction } from "react";
 import { Updater } from "use-immer";
 import { NoteID } from "../../../../skrift/note";
+import { Workspace } from "../../components/Workspace";
 import { Path } from "../path";
 
 export interface State {
@@ -46,6 +47,7 @@ export const Card = {
 
 export interface CardMeta {
   key: number;
+  selected: boolean;
 }
 
 export interface WorkspaceCard {
@@ -84,7 +86,7 @@ export const State = {
   initial(): State {
     return {
       workspace: {
-        meta: { key: key++ },
+        meta: { key: key++, selected: false },
         type: "workspace",
         zoom: true,
         streams: [
@@ -149,7 +151,7 @@ export const State = {
       return;
     }
 
-    const card = { meta: { key: key++ }, ...props };
+    const card = { meta: { key: key++, selected: false }, ...props };
 
     if (mode === "below") {
       stream.cards.push(card);
@@ -205,6 +207,36 @@ export const State = {
     stream.cards[idx] = { ...card, ...props };
   },
 
+  selectCard(state: State, path: Path, options?: { multi: boolean }) {
+    const workspace = State.at(state, Path.ancestor(Path.ancestor(path)));
+    if (!Card.isCard(workspace) || !Card.isWorkspace(workspace)) return;
+
+    const stream = State.at(state, Path.ancestor(path));
+    if (!Stream.isStream(stream)) return;
+
+    const card = State.at(state, path);
+    if (!Card.isCard(card)) return;
+
+    const multi = options?.multi;
+
+    // If this is not a multiple selection, clear other selections in
+    // the workspace.
+    if (!multi) {
+      workspace.streams.forEach((stream) =>
+        stream.cards.forEach((card) => (card.meta.selected = false))
+      );
+    }
+
+    card.meta.selected = true;
+  },
+
+  deselectCard(state: State, path: Path) {
+    const card = State.at(state, path);
+    if (!Card.isCard(card)) return;
+
+    card.meta.selected = false;
+  },
+
   zoomCard(state: State, path: Path) {
     const stream = State.at(state, Path.ancestor(path));
 
@@ -219,7 +251,7 @@ export const State = {
     }
 
     stream.cards[Path.last(path)] = {
-      meta: { key: key++ },
+      meta: { key: key++, selected: false },
       type: "workspace",
       zoom: true,
       streams: [
@@ -341,6 +373,8 @@ export const State = {
 interface StateActions {
   openCard: (path: Path, mode: OpenCardMode, card: OpenCard) => void;
   updateCard: <T extends Card>(path: Path, card: Partial<T>) => void;
+  selectCard: (path: Path, options?: { multi: boolean }) => void;
+  deselectCard: (path: Path) => void;
   zoomCard: (path: Path) => void;
   move: (from: Path, to: Path) => void;
   close: (options: CloseOptions) => void;
@@ -356,6 +390,16 @@ export const createStateActions = (setState: Updater<State>): StateActions => {
     updateCard<T extends Card>(path: Path, props: Partial<T>) {
       setState((draft) => {
         State.updateCard(draft, path, props);
+      });
+    },
+    selectCard(path: Path, options?: { multi: boolean }) {
+      setState((draft) => {
+        State.selectCard(draft, path, options);
+      });
+    },
+    deselectCard(path: Path) {
+      setState((draft) => {
+        State.deselectCard(draft, path);
       });
     },
     zoomCard(path: Path) {

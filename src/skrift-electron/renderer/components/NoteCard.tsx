@@ -9,12 +9,15 @@ import { CardToolbar } from "./CardToolbar";
 import { CardBody } from "./CardBody";
 import { CardToolbarItem } from "./CardToolbarItem";
 import { Path } from "../interfaces/path";
-import { OpenCardMode } from "../interfaces/state";
+import { NoteCard as NoteCardType, OpenCardMode } from "../interfaces/state";
 
 type Props = {
   path: Path;
+  card: NoteCardType;
   note: NoteWithLinks;
   onOpen: (id: string, mode: OpenCardMode) => void;
+  onSelect: (options?: { multi: boolean }) => void;
+  onDeselect: () => void;
   onZoom: () => void;
   onDelete: () => void;
   onClose: () => void;
@@ -22,9 +25,12 @@ type Props = {
 
 export const NoteCard: React.FC<Props> = ({
   path,
+  card,
   note,
   onOpen,
   onZoom,
+  onSelect,
+  onDeselect,
   onDelete,
   onClose,
 }) => {
@@ -46,7 +52,12 @@ export const NoteCard: React.FC<Props> = ({
   }, [note]);
 
   return (
-    <Card path={path}>
+    <Card
+      selected={card.meta.selected}
+      onSelect={onSelect}
+      onDeselect={onDeselect}
+      path={path}
+    >
       {(provided) => (
         <>
           <CardToolbar backgroundColor="bg-green-400">

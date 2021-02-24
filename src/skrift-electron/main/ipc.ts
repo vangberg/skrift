@@ -151,9 +151,6 @@ const handleSearch = async (
 
 export const setupIpc = () => {
   ipcMain.on("skrift", (event, command: IpcCommand) => {
-    if (isDev) {
-      console.log("IPC: ", command);
-    }
     switch (command.type) {
       case "command/LOAD_DIR":
         handleLoadDir(event);

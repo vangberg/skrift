@@ -1,13 +1,32 @@
 import { State, Card } from ".";
 
-export const cardA: Card = { meta: { key: 1 }, type: "note", id: "a" };
-export const cardB: Card = { meta: { key: 2 }, type: "note", id: "b" };
-export const cardC: Card = { meta: { key: 3 }, type: "note", id: "c" };
-export const cardD: Card = { meta: { key: 4 }, type: "note", id: "d" };
+export const cardA = (): Card => ({
+  meta: { key: 1, selected: true },
+  type: "note",
+  id: "a",
+});
+
+export const cardB = (): Card => ({
+  meta: { key: 2, selected: false },
+  type: "note",
+  id: "b",
+});
+
+export const cardC = (): Card => ({
+  meta: { key: 3, selected: false },
+  type: "note",
+  id: "c",
+});
+
+export const cardD = (): Card => ({
+  meta: { key: 4, selected: false },
+  type: "note",
+  id: "d",
+});
 
 export const getState = (): State => ({
   workspace: {
-    meta: { key: 0 },
+    meta: { key: 0, selected: false },
     type: "workspace",
     zoom: true,
     streams: [
@@ -16,8 +35,8 @@ export const getState = (): State => ({
         key: 1,
         type: "stream",
         cards: [
-          cardA, // [0, 0]
-          cardB, // [0, 1]
+          cardA(), // [0, 0]
+          cardB(), // [0, 1]
         ],
       },
       {
@@ -25,7 +44,7 @@ export const getState = (): State => ({
         key: 2,
         type: "stream",
         cards: [
-          cardC, // [1, 0]
+          cardC(), // [1, 0]
         ],
       },
       {
@@ -35,7 +54,7 @@ export const getState = (): State => ({
         cards: [
           {
             // [2, 0]
-            meta: { key: 4 },
+            meta: { key: 4, selected: false },
             type: "workspace",
             zoom: false,
             streams: [
@@ -44,7 +63,7 @@ export const getState = (): State => ({
                 key: 5,
                 type: "stream",
                 cards: [
-                  cardD, // [2, 0, 0, 0]
+                  cardD(), // [2, 0, 0, 0]
                 ],
               },
             ],

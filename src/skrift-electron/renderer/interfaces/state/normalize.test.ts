@@ -5,7 +5,7 @@ describe("State.normalize", () => {
   it("does not collapse the last stream in the root workspace", () => {
     let state: State = {
       workspace: {
-        meta: { key: 0 },
+        meta: { key: 0, selected: false },
         type: "workspace",
         zoom: true,
         streams: [
@@ -26,7 +26,7 @@ describe("State.normalize", () => {
   it("collapses surplus empty streams in the root workspace", () => {
     let state: State = {
       workspace: {
-        meta: { key: 0 },
+        meta: { key: 0, selected: false },
         type: "workspace",
         zoom: true,
         streams: [
@@ -52,14 +52,14 @@ describe("State.normalize", () => {
   it("collapses empty streams in the root workspace", () => {
     let state: State = {
       workspace: {
-        meta: { key: 0 },
+        meta: { key: 0, selected: false },
         type: "workspace",
         zoom: true,
         streams: [
           {
             key: 1,
             type: "stream",
-            cards: [cardA],
+            cards: [cardA()],
           },
           {
             key: 2,
@@ -78,7 +78,7 @@ describe("State.normalize", () => {
   it("does not collapse the last stream in nested workspaces", () => {
     let state: State = {
       workspace: {
-        meta: { key: 0 },
+        meta: { key: 0, selected: false },
         type: "workspace",
         zoom: true,
         streams: [
@@ -87,7 +87,7 @@ describe("State.normalize", () => {
             type: "stream",
             cards: [
               {
-                meta: { key: 2 },
+                meta: { key: 2, selected: false },
                 type: "workspace",
                 zoom: true,
                 streams: [{ key: 2, type: "stream", cards: [] }],
@@ -108,7 +108,7 @@ describe("State.normalize", () => {
   it("collapses empty streams in nested workspaces", () => {
     let state: State = {
       workspace: {
-        meta: { key: 0 },
+        meta: { key: 0, selected: false },
         type: "workspace",
         zoom: true,
         streams: [
@@ -117,11 +117,11 @@ describe("State.normalize", () => {
             type: "stream",
             cards: [
               {
-                meta: { key: 2 },
+                meta: { key: 2, selected: false },
                 type: "workspace",
                 zoom: true,
                 streams: [
-                  { key: 2, type: "stream", cards: [cardA] },
+                  { key: 2, type: "stream", cards: [cardA()] },
                   { key: 3, type: "stream", cards: [] },
                 ],
               },

@@ -10,6 +10,6 @@ describe("State.zoomCard", () => {
     const workspace = State.at(state, [0, 0]);
 
     expect(workspace.type).toEqual("workspace");
-    expect((workspace as WorkspaceCard).streams[0].cards).toEqual([cardA]);
+    expect((workspace as WorkspaceCard).streams[0].cards).toEqual([cardA()]);
   });
 });

@@ -8,7 +8,7 @@ describe("State.close", () => {
 
       State.close(state, { path: [0, 0] });
 
-      expect(state.workspace.streams[0].cards).toEqual([cardB]);
+      expect(state.workspace.streams[0].cards).toEqual([cardB()]);
     });
 
     it("closes stream in root workspace", () => {
@@ -44,7 +44,7 @@ describe("State.close", () => {
 
       State.close(state, { match: { type: "note", id: "a" } });
 
-      expect(state.workspace.streams[0].cards).toEqual([cardB]);
+      expect(state.workspace.streams[0].cards).toEqual([cardB()]);
     });
 
     it("closes matching entries in nested workspace", () => {

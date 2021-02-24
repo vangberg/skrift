@@ -18,7 +18,14 @@ interface Props {
 export const SearchCardContainer: React.FC<Props> = ({ path, card }) => {
   const { query } = card;
 
-  const { onOpenNote, onZoom, onClose, onUpdate } = useCardActions(card, path);
+  const {
+    onOpenNote,
+    onZoom,
+    onClose,
+    onUpdate,
+    onSelect,
+    onDeselect,
+  } = useCardActions(card, path);
 
   const [results, setResults] = useCache<Note[]>(
     `card/${card.meta.key}/results`,
@@ -53,11 +60,14 @@ export const SearchCardContainer: React.FC<Props> = ({ path, card }) => {
   return (
     <SearchCard
       path={path}
+      card={card}
       onAdd={handleAdd}
       onOpen={onOpenNote}
       onClose={onClose}
       onSearch={handleSearch}
       onZoom={onZoom}
+      onSelect={onSelect}
+      onDeselect={onDeselect}
       query={query}
       results={results}
     />

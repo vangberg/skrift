@@ -7,7 +7,7 @@ describe("State.at", () => {
 
     const card = State.at(state, [0, 1]);
 
-    expect(card).toEqual(cardB);
+    expect(card).toEqual(cardB());
   });
 
   it("gets card in nested workspace", () => {
@@ -15,6 +15,6 @@ describe("State.at", () => {
 
     const card = State.at(state, [2, 0, 0, 0]);
 
-    expect(card).toEqual(cardD);
+    expect(card).toEqual(cardD());
   });
 });
