@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "strict": true,
+    "lib": ["ES2019"],
     "noImplicitAny": true,
     "jsx": "react",
     "esModuleInterop": true,

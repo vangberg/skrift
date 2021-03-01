@@ -1,24 +1,24 @@
-import { State, Card } from ".";
+import { State, Card, NoteCard } from ".";
 
-export const cardA = (): Card => ({
+export const cardA = (): NoteCard => ({
   meta: { key: 1, selected: true },
   type: "note",
   id: "a",
 });
 
-export const cardB = (): Card => ({
+export const cardB = (): NoteCard => ({
   meta: { key: 2, selected: false },
   type: "note",
   id: "b",
 });
 
-export const cardC = (): Card => ({
+export const cardC = (): NoteCard => ({
   meta: { key: 3, selected: false },
   type: "note",
   id: "c",
 });
 
-export const cardD = (): Card => ({
+export const cardD = (): NoteCard => ({
   meta: { key: 4, selected: false },
   type: "note",
   id: "d",

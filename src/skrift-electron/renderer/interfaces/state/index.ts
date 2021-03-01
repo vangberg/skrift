@@ -3,13 +3,11 @@ import React from "react";
 import { SetStateAction } from "react";
 import { Updater } from "use-immer";
 import { NoteID } from "../../../../skrift/note";
-import { Workspace } from "../../components/Workspace";
 import { Path } from "../path";
 
 export interface State {
   workspace: WorkspaceCard;
 }
-
 export interface Stream {
   key: number;
   type: "stream";
@@ -42,6 +40,18 @@ export const Card = {
 
   isSearch(card: Card): card is SearchCard {
     return card.type === "search";
+  },
+
+  isSelected(card: Card): boolean {
+    return card.meta.selected;
+  },
+};
+
+export const Workspace = {
+  hasSelection(workspace: WorkspaceCard): boolean {
+    return workspace.streams.some((stream) =>
+      stream.cards.some(Card.isSelected)
+    );
   },
 };
 
@@ -235,6 +245,52 @@ export const State = {
     if (!Card.isCard(card)) return;
 
     card.meta.selected = false;
+  },
+
+  zoom(state: State, path: Path) {
+    const workspace = State.at(state, path);
+    if (!Card.isCard(workspace) || !Card.isWorkspace(workspace)) {
+      return;
+    }
+
+    if (!Workspace.hasSelection(workspace)) return;
+
+    // `next` is the new workspace that will receive the currently
+    // selected cards, and be zoomed.
+    const nextWorkspace: WorkspaceCard = {
+      meta: { key: key++, selected: false },
+      type: "workspace",
+      zoom: true,
+      streams: [],
+    };
+
+    // We store the paths of all zoomed cards, so we can close them
+    // after we have created the workspace.
+    let zoomed: Path[] = [];
+
+    // First, iterate through each stream in the current workspace,
+    // and add a corresponding stream in the next workspace. Then,
+    // add any selected cards from the original stream. This means
+    // that zooming preserves the selected cards positions in different
+    // streams.
+    workspace.streams.forEach((stream, streamIndex) => {
+      const nextStream: Stream = { key: key++, type: "stream", cards: [] };
+
+      stream.cards.filter(Card.isSelected).forEach((card, cardIndex) => {
+        nextStream.cards.push(card);
+        zoomed.push([streamIndex, cardIndex]);
+      });
+
+      nextWorkspace.streams.push(nextStream);
+    });
+
+    const firstPath = zoomed[0];
+    workspace.streams[firstPath[0]].cards[firstPath[1]] = nextWorkspace;
+
+    // Close all remaining cards.
+    zoomed.slice(1).forEach((cardPath) => {
+      State.close(state, { path: [...path, ...cardPath] });
+    });
   },
 
   zoomCard(state: State, path: Path) {
