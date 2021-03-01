@@ -93,6 +93,7 @@ export const NoteEditor: React.FC<Props> = ({ note, onOpen, onUpdate }) => {
         return false;
       }
 
+      event.stopPropagation();
       event.preventDefault();
 
       const noteId = getNoteID(target);

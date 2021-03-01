@@ -29,6 +29,13 @@ export const Card: React.FC<Props> = ({
     (event: React.PointerEvent) => {
       setClick(true);
 
+      // Clicking a link should not focus or select the current note, if it
+      // isn't already focused/selected.
+      if (event.target instanceof HTMLAnchorElement) {
+        event.preventDefault();
+        return;
+      }
+
       const multi = event.ctrlKey || event.metaKey;
 
       // If Ctrl/Cmd is clicked, it is part of a selection of multiple
@@ -39,7 +46,6 @@ export const Card: React.FC<Props> = ({
 
       // If Ctrl/Cmd is clicked and card is already selected, it should
       // be removed from a selection of multiple cards.
-
       if (multi && selected) {
         onDeselect();
       } else {
