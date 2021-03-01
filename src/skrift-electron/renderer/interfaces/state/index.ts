@@ -293,33 +293,6 @@ export const State = {
     });
   },
 
-  zoomCard(state: State, path: Path) {
-    const stream = State.at(state, Path.ancestor(path));
-
-    if (!Stream.isStream(stream)) {
-      return;
-    }
-
-    const card = State.at(state, path);
-
-    if (!Card.isCard(card)) {
-      return;
-    }
-
-    stream.cards[Path.last(path)] = {
-      meta: { key: key++, selected: false },
-      type: "workspace",
-      zoom: true,
-      streams: [
-        {
-          key: key++,
-          type: "stream",
-          cards: [card],
-        },
-      ],
-    };
-  },
-
   move(state: State, from: Path, to: Path) {
     const fromElem = State.at(state, from);
 
@@ -431,7 +404,7 @@ interface StateActions {
   updateCard: <T extends Card>(path: Path, card: Partial<T>) => void;
   selectCard: (path: Path, options?: { multi: boolean }) => void;
   deselectCard: (path: Path) => void;
-  zoomCard: (path: Path) => void;
+  zoom: (path: Path) => void;
   move: (from: Path, to: Path) => void;
   close: (options: CloseOptions) => void;
 }
@@ -458,9 +431,9 @@ export const createStateActions = (setState: Updater<State>): StateActions => {
         State.deselectCard(draft, path);
       });
     },
-    zoomCard(path: Path) {
+    zoom(path: Path) {
       setState((draft) => {
-        State.zoomCard(draft, path);
+        State.zoom(draft, path);
       });
     },
     move(from: Path, to: Path) {

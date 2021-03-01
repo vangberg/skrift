@@ -21,7 +21,7 @@ export const useCardActions = <T extends Card>(
 ): CardActions<T> => {
   const [
     ,
-    { openCard, updateCard, zoomCard, selectCard, deselectCard, close },
+    { openCard, updateCard, zoom, selectCard, deselectCard, close },
   ] = useContext(StateContext);
 
   const onDeleteNote = useCallback(
@@ -48,8 +48,8 @@ export const useCardActions = <T extends Card>(
   );
 
   const onZoom = useCallback(() => {
-    zoomCard(path);
-  }, [zoomCard, path]);
+    zoom(path);
+  }, [zoom, path]);
 
   const onSelect = useCallback(
     (options?: { multi: boolean }) => {
