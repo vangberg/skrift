@@ -4,6 +4,7 @@ import {
   Stream as StreamType,
   StateContext,
   OpenCardMode,
+  Workspace,
 } from "../interfaces/state";
 import { Path } from "../interfaces/path";
 
@@ -22,8 +23,7 @@ export const StreamContainer: React.FC<Props> = ({ path, stream }) => {
   );
 
   const handleOpenWorkspace = useCallback(
-    (mode: OpenCardMode) =>
-      openCard(path, mode, { type: "workspace", streams: [], zoom: false }),
+    (mode: OpenCardMode) => openCard(path, mode, Workspace.empty()),
     [openCard, path]
   );
 

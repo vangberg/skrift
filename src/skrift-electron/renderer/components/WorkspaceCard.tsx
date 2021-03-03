@@ -4,7 +4,10 @@ import { Card } from "./Card";
 import { CardBody } from "./CardBody";
 import { CardToolbarItem } from "./CardToolbarItem";
 import { MiniStream } from "./MiniStream";
-import { WorkspaceCard as WorkspaceCardType } from "../interfaces/state";
+import {
+  Workspace,
+  WorkspaceCard as WorkspaceCardType,
+} from "../interfaces/state";
 import { Path } from "../interfaces/path";
 
 type Props = {
@@ -43,6 +46,8 @@ export const WorkspaceCard: React.FC<Props> = ({
 
           <CardBody>
             <div className="flex-1 flex flex-row justify-center py-2 px-1">
+              {Workspace.isEmpty(card) && <div className="h-12"></div>}
+
               {card.streams.map((stream) => (
                 <MiniStream key={stream.key} stream={stream} />
               ))}

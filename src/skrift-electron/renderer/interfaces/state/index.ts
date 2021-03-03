@@ -53,6 +53,27 @@ export const Workspace = {
       stream.cards.some(Card.isSelected)
     );
   },
+
+  isEmpty(workspace: WorkspaceCard): boolean {
+    return (
+      workspace.streams.length === 1 && workspace.streams[0].cards.length === 0
+    );
+  },
+
+  empty(): WorkspaceCard {
+    return {
+      meta: { key: key++, selected: false },
+      type: "workspace",
+      zoom: false,
+      streams: [
+        {
+          type: "stream",
+          key: key++,
+          cards: [],
+        },
+      ],
+    };
+  },
 };
 
 export interface CardMeta {
