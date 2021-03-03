@@ -21,5 +21,18 @@ export const StreamContainer: React.FC<Props> = ({ path, stream }) => {
     [openCard, path]
   );
 
-  return <Stream path={path} stream={stream} onOpenSearch={handleOpenSearch} />;
+  const handleOpenWorkspace = useCallback(
+    (mode: OpenCardMode) =>
+      openCard(path, mode, { type: "workspace", streams: [], zoom: false }),
+    [openCard, path]
+  );
+
+  return (
+    <Stream
+      path={path}
+      stream={stream}
+      onOpenSearch={handleOpenSearch}
+      onOpenWorkspace={handleOpenWorkspace}
+    />
+  );
 };

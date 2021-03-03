@@ -12,9 +12,15 @@ type Props = {
   path: Path;
   stream: StreamType;
   onOpenSearch: (query: string, mode: OpenCardMode) => void;
+  onOpenWorkspace: (mode: OpenCardMode) => void;
 };
 
-export const Stream: React.FC<Props> = ({ path, stream, onOpenSearch }) => {
+export const Stream: React.FC<Props> = ({
+  path,
+  stream,
+  onOpenSearch,
+  onOpenWorkspace,
+}) => {
   const cards = stream.cards.map((card, idx) => {
     switch (card.type) {
       case "note":
@@ -51,6 +57,11 @@ export const Stream: React.FC<Props> = ({ path, stream, onOpenSearch }) => {
       onOpenSearch("", mouseEventToMode(event.nativeEvent)),
     [onOpenSearch]
   );
+  const handleOpenWorkspace = useCallback(
+    (event: React.MouseEvent) =>
+      onOpenWorkspace(mouseEventToMode(event.nativeEvent)),
+    [onOpenWorkspace]
+  );
   const handleOpenRecent = useCallback(
     (event: React.MouseEvent) =>
       onOpenSearch("*", mouseEventToMode(event.nativeEvent)),
@@ -80,6 +91,12 @@ export const Stream: React.FC<Props> = ({ path, stream, onOpenSearch }) => {
               className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
             >
               Search
+            </span>
+            <span
+              onClick={handleOpenWorkspace}
+              className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
+            >
+              Workspace
             </span>
           </div>
         </div>
