@@ -8,6 +8,7 @@ import { createStateActions, State, StateContext } from "../interfaces/state";
 import { DragDropContext, OnDragEndResponder } from "react-beautiful-dnd";
 import { DroppableIds } from "../interfaces/droppableIds";
 import { WorkspaceCardContainer } from "./WorkspaceCardContainer";
+import { DraggableIds } from "../interfaces/draggableIds";
 
 export const AppContainer: React.FC = () => {
   const cacheContext = useImmer(new Map());
@@ -49,20 +50,27 @@ export const AppContainer: React.FC = () => {
 
   const handleDragEnd: OnDragEndResponder = useCallback(
     (result) => {
-      if (!result.destination) {
-        return;
-      }
-
       const from = [
         ...DroppableIds.deserialize(result.source.droppableId),
         result.source.index,
       ];
-      const to = [
-        ...DroppableIds.deserialize(result.destination.droppableId),
-        result.destination.index,
-      ];
 
-      actions.move(from, to);
+      if (result.combine) {
+        actions.combine(
+          from,
+          DraggableIds.deserialize(result.combine.draggableId)
+        );
+
+        return;
+      }
+
+      if (result.destination) {
+        const to = [
+          ...DroppableIds.deserialize(result.destination.droppableId),
+          result.destination.index,
+        ];
+        actions.move(from, to);
+      }
     },
     [actions]
   );

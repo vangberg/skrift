@@ -36,13 +36,17 @@ export const WorkspaceCard: React.FC<Props> = ({
           </CardToolbar>
 
           <CardBody>
-            <div className="flex-1 flex flex-row justify-center py-2 px-1">
-              {Workspace.isEmpty(card) && <div className="h-12"></div>}
-
-              {card.streams.map((stream) => (
-                <MiniStream key={stream.key} stream={stream} />
-              ))}
-            </div>
+            {Workspace.isEmpty(card) ? (
+              <div className="h-12 flex items-center justify-center text-gray-500 select-none">
+                Drag cards here
+              </div>
+            ) : (
+              <div className="flex-1 flex flex-row justify-center py-2 px-1">
+                {card.streams.map((stream) => (
+                  <MiniStream key={stream.key} stream={stream} />
+                ))}
+              </div>
+            )}
           </CardBody>
         </>
       )}

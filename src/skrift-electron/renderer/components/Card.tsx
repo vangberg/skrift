@@ -1,7 +1,8 @@
 import clsx from "clsx";
-import React from "react";
+import React, { useMemo } from "react";
 import { Draggable, DraggableChildrenFn } from "react-beautiful-dnd";
 import { useUniqueId } from "../hooks/useUniqueId";
+import { DraggableIds } from "../interfaces/draggableIds";
 import { Path } from "../interfaces/path";
 
 interface Props {
@@ -10,13 +11,10 @@ interface Props {
 }
 
 export const Card: React.FC<Props> = ({ path, children }) => {
-  const draggableId = useUniqueId();
+  const draggableId = useMemo(() => DraggableIds.serialize(path), [path]);
 
   return (
-    <Draggable
-      draggableId={`stream-card-${draggableId}`}
-      index={Path.last(path)}
-    >
+    <Draggable draggableId={draggableId} index={Path.last(path)}>
       {(provided, snapshot, ...rest) => (
         <div
           ref={provided.innerRef}

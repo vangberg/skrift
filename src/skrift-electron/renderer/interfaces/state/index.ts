@@ -246,6 +246,49 @@ export const State = {
     State.normalize(state);
   },
 
+  combine(state: State, from: Path, to: Path) {
+    const fromCard = State.at(state, from);
+    const toCard = State.at(state, to);
+
+    // We can only move cards, not streams.
+    if (!Card.isCard(fromCard) || !Card.isCard(toCard)) return;
+
+    const fromStream = State.at(state, Path.ancestor(from));
+    const toStream = State.at(state, Path.ancestor(to));
+
+    if (!Stream.isStream(fromStream) || !Stream.isStream(toStream)) {
+      return;
+    }
+
+    if (toCard.type === "workspace") {
+      // If a card is dragged onto a workspace card, the dragged card
+      // will be moved to the end of the first stream of the workspace.
+      fromStream.cards.splice(Path.last(from), 1);
+      toCard.streams[0].cards.push(fromCard);
+    } else {
+      // Otherwise, combine the two cards into a new workspace.
+
+      // First, replace the card that was dragged onto with the workspace.
+      toStream.cards[Path.last(to)] = {
+        meta: { key: key++ },
+        type: "workspace",
+        zoom: false,
+        streams: [
+          {
+            type: "stream",
+            key: key++,
+            cards: [fromCard, toCard],
+          },
+        ],
+      };
+
+      // Then remove the dragged card.
+      fromStream.cards.splice(Path.last(from), 1);
+    }
+
+    State.normalize(state);
+  },
+
   close(state: State, options: CloseOptions) {
     if (options.path) {
       const { path } = options;
@@ -345,6 +388,7 @@ interface StateActions {
   openCard: (path: Path, mode: OpenCardMode, card: OpenCard) => void;
   updateCard: <T extends Card>(path: Path, card: Partial<T>) => void;
   move: (from: Path, to: Path) => void;
+  combine: (from: Path, to: Path) => void;
   close: (options: CloseOptions) => void;
 }
 
@@ -363,6 +407,11 @@ export const createStateActions = (setState: Updater<State>): StateActions => {
     move(from: Path, to: Path) {
       setState((draft) => {
         State.move(draft, from, to);
+      });
+    },
+    combine(from: Path, to: Path) {
+      setState((draft) => {
+        State.combine(draft, from, to);
       });
     },
     close(options: CloseOptions) {
