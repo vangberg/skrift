@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useRef } from "react";
 import { WorkspaceCard } from "../components/WorkspaceCard";
-import { Workspace } from "../components/Workspace";
+import { WorkspaceView } from "../components/WorkspaceView";
 import { Path } from "../interfaces/path";
 import {
   StateContext,
@@ -15,10 +15,14 @@ interface Props {
 }
 
 export const WorkspaceCardContainer: React.FC<Props> = ({ path, card }) => {
-  const { onClose, onUpdate, onSelect, onDeselect } = useCardActions(
+  const { onClose, onUpdate, onSelect, onDeselect, onZoom } = useCardActions(
     card,
     path
   );
+
+  const handleZoom = useCallback(() => {
+    onZoom();
+  }, [onZoom]);
 
   const handleZoomIn = useCallback(() => {
     onUpdate({ zoom: true });
@@ -52,7 +56,12 @@ export const WorkspaceCardContainer: React.FC<Props> = ({ path, card }) => {
   return (
     <>
       {ReactDOM.createPortal(
-        <Workspace path={path} card={card} onZoomOut={handleZoomOut} />,
+        <WorkspaceView
+          path={path}
+          card={card}
+          onZoom={handleZoom}
+          onZoomOut={handleZoomOut}
+        />,
         portal.current
       )}
       {Path.isRoot(path) || (
@@ -60,7 +69,7 @@ export const WorkspaceCardContainer: React.FC<Props> = ({ path, card }) => {
           card={card}
           path={path}
           onClose={onClose}
-          onZoom={handleZoomIn}
+          onZoomIn={handleZoomIn}
           onSelect={onSelect}
           onDeselect={onDeselect}
         />

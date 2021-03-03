@@ -20,7 +20,6 @@ export const SearchCardContainer: React.FC<Props> = ({ path, card }) => {
 
   const {
     onOpenNote,
-    onZoom,
     onClose,
     onUpdate,
     onSelect,
@@ -65,7 +64,6 @@ export const SearchCardContainer: React.FC<Props> = ({ path, card }) => {
       onOpen={onOpenNote}
       onClose={onClose}
       onSearch={handleSearch}
-      onZoom={onZoom}
       onSelect={onSelect}
       onDeselect={onDeselect}
       query={query}

@@ -1,18 +1,28 @@
 import clsx from "clsx";
 import React, { useCallback, useMemo } from "react";
+import { Button } from "../Button";
 import { StreamContainer } from "../containers/StreamContainer";
 import { Path } from "../interfaces/path";
-import { WorkspaceCard } from "../interfaces/state";
+import { Workspace, WorkspaceCard } from "../interfaces/state";
 
 type Props = {
   path: Path;
   card: WorkspaceCard;
+  onZoom: () => void;
   onZoomOut: () => void;
 };
 
-export const Workspace: React.FC<Props> = ({ path, card, onZoomOut }) => {
+export const WorkspaceView: React.FC<Props> = ({
+  path,
+  card,
+  onZoom,
+  onZoomOut,
+}) => {
   const { zoom } = card;
 
+  const handleZoom = useCallback(() => {
+    onZoom();
+  }, [onZoom]);
   const handleZoomOut = useCallback(() => onZoomOut(), [onZoomOut]);
 
   // We want to hide the workspace UNLESS it is the one that is currently
@@ -28,6 +38,8 @@ export const Workspace: React.FC<Props> = ({ path, card, onZoomOut }) => {
     [zoom, card]
   );
 
+  const hasSelection = useMemo(() => Workspace.hasSelection(card), [card]);
+
   return (
     <div
       className={clsx(
@@ -35,16 +47,18 @@ export const Workspace: React.FC<Props> = ({ path, card, onZoomOut }) => {
         { hidden: !isLastZoom }
       )}
     >
-      {Path.isRoot(path) || (
-        <div className="flex-none flex justify-center pt-2">
+      <div className="flex-none flex justify-center pt-2">
+        <Button title="Zoom" enabled={hasSelection} onClick={handleZoom} />
+
+        {Path.isRoot(path) || (
           <span
             onClick={handleZoomOut}
             className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
           >
             Zoom out
           </span>
-        </div>
-      )}
+        )}
+      </div>
 
       <div className="flex-1 flex flex-row h-0 justify-center px-1">
         {card.streams.map((stream, index) => (

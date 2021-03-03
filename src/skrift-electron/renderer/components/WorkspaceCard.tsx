@@ -11,7 +11,7 @@ type Props = {
   card: WorkspaceCardType;
   path: Path;
   onClose: () => void;
-  onZoom: () => void;
+  onZoomIn: () => void;
   onSelect: (options?: { multi: boolean }) => void;
   onDeselect: () => void;
 };
@@ -22,7 +22,7 @@ export const WorkspaceCard: React.FC<Props> = ({
   onSelect,
   onDeselect,
   onClose,
-  onZoom,
+  onZoomIn: onZoom,
 }) => {
   return (
     <Card

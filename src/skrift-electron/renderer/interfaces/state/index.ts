@@ -276,7 +276,9 @@ export const State = {
     workspace.streams.forEach((stream, streamIndex) => {
       const nextStream: Stream = { key: key++, type: "stream", cards: [] };
 
-      stream.cards.filter(Card.isSelected).forEach((card, cardIndex) => {
+      stream.cards.forEach((card, cardIndex) => {
+        if (!card.meta.selected) return;
+
         nextStream.cards.push(card);
         zoomed.push([streamIndex, cardIndex]);
       });

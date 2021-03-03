@@ -21,7 +21,6 @@ type Props = {
   onClose: () => void;
   onAdd: (title: string, mode: OpenCardMode) => void;
   onSearch: (query: string) => void;
-  onZoom: () => void;
   onSelect: (options?: { multi: boolean }) => void;
   onDeselect: () => void;
 };
@@ -35,7 +34,6 @@ export const SearchCard: React.FC<Props> = ({
   onClose,
   onAdd,
   onSearch,
-  onZoom,
   onSelect,
   onDeselect,
 }) => {
@@ -49,8 +47,6 @@ export const SearchCard: React.FC<Props> = ({
       {(provided) => (
         <>
           <CardToolbar backgroundColor="bg-yellow-300">
-            <CardToolbarItem onClick={onZoom}>Zoom</CardToolbarItem>
-
             <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>
             <CardToolbarItem {...provided.dragHandleProps}>
               Move

@@ -14,7 +14,6 @@ export const NoteCardContainer: React.FC<Props> = ({ card, path }) => {
   const {
     onOpenNote,
     onDeleteNote,
-    onZoom,
     onClose,
     onSelect,
     onDeselect,
@@ -36,7 +35,6 @@ export const NoteCardContainer: React.FC<Props> = ({ card, path }) => {
       onSelect={onSelect}
       onDeselect={onDeselect}
       onOpen={onOpenNote}
-      onZoom={onZoom}
       onDelete={handleDelete}
       onClose={onClose}
     />
