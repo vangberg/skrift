@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { CardToolbar } from "./CardToolbar";
 import { Card } from "./Card";
 import { CardBody } from "./CardBody";
@@ -9,6 +9,7 @@ import {
   WorkspaceCard as WorkspaceCardType,
 } from "../interfaces/state";
 import { Path } from "../interfaces/path";
+import clsx from "clsx";
 
 type Props = {
   card: WorkspaceCardType;
@@ -21,14 +22,23 @@ export const WorkspaceCard: React.FC<Props> = ({
   card,
   path,
   onClose,
-  onZoomIn: onZoom,
+  onZoomIn,
 }) => {
+  const handleZoom = useCallback(() => onZoomIn(), [onZoomIn]);
+
   return (
-    <Card card={card} path={path}>
+    <Card
+      card={card}
+      path={path}
+      className={clsx(
+        "transition-all",
+        card.zoom ? "transform scale-150" : "transform scale-100"
+      )}
+    >
       {(provided) => (
         <>
           <CardToolbar backgroundColor="bg-blue-300">
-            <CardToolbarItem onClick={onZoom}>Zoom</CardToolbarItem>
+            <CardToolbarItem onClick={handleZoom}>Zoom</CardToolbarItem>
             <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>
             <CardToolbarItem {...provided.dragHandleProps}>
               Move

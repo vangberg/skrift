@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { StreamContainer } from "../containers/StreamContainer";
 import { Path } from "../interfaces/path";
 import { WorkspaceCard } from "../interfaces/state";
@@ -31,8 +31,9 @@ export const WorkspaceView: React.FC<Props> = ({ path, card, onZoomOut }) => {
   return (
     <div
       className={clsx(
-        "fixed top-0 bottom-0 left-0 right-0 h-screen flex-1 flex flex-col bg-gray-200 text-sm",
-        { hidden: !isLastZoom }
+        "fixed top-0 bottom-0 left-0 right-0 h-screen flex-1 flex flex-col bg-gray-200 text-sm transition-all",
+        zoom ? "opacity-100 visible" : "opacity-0 invisible"
+        // { hidden: !isLastZoom }
       )}
     >
       <div className="flex-none flex justify-center pt-2">

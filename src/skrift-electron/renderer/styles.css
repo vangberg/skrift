@@ -14,8 +14,8 @@ body {
   flex: 0;
 }
 
-.skrift-card-combine-target {
-  box-shadow: inset 0px 0px 0 2000px rgba(0, 0, 0, 0.5);
+.skrift-zoom-card {
+  transform: scale(1.1);
 }
 
 .ProseMirror-focused {

@@ -9,10 +9,11 @@ import { Card as CardType } from "../interfaces/state";
 interface Props {
   path: Path;
   card: CardType;
+  className?: string;
   children: DraggableChildrenFn;
 }
 
-export const Card: React.FC<Props> = ({ card, path, children }) => {
+export const Card: React.FC<Props> = ({ card, path, className, children }) => {
   const draggableId = DraggableIds.serialize(card.meta.key);
 
   return (
@@ -21,7 +22,7 @@ export const Card: React.FC<Props> = ({ card, path, children }) => {
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          className="shadow-md mx-2 mb-2 relative"
+          className={clsx(className, "shadow-md mx-2 mb-2 relative")}
         >
           <div
             className={clsx(
