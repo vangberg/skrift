@@ -4,14 +4,16 @@ import { Draggable, DraggableChildrenFn } from "react-beautiful-dnd";
 import { useUniqueId } from "../hooks/useUniqueId";
 import { DraggableIds } from "../interfaces/draggableIds";
 import { Path } from "../interfaces/path";
+import { Card as CardType } from "../interfaces/state";
 
 interface Props {
   path: Path;
+  card: CardType;
   children: DraggableChildrenFn;
 }
 
-export const Card: React.FC<Props> = ({ path, children }) => {
-  const draggableId = useMemo(() => DraggableIds.serialize(path), [path]);
+export const Card: React.FC<Props> = ({ card, path, children }) => {
+  const draggableId = DraggableIds.serialize(card.meta.key);
 
   return (
     <Draggable draggableId={draggableId} index={Path.last(path)}>

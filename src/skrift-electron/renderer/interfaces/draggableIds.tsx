@@ -1,11 +1,9 @@
-import { Path } from "./path";
-
 export const DraggableIds = {
-  serialize(path: Path): string {
-    return JSON.stringify(path);
+  serialize(key: number): string {
+    return JSON.stringify({ type: "draggable", key });
   },
 
-  deserialize(str: string): Path {
-    return JSON.parse(str);
+  deserialize(str: string): number {
+    return JSON.parse(str).key;
   },
 };

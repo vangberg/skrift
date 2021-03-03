@@ -34,7 +34,7 @@ export const SearchCard: React.FC<Props> = ({
   onSearch,
 }) => {
   return (
-    <Card path={path}>
+    <Card card={card} path={path}>
       {(provided) => (
         <>
           <CardToolbar backgroundColor="bg-yellow-300">

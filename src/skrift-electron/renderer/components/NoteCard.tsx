@@ -46,7 +46,7 @@ export const NoteCard: React.FC<Props> = ({
   }, [note]);
 
   return (
-    <Card path={path}>
+    <Card card={card} path={path}>
       {(provided) => (
         <>
           <CardToolbar backgroundColor="bg-green-400">

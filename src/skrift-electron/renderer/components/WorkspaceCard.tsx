@@ -24,7 +24,7 @@ export const WorkspaceCard: React.FC<Props> = ({
   onZoomIn: onZoom,
 }) => {
   return (
-    <Card path={path}>
+    <Card card={card} path={path}>
       {(provided) => (
         <>
           <CardToolbar backgroundColor="bg-blue-300">
