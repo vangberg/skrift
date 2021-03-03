@@ -28,14 +28,6 @@ describe("State.close", () => {
         (State.at(state, [2, 0]) as WorkspaceCard).streams[0].cards
       ).toEqual([]);
     });
-
-    it("closes stream in nested workspace", () => {
-      let state = getState();
-
-      State.close(state, { path: [2, 0, 0] });
-
-      expect((State.at(state, [2, 0]) as WorkspaceCard).streams).toEqual([]);
-    });
   });
 
   describe("with match", () => {

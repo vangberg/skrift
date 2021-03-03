@@ -308,6 +308,16 @@ export const State = {
     // Can any of the streams be normalized?
     if (streams.some(State.normalizeStream)) return true;
 
+    // A workspace should always have at least 1 stream.
+    if (streams.length === 0) {
+      workspace.streams.push({
+        key: key++,
+        type: "stream",
+        cards: [],
+      });
+      return true;
+    }
+
     // We always want at least 1 stream, empty or not.
     if (streams.length === 1) return false;
 

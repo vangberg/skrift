@@ -2,6 +2,21 @@ import { State, Card, Stream, WorkspaceCard } from ".";
 import { cardA, cardB, cardC, cardD, getState } from "./fixture";
 
 describe("State.normalize", () => {
+  it("ensures that workspace has at least one stream", () => {
+    let state: State = {
+      workspace: {
+        meta: { key: 0 },
+        type: "workspace",
+        zoom: true,
+        streams: [],
+      },
+    };
+
+    State.normalize(state);
+
+    expect(state.workspace.streams.length).toEqual(1);
+  });
+
   it("does not collapse the last stream in the root workspace", () => {
     let state: State = {
       workspace: {
