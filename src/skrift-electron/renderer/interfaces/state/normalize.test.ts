@@ -5,7 +5,7 @@ describe("State.normalize", () => {
   it("does not collapse the last stream in the root workspace", () => {
     let state: State = {
       workspace: {
-        meta: { key: 0, selected: false },
+        meta: { key: 0 },
         type: "workspace",
         zoom: true,
         streams: [
@@ -26,7 +26,7 @@ describe("State.normalize", () => {
   it("collapses surplus empty streams in the root workspace", () => {
     let state: State = {
       workspace: {
-        meta: { key: 0, selected: false },
+        meta: { key: 0 },
         type: "workspace",
         zoom: true,
         streams: [
@@ -52,7 +52,7 @@ describe("State.normalize", () => {
   it("collapses empty streams in the root workspace", () => {
     let state: State = {
       workspace: {
-        meta: { key: 0, selected: false },
+        meta: { key: 0 },
         type: "workspace",
         zoom: true,
         streams: [
@@ -78,7 +78,7 @@ describe("State.normalize", () => {
   it("does not collapse the last stream in nested workspaces", () => {
     let state: State = {
       workspace: {
-        meta: { key: 0, selected: false },
+        meta: { key: 0 },
         type: "workspace",
         zoom: true,
         streams: [
@@ -87,7 +87,7 @@ describe("State.normalize", () => {
             type: "stream",
             cards: [
               {
-                meta: { key: 2, selected: false },
+                meta: { key: 2 },
                 type: "workspace",
                 zoom: true,
                 streams: [{ key: 2, type: "stream", cards: [] }],
@@ -108,7 +108,7 @@ describe("State.normalize", () => {
   it("collapses empty streams in nested workspaces", () => {
     let state: State = {
       workspace: {
-        meta: { key: 0, selected: false },
+        meta: { key: 0 },
         type: "workspace",
         zoom: true,
         streams: [
@@ -117,7 +117,7 @@ describe("State.normalize", () => {
             type: "stream",
             cards: [
               {
-                meta: { key: 2, selected: false },
+                meta: { key: 2 },
                 type: "workspace",
                 zoom: true,
                 streams: [

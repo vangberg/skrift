@@ -21,8 +21,6 @@ type Props = {
   onClose: () => void;
   onAdd: (title: string, mode: OpenCardMode) => void;
   onSearch: (query: string) => void;
-  onSelect: (options?: { multi: boolean }) => void;
-  onDeselect: () => void;
 };
 
 export const SearchCard: React.FC<Props> = ({
@@ -34,16 +32,9 @@ export const SearchCard: React.FC<Props> = ({
   onClose,
   onAdd,
   onSearch,
-  onSelect,
-  onDeselect,
 }) => {
   return (
-    <Card
-      selected={card.meta.selected}
-      onSelect={onSelect}
-      onDeselect={onDeselect}
-      path={path}
-    >
+    <Card path={path}>
       {(provided) => (
         <>
           <CardToolbar backgroundColor="bg-yellow-300">

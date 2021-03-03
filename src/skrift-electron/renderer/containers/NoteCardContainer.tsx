@@ -11,13 +11,7 @@ interface Props {
 }
 
 export const NoteCardContainer: React.FC<Props> = ({ card, path }) => {
-  const {
-    onOpenNote,
-    onDeleteNote,
-    onClose,
-    onSelect,
-    onDeselect,
-  } = useCardActions(card, path);
+  const { onOpenNote, onDeleteNote, onClose } = useCardActions(card, path);
   const { id } = card;
   const note = useNote(id);
 
@@ -32,8 +26,6 @@ export const NoteCardContainer: React.FC<Props> = ({ card, path }) => {
       path={path}
       card={card}
       note={note}
-      onSelect={onSelect}
-      onDeselect={onDeselect}
       onOpen={onOpenNote}
       onDelete={handleDelete}
       onClose={onClose}

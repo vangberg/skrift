@@ -8,9 +8,6 @@ interface CardActions<T extends Card> {
   onDeleteNote: (id: NoteID) => void;
   onOpenNote: (id: NoteID, mode: OpenCardMode) => void;
   onOpenSearch: (query: string, mode: OpenCardMode) => void;
-  onSelect: (options?: { multi: boolean }) => void;
-  onDeselect: () => void;
-  onZoom: () => void;
   onClose: () => void;
   onUpdate: (card: Partial<T>) => void;
 }
@@ -19,10 +16,7 @@ export const useCardActions = <T extends Card>(
   card: T,
   path: Path
 ): CardActions<T> => {
-  const [
-    ,
-    { openCard, updateCard, zoom, selectCard, deselectCard, close },
-  ] = useContext(StateContext);
+  const [, { openCard, updateCard, close }] = useContext(StateContext);
 
   const onDeleteNote = useCallback(
     (id: NoteID) => {
@@ -47,21 +41,6 @@ export const useCardActions = <T extends Card>(
     [openCard, path]
   );
 
-  const onZoom = useCallback(() => {
-    zoom(path);
-  }, [zoom, path]);
-
-  const onSelect = useCallback(
-    (options?: { multi: boolean }) => {
-      selectCard(path, options);
-    },
-    [selectCard, path]
-  );
-
-  const onDeselect = useCallback(() => {
-    deselectCard(path);
-  }, []);
-
   const onClose = useCallback(() => close({ path }), [close, path]);
 
   const onUpdate = useCallback(
@@ -73,9 +52,6 @@ export const useCardActions = <T extends Card>(
     onDeleteNote,
     onOpenNote,
     onOpenSearch,
-    onSelect,
-    onDeselect,
-    onZoom,
     onClose,
     onUpdate,
   };

@@ -15,25 +15,16 @@ type Props = {
   path: Path;
   onClose: () => void;
   onZoomIn: () => void;
-  onSelect: (options?: { multi: boolean }) => void;
-  onDeselect: () => void;
 };
 
 export const WorkspaceCard: React.FC<Props> = ({
   card,
   path,
-  onSelect,
-  onDeselect,
   onClose,
   onZoomIn: onZoom,
 }) => {
   return (
-    <Card
-      selected={card.meta.selected}
-      onSelect={onSelect}
-      onDeselect={onDeselect}
-      path={path}
-    >
+    <Card path={path}>
       {(provided) => (
         <>
           <CardToolbar backgroundColor="bg-blue-300">

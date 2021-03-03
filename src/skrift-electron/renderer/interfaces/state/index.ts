@@ -1,6 +1,4 @@
-import produce from "immer";
 import React from "react";
-import { SetStateAction } from "react";
 import { Updater } from "use-immer";
 import { NoteID } from "../../../../skrift/note";
 import { Path } from "../path";
@@ -41,19 +39,9 @@ export const Card = {
   isSearch(card: Card): card is SearchCard {
     return card.type === "search";
   },
-
-  isSelected(card: Card): boolean {
-    return card.meta.selected;
-  },
 };
 
 export const Workspace = {
-  hasSelection(workspace: WorkspaceCard): boolean {
-    return workspace.streams.some((stream) =>
-      stream.cards.some(Card.isSelected)
-    );
-  },
-
   isEmpty(workspace: WorkspaceCard): boolean {
     return (
       workspace.streams.length === 1 && workspace.streams[0].cards.length === 0
@@ -62,7 +50,7 @@ export const Workspace = {
 
   empty(): WorkspaceCard {
     return {
-      meta: { key: key++, selected: false },
+      meta: { key: key++ },
       type: "workspace",
       zoom: false,
       streams: [
@@ -78,7 +66,6 @@ export const Workspace = {
 
 export interface CardMeta {
   key: number;
-  selected: boolean;
 }
 
 export interface WorkspaceCard {
@@ -117,7 +104,7 @@ export const State = {
   initial(): State {
     return {
       workspace: {
-        meta: { key: key++, selected: false },
+        meta: { key: key++ },
         type: "workspace",
         zoom: true,
         streams: [
@@ -182,7 +169,7 @@ export const State = {
       return;
     }
 
-    const card = { meta: { key: key++, selected: false }, ...props };
+    const card = { meta: { key: key++ }, ...props };
 
     if (mode === "below") {
       stream.cards.push(card);
@@ -236,84 +223,6 @@ export const State = {
     const idx = Path.last(path);
 
     stream.cards[idx] = { ...card, ...props };
-  },
-
-  selectCard(state: State, path: Path, options?: { multi: boolean }) {
-    const workspace = State.at(state, Path.ancestor(Path.ancestor(path)));
-    if (!Card.isCard(workspace) || !Card.isWorkspace(workspace)) return;
-
-    const stream = State.at(state, Path.ancestor(path));
-    if (!Stream.isStream(stream)) return;
-
-    const card = State.at(state, path);
-    if (!Card.isCard(card)) return;
-
-    const multi = options?.multi;
-
-    // If this is not a multiple selection, clear other selections in
-    // the workspace.
-    if (!multi) {
-      workspace.streams.forEach((stream) =>
-        stream.cards.forEach((card) => (card.meta.selected = false))
-      );
-    }
-
-    card.meta.selected = true;
-  },
-
-  deselectCard(state: State, path: Path) {
-    const card = State.at(state, path);
-    if (!Card.isCard(card)) return;
-
-    card.meta.selected = false;
-  },
-
-  zoom(state: State, path: Path) {
-    const workspace = State.at(state, path);
-    if (!Card.isCard(workspace) || !Card.isWorkspace(workspace)) {
-      return;
-    }
-
-    if (!Workspace.hasSelection(workspace)) return;
-
-    // `next` is the new workspace that will receive the currently
-    // selected cards, and be zoomed.
-    const nextWorkspace: WorkspaceCard = {
-      meta: { key: key++, selected: false },
-      type: "workspace",
-      zoom: true,
-      streams: [],
-    };
-
-    // We store the paths of all zoomed cards, so we can close them
-    // after we have created the workspace.
-    let zoomed: Path[] = [];
-
-    // First, iterate through each stream in the current workspace,
-    // and add a corresponding stream in the next workspace. Then,
-    // add any selected cards from the original stream. This means
-    // that zooming preserves the selected cards positions in different
-    // streams.
-    workspace.streams.forEach((stream, streamIndex) => {
-      const nextStream: Stream = { key: key++, type: "stream", cards: [] };
-
-      stream.cards.forEach((card, cardIndex) => {
-        if (!card.meta.selected) return;
-
-        nextStream.cards.push(card);
-        zoomed.push([streamIndex, cardIndex]);
-      });
-
-      nextWorkspace.streams.push(nextStream);
-    });
-
-    const firstPath = zoomed[0];
-    workspace.streams[firstPath[0]].cards[firstPath[1]] = nextWorkspace;
-
-    // Close all remaining cards.
-    zoomed.slice(1).forEach((cardPath) => {
-      State.close(state, { path: [...path, ...cardPath] });
-    });
   },
 
   move(state: State, from: Path, to: Path) {
@@ -425,9 +334,6 @@ export const State = {
 interface StateActions {
   openCard: (path: Path, mode: OpenCardMode, card: OpenCard) => void;
   updateCard: <T extends Card>(path: Path, card: Partial<T>) => void;
-  selectCard: (path: Path, options?: { multi: boolean }) => void;
-  deselectCard: (path: Path) => void;
-  zoom: (path: Path) => void;
   move: (from: Path, to: Path) => void;
   close: (options: CloseOptions) => void;
 }
@@ -442,21 +348,6 @@ export const createStateActions = (setState: Updater<State>): StateActions => {
     updateCard<T extends Card>(path: Path, props: Partial<T>) {
       setState((draft) => {
         State.updateCard(draft, path, props);
-      });
-    },
-    selectCard(path: Path, options?: { multi: boolean }) {
-      setState((draft) => {
-        State.selectCard(draft, path, options);
-      });
-    },
-    deselectCard(path: Path) {
-      setState((draft) => {
-        State.deselectCard(draft, path);
-      });
-    },
-    zoom(path: Path) {
-      setState((draft) => {
-        State.zoom(draft, path);
       });
     },
     move(from: Path, to: Path) {

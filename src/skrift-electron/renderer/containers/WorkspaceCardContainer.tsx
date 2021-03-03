@@ -15,14 +15,7 @@ interface Props {
 }
 
 export const WorkspaceCardContainer: React.FC<Props> = ({ path, card }) => {
-  const { onClose, onUpdate, onSelect, onDeselect, onZoom } = useCardActions(
-    card,
-    path
-  );
-
-  const handleZoom = useCallback(() => {
-    onZoom();
-  }, [onZoom]);
+  const { onClose, onUpdate } = useCardActions(card, path);
 
   const handleZoomIn = useCallback(() => {
     onUpdate({ zoom: true });
@@ -56,12 +49,7 @@ export const WorkspaceCardContainer: React.FC<Props> = ({ path, card }) => {
   return (
     <>
       {ReactDOM.createPortal(
-        <WorkspaceView
-          path={path}
-          card={card}
-          onZoom={handleZoom}
-          onZoomOut={handleZoomOut}
-        />,
+        <WorkspaceView path={path} card={card} onZoomOut={handleZoomOut} />,
         portal.current
       )}
       {Path.isRoot(path) || (
@@ -70,8 +58,6 @@ export const WorkspaceCardContainer: React.FC<Props> = ({ path, card }) => {
           path={path}
           onClose={onClose}
           onZoomIn={handleZoomIn}
-          onSelect={onSelect}
-          onDeselect={onDeselect}
         />
       )}
     </>

@@ -16,8 +16,6 @@ type Props = {
   card: NoteCardType;
   note: NoteWithLinks;
   onOpen: (id: string, mode: OpenCardMode) => void;
-  onSelect: (options?: { multi: boolean }) => void;
-  onDeselect: () => void;
   onDelete: () => void;
   onClose: () => void;
 };
@@ -27,8 +25,6 @@ export const NoteCard: React.FC<Props> = ({
   card,
   note,
   onOpen,
-  onSelect,
-  onDeselect,
   onDelete,
   onClose,
 }) => {
@@ -50,12 +46,7 @@ export const NoteCard: React.FC<Props> = ({
   }, [note]);
 
   return (
-    <Card
-      selected={card.meta.selected}
-      onSelect={onSelect}
-      onDeselect={onDeselect}
-      path={path}
-    >
+    <Card path={path}>
       {(provided) => (
         <>
           <CardToolbar backgroundColor="bg-green-400">
