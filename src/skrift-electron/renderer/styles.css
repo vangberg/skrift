@@ -14,6 +14,10 @@ body {
   flex: 0;
 }
 
+.skrift-card-combine-target {
+  box-shadow: inset 0px 0px 0 2000px rgba(0, 0, 0, 0.5);
+}
+
 .ProseMirror-focused {
   @apply outline-none ring-2 ring-yellow-400 ring-opacity-30 rounded-sm
   /* @apply opacity-10 bg-yellow-100; */;

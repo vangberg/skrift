@@ -69,7 +69,7 @@ export const Stream: React.FC<Props> = ({
   );
 
   return (
-    <Droppable droppableId={droppableId}>
+    <Droppable droppableId={droppableId} isCombineEnabled>
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
