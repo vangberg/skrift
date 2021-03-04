@@ -22,7 +22,10 @@ export const Card: React.FC<Props> = ({ card, path, className, children }) => {
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          className={clsx(className, "shadow-md mx-2 mb-2 relative")}
+          className={clsx(
+            className,
+            "shadow-md mx-2 mb-2 relative flex flex-initial flex-col overflow-hidden"
+          )}
         >
           <div
             className={clsx(
@@ -32,7 +35,7 @@ export const Card: React.FC<Props> = ({ card, path, className, children }) => {
                 : "opacity-0 invisible"
             )}
           ></div>
-          <div className="relative">
+          <div className="relative flex-auto flex flex-col overflow-hidden">
             {children(provided, snapshot, ...rest)}
           </div>
         </div>

@@ -60,9 +60,9 @@ export const NoteCard: React.FC<Props> = ({
 
           <CardBody>
             <NoteEditorContainer id={note.id} onOpen={onOpen} />
-
-            <NoteCardBacklinks note={note} onOpen={onOpen} />
           </CardBody>
+
+          <NoteCardBacklinks note={note} onOpen={onOpen} />
         </>
       )}
     </Card>
