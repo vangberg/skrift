@@ -1,6 +1,13 @@
 import clsx from "clsx";
-import React, { useCallback, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { StreamContainer } from "../containers/StreamContainer";
+import { usePrevious } from "../hooks/usePrevious";
 import { Path } from "../interfaces/path";
 import { WorkspaceCard } from "../interfaces/state";
 
@@ -28,13 +35,46 @@ export const WorkspaceView: React.FC<Props> = ({ path, card, onZoomOut }) => {
     [zoom, card]
   );
 
+  const wasZoomed = usePrevious(zoom);
+
+  const [hidden, setHidden] = useState(!zoom);
+  const [visible, setVisible] = useState(zoom);
+
+  useEffect(() => {
+    // If the workspace is the last zoom, it has just been zoomed into.
+    if (isLastZoom) {
+      // Set `display: block` immediately.
+      setHidden(false);
+
+      // In next tick, i.e. after `display` has been set, trigger fade-in
+      // transition.
+      setImmediate(() => setVisible(true));
+    }
+  }, [isLastZoom]);
+
+  useEffect(() => {
+    // If the workspace was zoomed, but isn't now, it has just been zoomed
+    // out of.
+    if (wasZoomed && !zoom) {
+      // Trigger fade-out transition
+      setVisible(false);
+    }
+  }, [wasZoomed, zoom]);
+
   return (
     <div
       className={clsx(
         "fixed top-0 bottom-0 left-0 right-0 h-screen flex-1 flex flex-col bg-gray-200 text-sm transition-all",
-        zoom ? "opacity-100 visible" : "opacity-0 invisible"
-        // { hidden: !isLastZoom }
+        visible ? "opacity-100" : "opacity-0",
+        { hidden }
       )}
+      onTransitionEnd={(e) => {
+        // Whenever a transition ends, hide the workspace, unless it
+        // is the currently zoomed workspace.
+        if (!isLastZoom) {
+          setHidden(true);
+        }
+      }}
     >
       <div className="flex-none flex justify-center pt-2">
         {Path.isRoot(path) || (
