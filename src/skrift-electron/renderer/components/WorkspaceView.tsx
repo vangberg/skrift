@@ -61,12 +61,22 @@ export const WorkspaceView: React.FC<Props> = ({ path, card, onZoomOut }) => {
     }
   }, [wasZoomed, zoom]);
 
+  if (path.length === 0) console.log({ hidden });
+
   return (
     <div
       className={clsx(
-        "fixed top-0 bottom-0 left-0 right-0 h-screen flex-1 flex flex-col bg-gray-200 text-sm transition-all",
-        visible ? "opacity-100" : "opacity-0",
-        { hidden }
+        "fixed flex-1 flex flex-col bg-gray-200 text-sm transition-opacity",
+
+        // If the workspaces overlap, drag/drop will be mixed up. We cannot
+        // use `display: block`, as that hinders any transitions. The
+        // compromise is to make the hidden workspace into a 0x0 box with
+        // hidden overflow
+        hidden
+          ? "h-0 w-0 overflow-hidden"
+          : "top-0 bottom-0 left-0 right-0 h-screen",
+
+        visible ? "opacity-90" : "opacity-10"
       )}
       onTransitionEnd={(e) => {
         // Whenever a transition ends, hide the workspace, unless it
