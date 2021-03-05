@@ -68,6 +68,8 @@ export const WorkspaceView: React.FC<Props> = ({ path, card, onZoomOut }) => {
       className={clsx(
         "fixed flex-1 flex flex-col bg-gray-200 text-sm transition-opacity",
 
+        // All of this could possibly be replaced by a set of linked transitions.
+
         // If the workspaces overlap, drag/drop will be mixed up. We cannot
         // use `display: block`, as that hinders any transitions. The
         // compromise is to make the hidden workspace into a 0x0 box with
