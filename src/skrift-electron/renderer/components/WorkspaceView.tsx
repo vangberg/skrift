@@ -61,8 +61,6 @@ export const WorkspaceView: React.FC<Props> = ({ path, card, onZoomOut }) => {
     }
   }, [wasZoomed, zoom]);
 
-  if (path.length === 0) console.log({ hidden });
-
   return (
     <div
       className={clsx(
