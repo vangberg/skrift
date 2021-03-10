@@ -234,9 +234,49 @@ export const State = {
     }
 
     const fromStream = State.at(state, Path.ancestor(from));
-    const toStream = State.at(state, Path.ancestor(to));
+    if (!Stream.isStream(fromStream)) return;
 
-    if (!Stream.isStream(fromStream) || !Stream.isStream(toStream)) {
+    const workspace = State.at(state, Path.ancestor(Path.ancestor(from)));
+    if (!Card.isCard(workspace) || !Card.isWorkspace(workspace)) return;
+
+    // `const [x] = arr.slice(-1)` is a neat way to get the last element
+    // of the array.
+    const [toStreamIndex] = Path.ancestor(to).slice(-1);
+
+    // If the index of the destination stream is negative, it means that
+    // the card was drag and dropped to the left of the first stream, so
+    // we insert a new stream at the beginning of the workspace.
+    if (toStreamIndex < 0) {
+      const [removed] = fromStream.cards.splice(Path.last(from), 1);
+
+      workspace.streams.unshift({
+        type: "stream",
+        key: key++,
+        cards: [removed],
+      });
+
+      return;
+    }
+
+    // If the index of the destination stream is larger than the number
+    // of streams in the workspace, it means that the card was drag and
+    // dropped to the right of the last stream, so we insert a new stream
+    // at the end of the workspace.
+    if (toStreamIndex > workspace.streams.length - 1) {
+      const [removed] = fromStream.cards.splice(Path.last(from), 1);
+
+      workspace.streams.push({
+        type: "stream",
+        key: key++,
+        cards: [removed],
+      });
+
+      return;
+    }
+
+    // Otherwise, the card was moved between existing streams.
+    const toStream = State.at(state, Path.ancestor(to));
+    if (!Stream.isStream(toStream)) {
       return;
     }
 
