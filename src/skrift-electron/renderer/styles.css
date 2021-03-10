@@ -10,14 +10,6 @@ body {
   @apply py-0;
 }
 
-.skrift-flex-empty-0:empty {
-  flex: 0;
-}
-
-.skrift-zoom-card {
-  transform: scale(1.1);
-}
-
 .ProseMirror-focused {
   @apply outline-none ring-2 ring-yellow-400 ring-opacity-30 rounded-sm
   /* @apply opacity-10 bg-yellow-100; */;

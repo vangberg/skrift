@@ -10,6 +10,7 @@ import { StreamContainer } from "../containers/StreamContainer";
 import { usePrevious } from "../hooks/usePrevious";
 import { Path } from "../interfaces/path";
 import { WorkspaceCard } from "../interfaces/state";
+import { DropStream } from "./DropStream";
 
 type Props = {
   path: Path;
@@ -98,6 +99,7 @@ export const WorkspaceView: React.FC<Props> = ({ path, card, onZoomOut }) => {
       </div>
 
       <div className="flex-1 flex flex-row h-0 justify-center px-1">
+        <DropStream path={[...path, -1]} />
         {card.streams.map((stream, index) => (
           <StreamContainer
             key={stream.key}
@@ -105,6 +107,7 @@ export const WorkspaceView: React.FC<Props> = ({ path, card, onZoomOut }) => {
             stream={stream}
           />
         ))}
+        <DropStream path={[...path, card.streams.length]} />
       </div>
     </div>
   );
