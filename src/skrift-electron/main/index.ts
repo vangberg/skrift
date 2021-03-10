@@ -1,4 +1,5 @@
 import { app, BrowserWindow, Menu } from "electron";
+import { autoUpdater } from "electron-updater";
 import isDev from "electron-is-dev";
 import { setupErrors } from "../errors";
 import { setupIpc } from "./ipc";
@@ -33,7 +34,11 @@ function createWindow() {
 
 Menu.setApplicationMenu(menu);
 
-app.on("ready", createWindow);
+app.on("ready", () => {
+  autoUpdater.checkForUpdatesAndNotify();
+
+  createWindow();
+});
 
 app.on("window-all-closed", () => {
   app.quit();
