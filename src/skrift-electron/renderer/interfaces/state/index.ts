@@ -255,6 +255,8 @@ export const State = {
         cards: [removed],
       });
 
+      State.normalize(state);
+
       return;
     }
 
@@ -270,6 +272,8 @@ export const State = {
         key: key++,
         cards: [removed],
       });
+
+      State.normalize(state);
 
       return;
     }
