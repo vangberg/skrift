@@ -23,7 +23,7 @@ const getDB: () => Promise<Database> = (() => {
   return async (): Promise<Database> => {
     if (!db) {
       db = await NotesDB.file(_path);
-      // await NotesDB.initialize(db);
+      await NotesDB.initialize(db);
     }
 
     return db;
@@ -39,13 +39,13 @@ const handleLoadDir = async (event: Electron.IpcMainEvent) => {
   const db = await getDB();
 
   let loaded = 0;
-  // for await (let note of NotesFS.readDir(_path)) {
-  //   await NotesDB.save(db, note.id, note.markdown, note.modifiedAt);
-  //   loaded += 1;
-  //   if (loaded % 100 === 0) {
-  //     reply(event, { type: "event/LOADING_DIR", loaded });
-  //   }
-  // }
+  for await (let note of NotesFS.readDir(_path)) {
+    await NotesDB.save(db, note.id, note.markdown, note.modifiedAt);
+    loaded += 1;
+    if (loaded % 100 === 0) {
+      reply(event, { type: "event/LOADING_DIR", loaded });
+    }
+  }
 
   const initialNoteID = "20210108T145053.970Z.md";
 
