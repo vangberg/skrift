@@ -8,7 +8,6 @@ import {
   IpcSetNoteCommand,
 } from "../shared/types";
 import { Database } from "sqlite";
-import isDev from "electron-is-dev";
 import path from "path";
 import { TSet } from "../../skrift/tset";
 import { Note, NoteLink, NoteWithLinks } from "../../skrift/note";

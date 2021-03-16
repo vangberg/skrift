@@ -1,6 +1,5 @@
 import { app, BrowserWindow, Menu } from "electron";
 import { autoUpdater } from "electron-updater";
-import isDev from "electron-is-dev";
 import { setupErrors } from "../errors";
 import { setupIpc } from "./ipc";
 import { menu } from "./menu";
@@ -15,16 +14,18 @@ function createWindow() {
     height: 800,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
     },
   });
 
   mainWindow.maximize();
 
-  if (isDev) {
+  if (app.isPackaged) {
+    mainWindow.loadFile("./build/app.html");
+  } else {
     mainWindow.loadURL("http://localhost:8080/app.html");
     mainWindow.webContents.openDevTools();
-  } else {
-    mainWindow.loadFile("./build/app.html");
   }
 
   mainWindow.on("closed", () => {

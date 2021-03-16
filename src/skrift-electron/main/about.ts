@@ -1,5 +1,4 @@
-import { BrowserWindow } from "electron";
-import isDev from "electron-is-dev";
+import { app, BrowserWindow } from "electron";
 
 export const createAboutWindow = () => {
   const window = new BrowserWindow({
@@ -12,10 +11,10 @@ export const createAboutWindow = () => {
 
   window.setMenu(null);
 
-  if (isDev) {
-    window.loadURL("http://localhost:8080/about.html");
-  } else {
+  if (app.isPackaged) {
     window.loadFile("./build/about.html");
+  } else {
+    window.loadURL("http://localhost:8080/about.html");
   }
 
   window.on("closed", () => {
