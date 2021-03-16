@@ -75,6 +75,7 @@ export const Stream: React.FC<Props> = ({
           ref={provided.innerRef}
           {...provided.droppableProps}
           className="flex-auto max-w-2xl py-2 flex flex-col overflow-x-visible"
+          style={{ flexBasis: "100%" }}
         >
           {cards}
           {provided.placeholder}
