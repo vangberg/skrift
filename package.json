@@ -138,6 +138,6 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
-    "sqlite3": "^4.2.0"
+    "sqlite3": "^5.0.2"
   }
 }
