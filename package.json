@@ -17,7 +17,8 @@
     "eslint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
     "test-watch": "jest --watch",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "notarize": "./notarize.sh"
   },
   "build": {
     "appId": "com.halestreet.Skrift",
@@ -27,7 +28,12 @@
       "repo": "skrift-release"
     },
     "mac": {
-      "category": "public.app-category.productivity"
+      "category": "public.app-category.productivity",
+      "hardenedRuntime": true,
+      "entitlements": "entitlements.mac.plist",
+      "target": [
+        "dmg"
+      ]
     },
     "linux": {
       "category": "Office",
@@ -124,7 +130,7 @@
     "tailwindcss": "^2.0.2",
     "ts-jest": "^25.4.0",
     "ts-loader": "^7.0.0",
-    "typescript": "^3.9.9",
+    "typescript": "^4.2.3",
     "use-immer": "^0.4.1",
     "use-prosemirror": "^1.2.1",
     "webpack": "^5.26.0",
