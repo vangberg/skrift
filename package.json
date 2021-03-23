@@ -1,6 +1,6 @@
 {
   "name": "Skrift",
-  "version": "0.11.0",
+  "version": "0.13.0",
   "description": "Networked notes",
   "main": "build/main.js",
   "scripts": {
@@ -30,10 +30,7 @@
     "mac": {
       "category": "public.app-category.productivity",
       "hardenedRuntime": true,
-      "entitlements": "entitlements.mac.plist",
-      "target": [
-        "dmg"
-      ]
+      "entitlements": "entitlements.mac.plist"
     },
     "linux": {
       "category": "Office",
