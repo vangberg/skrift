@@ -92,7 +92,7 @@ export const NotesDB = {
           db.run(`DELETE FROM links WHERE fromId = ?`, id),
           db.run(
             `INSERT INTO notes (id, title, markdown, modifiedAt) VALUES (?, ?, ?, ?)`,
-            [id, note.title, markdown, modifiedAt || new Date()]
+            [id, note.title, markdown, (modifiedAt || new Date()).getTime()]
           ),
           ...[...note.linkIds].map((link) =>
             db.run(`INSERT INTO links (fromId, toId) VALUES (?, ?)`, [id, link])
@@ -131,7 +131,7 @@ export const NotesDB = {
       ...Note.empty({
         id,
         backlinkIds: new Set(backlinkIds.map(({ fromId }) => fromId)),
-        modifiedAt: new Date(parseFloat(modifiedAt)),
+        modifiedAt: new Date(parseInt(modifiedAt)),
       }),
       ...Note.fromMarkdown(markdown),
     };
