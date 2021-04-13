@@ -37,7 +37,7 @@ export const SearchCard: React.FC<Props> = ({
     <Card card={card} path={path}>
       {(provided) => (
         <>
-          <CardBody>
+          <CardBody visible={true}>
             <div className="p-2">
               <SearchCardInput
                 query={query}

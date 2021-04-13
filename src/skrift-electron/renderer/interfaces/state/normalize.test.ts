@@ -5,7 +5,7 @@ describe("State.normalize", () => {
   it("ensures that workspace has at least one stream", () => {
     let state: State = {
       workspace: {
-        meta: { key: 0 },
+        meta: { key: 0, collapsed: false },
         type: "workspace",
         zoom: true,
         streams: [],
@@ -20,7 +20,7 @@ describe("State.normalize", () => {
   it("does not collapse the last stream in the root workspace", () => {
     let state: State = {
       workspace: {
-        meta: { key: 0 },
+        meta: { key: 0, collapsed: false },
         type: "workspace",
         zoom: true,
         streams: [
@@ -41,7 +41,7 @@ describe("State.normalize", () => {
   it("collapses surplus empty streams in the root workspace", () => {
     let state: State = {
       workspace: {
-        meta: { key: 0 },
+        meta: { key: 0, collapsed: false },
         type: "workspace",
         zoom: true,
         streams: [
@@ -67,7 +67,7 @@ describe("State.normalize", () => {
   it("collapses empty streams in the root workspace", () => {
     let state: State = {
       workspace: {
-        meta: { key: 0 },
+        meta: { key: 0, collapsed: false },
         type: "workspace",
         zoom: true,
         streams: [
@@ -93,7 +93,7 @@ describe("State.normalize", () => {
   it("does not collapse the last stream in nested workspaces", () => {
     let state: State = {
       workspace: {
-        meta: { key: 0 },
+        meta: { key: 0, collapsed: false },
         type: "workspace",
         zoom: true,
         streams: [
@@ -102,7 +102,7 @@ describe("State.normalize", () => {
             type: "stream",
             cards: [
               {
-                meta: { key: 2 },
+                meta: { key: 2, collapsed: false },
                 type: "workspace",
                 zoom: true,
                 streams: [{ key: 2, type: "stream", cards: [] }],
@@ -123,7 +123,7 @@ describe("State.normalize", () => {
   it("collapses empty streams in nested workspaces", () => {
     let state: State = {
       workspace: {
-        meta: { key: 0 },
+        meta: { key: 0, collapsed: false },
         type: "workspace",
         zoom: true,
         streams: [
@@ -132,7 +132,7 @@ describe("State.normalize", () => {
             type: "stream",
             cards: [
               {
-                meta: { key: 2 },
+                meta: { key: 2, collapsed: false },
                 type: "workspace",
                 zoom: true,
                 streams: [

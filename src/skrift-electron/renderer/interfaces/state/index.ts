@@ -50,7 +50,7 @@ export const Workspace = {
 
   empty(): WorkspaceCard {
     return {
-      meta: { key: key++ },
+      meta: { key: key++, collapsed: false },
       type: "workspace",
       zoom: false,
       streams: [
@@ -66,6 +66,7 @@ export const Workspace = {
 
 export interface CardMeta {
   key: number;
+  collapsed: boolean;
 }
 
 export interface WorkspaceCard {
@@ -104,7 +105,7 @@ export const State = {
   initial(): State {
     return {
       workspace: {
-        meta: { key: key++ },
+        meta: { key: key++, collapsed: false },
         type: "workspace",
         zoom: true,
         streams: [
@@ -169,7 +170,7 @@ export const State = {
       return;
     }
 
-    const card = { meta: { key: key++ }, ...props };
+    const card = { meta: { key: key++, collapsed: false }, ...props };
 
     if (mode === "below") {
       stream.cards.push(card);
@@ -223,6 +224,28 @@ export const State = {
     const idx = Path.last(path);
 
     stream.cards[idx] = { ...card, ...props };
+  },
+
+  updateMeta<T extends Card>(
+    state: State,
+    path: Path,
+    props: Partial<CardMeta>
+  ) {
+    const stream = State.at(state, Path.ancestor(path));
+
+    if (!Stream.isStream(stream)) {
+      return;
+    }
+
+    const card = State.at(state, path);
+
+    if (!Card.isCard(card)) {
+      return;
+    }
+
+    const idx = Path.last(path);
+
+    stream.cards[idx].meta = { ...card.meta, ...props };
   },
 
   move(state: State, from: Path, to: Path) {
@@ -314,7 +337,7 @@ export const State = {
 
       // First, replace the card that was dragged onto with the workspace.
       toStream.cards[Path.last(to)] = {
-        meta: { key: key++ },
+        meta: { key: key++, collapsed: false },
         type: "workspace",
         zoom: false,
         streams: [
@@ -431,6 +454,7 @@ export const State = {
 interface StateActions {
   openCard: (path: Path, mode: OpenCardMode, card: OpenCard) => void;
   updateCard: <T extends Card>(path: Path, card: Partial<T>) => void;
+  updateMeta: (path: Path, card: Partial<CardMeta>) => void;
   move: (from: Path, to: Path) => void;
   combine: (from: Path, to: Path) => void;
   close: (options: CloseOptions) => void;
@@ -446,6 +470,11 @@ export const createStateActions = (setState: Updater<State>): StateActions => {
     updateCard<T extends Card>(path: Path, props: Partial<T>) {
       setState((draft) => {
         State.updateCard(draft, path, props);
+      });
+    },
+    updateMeta(path: Path, props: Partial<CardMeta>) {
+      setState((draft) => {
+        State.updateMeta(draft, path, props);
       });
     },
     move(from: Path, to: Path) {

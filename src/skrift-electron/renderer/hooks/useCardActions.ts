@@ -1,7 +1,12 @@
 import { useCallback, useContext } from "react";
 import { NoteID } from "../../../skrift/note";
 import { Path } from "../interfaces/path";
-import { Card, OpenCardMode, StateContext } from "../interfaces/state";
+import {
+  Card,
+  CardMeta,
+  OpenCardMode,
+  StateContext,
+} from "../interfaces/state";
 import { Ipc } from "../ipc";
 
 interface CardActions<T extends Card> {
@@ -10,13 +15,16 @@ interface CardActions<T extends Card> {
   onOpenSearch: (query: string, mode: OpenCardMode) => void;
   onClose: () => void;
   onUpdate: (card: Partial<T>) => void;
+  onUpdateMeta: (meta: Partial<CardMeta>) => void;
 }
 
 export const useCardActions = <T extends Card>(
   card: T,
   path: Path
 ): CardActions<T> => {
-  const [, { openCard, updateCard, close }] = useContext(StateContext);
+  const [, { openCard, updateCard, updateMeta, close }] = useContext(
+    StateContext
+  );
 
   const onDeleteNote = useCallback(
     (id: NoteID) => {
@@ -48,11 +56,17 @@ export const useCardActions = <T extends Card>(
     [updateCard, path]
   );
 
+  const onUpdateMeta = useCallback(
+    (changes: Partial<CardMeta>) => updateMeta(path, changes),
+    [updateMeta, path]
+  );
+
   return {
     onDeleteNote,
     onOpenNote,
     onOpenSearch,
     onClose,
     onUpdate,
+    onUpdateMeta,
   };
 };

@@ -11,11 +11,18 @@ interface Props {
 }
 
 export const NoteCardContainer: React.FC<Props> = ({ card, path }) => {
-  const { onOpenNote, onDeleteNote, onClose } = useCardActions(card, path);
+  const { onOpenNote, onDeleteNote, onClose, onUpdateMeta } = useCardActions(
+    card,
+    path
+  );
   const { id } = card;
   const note = useNote(id);
 
   const handleDelete = useCallback(() => onDeleteNote(id), [onDeleteNote, id]);
+
+  const handleToggle = useCallback(() => {
+    onUpdateMeta({ collapsed: !card.meta.collapsed });
+  }, [onUpdateMeta, card]);
 
   if (!note) {
     return null;
@@ -29,6 +36,7 @@ export const NoteCardContainer: React.FC<Props> = ({ card, path }) => {
       onOpen={onOpenNote}
       onDelete={handleDelete}
       onClose={onClose}
+      onToggle={handleToggle}
     />
   );
 };

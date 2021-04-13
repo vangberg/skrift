@@ -10,6 +10,8 @@ import { CardBody } from "./CardBody";
 import { CardToolbarItem } from "./CardToolbarItem";
 import { Path } from "../interfaces/path";
 import { NoteCard as NoteCardType, OpenCardMode } from "../interfaces/state";
+import { NoteCardTitle } from "./NoteCardTitle";
+import { CardTitle } from "./CardTitle";
 
 type Props = {
   path: Path;
@@ -18,6 +20,7 @@ type Props = {
   onOpen: (id: string, mode: OpenCardMode) => void;
   onDelete: () => void;
   onClose: () => void;
+  onToggle: () => void;
 };
 
 export const NoteCard: React.FC<Props> = ({
@@ -27,7 +30,10 @@ export const NoteCard: React.FC<Props> = ({
   onOpen,
   onDelete,
   onClose,
+  onToggle,
 }) => {
+  const { collapsed } = card.meta;
+
   const handleDelete = useCallback(async () => {
     const { response } = await remote.dialog.showMessageBox({
       type: "question",
@@ -49,11 +55,19 @@ export const NoteCard: React.FC<Props> = ({
     <Card card={card} path={path}>
       {(provided) => (
         <>
-          <CardBody>
+          <CardTitle visible={collapsed}>
+            <NoteCardTitle note={note} />
+          </CardTitle>
+
+          <CardBody visible={!collapsed}>
             <NoteEditorContainer id={note.id} onOpen={onOpen} />
+            <NoteCardBacklinks note={note} onOpen={onOpen} />
           </CardBody>
 
           <CardToolbar backgroundColor="bg-green-400">
+            <CardToolbarItem onClick={onToggle}>
+              {collapsed ? "Maximize" : "Minimize"}
+            </CardToolbarItem>
             <CardToolbarItem onClick={handleDelete}>Delete</CardToolbarItem>
             <CardToolbarItem onClick={handleCopy}>Copy link</CardToolbarItem>
             <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>
@@ -61,8 +75,6 @@ export const NoteCard: React.FC<Props> = ({
               Move
             </CardToolbarItem>
           </CardToolbar>
-
-          <NoteCardBacklinks note={note} onOpen={onOpen} />
         </>
       )}
     </Card>

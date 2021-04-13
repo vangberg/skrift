@@ -1,32 +1,32 @@
 import { State, Card, NoteCard } from ".";
 
 export const cardA = (): NoteCard => ({
-  meta: { key: 1 },
+  meta: { key: 1, collapsed: false },
   type: "note",
   id: "a",
 });
 
 export const cardB = (): NoteCard => ({
-  meta: { key: 2 },
+  meta: { key: 2, collapsed: false },
   type: "note",
   id: "b",
 });
 
 export const cardC = (): NoteCard => ({
-  meta: { key: 3 },
+  meta: { key: 3, collapsed: false },
   type: "note",
   id: "c",
 });
 
 export const cardD = (): NoteCard => ({
-  meta: { key: 4 },
+  meta: { key: 4, collapsed: false },
   type: "note",
   id: "d",
 });
 
 export const getState = (): State => ({
   workspace: {
-    meta: { key: 0 },
+    meta: { key: 0, collapsed: false },
     type: "workspace",
     zoom: true,
     streams: [
@@ -54,7 +54,7 @@ export const getState = (): State => ({
         cards: [
           {
             // [2, 0]
-            meta: { key: 4 },
+            meta: { key: 4, collapsed: false },
             type: "workspace",
             zoom: false,
             streams: [

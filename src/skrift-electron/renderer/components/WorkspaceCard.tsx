@@ -45,7 +45,7 @@ export const WorkspaceCard: React.FC<Props> = ({
             </CardToolbarItem>
           </CardToolbar>
 
-          <CardBody>
+          <CardBody visible={true}>
             {Workspace.isEmpty(card) ? (
               <div className="h-12 flex items-center justify-center text-gray-500 select-none">
                 Drag cards here
