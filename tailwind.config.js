@@ -4,4 +4,5 @@ module.exports = {
       sm: "24rem",
     },
   },
+  variants: {},
 };

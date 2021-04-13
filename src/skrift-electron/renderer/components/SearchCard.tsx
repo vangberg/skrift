@@ -37,14 +37,13 @@ export const SearchCard: React.FC<Props> = ({
     <Card card={card} path={path}>
       {(provided) => (
         <>
-          <CardToolbar backgroundColor="bg-yellow-300">
-            <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>
-            <CardToolbarItem {...provided.dragHandleProps}>
-              Move
-            </CardToolbarItem>
-          </CardToolbar>
-
           <CardBody>
+            <CardToolbar backgroundColor="bg-yellow-300">
+              <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>
+              <CardToolbarItem {...provided.dragHandleProps}>
+                Move
+              </CardToolbarItem>
+            </CardToolbar>
             <div className="p-2">
               <SearchCardInput
                 query={query}

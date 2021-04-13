@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { remote, clipboard } from "electron";
 
 import { NoteCardBacklinks } from "./NoteCardBacklinks";
@@ -49,6 +49,10 @@ export const NoteCard: React.FC<Props> = ({
     <Card card={card} path={path}>
       {(provided) => (
         <>
+          <CardBody>
+            <NoteEditorContainer id={note.id} onOpen={onOpen} />
+          </CardBody>
+
           <CardToolbar backgroundColor="bg-green-400">
             <CardToolbarItem onClick={handleDelete}>Delete</CardToolbarItem>
             <CardToolbarItem onClick={handleCopy}>Copy link</CardToolbarItem>
@@ -57,10 +61,6 @@ export const NoteCard: React.FC<Props> = ({
               Move
             </CardToolbarItem>
           </CardToolbar>
-
-          <CardBody>
-            <NoteEditorContainer id={note.id} onOpen={onOpen} />
-          </CardBody>
 
           <NoteCardBacklinks note={note} onOpen={onOpen} />
         </>

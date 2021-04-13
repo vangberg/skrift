@@ -5,7 +5,7 @@ interface Props {
 }
 export const CardToolbar: React.FC<Props> = ({ backgroundColor, children }) => {
   return (
-    <div className={`flex px-2 py-1 justify-end ${backgroundColor}`}>
+    <div className="skrift-card-toolbar absolute top-0 right-0 p-2 flex flex-wrap opacity-0 transition group-hover:opacity-100">
       {children}
     </div>
   );
