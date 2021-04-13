@@ -59,35 +59,6 @@ export const AppContainer: React.FC = () => {
         result.source.index,
       ];
 
-      if (result.combine) {
-        // We don't get the index in `combine`, so we need to find
-        // the stream (which we can get from `droppableId`), and then
-        // find the card in that stream with the matching `key` from
-        // `draggableId`.
-
-        // This should somehow be moved to `State`, but at the other
-        // hand, react-beautiful-dnd should really include the index
-        // in `result.combine`.
-
-        const droppableId = DroppableIds.deserialize(
-          result.combine.droppableId
-        );
-        const draggableId = DraggableIds.deserialize(
-          result.combine.draggableId
-        );
-
-        const stream = State.at(state, droppableId);
-        if (!Stream.isStream(stream)) return;
-
-        const index = stream.cards.findIndex(
-          (card) => card.meta.key === draggableId
-        );
-
-        actions.combine(from, [...droppableId, index]);
-
-        return;
-      }
-
       if (result.destination) {
         const to = [
           ...DroppableIds.deserialize(result.destination.droppableId),
@@ -96,7 +67,7 @@ export const AppContainer: React.FC = () => {
         actions.move(from, to);
       }
     },
-    [actions, state]
+    [actions]
   );
 
   return (

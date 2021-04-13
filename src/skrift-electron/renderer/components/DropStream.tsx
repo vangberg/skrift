@@ -12,7 +12,7 @@ export const DropStream: React.FC<Props> = ({ path }) => {
   const droppableId = useMemo(() => DroppableIds.serialize(path), [path]);
 
   return (
-    <Droppable droppableId={droppableId} isCombineEnabled>
+    <Droppable droppableId={droppableId}>
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}

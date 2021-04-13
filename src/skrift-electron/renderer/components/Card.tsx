@@ -27,14 +27,6 @@ export const Card: React.FC<Props> = ({ card, path, className, children }) => {
             "skrift-card shadow-md mx-2 mb-2 relative flex flex-initial flex-col group"
           )}
         >
-          <div
-            className={clsx(
-              "absolute top-0 right-0 left-0 bottom-0 z-10 bg-black transition-all",
-              snapshot.combineTargetFor
-                ? "opacity-30 visible"
-                : "opacity-0 invisible"
-            )}
-          ></div>
           <div className="relative flex-auto flex flex-col ">
             {children(provided, snapshot, ...rest)}
           </div>

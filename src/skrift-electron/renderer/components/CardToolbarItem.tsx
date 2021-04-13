@@ -12,21 +12,13 @@ export const CardToolbarItem: React.FC<Props> = ({
   children,
   ...props
 }) => {
-  const handleClick = useCallback(
-    (event: React.MouseEvent) => {
-      event.preventDefault();
-      onClick?.();
-    },
-    [onClick]
-  );
-
   return (
     <div
       className={clsx(
         "ml-2 mb-2 px-2 py-1 select-none rounded-full shadow bg-gray-100 cursor-pointer",
         className
       )}
-      onClick={handleClick}
+      onClick={onClick}
       tabIndex={0}
       {...props}
     >
