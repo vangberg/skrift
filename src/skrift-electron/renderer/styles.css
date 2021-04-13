@@ -10,7 +10,7 @@ body {
   @apply py-0;
 }
 
-.skrift-card:focus-within .skrift-card-toolbar {
+.skrift-card-body:focus-within + .skrift-card-toolbar {
   @apply transform -translate-y-1/3 opacity-100;
 }
 

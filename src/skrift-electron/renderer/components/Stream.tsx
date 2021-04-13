@@ -93,12 +93,6 @@ export const Stream: React.FC<Props> = ({
             >
               Search
             </span>
-            <span
-              onClick={handleOpenWorkspace}
-              className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
-            >
-              Workspace
-            </span>
           </div>
         </div>
       )}

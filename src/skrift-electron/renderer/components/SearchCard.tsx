@@ -38,12 +38,6 @@ export const SearchCard: React.FC<Props> = ({
       {(provided) => (
         <>
           <CardBody>
-            <CardToolbar backgroundColor="bg-yellow-300">
-              <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>
-              <CardToolbarItem {...provided.dragHandleProps}>
-                Move
-              </CardToolbarItem>
-            </CardToolbar>
             <div className="p-2">
               <SearchCardInput
                 query={query}
@@ -53,6 +47,13 @@ export const SearchCard: React.FC<Props> = ({
               <SearchCardResults onOpen={onOpen} results={results} />
             </div>
           </CardBody>
+
+          <CardToolbar backgroundColor="bg-yellow-300">
+            <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>
+            <CardToolbarItem {...provided.dragHandleProps}>
+              Move
+            </CardToolbarItem>
+          </CardToolbar>
         </>
       )}
     </Card>
