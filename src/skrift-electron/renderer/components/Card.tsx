@@ -24,7 +24,7 @@ export const Card: React.FC<Props> = ({ card, path, className, children }) => {
           {...provided.draggableProps}
           className={clsx(
             className,
-            "skrift-card shadow-md mx-2 mb-2 relative flex flex-initial flex-col group"
+            "skrift-card shadow-md mx-2 mb-4 relative flex flex-initial flex-col group"
           )}
         >
           <div className="relative flex-auto flex flex-col ">
