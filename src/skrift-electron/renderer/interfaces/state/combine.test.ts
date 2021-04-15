@@ -3,7 +3,7 @@ import { cardA, cardB, cardC, cardD, getState } from "./fixture";
 
 describe("State.combine", () => {
   it("moves card into first stream in workspace", () => {
-    let state = getState();
+    const state = getState();
 
     State.combine(state, [0, 0], [2, 0]);
 
@@ -15,7 +15,7 @@ describe("State.combine", () => {
   });
 
   it("combines two note cards into a workspace", () => {
-    let state = getState();
+    const state = getState();
 
     State.combine(state, [0, 0], [0, 1]);
 

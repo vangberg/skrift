@@ -20,10 +20,10 @@ import {
 } from "prosemirror-schema-list";
 
 export function buildKeymap<S extends Schema>(schema: S) {
-  let keys: Keymap<S> = {};
+  const keys: Keymap<S> = {};
   let type;
 
-  let enter: Command[] = [];
+  const enter: Command[] = [];
 
   enter.push(splitListItem(schema.nodes.list_item));
 

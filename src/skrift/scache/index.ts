@@ -12,7 +12,7 @@ export type SCache<Key, Value> = Map<Key, CacheEntry<Value>>;
 
 export const SCache = {
   claim<Key, Value>(cache: SCache<Key, Value>, key: Key, defaultValue?: Value) {
-    let entry = cache.get(key);
+    const entry = cache.get(key);
 
     if (entry) {
       entry.claims++;
@@ -22,7 +22,7 @@ export const SCache = {
   },
 
   release<Key, Value>(cache: SCache<Key, Value>, key: Key) {
-    let entry = cache.get(key);
+    const entry = cache.get(key);
 
     if (!entry) {
       return;
@@ -36,7 +36,7 @@ export const SCache = {
   },
 
   set<Key, Value>(cache: SCache<Key, Value>, key: Key, value: Value) {
-    let entry = cache.get(key);
+    const entry = cache.get(key);
 
     if (entry) {
       entry.value = value;

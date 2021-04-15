@@ -18,7 +18,7 @@ describe("NotesFS.readDir", () => {
   it("reads all notes", async () => {
     const notes = [];
 
-    for await (let note of NotesFS.readDir(PATH)) {
+    for await (const note of NotesFS.readDir(PATH)) {
       notes.push(note);
     }
 

@@ -14,7 +14,7 @@ import { Note, NoteLink, NoteWithLinks } from "../../skrift/note";
 import { NotesDB } from "../../skrift/notes_db";
 import { NotesFS } from "../../skrift/notes_fs";
 
-let _path = path.join(app.getPath("documents"), "Skrift");
+const _path = path.join(app.getPath("documents"), "Skrift");
 
 const getDB: () => Promise<Database> = (() => {
   let db: Database;
@@ -38,7 +38,7 @@ const handleLoadDir = async (event: Electron.IpcMainEvent) => {
   const db = await getDB();
 
   let loaded = 0;
-  for await (let note of NotesFS.readDir(_path)) {
+  for await (const note of NotesFS.readDir(_path)) {
     await NotesDB.save(db, note.id, note.markdown, note.modifiedAt);
     loaded += 1;
     if (loaded % 100 === 0) {

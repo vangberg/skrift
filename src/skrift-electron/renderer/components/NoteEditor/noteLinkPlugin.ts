@@ -23,10 +23,10 @@ export const noteLinkPlugin = new Plugin<NoteLinkPluginState>({
     apply(tr, state) {
       // Whenever the note data updates, we apply a transaction with the
       // note as the meta data for this plugin.
-      let meta = tr.getMeta(noteLinkPlugin) as NoteWithLinks | undefined;
+      const meta = tr.getMeta(noteLinkPlugin) as NoteWithLinks | undefined;
 
       // Otherwise, fall back to previously injected note from the state.
-      let note = meta || state.note;
+      const note = meta || state.note;
 
       if (!note) {
         return state;

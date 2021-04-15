@@ -3,7 +3,7 @@ import { getState } from "./fixture";
 
 describe("State.openStream", () => {
   it("opens a new stream in root workspace", () => {
-    let state = getState();
+    const state = getState();
 
     State.openStream(state, []);
 
@@ -11,7 +11,7 @@ describe("State.openStream", () => {
   });
 
   it("opens a new stream in nested workspace", () => {
-    let state = getState();
+    const state = getState();
 
     State.openStream(state, [2, 0]);
 

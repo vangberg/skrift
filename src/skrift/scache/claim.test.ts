@@ -2,7 +2,7 @@ import { SCache } from ".";
 
 describe("SCache.claim", () => {
   it("sets initial claim", () => {
-    let cache: SCache<string, null> = new Map();
+    const cache: SCache<string, null> = new Map();
 
     SCache.claim(cache, "a");
 
@@ -10,7 +10,7 @@ describe("SCache.claim", () => {
   });
 
   it("sets initial claim with default value", () => {
-    let cache: SCache<string, null> = new Map();
+    const cache: SCache<string, null> = new Map();
 
     SCache.claim(cache, "a", "default");
 
@@ -18,7 +18,7 @@ describe("SCache.claim", () => {
   });
 
   it("increases existing claims", () => {
-    let cache: SCache<string, null> = new Map();
+    const cache: SCache<string, null> = new Map();
 
     SCache.claim(cache, "a");
     SCache.claim(cache, "a");
@@ -27,7 +27,7 @@ describe("SCache.claim", () => {
   });
 
   it("increases existing claims without overriding default value", () => {
-    let cache: SCache<string, null> = new Map();
+    const cache: SCache<string, null> = new Map();
 
     SCache.claim(cache, "a", "default");
     SCache.claim(cache, "a", "later default");

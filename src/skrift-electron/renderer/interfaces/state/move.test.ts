@@ -3,7 +3,7 @@ import { cardA, cardB, cardC, cardD, getState } from "./fixture";
 
 describe("State.move", () => {
   it("moves within a stream", () => {
-    let state = getState();
+    const state = getState();
 
     State.move(state, [0, 0], [0, 1]);
 
@@ -11,7 +11,7 @@ describe("State.move", () => {
   });
 
   it("moves between streams", () => {
-    let state = getState();
+    const state = getState();
 
     State.move(state, [0, 0], [1, 1]);
 
@@ -20,7 +20,7 @@ describe("State.move", () => {
   });
 
   it("moves between workspaces", () => {
-    let state = getState();
+    const state = getState();
 
     State.move(state, [0, 0], [2, 0, 0, 1]);
 
@@ -32,7 +32,7 @@ describe("State.move", () => {
 
   describe("with negative stream index", () => {
     it("prepends a new stream", () => {
-      let state = getState();
+      const state = getState();
 
       State.move(state, [0, 0], [-1, 0]);
 
@@ -44,7 +44,7 @@ describe("State.move", () => {
 
   describe("with stream index larger than number of streams", () => {
     it("appends a new stream", () => {
-      let state = getState();
+      const state = getState();
 
       State.move(state, [0, 0], [3, 0]);
 

@@ -49,7 +49,7 @@ export const NotesFS = {
   async *readDir(dirPath: string): AsyncGenerator<Note, void> {
     const ids = await NotesFS.ids(dirPath);
 
-    for (let id of ids) {
+    for (const id of ids) {
       yield await NotesFS.read(dirPath, id);
     }
   },

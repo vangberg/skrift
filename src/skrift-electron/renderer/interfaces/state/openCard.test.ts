@@ -3,7 +3,7 @@ import { getState } from "./fixture";
 
 describe("State.openCard", () => {
   it("opens card in stream", () => {
-    let state = getState();
+    const state = getState();
 
     State.openCard(state, [0], { mode: "below" }, { type: "note", id: "x" });
 
@@ -14,7 +14,7 @@ describe("State.openCard", () => {
   });
 
   it("opens card at end of stream", () => {
-    let state = getState();
+    const state = getState();
 
     State.openCard(state, [0, 0], { mode: "below" }, { type: "note", id: "x" });
 
@@ -25,7 +25,7 @@ describe("State.openCard", () => {
   });
 
   it("opens card in next stream", () => {
-    let state = getState();
+    const state = getState();
     State.openCard(state, [0, 0], { mode: "push" }, { type: "note", id: "x" });
 
     const card = State.at(state, [1, 1]);
@@ -35,7 +35,7 @@ describe("State.openCard", () => {
   });
 
   it("opens card in new stream", () => {
-    let state = getState();
+    const state = getState();
 
     State.openCard(
       state,
@@ -51,7 +51,7 @@ describe("State.openCard", () => {
   });
 
   it("replaces card at path", () => {
-    let state = getState();
+    const state = getState();
 
     State.openCard(
       state,
