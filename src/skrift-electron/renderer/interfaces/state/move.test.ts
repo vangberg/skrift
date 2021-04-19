@@ -1,4 +1,4 @@
-import { State, Card, Stream, WorkspaceCard } from ".";
+import { State, Card, Stream } from ".";
 import { cardA, cardB, cardC, cardD, getState } from "./fixture";
 
 describe("State.move", () => {
@@ -7,7 +7,7 @@ describe("State.move", () => {
 
     State.move(state, [0, 0], [0, 1]);
 
-    expect(state.workspace.streams[0].cards).toEqual([cardB(), cardA()]);
+    expect(state.streams[0].cards).toEqual([cardB(), cardA()]);
   });
 
   it("moves between streams", () => {
@@ -15,19 +15,8 @@ describe("State.move", () => {
 
     State.move(state, [0, 0], [1, 1]);
 
-    expect(state.workspace.streams[0].cards).toEqual([cardB()]);
-    expect(state.workspace.streams[1].cards).toEqual([cardC(), cardA()]);
-  });
-
-  it("moves between workspaces", () => {
-    const state = getState();
-
-    State.move(state, [0, 0], [2, 0, 0, 1]);
-
-    expect(state.workspace.streams[0].cards).toEqual([cardB()]);
-    expect(
-      (State.at(state, [2, 0]) as WorkspaceCard).streams[0].cards
-    ).toEqual([cardD(), cardA()]);
+    expect(state.streams[0].cards).toEqual([cardB()]);
+    expect(state.streams[1].cards).toEqual([cardC(), cardA()]);
   });
 
   describe("with negative stream index", () => {
@@ -36,9 +25,9 @@ describe("State.move", () => {
 
       State.move(state, [0, 0], [-1, 0]);
 
-      expect(state.workspace.streams.length).toEqual(4);
-      expect(state.workspace.streams[0].cards).toEqual([cardA()]);
-      expect(state.workspace.streams[1].cards).toEqual([cardB()]);
+      expect(state.streams.length).toEqual(3);
+      expect(state.streams[0].cards).toEqual([cardA()]);
+      expect(state.streams[1].cards).toEqual([cardB()]);
     });
   });
 
@@ -46,11 +35,11 @@ describe("State.move", () => {
     it("appends a new stream", () => {
       const state = getState();
 
-      State.move(state, [0, 0], [3, 0]);
+      State.move(state, [0, 0], [2, 0]);
 
-      expect(state.workspace.streams.length).toEqual(4);
-      expect(state.workspace.streams[0].cards).toEqual([cardB()]);
-      expect(state.workspace.streams[3].cards).toEqual([cardA()]);
+      expect(state.streams.length).toEqual(3);
+      expect(state.streams[0].cards).toEqual([cardB()]);
+      expect(state.streams[2].cards).toEqual([cardA()]);
     });
   });
 });

@@ -4,7 +4,7 @@ import { NoteID } from "../../../../skrift/note";
 import { Path } from "../path";
 
 export interface State {
-  workspace: WorkspaceCard;
+  streams: Stream[];
 }
 export interface Stream {
   key: number;
@@ -18,22 +18,15 @@ export const Stream = {
   },
 };
 
-export type Card = WorkspaceCard | NoteCard | SearchCard;
+export type Card = NoteCard | SearchCard;
 
 export const Card = {
   isCard(card: any): card is Card {
-    return (
-      card.type &&
-      (Card.isWorkspace(card) || Card.isNote(card) || Card.isSearch(card))
-    );
+    return card.type && (Card.isNote(card) || Card.isSearch(card));
   },
 
   isNote(card: Card): card is NoteCard {
     return card.type === "note";
-  },
-
-  isWorkspace(card: Card): card is WorkspaceCard {
-    return card.type === "workspace";
   },
 
   isSearch(card: Card): card is SearchCard {
@@ -41,41 +34,10 @@ export const Card = {
   },
 };
 
-export const Workspace = {
-  isEmpty(workspace: WorkspaceCard): boolean {
-    return (
-      workspace.streams.length === 1 && workspace.streams[0].cards.length === 0
-    );
-  },
-
-  empty(): WorkspaceCard {
-    return {
-      meta: { key: key++, collapsed: false },
-      type: "workspace",
-      zoom: false,
-      streams: [
-        {
-          type: "stream",
-          key: key++,
-          cards: [],
-        },
-      ],
-    };
-  },
-};
-
 export interface CardMeta {
   key: number;
   collapsed: boolean;
 }
-
-export interface WorkspaceCard {
-  meta: CardMeta;
-  type: "workspace";
-  zoom: boolean;
-  streams: Stream[];
-}
-
 export interface NoteCard {
   meta: CardMeta;
   type: "note";
@@ -94,53 +56,25 @@ type CloseOptions =
 
 export type OpenCardMode = "below" | "push" | "replace";
 
-type OpenCard =
-  | Omit<WorkspaceCard, "meta">
-  | Omit<NoteCard, "meta">
-  | Omit<SearchCard, "meta">;
+type OpenCard = Omit<NoteCard, "meta"> | Omit<SearchCard, "meta">;
 
 let key = 0;
 
 export const State = {
   initial(): State {
     return {
-      workspace: {
-        meta: { key: key++, collapsed: false },
-        type: "workspace",
-        zoom: true,
-        streams: [
-          {
-            key: key++,
-            type: "stream",
-            cards: [],
-          },
-        ],
-      },
+      streams: [
+        {
+          key: key++,
+          type: "stream",
+          cards: [],
+        },
+      ],
     };
   },
 
-  at(state: State, path: Path): Card | Stream {
-    let entry: Card | Stream = state.workspace;
-
-    for (let i = 0; i < path.length; i++) {
-      if (entry.type === "workspace") {
-        entry = entry.streams[path[i]];
-      } else if (entry.type === "stream") {
-        entry = entry.cards[path[i]];
-      }
-    }
-
-    return entry;
-  },
-
-  openStream(state: State, path: Path) {
-    const workspace = State.at(state, path);
-
-    if (!Card.isCard(workspace) || !Card.isWorkspace(workspace)) {
-      return;
-    }
-
-    workspace.streams.push({
+  openStream(state: State) {
+    state.streams.push({
       key: key++,
       type: "stream",
       cards: [],
@@ -155,20 +89,7 @@ export const State = {
   ) {
     const { mode } = options;
 
-    const atPath = State.at(state, path);
-
-    let stream;
-
-    if (Stream.isStream(atPath)) {
-      stream = atPath;
-      path = [...path, stream.cards.length - 1];
-    } else if (Card.isCard(atPath)) {
-      stream = State.at(state, Path.ancestor(path));
-    }
-
-    if (!Stream.isStream(stream)) {
-      return;
-    }
+    const stream = state.streams[Path.stream(path)];
 
     const card = { meta: { key: key++, collapsed: false }, ...props };
 
@@ -182,18 +103,14 @@ export const State = {
       // Append the card to the next stream, creating the stream
       // if it does not exist.
 
-      const nextPath = Path.next(Path.ancestor(path));
+      const nextPath = Path.next(Path.streamPath(path));
 
-      // If the stream does not exist, create it.
-      if (!State.at(state, nextPath)) {
-        State.openStream(state, Path.ancestor(nextPath));
+      // If the card is pushed from the last stream, open a new stream.
+      if (Path.stream(nextPath) >= state.streams.length) {
+        State.openStream(state);
       }
 
-      const nextStream = State.at(state, Path.next(Path.ancestor(path)));
-
-      if (!Stream.isStream(nextStream)) {
-        return;
-      }
+      const nextStream = state.streams[Path.stream(nextPath)];
 
       nextStream.cards.push(card);
 
@@ -209,17 +126,10 @@ export const State = {
   },
 
   updateCard<T extends Card>(state: State, path: Path, props: Partial<T>) {
-    const stream = State.at(state, Path.ancestor(path));
+    if (!Path.isCardPath(path)) return;
 
-    if (!Stream.isStream(stream)) {
-      return;
-    }
-
-    const card = State.at(state, path);
-
-    if (!Card.isCard(card)) {
-      return;
-    }
+    const stream = state.streams[Path.stream(path)];
+    const card = stream.cards[Path.card(path)];
 
     const idx = Path.last(path);
 
@@ -231,48 +141,29 @@ export const State = {
     path: Path,
     props: Partial<CardMeta>
   ) {
-    const stream = State.at(state, Path.ancestor(path));
+    if (!Path.isCardPath(path)) return;
 
-    if (!Stream.isStream(stream)) {
-      return;
-    }
+    const stream = state.streams[Path.stream(path)];
+    const card = stream.cards[Path.card(path)];
 
-    const card = State.at(state, path);
-
-    if (!Card.isCard(card)) {
-      return;
-    }
-
-    const idx = Path.last(path);
-
-    stream.cards[idx].meta = { ...card.meta, ...props };
+    stream.cards[Path.card(path)].meta = { ...card.meta, ...props };
   },
 
   move(state: State, from: Path, to: Path) {
-    const fromElem = State.at(state, from);
-
     // We can only move cards, not streams.
-    if (!Card.isCard(fromElem)) {
-      return;
-    }
+    if (!Path.isCardPath(from)) return;
 
-    const fromStream = State.at(state, Path.ancestor(from));
-    if (!Stream.isStream(fromStream)) return;
+    const fromStream = state.streams[Path.stream(from)];
 
-    const workspace = State.at(state, Path.ancestor(Path.ancestor(from)));
-    if (!Card.isCard(workspace) || !Card.isWorkspace(workspace)) return;
-
-    // `const [x] = arr.slice(-1)` is a neat way to get the last element
-    // of the array.
-    const [toStreamIndex] = Path.ancestor(to).slice(-1);
+    const toStreamPath = Path.stream(to);
 
     // If the index of the destination stream is negative, it means that
     // the card was drag and dropped to the left of the first stream, so
-    // we insert a new stream at the beginning of the workspace.
-    if (toStreamIndex < 0) {
+    // we insert a new stream at the beginning.
+    if (toStreamPath < 0) {
       const [removed] = fromStream.cards.splice(Path.last(from), 1);
 
-      workspace.streams.unshift({
+      state.streams.unshift({
         type: "stream",
         key: key++,
         cards: [removed],
@@ -284,13 +175,13 @@ export const State = {
     }
 
     // If the index of the destination stream is larger than the number
-    // of streams in the workspace, it means that the card was drag and
+    // of streams, it means that the card was drag and
     // dropped to the right of the last stream, so we insert a new stream
-    // at the end of the workspace.
-    if (toStreamIndex > workspace.streams.length - 1) {
+    // at the end.
+    if (toStreamPath > state.streams.length - 1) {
       const [removed] = fromStream.cards.splice(Path.last(from), 1);
 
-      workspace.streams.push({
+      state.streams.push({
         type: "stream",
         key: key++,
         cards: [removed],
@@ -302,10 +193,7 @@ export const State = {
     }
 
     // Otherwise, the card was moved between existing streams.
-    const toStream = State.at(state, Path.ancestor(to));
-    if (!Stream.isStream(toStream)) {
-      return;
-    }
+    const toStream = state.streams[Path.stream(to)];
 
     const [removed] = fromStream.cards.splice(Path.last(from), 1);
     toStream.cards.splice(Path.last(to), 0, removed);
@@ -313,114 +201,55 @@ export const State = {
     State.normalize(state);
   },
 
-  combine(state: State, from: Path, to: Path) {
-    const fromCard = State.at(state, from);
-    const toCard = State.at(state, to);
-
-    // We can only move cards, not streams.
-    if (!Card.isCard(fromCard) || !Card.isCard(toCard)) return;
-
-    const fromStream = State.at(state, Path.ancestor(from));
-    const toStream = State.at(state, Path.ancestor(to));
-
-    if (!Stream.isStream(fromStream) || !Stream.isStream(toStream)) {
-      return;
-    }
-
-    if (toCard.type === "workspace") {
-      // If a card is dragged onto a workspace card, the dragged card
-      // will be moved to the end of the first stream of the workspace.
-      fromStream.cards.splice(Path.last(from), 1);
-      toCard.streams[0].cards.push(fromCard);
-    } else {
-      // Otherwise, combine the two cards into a new workspace.
-
-      // First, replace the card that was dragged onto with the workspace.
-      toStream.cards[Path.last(to)] = {
-        meta: { key: key++, collapsed: false },
-        type: "workspace",
-        zoom: false,
-        streams: [
-          {
-            type: "stream",
-            key: key++,
-            cards: [fromCard, toCard],
-          },
-        ],
-      };
-
-      // Then remove the dragged card.
-      fromStream.cards.splice(Path.last(from), 1);
-    }
-
-    State.normalize(state);
-  },
-
   close(state: State, options: CloseOptions) {
     if (options.path) {
       const { path } = options;
-      const parent = State.at(state, Path.ancestor(path));
 
-      if (Stream.isStream(parent)) {
-        parent.cards.splice(Path.last(path), 1);
-      } else if (Card.isWorkspace(parent)) {
-        parent.streams.splice(Path.last(path), 1);
+      if (Path.isCardPath(path)) {
+        const stream = state.streams[Path.stream(path)];
+        stream.cards.splice(Path.card(path), 1);
+      } else {
+        state.streams.splice(Path.stream(path), 1);
       }
     } else {
       const { match } = options;
 
-      const closeInWorkspace = (
-        workspace: WorkspaceCard,
-        match: Partial<Card>
-      ) => {
-        workspace.streams.forEach((stream) => {
-          // We iterate through cards from the end, so we can safely remove the cards.
-          for (let i = stream.cards.length - 1; i >= 0; i--) {
-            const card = stream.cards[i];
-            if (
-              Object.keys(match).every(
-                (key) =>
-                  card[key as keyof Partial<Card>] ===
-                  match[key as keyof Partial<Card>]
-              )
-            ) {
-              stream.cards.splice(i, 1);
-            } else if (Card.isWorkspace(card)) {
-              closeInWorkspace(card, match);
-            }
+      state.streams.forEach((stream) => {
+        // We iterate through cards from the end, so we can safely remove the cards.
+        for (let i = stream.cards.length - 1; i >= 0; i--) {
+          const card = stream.cards[i];
+          if (
+            Object.keys(match).every(
+              (key) =>
+                card[key as keyof Partial<Card>] ===
+                match[key as keyof Partial<Card>]
+            )
+          ) {
+            stream.cards.splice(i, 1);
           }
-        });
-      };
-
-      closeInWorkspace(state.workspace, match);
+        }
+      });
     }
 
     State.normalize(state);
   },
 
-  /*
-  normalizeWorkspace, normalizeStream etc. performs exactly
-  one normalization, and returns true. If no normalization
-  were needed, they return false. This allows the normalization
-  pass to do destructive things to i.e. arrays, without thinking
-  too much over it. We simply call it repeatedly until there 
-  is nothing left to do.
-  */
+  /* normalizeOnce perform exactly one normalization, and returns true. If no
+  normalization were needed, they return false. This allows the normalization
+  pass to do destructive things to i.e. arrays, without thinking too much over
+  it. We simply call it repeatedly until there is nothing left to do. */
   normalize(state: State) {
-    while (State.normalizeWorkspace(state.workspace)) {
+    while (State.normalizeOnce(state)) {
       null;
     }
   },
 
-  normalizeWorkspace(workspace: WorkspaceCard): boolean {
-    const { streams } = workspace;
+  normalizeOnce(state: State): boolean {
+    const { streams } = state;
 
-    // Can any of the streams be normalized?
-    if (streams.some(State.normalizeStream)) return true;
-
-    // A workspace should always have at least 1 stream.
+    // There should always be at least 1 stream.
     if (streams.length === 0) {
-      workspace.streams.push({
+      streams.push({
         key: key++,
         type: "stream",
         cards: [],
@@ -441,14 +270,6 @@ export const State = {
 
     return false;
   },
-
-  normalizeStream(stream: Stream): boolean {
-    const { cards } = stream;
-
-    const workspaces = cards.filter(Card.isWorkspace);
-
-    return workspaces.some(State.normalizeWorkspace);
-  },
 };
 
 interface StateActions {
@@ -456,7 +277,6 @@ interface StateActions {
   updateCard: <T extends Card>(path: Path, card: Partial<T>) => void;
   updateMeta: (path: Path, card: Partial<CardMeta>) => void;
   move: (from: Path, to: Path) => void;
-  combine: (from: Path, to: Path) => void;
   close: (options: CloseOptions) => void;
 }
 
@@ -480,11 +300,6 @@ export const createStateActions = (setState: Updater<State>): StateActions => {
     move(from: Path, to: Path) {
       setState((draft) => {
         State.move(draft, from, to);
-      });
-    },
-    combine(from: Path, to: Path) {
-      setState((draft) => {
-        State.combine(draft, from, to);
       });
     },
     close(options: CloseOptions) {

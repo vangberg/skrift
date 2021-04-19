@@ -1,34 +1,39 @@
-export type Path = number[];
+export type StreamPath = [number];
+export type CardPath = [number, number];
+export type Path = StreamPath | CardPath;
 
 export const Path = {
-  isRoot(path: Path): boolean {
-    return path.length === 0;
+  isCardPath(path: Path): path is CardPath {
+    return path.length === 2;
+  },
+
+  stream(path: Path): number {
+    return path[0];
+  },
+
+  streamPath(path: Path): StreamPath {
+    return [Path.stream(path)];
+  },
+
+  card(path: CardPath): number {
+    return path[1];
   },
 
   next(path: Path): Path {
-    const head = path.slice(0, -1);
-    const tail = Path.last(path);
-    return [...head, tail + 1];
+    const [stream, card] = path;
+
+    if (typeof card === "number") {
+      return [stream, card + 1];
+    }
+
+    return [stream + 1];
   },
 
   last(path: Path): number {
     return path[path.length - 1];
   },
 
-  isSibling(p1: Path, p2: Path): boolean {
-    const ancestors1 = p1.slice(0, -1);
-    const ancestors2 = p2.slice(0, -1);
-
-    return (
-      Path.last(p1) !== Path.last(p2) && Path.equals(ancestors1, ancestors2)
-    );
-  },
-
   equals(p1: Path, p2: Path): boolean {
     return p1.every((value, index) => value === p2[index]);
-  },
-
-  ancestor(path: Path): Path {
-    return path.slice(0, -1);
   },
 };

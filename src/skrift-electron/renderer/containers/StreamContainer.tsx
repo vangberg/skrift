@@ -4,12 +4,11 @@ import {
   Stream as StreamType,
   StateContext,
   OpenCardMode,
-  Workspace,
 } from "../interfaces/state";
-import { Path } from "../interfaces/path";
+import { Path, StreamPath } from "../interfaces/path";
 
 interface Props {
-  path: Path;
+  path: StreamPath;
   stream: StreamType;
 }
 
@@ -22,17 +21,5 @@ export const StreamContainer: React.FC<Props> = ({ path, stream }) => {
     [openCard, path]
   );
 
-  const handleOpenWorkspace = useCallback(
-    (mode: OpenCardMode) => openCard(path, mode, Workspace.empty()),
-    [openCard, path]
-  );
-
-  return (
-    <Stream
-      path={path}
-      stream={stream}
-      onOpenSearch={handleOpenSearch}
-      onOpenWorkspace={handleOpenWorkspace}
-    />
-  );
+  return <Stream path={path} stream={stream} onOpenSearch={handleOpenSearch} />;
 };

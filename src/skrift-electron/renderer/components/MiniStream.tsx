@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 import { MiniNoteCardContainer } from "../containers/MiniNoteCardContainer";
 import { Stream } from "../interfaces/state";
 import { MiniSearchCard } from "./MiniSearchCard";
-import { MiniWorkspace } from "./MiniWorkspace";
 
 type Props = {
   stream: Stream;
@@ -16,8 +15,6 @@ export const MiniStream: React.FC<Props> = ({ stream }) => {
           switch (card.type) {
             case "note":
               return <MiniNoteCardContainer key={card.meta.key} id={card.id} />;
-            case "workspace":
-              return <MiniWorkspace key={card.meta.key} card={card} />;
             case "search":
               return <MiniSearchCard key={card.meta.key} card={card} />;
             default:

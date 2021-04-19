@@ -25,51 +25,23 @@ export const cardD = (): NoteCard => ({
 });
 
 export const getState = (): State => ({
-  workspace: {
-    meta: { key: 0, collapsed: false },
-    type: "workspace",
-    zoom: true,
-    streams: [
-      {
-        // [0]
-        key: 1,
-        type: "stream",
-        cards: [
-          cardA(), // [0, 0]
-          cardB(), // [0, 1]
-        ],
-      },
-      {
-        // [1]
-        key: 2,
-        type: "stream",
-        cards: [
-          cardC(), // [1, 0]
-        ],
-      },
-      {
-        // [2]
-        key: 3,
-        type: "stream",
-        cards: [
-          {
-            // [2, 0]
-            meta: { key: 4, collapsed: false },
-            type: "workspace",
-            zoom: false,
-            streams: [
-              {
-                // [2, 0, 0]
-                key: 5,
-                type: "stream",
-                cards: [
-                  cardD(), // [2, 0, 0, 0]
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
+  streams: [
+    {
+      // [0]
+      key: 1,
+      type: "stream",
+      cards: [
+        cardA(), // [0, 0]
+        cardB(), // [0, 1]
+      ],
+    },
+    {
+      // [1]
+      key: 2,
+      type: "stream",
+      cards: [
+        cardC(), // [1, 0]
+      ],
+    },
+  ],
 });

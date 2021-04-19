@@ -7,7 +7,7 @@ describe("State.openCard", () => {
 
     State.openCard(state, [0], { mode: "below" }, { type: "note", id: "x" });
 
-    const card = State.at(state, [0, 2]);
+    const card = state.streams[0].cards[2];
 
     expect(card.type).toEqual("note");
     expect((card as NoteCard).id).toEqual("x");
@@ -18,7 +18,7 @@ describe("State.openCard", () => {
 
     State.openCard(state, [0, 0], { mode: "below" }, { type: "note", id: "x" });
 
-    const card = State.at(state, [0, 2]);
+    const card = state.streams[0].cards[2];
 
     expect(card.type).toEqual("note");
     expect((card as NoteCard).id).toEqual("x");
@@ -28,7 +28,7 @@ describe("State.openCard", () => {
     const state = getState();
     State.openCard(state, [0, 0], { mode: "push" }, { type: "note", id: "x" });
 
-    const card = State.at(state, [1, 1]);
+    const card = state.streams[1].cards[1];
 
     expect(card.type).toEqual("note");
     expect((card as NoteCard).id).toEqual("x");
@@ -37,14 +37,9 @@ describe("State.openCard", () => {
   it("opens card in new stream", () => {
     const state = getState();
 
-    State.openCard(
-      state,
-      [2, 0, 0, 0],
-      { mode: "push" },
-      { type: "note", id: "x" }
-    );
+    State.openCard(state, [1, 0], { mode: "push" }, { type: "note", id: "x" });
 
-    const card = State.at(state, [2, 0, 1, 0]);
+    const card = state.streams[2].cards[0];
 
     expect(card.type).toEqual("note");
     expect((card as NoteCard).id).toEqual("x");
@@ -60,7 +55,7 @@ describe("State.openCard", () => {
       { type: "note", id: "x" }
     );
 
-    const card = State.at(state, [0, 0]);
+    const card = state.streams[0].cards[0];
 
     expect(card.type).toEqual("note");
     expect((card as NoteCard).id).toEqual("x");

@@ -2,25 +2,18 @@ import React, { useCallback, useMemo } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { NoteCardContainer } from "../containers/NoteCardContainer";
 import { SearchCardContainer } from "../containers/SearchCardContainer";
-import { WorkspaceCardContainer } from "../containers/WorkspaceCardContainer";
 import { DroppableIds } from "../interfaces/droppableIds";
-import { Path } from "../interfaces/path";
+import { Path, StreamPath } from "../interfaces/path";
 import { OpenCardMode, Stream as StreamType } from "../interfaces/state";
 import { mouseEventToMode } from "../mouseEventToMode";
 
 type Props = {
-  path: Path;
+  path: StreamPath;
   stream: StreamType;
   onOpenSearch: (query: string, mode: OpenCardMode) => void;
-  onOpenWorkspace: (mode: OpenCardMode) => void;
 };
 
-export const Stream: React.FC<Props> = ({
-  path,
-  stream,
-  onOpenSearch,
-  onOpenWorkspace,
-}) => {
+export const Stream: React.FC<Props> = ({ path, stream, onOpenSearch }) => {
   const cards = stream.cards.map((card, idx) => {
     switch (card.type) {
       case "note":
@@ -39,14 +32,6 @@ export const Stream: React.FC<Props> = ({
             path={[...path, idx]}
           />
         );
-      case "workspace":
-        return (
-          <WorkspaceCardContainer
-            key={card.meta.key}
-            card={card}
-            path={[...path, idx]}
-          />
-        );
     }
   });
 
@@ -56,11 +41,6 @@ export const Stream: React.FC<Props> = ({
     (event: React.MouseEvent) =>
       onOpenSearch("", mouseEventToMode(event.nativeEvent)),
     [onOpenSearch]
-  );
-  const handleOpenWorkspace = useCallback(
-    (event: React.MouseEvent) =>
-      onOpenWorkspace(mouseEventToMode(event.nativeEvent)),
-    [onOpenWorkspace]
   );
   const handleOpenRecent = useCallback(
     (event: React.MouseEvent) =>

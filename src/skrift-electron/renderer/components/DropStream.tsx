@@ -2,10 +2,10 @@ import clsx from "clsx";
 import React, { useMemo } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { DroppableIds } from "../interfaces/droppableIds";
-import { Path } from "../interfaces/path";
+import { StreamPath } from "../interfaces/path";
 
 type Props = {
-  path: Path;
+  path: StreamPath;
 };
 
 export const DropStream: React.FC<Props> = ({ path }) => {

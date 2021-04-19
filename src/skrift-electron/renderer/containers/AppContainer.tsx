@@ -3,16 +3,11 @@ import { Splash } from "../components/Splash";
 import { useImmer } from "use-immer";
 import { CacheContext } from "../hooks/useCache";
 import { Ipc } from "../ipc";
-import {
-  createStateActions,
-  State,
-  StateContext,
-  Stream,
-} from "../interfaces/state";
+import { createStateActions, State, StateContext } from "../interfaces/state";
 import { DragDropContext, OnDragEndResponder } from "react-beautiful-dnd";
 import { DroppableIds } from "../interfaces/droppableIds";
-import { WorkspaceCardContainer } from "./WorkspaceCardContainer";
-import { DraggableIds } from "../interfaces/draggableIds";
+import { Path } from "../interfaces/path";
+import { StreamsContainer } from "./StreamsContainer";
 
 export const AppContainer: React.FC = () => {
   const cacheContext = useImmer(new Map());
@@ -54,13 +49,13 @@ export const AppContainer: React.FC = () => {
 
   const handleDragEnd: OnDragEndResponder = useCallback(
     (result) => {
-      const from = [
+      const from: Path = [
         ...DroppableIds.deserialize(result.source.droppableId),
         result.source.index,
       ];
 
       if (result.destination) {
-        const to = [
+        const to: Path = [
           ...DroppableIds.deserialize(result.destination.droppableId),
           result.destination.index,
         ];
@@ -77,7 +72,7 @@ export const AppContainer: React.FC = () => {
           <Splash loaded={loaded} />
         ) : (
           <DragDropContext onDragEnd={handleDragEnd}>
-            <WorkspaceCardContainer path={[]} card={state.workspace} />
+            <StreamsContainer />
           </DragDropContext>
         )}
       </StateContext.Provider>

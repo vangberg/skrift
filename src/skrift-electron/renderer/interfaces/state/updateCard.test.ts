@@ -7,6 +7,6 @@ describe("State.updateCard", () => {
 
     State.updateCard(state, [0, 1], { id: "x" });
 
-    expect((State.at(state, [0, 1]) as NoteCard).id).toEqual("x");
+    expect((state.streams[0].cards[1] as NoteCard).id).toEqual("x");
   });
 });
