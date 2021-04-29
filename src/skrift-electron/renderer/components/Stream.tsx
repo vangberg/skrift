@@ -11,9 +11,17 @@ type Props = {
   path: StreamPath;
   stream: StreamType;
   onOpenSearch: (query: string, mode: OpenCardMode) => void;
+  onMinimizeAll: () => void;
+  onMaximizeAll: () => void;
 };
 
-export const Stream: React.FC<Props> = ({ path, stream, onOpenSearch }) => {
+export const Stream: React.FC<Props> = ({
+  path,
+  stream,
+  onOpenSearch,
+  onMinimizeAll,
+  onMaximizeAll,
+}) => {
   const cards = stream.cards.map((card, idx) => {
     switch (card.type) {
       case "note":
@@ -42,6 +50,7 @@ export const Stream: React.FC<Props> = ({ path, stream, onOpenSearch }) => {
       onOpenSearch("", mouseEventToMode(event.nativeEvent)),
     [onOpenSearch]
   );
+
   const handleOpenRecent = useCallback(
     (event: React.MouseEvent) =>
       onOpenSearch("*", mouseEventToMode(event.nativeEvent)),
@@ -57,6 +66,21 @@ export const Stream: React.FC<Props> = ({ path, stream, onOpenSearch }) => {
           className="flex-auto max-w-2xl py-2 flex flex-col overflow-y-auto"
           style={{ flexBasis: "100%" }}
         >
+          <div className="flex justify-center">
+            <span
+              onClick={onMinimizeAll}
+              className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
+            >
+              Minimize
+            </span>
+            <span
+              onClick={onMaximizeAll}
+              className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
+            >
+              Maximize
+            </span>
+          </div>
+
           {cards}
           {provided.placeholder}
 

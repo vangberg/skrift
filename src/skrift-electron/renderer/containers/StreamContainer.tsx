@@ -13,7 +13,9 @@ interface Props {
 }
 
 export const StreamContainer: React.FC<Props> = ({ path, stream }) => {
-  const [, { openCard }] = useContext(StateContext);
+  const [, { openCard, updateMeta }] = useContext(StateContext);
+
+  const { cards } = stream;
 
   const handleOpenSearch = useCallback(
     (query: string, mode: OpenCardMode) =>
@@ -21,5 +23,25 @@ export const StreamContainer: React.FC<Props> = ({ path, stream }) => {
     [openCard, path]
   );
 
-  return <Stream path={path} stream={stream} onOpenSearch={handleOpenSearch} />;
+  const handleMinimizeAll = useCallback(() => {
+    cards.forEach((card, idx) => {
+      updateMeta([...path, idx], { collapsed: true });
+    });
+  }, [updateMeta, cards, path]);
+
+  const handleMaximizeAll = useCallback(() => {
+    cards.forEach((card, idx) => {
+      updateMeta([...path, idx], { collapsed: false });
+    });
+  }, [updateMeta, cards, path]);
+
+  return (
+    <Stream
+      path={path}
+      stream={stream}
+      onOpenSearch={handleOpenSearch}
+      onMinimizeAll={handleMinimizeAll}
+      onMaximizeAll={handleMaximizeAll}
+    />
+  );
 };
