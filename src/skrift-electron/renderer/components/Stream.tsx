@@ -51,12 +51,6 @@ export const Stream: React.FC<Props> = ({
     [onOpenSearch]
   );
 
-  const handleOpenRecent = useCallback(
-    (event: React.MouseEvent) =>
-      onOpenSearch("*", mouseEventToMode(event.nativeEvent)),
-    [onOpenSearch]
-  );
-
   return (
     <Droppable droppableId={droppableId}>
       {(provided, snapshot) => (
@@ -79,18 +73,6 @@ export const Stream: React.FC<Props> = ({
             >
               Maximize
             </span>
-          </div>
-
-          {cards}
-          {provided.placeholder}
-
-          <div className="flex justify-center">
-            <span
-              onClick={handleOpenRecent}
-              className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
-            >
-              Recent
-            </span>
             <span
               onClick={handleOpenSearch}
               className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
@@ -98,6 +80,9 @@ export const Stream: React.FC<Props> = ({
               Search
             </span>
           </div>
+
+          {cards}
+          {provided.placeholder}
         </div>
       )}
     </Droppable>

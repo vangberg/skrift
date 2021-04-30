@@ -100,7 +100,7 @@ export const State = {
     }
 
     if (mode === "push") {
-      // Append the card to the next stream, creating the stream
+      // Prepend the card to the next stream, creating the stream
       // if it does not exist.
 
       const nextPath = Path.next(Path.streamPath(path));
@@ -112,7 +112,7 @@ export const State = {
 
       const nextStream = state.streams[Path.stream(nextPath)];
 
-      nextStream.cards.push(card);
+      nextStream.cards.unshift(card);
 
       return;
     }

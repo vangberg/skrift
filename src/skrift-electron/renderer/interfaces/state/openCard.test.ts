@@ -28,7 +28,7 @@ describe("State.openCard", () => {
     const state = getState();
     State.openCard(state, [0, 0], { mode: "push" }, { type: "note", id: "x" });
 
-    const card = state.streams[1].cards[1];
+    const card = state.streams[1].cards[0];
 
     expect(card.type).toEqual("note");
     expect((card as NoteCard).id).toEqual("x");
