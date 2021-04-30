@@ -94,8 +94,16 @@ export const State = {
     const card = { meta: { key: key++, collapsed: false }, ...props };
 
     if (mode === "below") {
-      stream.cards.push(card);
+      if (Path.isCardPath(path)) {
+        // If path is card path, open the new card below the card that
+        // requested the card to be opened.
+        stream.cards.splice(Path.card(path) + 1, 0, card);
+        return;
+      }
 
+      // Otherwise, path is a stream path, in which case the card should
+      // be opened at the top.
+      stream.cards.unshift(card);
       return;
     }
 

@@ -2,26 +2,42 @@ import { NoteCard, State } from ".";
 import { getState } from "./fixture";
 
 describe("State.openCard", () => {
-  it("opens card in stream", () => {
-    const state = getState();
+  describe("below", () => {
+    describe("with stream path", () => {
+      it("opens card at top of stream", () => {
+        const state = getState();
 
-    State.openCard(state, [0], { mode: "below" }, { type: "note", id: "x" });
+        State.openCard(
+          state,
+          [0],
+          { mode: "below" },
+          { type: "note", id: "x" }
+        );
 
-    const card = state.streams[0].cards[2];
+        const card = state.streams[0].cards[0];
 
-    expect(card.type).toEqual("note");
-    expect((card as NoteCard).id).toEqual("x");
-  });
+        expect(card.type).toEqual("note");
+        expect((card as NoteCard).id).toEqual("x");
+      });
+    });
 
-  it("opens card at end of stream", () => {
-    const state = getState();
+    describe("with card path", () => {
+      it("opens card after card at path", () => {
+        const state = getState();
 
-    State.openCard(state, [0, 0], { mode: "below" }, { type: "note", id: "x" });
+        State.openCard(
+          state,
+          [0, 0],
+          { mode: "below" },
+          { type: "note", id: "x" }
+        );
 
-    const card = state.streams[0].cards[2];
+        const card = state.streams[0].cards[1];
 
-    expect(card.type).toEqual("note");
-    expect((card as NoteCard).id).toEqual("x");
+        expect(card.type).toEqual("note");
+        expect((card as NoteCard).id).toEqual("x");
+      });
+    });
   });
 
   it("opens card in next stream", () => {
