@@ -5,8 +5,10 @@ import { EventEmitter } from "events";
 
 import "./styles.css";
 import { setupErrors } from "../errors";
+import { enableMapSet } from "immer";
 
 setupErrors();
+enableMapSet();
 
 EventEmitter.defaultMaxListeners = 250;
 
