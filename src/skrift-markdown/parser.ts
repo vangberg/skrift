@@ -1,10 +1,10 @@
 import markdownit from "markdown-it/lib";
-// @ts-ignore
 import { MarkdownParser, schema as markdownSchema } from "prosemirror-markdown";
 import { defaultMarkdownParser } from "prosemirror-markdown";
 import { Node, Schema } from "prosemirror-model";
 
 export const schema = new Schema({
+  // @ts-ignore
   nodes: markdownSchema.spec.nodes.addBefore("text", "link", {
     inline: true,
     group: "inline",
@@ -33,6 +33,7 @@ export const schema = new Schema({
       return ["a", node.attrs, 0];
     },
   }),
+  // @ts-ignore
   marks: markdownSchema.spec.marks.remove("link"),
 });
 
