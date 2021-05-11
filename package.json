@@ -1,6 +1,6 @@
 {
   "name": "Skrift",
-  "version": "0.18.0",
+  "version": "0.19.0",
   "description": "Networked notes",
   "main": "build/main.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "start": "concurrently \"npm:start:*\"",
     "dist:mac": "electron-builder -m",
     "dist:linux": "electron-builder -l",
-    "dist:win": "electron-builder -w portable",
+    "dist:win": "electron-builder -w",
     "publish": "electron-builder --publish always",
     "eslint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
