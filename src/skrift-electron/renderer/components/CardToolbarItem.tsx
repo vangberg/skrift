@@ -15,7 +15,7 @@ export const CardToolbarItem: React.FC<Props> = ({
   return (
     <div
       className={clsx(
-        "ml-2 mb-2 px-2 py-1 select-none rounded-full shadow bg-gray-100 cursor-pointer",
+        "ml-2 select-none cursor-pointer text-gray-600 hover:text-black",
         className
       )}
       onClick={onClick}

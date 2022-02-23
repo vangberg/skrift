@@ -1,11 +1,10 @@
 import React from "react";
 
-interface Props {
-  backgroundColor: string;
-}
-export const CardToolbar: React.FC<Props> = ({ backgroundColor, children }) => {
+interface Props {}
+
+export const CardToolbar: React.FC<Props> = ({ children }) => {
   return (
-    <div className="skrift-card-toolbar absolute top-0 right-0 p-2 flex flex-wrap opacity-0 transition group-hover:opacity-100">
+    <div className="flex flex-wrap justify-end px-2 py-1 bg-gray-100 rounded-t-md">
       {children}
     </div>
   );

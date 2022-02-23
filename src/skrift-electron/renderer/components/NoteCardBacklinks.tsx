@@ -14,7 +14,7 @@ export const NoteCardBacklinks: React.FC<Props> = ({ note, onOpen }) => {
   }
 
   return (
-    <details className="p-2 bg-gray-100">
+    <details className="px-2 py-1 bg-gray-100">
       <summary className="cursor-pointer select-none">
         Backlinks ({note.backlinks.length})
       </summary>

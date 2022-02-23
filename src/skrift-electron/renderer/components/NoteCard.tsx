@@ -55,6 +55,15 @@ export const NoteCard: React.FC<Props> = ({
     <Card card={card} path={path}>
       {(provided) => (
         <>
+          <CardToolbar>
+            <CardToolbarItem onClick={handleDelete}>Delete</CardToolbarItem>
+            <CardToolbarItem onClick={handleCopy}>Copy link</CardToolbarItem>
+            <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>
+            <CardToolbarItem {...provided.dragHandleProps}>
+              Move
+            </CardToolbarItem>
+          </CardToolbar>
+
           <CardTitle visible={collapsed}>
             <NoteCardTitle note={note} />
           </CardTitle>
@@ -63,18 +72,6 @@ export const NoteCard: React.FC<Props> = ({
             <NoteEditorContainer id={note.id} onOpen={onOpen} />
             <NoteCardBacklinks note={note} onOpen={onOpen} />
           </CardBody>
-
-          <CardToolbar backgroundColor="bg-green-400">
-            <CardToolbarItem onClick={onToggle}>
-              {collapsed ? "Maximize" : "Minimize"}
-            </CardToolbarItem>
-            <CardToolbarItem onClick={handleDelete}>Delete</CardToolbarItem>
-            <CardToolbarItem onClick={handleCopy}>Copy link</CardToolbarItem>
-            <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>
-            <CardToolbarItem {...provided.dragHandleProps}>
-              Move
-            </CardToolbarItem>
-          </CardToolbar>
         </>
       )}
     </Card>
