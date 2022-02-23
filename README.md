@@ -10,3 +10,9 @@ export AC_PASSWORD=<app-speficic-password>
 
 npm run notarize
 ```
+
+### Check if app has been notarized
+
+```
+spctl -a -v dist/mac/Skrift.app
+```
