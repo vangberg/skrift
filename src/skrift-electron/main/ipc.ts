@@ -14,7 +14,8 @@ import { Note, NoteLink, NoteWithLinks } from "../../skrift/note";
 import { NotesDB } from "../../skrift/notes_db";
 import { NotesFS } from "../../skrift/notes_fs";
 
-const _path = path.join(app.getPath("documents"), "Skrift");
+const dir = app.isPackaged ? "Skrift" : "Skrift.dev";
+const _path = path.join(app.getPath("documents"), dir);
 
 const getDB: () => Promise<Database> = (() => {
   let db: Database;
