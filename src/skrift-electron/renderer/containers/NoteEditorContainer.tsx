@@ -9,10 +9,11 @@ import { Ipc } from "../ipc";
 
 interface Props {
   id: NoteID;
+  focus: number;
   onOpen: (id: string, mode: OpenCardMode) => void;
 }
 
-export const NoteEditorContainer: React.FC<Props> = ({ id, onOpen }) => {
+export const NoteEditorContainer: React.FC<Props> = ({ id, focus, onOpen }) => {
   const note = useNote(id);
 
   const handleUpdate = useCallback(
@@ -26,5 +27,12 @@ export const NoteEditorContainer: React.FC<Props> = ({ id, onOpen }) => {
     return null;
   }
 
-  return <NoteEditor note={note} onOpen={onOpen} onUpdate={handleUpdate} />;
+  return (
+    <NoteEditor
+      note={note}
+      focus={focus}
+      onOpen={onOpen}
+      onUpdate={handleUpdate}
+    />
+  );
 };

@@ -17,22 +17,27 @@ type Props = {
   path: Path;
   card: NoteCardType;
   note: NoteWithLinks;
+  focus: number;
   onOpen: (id: string, mode: OpenCardMode) => void;
   onDelete: () => void;
   onClose: () => void;
   onToggle: () => void;
+  onFocus: () => void;
 };
 
 export const NoteCard: React.FC<Props> = ({
   path,
   card,
   note,
+  focus,
   onOpen,
   onDelete,
   onClose,
   onToggle,
+  onFocus,
 }) => {
   const { collapsed } = card.meta;
+  const handleFocus = useCallback(() => onFocus(), [onFocus]);
 
   const handleDelete = useCallback(async () => {
     const { response } = await remote.dialog.showMessageBox({
@@ -69,7 +74,7 @@ export const NoteCard: React.FC<Props> = ({
           </CardTitle>
 
           <CardBody visible={!collapsed}>
-            <NoteEditorContainer id={note.id} onOpen={onOpen} />
+            <NoteEditorContainer id={note.id} focus={focus} onOpen={onOpen} />
             <NoteCardBacklinks note={note} onOpen={onOpen} />
           </CardBody>
         </>
