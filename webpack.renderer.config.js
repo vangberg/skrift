@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require("path");
 
 module.exports = [
   {
@@ -16,7 +17,9 @@ module.exports = [
       rules: [
         {
           test: /\.ts(x?)$/,
-          include: /src/,
+          include: [
+            path.resolve(__dirname, "src")
+          ],
           use: [{ loader: "ts-loader" }],
         },
         {

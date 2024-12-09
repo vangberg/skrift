@@ -3,6 +3,10 @@
   "version": "0.23.0",
   "description": "Networked notes",
   "main": "build/main.js",
+  "private": true,
+  "workspaces": [
+    "quarto/packages/*"
+  ],
   "scripts": {
     "build:main": "webpack --config ./webpack.main.config.js",
     "build:renderer": "webpack --config ./webpack.renderer.config.js",
@@ -76,16 +80,10 @@
     "@types/markdown-it": "^12.0.1",
     "@types/node": "^15.0.2",
     "@types/parsimmon": "^1.10.6",
-    "@types/prosemirror-commands": "^1.0.4",
-    "@types/prosemirror-history": "^1.0.2",
-    "@types/prosemirror-inputrules": "^1.0.4",
-    "@types/prosemirror-keymap": "^1.0.4",
-    "@types/prosemirror-markdown": "^1.5.1",
-    "@types/prosemirror-schema-list": "^1.0.3",
-    "@types/prosemirror-transform": "^1.1.2",
     "@types/react": "^17.0.5",
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-dom": "^17.0.4",
+    "@types/prosemirror-markdown": "^1.5.1",
     "@typescript-eslint/eslint-plugin": "^4.23.0",
     "@typescript-eslint/parser": "^4.23.0",
     "autoprefixer": "^10.2.5",
@@ -109,16 +107,6 @@
     "postcss": "^8.2.15",
     "postcss-loader": "^5.2.0",
     "postcss-nested": "^5.0.5",
-    "prosemirror-commands": "^1.1.7",
-    "prosemirror-history": "^1.1.3",
-    "prosemirror-inputrules": "^1.1.3",
-    "prosemirror-keymap": "^1.1.4",
-    "prosemirror-markdown": "^1.5.1",
-    "prosemirror-model": "^1.14.1",
-    "prosemirror-schema-list": "^1.1.4",
-    "prosemirror-state": "^1.3.4",
-    "prosemirror-transform": "^1.3.2",
-    "prosemirror-view": "^1.18.4",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-dom": "^17.0.2",
@@ -130,9 +118,10 @@
     "ts-loader": "^9.1.2",
     "typescript": "^4.2.4",
     "use-immer": "^0.5.1",
-    "use-prosemirror": "^1.2.3",
     "webpack": "^5.37.0",
     "webpack-cli": "^4.7.0",
-    "webpack-dev-server": "^3.11.2"
-  }
+    "webpack-dev-server": "^3.11.2",
+    "prosemirror-markdown": "^1.5.1"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

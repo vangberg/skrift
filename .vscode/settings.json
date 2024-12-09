@@ -3,5 +3,8 @@
   "search.exclude": {
     "**/dist": true
   },
-  "javascript.validate.enable": false
+  "javascript.validate.enable": false,
+  "files.exclude": {
+    "/quarto": true
+  }
 }

@@ -3,7 +3,7 @@ import { remote, clipboard } from "electron";
 
 import { NoteCardBacklinks } from "./NoteCardBacklinks";
 import { NoteWithLinks } from "../../../skrift/note";
-import { NoteEditorContainer } from "../containers/NoteEditorContainer";
+//import { NoteEditorContainer } from "../containers/NoteEditorContainer";
 import { Card } from "./Card";
 import { CardToolbar } from "./CardToolbar";
 import { CardBody } from "./CardBody";
@@ -74,7 +74,8 @@ export const NoteCard: React.FC<Props> = ({
           </CardTitle>
 
           <CardBody visible={!collapsed}>
-            <NoteEditorContainer id={note.id} focus={focus} onOpen={onOpen} />
+            NOTE EDITOR
+            {/* <NoteEditorContainer id={note.id} focus={focus} onOpen={onOpen} /> */}
             <NoteCardBacklinks note={note} onOpen={onOpen} />
           </CardBody>
         </>
