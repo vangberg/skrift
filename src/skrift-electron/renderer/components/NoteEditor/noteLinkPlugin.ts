@@ -62,7 +62,8 @@ export const noteLinkPlugin = new Plugin<NoteLinkPluginState>({
   },
   props: {
     decorations(state) {
-      return this.getState(state).decorationSet;
+      const pluginState = this.getState(state);
+      return pluginState ? pluginState.decorationSet : DecorationSet.empty;
     },
   },
 });

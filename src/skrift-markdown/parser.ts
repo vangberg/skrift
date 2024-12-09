@@ -51,6 +51,7 @@ const tokens = {
 
 export const markdownParser = new MarkdownParser(
   schema,
+  // @ts-ignore
   markdownit("commonmark", { html: false }),
   tokens
 );

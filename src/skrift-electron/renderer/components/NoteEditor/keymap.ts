@@ -1,15 +1,14 @@
+import { Command } from "prosemirror-state";
 import {
   chainCommands,
-  Command,
   createParagraphNear,
   deleteSelection,
   joinBackward,
-  Keymap,
   liftEmptyBlock,
   newlineInCode,
   selectNodeBackward,
   selectParentNode,
-  splitBlock,
+  splitBlock
 } from "prosemirror-commands";
 import { redo, undo } from "prosemirror-history";
 import { NodeType, Schema } from "prosemirror-model";
@@ -20,7 +19,7 @@ import {
 } from "prosemirror-schema-list";
 
 export function buildKeymap<S extends Schema>(schema: S) {
-  const keys: Keymap<S> = {};
+  const keys: { [key: string]: Command } = {};
   let type;
 
   const enter: Command[] = [];
@@ -46,7 +45,7 @@ export function buildKeymap<S extends Schema>(schema: S) {
   keys["Mod-z"] = undo;
   keys["Mod-y"] = redo;
 
-  if ((type = schema.nodes.list_item as NodeType<S>)) {
+  if ((type = schema.nodes.list_item)) {
     keys["Mod-]"] = sinkListItem(type);
     keys["Mod-["] = liftListItem(type);
   }

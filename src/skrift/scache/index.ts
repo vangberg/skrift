@@ -8,43 +8,43 @@ export interface CacheEntry<Value> {
   value: Value | null;
 }
 
-export type SCache<Key, Value> = Map<Key, CacheEntry<Value>>;
+export type SCache<Value> = Record<string, CacheEntry<Value>>;
 
 export const SCache = {
-  claim<Key, Value>(cache: SCache<Key, Value>, key: Key, defaultValue?: Value) {
-    const entry = cache.get(key);
+  claim<Value>(cache: SCache<Value>, key: string, defaultValue?: Value) {
+    const entry = cache[key];
 
     if (entry) {
       entry.claims++;
     } else {
-      cache.set(key, { value: defaultValue || null, claims: 1 });
+      cache[key] = { value: defaultValue || null, claims: 1 };
     }
   },
 
-  release<Key, Value>(cache: SCache<Key, Value>, key: Key) {
-    const entry = cache.get(key);
+  release<Value>(cache: SCache<Value>, key: string) {
+    const entry = cache[key];
 
     if (!entry) {
       return;
     }
 
     if (entry.claims === 1) {
-      cache.delete(key);
+      delete cache[key];
     } else {
       entry.claims--;
     }
   },
 
-  set<Key, Value>(cache: SCache<Key, Value>, key: Key, value: Value) {
-    const entry = cache.get(key);
+  set<Value>(cache: SCache<Value>, key: string, value: Value) {
+    const entry = cache[key];
 
     if (entry) {
       entry.value = value;
     }
   },
 
-  get<Key, Value>(cache: SCache<Key, Value>, key: Key): Value | null {
-    const entry = cache.get(key);
+  get<Value>(cache: SCache<Value>, key: string): Value | null {
+    const entry = cache[key];
 
     if (!entry) {
       return null;

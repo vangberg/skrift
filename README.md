@@ -1,5 +1,18 @@
 # Skrift
 
+## Development
+
+- `asdf` is used for version management.
+- `npm run start` will start the app in dev mode.
+
+## Tests
+
+- `npm run test` will run the tests.
+
+## Build and release
+
+- `npm run build && npm run dist && npm run publish`
+
 ## Notarizing on Mac
 
 ```bash

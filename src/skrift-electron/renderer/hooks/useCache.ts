@@ -2,11 +2,11 @@ import React, { useCallback, useContext, useEffect } from "react";
 import { ImmerHook } from "use-immer";
 import { SCache } from "../../../skrift/scache";
 
-type Cache = SCache<string, any>;
+type Cache = SCache<any>;
 
 export const CacheContext = React.createContext<ImmerHook<Cache>>([
-  new Map(),
-  () => {},
+  {},
+  () => { },
 ]);
 
 export const useCache = <Value>(

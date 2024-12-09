@@ -10,7 +10,7 @@ import { Path } from "../interfaces/path";
 import { StreamsContainer } from "./StreamsContainer";
 
 export const AppContainer: React.FC = () => {
-  const cacheContext = useImmer(new Map());
+  const cacheContext = useImmer({});
 
   const [loading, setLoading] = useState(true);
   const [loaded, setLoaded] = useState(0);
