@@ -1,4 +1,4 @@
-import unhandled from "electron-unhandled";
+// import unhandled from "electron-unhandled";
 import * as Sentry from "@sentry/electron";
 
 export const setupErrors = () => {
@@ -8,10 +8,10 @@ export const setupErrors = () => {
     defaultIntegrations: false,
   });
 
-  unhandled({
-    showDialog: true,
-    reportButton: (error) => {
-      Sentry.captureException(error);
-    },
-  });
+  // unhandled({
+  //   showDialog: true,
+  //   reportButton: (error) => {
+  //     Sentry.captureException(error);
+  //   },
+  // });
 };

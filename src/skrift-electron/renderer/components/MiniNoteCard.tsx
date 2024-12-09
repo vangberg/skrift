@@ -1,5 +1,4 @@
 import React, { useCallback } from "react";
-import { remote, clipboard } from "electron";
 
 import { Note } from "../../../skrift/note";
 import { MiniCard } from "./MiniCard";

@@ -1,4 +1,4 @@
-import { ipcMain, app } from "electron";
+import { ipcMain, app, dialog, clipboard } from "electron";
 import {
   IpcCommand,
   IpcReply,
@@ -149,6 +149,13 @@ const handleSearch = async (
   return links;
 };
 
+const handleWriteHTMLToClipboard = async (
+  event: Electron.IpcMainInvokeEvent,
+  html: string
+): Promise<void> => {
+  clipboard.writeHTML(html);
+};
+
 export const setupIpc = () => {
   ipcMain.on("skrift", (event, command: IpcCommand) => {
     switch (command.type) {
@@ -171,4 +178,10 @@ export const setupIpc = () => {
   });
 
   ipcMain.handle("search", handleSearch);
+
+  ipcMain.handle('show-message-box', async (event, options) => {
+    return await dialog.showMessageBox(options);
+  });
+
+  ipcMain.handle('write-html-to-clipboard', handleWriteHTMLToClipboard);
 };

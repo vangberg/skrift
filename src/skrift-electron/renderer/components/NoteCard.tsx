@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
-import { remote, clipboard } from "electron";
 
+import { Ipc } from "../ipc";
 import { NoteCardBacklinks } from "./NoteCardBacklinks";
 import { NoteWithLinks } from "../../../skrift/note";
 import { NoteEditorContainer } from "../containers/NoteEditorContainer";
@@ -40,7 +40,7 @@ export const NoteCard: React.FC<Props> = ({
   const handleFocus = useCallback(() => onFocus(), [onFocus]);
 
   const handleDelete = useCallback(async () => {
-    const { response } = await remote.dialog.showMessageBox({
+    const { response } = await Ipc.showMessageBox({
       type: "question",
       message: `Are you sure you want to delete the note ${note.title}`,
       buttons: ["Yes", "No"],
@@ -53,7 +53,7 @@ export const NoteCard: React.FC<Props> = ({
   const handleCopy = useCallback(() => {
     // For some reason it works when we add data-pm-slice. If interested in
     // debugging, look into clipboard.js in prosemirror-view.
-    clipboard.writeHTML(`<a data-pm-slice="0 0 []" href="${note.id}">#</a>`);
+    Ipc.writeHTMLToClipboard(`<a data-pm-slice="0 0 []" href="${note.id}">#</a>`);
   }, [note]);
 
   return (

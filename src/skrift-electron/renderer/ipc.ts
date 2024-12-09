@@ -23,4 +23,12 @@ export const Ipc = {
   search(query: String): Promise<Note[]> {
     return ipcRenderer.invoke("search", query);
   },
+
+  showMessageBox(options: Electron.MessageBoxOptions): Promise<Electron.MessageBoxReturnValue> {
+    return ipcRenderer.invoke('show-message-box', options);
+  },
+
+  writeHTMLToClipboard(html: string): Promise<void> {
+    return ipcRenderer.invoke('write-html-to-clipboard', html);
+  },
 };
