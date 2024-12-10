@@ -1,12 +1,12 @@
 import clsx from "clsx";
-import React, { useCallback } from "react";
+import React, { PropsWithChildren, useCallback } from "react";
 
 type Props = {
   onClick?: () => void;
   className?: string;
 };
 
-export const CardToolbarItem: React.FC<Props> = ({
+export const CardToolbarItem: React.FC<PropsWithChildren<Props>> = ({
   onClick,
   className,
   children,

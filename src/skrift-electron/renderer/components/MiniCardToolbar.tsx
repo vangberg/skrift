@@ -1,9 +1,9 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 
 interface Props {
   backgroundColor: string;
 }
-export const MiniCardToolbar: React.FC<Props> = ({
+export const MiniCardToolbar: React.FC<PropsWithChildren<Props>> = ({
   backgroundColor,
   children,
 }) => {
