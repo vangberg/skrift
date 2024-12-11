@@ -26,6 +26,7 @@ interface Props {
 const isNoteLink = (href: string): boolean => href.indexOf("://") < 0;
 
 const getNoteID = (anchor: HTMLAnchorElement): NoteID | false => {
+  // HTMLAnchorElement.href prepends localhost://
   const href = anchor.getAttribute("href");
   if (!href) return false;
   if (!isNoteLink(href)) return false;
