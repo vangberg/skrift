@@ -1,21 +1,15 @@
 import "prosemirror-view/style/prosemirror.css";
 
-import React, {
-  RefObject,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { NoteID, NoteWithLinks } from "../../../../skrift/note";
 import { OpenCardMode } from "../../interfaces/state";
-import { Handle, ProseMirror, useProseMirror } from "use-prosemirror";
+import { ProseMirror, react, useEditorEffect } from "@nytimes/react-prosemirror";
 import { keymap } from "prosemirror-keymap";
 import { buildKeymap } from "./keymap";
 import { history } from "prosemirror-history";
 import { EditorView } from "prosemirror-view";
 import { markdownParser, schema } from "../../../../skrift-markdown/parser";
-import { EditorState, TextSelection } from "prosemirror-state";
+import { EditorState } from "prosemirror-state";
 import { markdownSerializer } from "../../../../skrift-markdown/serializer";
 import { mouseEventToMode } from "../../mouseEventToMode";
 import { nodeViews } from "./nodeViews";
@@ -32,13 +26,9 @@ interface Props {
 const isNoteLink = (href: string): boolean => href.indexOf("://") < 0;
 
 const getNoteID = (anchor: HTMLAnchorElement): NoteID | false => {
-  // HTMLAnchorElement.href prepends localhost://
   const href = anchor.getAttribute("href");
-
   if (!href) return false;
-
   if (!isNoteLink(href)) return false;
-
   return href;
 };
 
@@ -48,6 +38,8 @@ export const NoteEditor: React.FC<Props> = ({
   onOpen,
   onUpdate,
 }) => {
+  const [mount, setMount] = useState<HTMLElement | null>(null);
+
   const plugins = useMemo(
     () => [
       history(),
@@ -58,25 +50,23 @@ export const NoteEditor: React.FC<Props> = ({
     []
   );
 
-  const doc = useMemo(() => markdownParser.parse(note.markdown), [note]);
-
-  const [state, setState] = useProseMirror({
-    doc,
-    schema,
-    plugins,
-  });
-
-  const _nodeViews = useMemo(() => nodeViews(), []);
-
-  const viewRef = useRef() as RefObject<Handle>;
+  const [state, setState] = useState(() =>
+    EditorState.create({
+      doc: markdownParser.parse(note.markdown),
+      schema,
+      plugins,
+    }),
+  );
 
   const handleChange = useCallback(
     (state: EditorState) => {
-      setState(state);
+      setState(state)
       onUpdate(markdownSerializer.serialize(state.doc));
     },
-    [setState, onUpdate]
+    [onUpdate]
   );
+
+  const _nodeViews = useMemo(() => nodeViews(), []);
 
   const handleClick = useCallback(
     (view: EditorView, event: MouseEvent) => {
@@ -88,6 +78,7 @@ export const NoteEditor: React.FC<Props> = ({
 
       event.stopPropagation();
       event.preventDefault();
+
 
       const noteId = getNoteID(target);
       if (!noteId) return false;
@@ -103,7 +94,8 @@ export const NoteEditor: React.FC<Props> = ({
     [onOpen]
   );
 
-  const domEvents = useMemo(
+
+  const handleDOMEvents = useMemo(
     () => ({
       click: handleClick,
     }),
@@ -111,36 +103,12 @@ export const NoteEditor: React.FC<Props> = ({
   );
 
   useEffect(() => {
-    // We need to use the viewRef instead of directly referencing
-    // `state`, as that would require us to add `state` as a dependency
-    // to this hook, making it re-run everytime there was any change in
-    // the editor. We only want this to run when the note itself changes.
-    const view = viewRef.current?.view;
-    if (!view) return;
-
-    const tr = view.state.tr;
+    // Update note links when note changes
+    const tr = state.tr;
     tr.setMeta(noteLinkPlugin, note);
-    setState(view.state.apply(tr));
-  }, [note, viewRef, setState]);
+    setState(state.apply(tr));
+  }, [note]);
 
-  useEffect(() => {
-    const view = viewRef.current?.view;
-    if (!view) return;
-
-    // Set initial selection to end of document, so the initial
-    // focus after render starts at the end of the note.
-    view.dispatch(
-      view.state.tr.setSelection(TextSelection.atEnd(view.state.doc))
-    );
-  }, []);
-
-  useEffect(() => {
-    const view = viewRef.current?.view;
-    if (!view) return;
-
-    // Focus the editor each time the `focus` number is increased.
-    view.focus();
-  }, [focus]);
 
   if (!note) {
     return null;
@@ -149,12 +117,16 @@ export const NoteEditor: React.FC<Props> = ({
   return (
     <div className="p-2 markdown skrift-note-editor">
       <ProseMirror
-        ref={viewRef}
-        handleDOMEvents={domEvents}
+        mount={mount}
         state={state}
-        onChange={handleChange}
+        dispatchTransaction={(tr) => {
+          handleChange(state.apply(tr));
+        }}
+        handleDOMEvents={handleDOMEvents}
         nodeViews={_nodeViews}
-      />
+      >
+        <div ref={setMount} />
+      </ProseMirror>
     </div>
   );
 };
