@@ -91,7 +91,7 @@
     "electron-unhandled": "^5.0.0",
     "electron-updater": "^6.3.9",
     "eslint": "^7.26.0",
-    "eslint-plugin-jest": "^24.3.6",
+    "eslint-plugin-jest": "^28.9.0",
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
     "html-webpack-plugin": "^5.3.1",
