@@ -1,5 +1,5 @@
 import markdownit from "markdown-it";
-import Token from "markdown-it/lib/token";
+import { Token } from "markdown-it";
 
 interface ParsedNote {
   markdown: string;

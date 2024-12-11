@@ -1,4 +1,4 @@
-import markdownit from "markdown-it/lib";
+import markdownit from "markdown-it";
 import { MarkdownParser, schema as markdownSchema } from "prosemirror-markdown";
 import { defaultMarkdownParser } from "prosemirror-markdown";
 import { Node, Schema } from "prosemirror-model";

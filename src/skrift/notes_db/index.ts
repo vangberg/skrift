@@ -2,10 +2,7 @@ import sqlite3 from "sqlite3";
 import { open, Database } from "sqlite";
 import { Note, NoteID, NoteLink, NoteWithLinks } from "../note";
 import path from "path";
-import { exists } from "fs";
 import { Fts } from "./fts";
-import utils from "markdown-it/lib/common/utils";
-import { promisify } from "util";
 
 export interface NoteRow {
   id: string;
