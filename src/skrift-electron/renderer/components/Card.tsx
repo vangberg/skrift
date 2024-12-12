@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import React, { useMemo } from "react";
-import { Draggable, DraggableChildrenFn } from "@atlaskit/pragmatic-drag-and-drop-react-beautiful-dnd-migration";
+import { Draggable, DraggableChildrenFn } from "react-beautiful-dnd";
 import { useUniqueId } from "../hooks/useUniqueId";
 import { DraggableIds } from "../interfaces/draggableIds";
 import { Path } from "../interfaces/path";

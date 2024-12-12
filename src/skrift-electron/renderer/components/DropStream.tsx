@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import React, { useMemo } from "react";
-import { Droppable } from "@atlaskit/pragmatic-drag-and-drop-react-beautiful-dnd-migration";
+import { Droppable } from "react-beautiful-dnd";
 import { DroppableIds } from "../interfaces/droppableIds";
 import { StreamPath } from "../interfaces/path";
 

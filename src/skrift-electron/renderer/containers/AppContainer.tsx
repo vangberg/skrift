@@ -4,7 +4,7 @@ import { useImmer } from "use-immer";
 import { CacheContext } from "../hooks/useCache";
 import { Ipc } from "../ipc";
 import { createStateActions, State, StateContext } from "../interfaces/state";
-import { DragDropContext, OnDragEndResponder } from "@atlaskit/pragmatic-drag-and-drop-react-beautiful-dnd-migration";
+import { DragDropContext, OnDragEndResponder } from "react-beautiful-dnd";
 import { DroppableIds } from "../interfaces/droppableIds";
 import { Path } from "../interfaces/path";
 import { StreamsContainer } from "./StreamsContainer";
