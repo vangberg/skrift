@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from "react";
-import { Droppable } from "react-beautiful-dnd";
+import { Droppable } from "@atlaskit/pragmatic-drag-and-drop-react-beautiful-dnd-migration";
 import { NoteCardContainer } from "../containers/NoteCardContainer";
 import { SearchCardContainer } from "../containers/SearchCardContainer";
 import { DroppableIds } from "../interfaces/droppableIds";
