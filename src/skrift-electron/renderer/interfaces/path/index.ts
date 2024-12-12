@@ -1,3 +1,5 @@
+import { State } from "../state";
+
 export type StreamPath = [number];
 export type CardPath = [number, number];
 export type Path = StreamPath | CardPath;
@@ -17,6 +19,15 @@ export const Path = {
 
   card(path: CardPath): number {
     return path[1];
+  },
+
+  findByCardKey(state: State, cardKey: number): Path | undefined {
+    for (let stream = 0; stream < state.streams.length; stream++) {
+      const cardIndex = state.streams[stream].cards.findIndex((card) => card.meta.key === cardKey);
+      if (cardIndex !== -1) {
+        return [stream, cardIndex];
+      }
+    }
   },
 
   next(path: Path): Path {

@@ -1,11 +1,13 @@
-import React, { useCallback, useMemo } from "react";
-import { Droppable } from "react-beautiful-dnd";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+// import { Droppable } from "react-beautiful-dnd";
+import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter'
 import { NoteCardContainer } from "../containers/NoteCardContainer";
 import { SearchCardContainer } from "../containers/SearchCardContainer";
 import { DroppableIds } from "../interfaces/droppableIds";
 import { Path, StreamPath } from "../interfaces/path";
 import { OpenCardMode, Stream as StreamType } from "../interfaces/state";
 import { mouseEventToMode } from "../mouseEventToMode";
+import { DragDropCardContainer } from "../containers/DragDropCardContainer";
 
 type Props = {
   path: StreamPath;
@@ -26,24 +28,27 @@ export const Stream: React.FC<Props> = ({
     switch (card.type) {
       case "note":
         return (
-          <NoteCardContainer
-            key={card.meta.key}
-            card={card}
-            path={[...path, idx]}
-          />
+          <DragDropCardContainer card={card} key={card.meta.key}>
+            <NoteCardContainer
+              card={card}
+              path={[...path, idx]}
+            />
+          </DragDropCardContainer>
         );
       case "search":
         return (
-          <SearchCardContainer
-            key={card.meta.key}
-            card={card}
-            path={[...path, idx]}
-          />
+          <DragDropCardContainer card={card} key={card.meta.key}>
+            <SearchCardContainer
+              key={card.meta.key}
+              card={card}
+              path={[...path, idx]}
+            />
+          </DragDropCardContainer>
         );
     }
   });
 
-  const droppableId = useMemo(() => DroppableIds.serialize(path), [path]);
+
 
   const handleOpenSearch = useCallback(
     (event: React.MouseEvent) =>
@@ -52,39 +57,39 @@ export const Stream: React.FC<Props> = ({
   );
 
   return (
-    <Droppable droppableId={droppableId}>
-      {(provided, snapshot) => (
-        <div
-          ref={provided.innerRef}
-          {...provided.droppableProps}
-          className="flex-auto max-w-2xl py-2 flex flex-col overflow-y-auto"
-          style={{ flexBasis: "100%" }}
+    // <Droppable droppableId={droppableId}>
+    // {(provided, snapshot) => (
+    <div
+      // ref={provided.innerRef}
+      // {...provided.droppableProps}
+      className="flex-auto max-w-2xl py-2 flex flex-col overflow-y-auto"
+      style={{ flexBasis: "100%" }}
+    >
+      <div className="flex justify-center">
+        <span
+          onClick={onMinimizeAll}
+          className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
         >
-          <div className="flex justify-center">
-            <span
-              onClick={onMinimizeAll}
-              className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
-            >
-              Minimize
-            </span>
-            <span
-              onClick={onMaximizeAll}
-              className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
-            >
-              Maximize
-            </span>
-            <span
-              onClick={handleOpenSearch}
-              className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
-            >
-              Search
-            </span>
-          </div>
+          Minimize
+        </span>
+        <span
+          onClick={onMaximizeAll}
+          className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
+        >
+          Maximize
+        </span>
+        <span
+          onClick={handleOpenSearch}
+          className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
+        >
+          Search
+        </span>
+      </div>
 
-          {cards}
-          {provided.placeholder}
-        </div>
-      )}
-    </Droppable>
+      {cards}
+      {/* {provided.placeholder} */}
+    </div>
+    // )}
+    // </Droppable>
   );
 };
