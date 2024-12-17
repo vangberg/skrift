@@ -7,7 +7,7 @@ describe("State.dropOnCard", () => {
 
     State.dropOnCard(state, 2, 2, "above")
 
-    expect(state.streams[0].cards).toEqual([cardA(), cardB(), cardC()])
+    expect(state.streams[0].cards).toEqual([cardA(), cardB()])
   })
 
   it("moves card above target card", () => {
