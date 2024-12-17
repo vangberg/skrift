@@ -1,10 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-// import { Droppable } from "react-beautiful-dnd";
-import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter'
+import React, { useCallback } from "react";
 import { NoteCardContainer } from "../containers/NoteCardContainer";
 import { SearchCardContainer } from "../containers/SearchCardContainer";
-import { DroppableIds } from "../interfaces/droppableIds";
-import { Path, StreamPath } from "../interfaces/path";
+import { StreamPath } from "../interfaces/path";
 import { OpenCardMode, Stream as StreamType } from "../interfaces/state";
 import { mouseEventToMode } from "../mouseEventToMode";
 import { DragDropCardContainer } from "../containers/DragDropCardContainer";
@@ -57,11 +54,7 @@ export const Stream: React.FC<Props> = ({
   );
 
   return (
-    // <Droppable droppableId={droppableId}>
-    // {(provided, snapshot) => (
     <div
-      // ref={provided.innerRef}
-      // {...provided.droppableProps}
       className="flex-auto max-w-2xl py-2 flex flex-col overflow-y-auto"
       style={{ flexBasis: "100%" }}
     >
@@ -87,9 +80,6 @@ export const Stream: React.FC<Props> = ({
       </div>
 
       {cards}
-      {/* {provided.placeholder} */}
     </div>
-    // )}
-    // </Droppable>
   );
 };

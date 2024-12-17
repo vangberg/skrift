@@ -29,17 +29,12 @@ export const DropStream: React.FC<Props> = ({ mode, onDrop }) => {
   }, []);
 
   return (
-    // <Droppable droppableId={droppableId}>
-    // {(provided, snapshot) => (
     <div
-      // ref={provided.innerRef}
-      // {...provided.droppableProps}
       ref={ref}
       className={clsx(
         "bg-gray-300 my-2 w-20 shadow-inner rounded opacity-0 transition-opacity",
         {
           "opacity-100": isDraggedOver,
-          // "opacity-100": snapshot.isDraggingOver,
         }
       )}
       style={{
@@ -54,7 +49,5 @@ export const DropStream: React.FC<Props> = ({ mode, onDrop }) => {
            */}
       <div className="hidden"></div>
     </div>
-    // )}
-    // </Droppable>
   );
 };

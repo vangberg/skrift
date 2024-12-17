@@ -8,13 +8,11 @@ import { Card } from "./Card";
 import { CardToolbar } from "./CardToolbar";
 import { CardBody } from "./CardBody";
 import { CardToolbarItem } from "./CardToolbarItem";
-import { Path } from "../interfaces/path";
 import { NoteCard as NoteCardType, OpenCardMode } from "../interfaces/state";
 import { NoteCardTitle } from "./NoteCardTitle";
 import { CardTitle } from "./CardTitle";
 
 type Props = {
-  path: Path;
   card: NoteCardType;
   note: NoteWithLinks;
   focus: number;
@@ -26,7 +24,6 @@ type Props = {
 };
 
 export const NoteCard: React.FC<Props> = ({
-  path,
   card,
   note,
   focus,
@@ -57,8 +54,7 @@ export const NoteCard: React.FC<Props> = ({
   }, [note]);
 
   return (
-    <Card card={card} path={path}>
-      {/* {(provided) => ( */}
+    <Card>
       <>
         <CardToolbar>
           <CardToolbarItem onClick={handleDelete}>Delete</CardToolbarItem>
@@ -75,7 +71,6 @@ export const NoteCard: React.FC<Props> = ({
           <NoteCardBacklinks note={note} onOpen={onOpen} />
         </CardBody>
       </>
-      {/* )} */}
     </Card>
   );
 };

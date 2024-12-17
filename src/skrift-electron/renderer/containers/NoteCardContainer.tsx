@@ -35,7 +35,6 @@ export const NoteCardContainer: React.FC<Props> = ({ card, path }) => {
 
   return (
     <NoteCard
-      path={path}
       card={card}
       note={note}
       focus={focus}

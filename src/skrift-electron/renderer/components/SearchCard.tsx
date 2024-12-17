@@ -6,15 +6,9 @@ import { Card } from "./Card";
 import { CardBody } from "./CardBody";
 import { CardToolbarItem } from "./CardToolbarItem";
 import { SearchCardResults } from "./SearchCardResults";
-import { Path } from "../interfaces/path";
-import {
-  OpenCardMode,
-  SearchCard as SearchCardType,
-} from "../interfaces/state";
+import { OpenCardMode } from "../interfaces/state";
 
 type Props = {
-  path: Path;
-  card: SearchCardType;
   query: string;
   results: Note[];
   onOpen: (id: string, mode: OpenCardMode) => void;
@@ -24,8 +18,6 @@ type Props = {
 };
 
 export const SearchCard: React.FC<Props> = ({
-  path,
-  card,
   query,
   results,
   onOpen,
@@ -34,8 +26,7 @@ export const SearchCard: React.FC<Props> = ({
   onSearch,
 }) => {
   return (
-    <Card card={card} path={path}>
-      {/* {(provided) => ( */}
+    <Card>
       <>
         <CardToolbar>
           <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>
@@ -52,7 +43,6 @@ export const SearchCard: React.FC<Props> = ({
           </div>
         </CardBody>
       </>
-      {/* )} */}
     </Card>
   );
 };

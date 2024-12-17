@@ -52,8 +52,6 @@ export const SearchCardContainer: React.FC<Props> = ({ path, card }) => {
 
   return (
     <SearchCard
-      path={path}
-      card={card}
       onAdd={handleAdd}
       onOpen={onOpenNote}
       onClose={onClose}

@@ -114,7 +114,6 @@
     "prosemirror-transform": "^1.10.2",
     "prosemirror-view": "^1.37.0",
     "react": "^18.0.0",
-    "react-beautiful-dnd": "^13.1.0",
     "react-dom": "^18.0.0",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.6",

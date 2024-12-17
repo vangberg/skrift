@@ -1,11 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Splash } from "../components/Splash";
 import { useImmer } from "use-immer";
 import { CacheContext } from "../hooks/useCache";
 import { Ipc } from "../ipc";
 import { createStateActions, State, StateContext } from "../interfaces/state";
-import { DroppableIds } from "../interfaces/droppableIds";
-import { Path } from "../interfaces/path";
 import { StreamsContainer } from "./StreamsContainer";
 
 export const AppContainer: React.FC = () => {
@@ -46,33 +44,13 @@ export const AppContainer: React.FC = () => {
     return deregister;
   }, [actions]);
 
-  // const handleDragEnd: OnDragEndResponder = useCallback(
-  //   (result) => {
-  //     const from: Path = [
-  //       ...DroppableIds.deserialize(result.source.droppableId),
-  //       result.source.index,
-  //     ];
-
-  //     if (result.destination) {
-  //       const to: Path = [
-  //         ...DroppableIds.deserialize(result.destination.droppableId),
-  //         result.destination.index,
-  //       ];
-  //       actions.move(from, to);
-  //     }
-  //   },
-  //   [actions]
-  // );
-
   return (
     <CacheContext.Provider value={cacheContext}>
       <StateContext.Provider value={[state, actions]}>
         {loading ? (
           <Splash loaded={loaded} />
         ) : (
-          // <DragDropContext onDragEnd={handleDragEnd}>
           <StreamsContainer />
-          // </DragDropContext>d
         )}
       </StateContext.Provider>
     </CacheContext.Provider>
