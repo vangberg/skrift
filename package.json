@@ -73,7 +73,7 @@
     "@atlaskit/pragmatic-drag-and-drop": "^1.4.0",
     "@atlaskit/pragmatic-drag-and-drop-hitbox": "^1.0.3",
     "@nytimes/react-prosemirror": "^1.0.0",
-    "@sentry/electron": "^5.7.0",
+    "@sentry/electron": "^5.8.0",
     "@types/jest": "^29.5.14",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^22.10.2",
