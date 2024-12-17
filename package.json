@@ -24,8 +24,8 @@
     "appId": "com.halestreet.Skrift",
     "publish": {
       "provider": "github",
-      "owner": "halestreet",
-      "repo": "skrift-release"
+      "owner": "vangberg",
+      "repo": "skrift"
     },
     "mac": {
       "category": "public.app-category.productivity",
