@@ -4,14 +4,16 @@ import React, { PropsWithChildren, useCallback } from "react";
 type Props = {
   onClick?: () => void;
   className?: string;
+  ref?: React.Ref<HTMLDivElement>;
 };
 
-export const CardToolbarItem = React.forwardRef<HTMLDivElement, PropsWithChildren<Props>>(({
+export const CardToolbarItem: React.FC<PropsWithChildren<Props>> = ({
   onClick,
   className,
   children,
+  ref,
   ...props
-}, ref) => {
+}) => {
   return (
     <div
       ref={ref}
@@ -26,4 +28,4 @@ export const CardToolbarItem = React.forwardRef<HTMLDivElement, PropsWithChildre
       {children}
     </div>
   );
-});
+}
