@@ -35,27 +35,24 @@ export const SearchCard: React.FC<Props> = ({
 }) => {
   return (
     <Card card={card} path={path}>
-      {(provided) => (
-        <>
-          <CardToolbar>
-            <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>
-            <CardToolbarItem {...provided.dragHandleProps}>
-              Move
-            </CardToolbarItem>
-          </CardToolbar>
+      {/* {(provided) => ( */}
+      <>
+        <CardToolbar>
+          <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>
+        </CardToolbar>
 
-          <CardBody visible={true}>
-            <div className="p-2">
-              <SearchCardInput
-                query={query}
-                onAdd={onAdd}
-                onSearch={onSearch}
-              />
-              <SearchCardResults onOpen={onOpen} results={results} />
-            </div>
-          </CardBody>
-        </>
-      )}
+        <CardBody visible={true}>
+          <div className="p-2">
+            <SearchCardInput
+              query={query}
+              onAdd={onAdd}
+              onSearch={onSearch}
+            />
+            <SearchCardResults onOpen={onOpen} results={results} />
+          </div>
+        </CardBody>
+      </>
+      {/* )} */}
     </Card>
   );
 };

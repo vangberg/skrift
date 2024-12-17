@@ -28,8 +28,9 @@ function createWindow() {
   if (app.isPackaged) {
     mainWindow.loadFile("./build/app.html");
   } else {
-    mainWindow.loadURL("http://localhost:8080/app.html");
-    mainWindow.webContents.openDevTools();
+    mainWindow.loadURL("http://localhost:8080/app.html").then(() => {
+      mainWindow.webContents.openDevTools();
+    });
   }
 
   mainWindow.on("closed", () => {

@@ -58,27 +58,24 @@ export const NoteCard: React.FC<Props> = ({
 
   return (
     <Card card={card} path={path}>
-      {(provided) => (
-        <>
-          <CardToolbar>
-            <CardToolbarItem onClick={handleDelete}>Delete</CardToolbarItem>
-            <CardToolbarItem onClick={handleCopy}>Copy link</CardToolbarItem>
-            <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>
-            <CardToolbarItem {...provided.dragHandleProps}>
-              Move
-            </CardToolbarItem>
-          </CardToolbar>
+      {/* {(provided) => ( */}
+      <>
+        <CardToolbar>
+          <CardToolbarItem onClick={handleDelete}>Delete</CardToolbarItem>
+          <CardToolbarItem onClick={handleCopy}>Copy link</CardToolbarItem>
+          <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>
+        </CardToolbar>
 
-          <CardTitle visible={collapsed}>
-            <NoteCardTitle note={note} />
-          </CardTitle>
+        <CardTitle visible={collapsed}>
+          <NoteCardTitle note={note} />
+        </CardTitle>
 
-          <CardBody visible={!collapsed}>
-            <NoteEditorContainer id={note.id} focus={focus} onOpen={onOpen} />
-            <NoteCardBacklinks note={note} onOpen={onOpen} />
-          </CardBody>
-        </>
-      )}
+        <CardBody visible={!collapsed}>
+          <NoteEditorContainer id={note.id} focus={focus} onOpen={onOpen} />
+          <NoteCardBacklinks note={note} onOpen={onOpen} />
+        </CardBody>
+      </>
+      {/* )} */}
     </Card>
   );
 };

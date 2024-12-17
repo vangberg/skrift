@@ -58,6 +58,8 @@ export type OpenCardMode = "below" | "push" | "replace";
 
 type OpenCard = Omit<NoteCard, "meta"> | Omit<SearchCard, "meta">;
 
+export type MoveMode = "above" | "below";
+
 let key = 0;
 
 export const State = {
@@ -157,56 +159,62 @@ export const State = {
     stream.cards[Path.card(path)].meta = { ...card.meta, ...props };
   },
 
-  move(state: State, from: Path, to: Path) {
-    // We can only move cards, not streams.
-    if (!Path.isCardPath(from)) return;
+  dropOnCard(state: State, sourceKey: number, targetKey: number, mode: MoveMode) {
+    if (sourceKey === targetKey) return;
 
-    const fromStream = state.streams[Path.stream(from)];
+    const sourcePath = Path.findByCardKey(state, sourceKey);
+    if (!sourcePath) throw new Error("Source card not found");
+    const fromStream = state.streams[Path.stream(sourcePath)];
 
-    const toStreamPath = Path.stream(to);
+    const [removed] = fromStream.cards.splice(Path.last(sourcePath), 1);
 
-    // If the index of the destination stream is negative, it means that
-    // the card was drag and dropped to the left of the first stream, so
-    // we insert a new stream at the beginning.
-    if (toStreamPath < 0) {
-      const [removed] = fromStream.cards.splice(Path.last(from), 1);
+    const targetPath = Path.findByCardKey(state, targetKey)
+    if (!targetPath) throw new Error("Target card not found");
+    const toStream = state.streams[Path.stream(targetPath)];
 
-      state.streams.unshift({
-        type: "stream",
-        key: key++,
-        cards: [removed],
-      });
-
-      State.normalize(state);
-
-      return;
+    let targetStart: number;
+    switch (mode) {
+      case "above":
+        targetStart = Path.last(targetPath);
+        break;
+      case "below":
+        targetStart = Path.last(targetPath) + 1;
+        break;
     }
 
-    // If the index of the destination stream is larger than the number
-    // of streams, it means that the card was drag and
-    // dropped to the right of the last stream, so we insert a new stream
-    // at the end.
-    if (toStreamPath > state.streams.length - 1) {
-      const [removed] = fromStream.cards.splice(Path.last(from), 1);
-
-      state.streams.push({
-        type: "stream",
-        key: key++,
-        cards: [removed],
-      });
-
-      State.normalize(state);
-
-      return;
-    }
-
-    // Otherwise, the card was moved between existing streams.
-    const toStream = state.streams[Path.stream(to)];
-
-    const [removed] = fromStream.cards.splice(Path.last(from), 1);
-    toStream.cards.splice(Path.last(to), 0, removed);
+    toStream.cards.splice(targetStart, 0, removed);
 
     State.normalize(state);
+  },
+
+  dropOnNewStream(state: State, sourceKey: number, mode: "prepend" | "append") {
+    const sourcePath = Path.findByCardKey(state, sourceKey);
+
+    if (!sourcePath) return;
+
+    const fromStream = state.streams[Path.stream(sourcePath)];
+    const [removed] = fromStream.cards.splice(Path.last(sourcePath), 1);
+
+    const newStream: Stream = {
+      type: "stream",
+      key: key++,
+      cards: [removed],
+    };
+
+    switch (mode) {
+      case "prepend":
+        state.streams.unshift(newStream);
+        break;
+      case "append":
+        state.streams.push(newStream);
+        break;
+      default:
+        throw new Error(`Invalid mode: ${mode}`);
+    }
+
+    State.normalize(state);
+
+    return;
   },
 
   close(state: State, options: CloseOptions) {
@@ -284,7 +292,8 @@ interface StateActions {
   openCard: (path: Path, mode: OpenCardMode, card: OpenCard) => void;
   updateCard: <T extends Card>(path: Path, card: Partial<T>) => void;
   updateMeta: (path: Path, card: Partial<CardMeta>) => void;
-  move: (from: Path, to: Path) => void;
+  dropOnCard: (sourceKey: number, targetKey: number, mode: MoveMode) => void;
+  dropOnNewStream: (sourceKey: number, mode: "prepend" | "append") => void;
   close: (options: CloseOptions) => void;
 }
 
@@ -305,9 +314,14 @@ export const createStateActions = (setState: Updater<State>): StateActions => {
         State.updateMeta(draft, path, props);
       });
     },
-    move(from: Path, to: Path) {
+    dropOnCard(sourceKey: number, targetKey: number, mode: MoveMode) {
       setState((draft) => {
-        State.move(draft, from, to);
+        State.dropOnCard(draft, sourceKey, targetKey, mode);
+      });
+    },
+    dropOnNewStream(sourceKey: number, mode: "prepend" | "append") {
+      setState((draft) => {
+        State.dropOnNewStream(draft, sourceKey, mode);
       });
     },
     close(options: CloseOptions) {
@@ -320,5 +334,5 @@ export const createStateActions = (setState: Updater<State>): StateActions => {
 
 export const StateContext = React.createContext<[State, StateActions]>([
   State.initial(),
-  createStateActions(() => {}),
+  createStateActions(() => { }),
 ]);

@@ -6,14 +6,15 @@ type Props = {
   className?: string;
 };
 
-export const CardToolbarItem: React.FC<PropsWithChildren<Props>> = ({
+export const CardToolbarItem = React.forwardRef<HTMLDivElement, PropsWithChildren<Props>>(({
   onClick,
   className,
   children,
   ...props
-}) => {
+}, ref) => {
   return (
     <div
+      ref={ref}
       className={clsx(
         "ml-2 select-none cursor-pointer text-gray-600 hover:text-black",
         className
@@ -25,4 +26,4 @@ export const CardToolbarItem: React.FC<PropsWithChildren<Props>> = ({
       {children}
     </div>
   );
-};
+});
