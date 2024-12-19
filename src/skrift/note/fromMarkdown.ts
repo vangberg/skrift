@@ -1,7 +1,7 @@
 import markdownit from "markdown-it";
 import { Token } from "markdown-it";
 
-interface ParsedNote {
+export interface ParsedNote {
   markdown: string;
   title: string;
   body: string;

@@ -7,7 +7,7 @@ import {
   IpcDeleteNoteCommand,
   IpcSetNoteCommand,
 } from "../shared/types";
-import { Database } from "sqlite";
+import BetterSqlite3 from "better-sqlite3";
 import path from "path";
 import { TSet } from "../../skrift/tset";
 import { Note, NoteLink, NoteWithLinks } from "../../skrift/note";
@@ -17,13 +17,13 @@ import { NotesFS } from "../../skrift/notes_fs";
 const dir = app.isPackaged ? "Skrift" : "Skrift.dev";
 const _path = path.join(app.getPath("documents"), dir);
 
-const getDB: () => Promise<Database> = (() => {
-  let db: Database;
+const getDB = (() => {
+  let db: BetterSqlite3.Database;
 
-  return async (): Promise<Database> => {
+  return (): BetterSqlite3.Database => {
     if (!db) {
-      db = await NotesDB.file(_path);
-      await NotesDB.initialize(db);
+      db = NotesDB.file(_path);
+      NotesDB.initialize(db);
     }
 
     return db;
@@ -35,12 +35,12 @@ const reply = (event: Electron.IpcMainEvent, reply: IpcReply) => {
 };
 
 const handleLoadDir = async (event: Electron.IpcMainEvent) => {
-  await NotesFS.initialize(_path);
-  const db = await getDB();
+  NotesFS.initialize(_path);
+  const db = getDB();
 
   let loaded = 0;
   for await (const note of NotesFS.readDir(_path)) {
-    await NotesDB.save(db, note.id, note.markdown, note.modifiedAt);
+    NotesDB.save(db, note.id, note.markdown, note.modifiedAt);
     loaded += 1;
     if (loaded % 100 === 0) {
       reply(event, { type: "event/LOADING_DIR", loaded });
@@ -49,73 +49,73 @@ const handleLoadDir = async (event: Electron.IpcMainEvent) => {
 
   const initialNoteID = "20210108T145053.970Z.md";
 
-  if (await NotesDB.exists(db, initialNoteID)) {
+  if (NotesDB.exists(db, initialNoteID)) {
     reply(event, { type: "event/LOADED_DIR", initialNoteID });
   } else {
     reply(event, { type: "event/LOADED_DIR", initialNoteID: null });
   }
 };
 
-const handleLoadNote = async (
+const handleLoadNote = (
   event: Electron.IpcMainEvent,
   cmd: IpcLoadNoteCommand
 ) => {
   const { id } = cmd;
-  const db = await getDB();
+  const db = getDB();
 
-  const note = await NotesDB.getWithLinks(db, id);
+  const note = NotesDB.getWithLinks(db, id);
   reply(event, { type: "event/SET_NOTE", note });
 };
 
-const handleDeleteNote = async (
+const handleDeleteNote = (
   event: Electron.IpcMainEvent,
   cmd: IpcDeleteNoteCommand
 ) => {
   const { id } = cmd;
-  const db = await getDB();
+  const db = getDB();
 
-  const note = await NotesDB.get(db, id);
-  await NotesDB.delete(db, id);
-  await NotesFS.delete(_path, id);
+  const note = NotesDB.get(db, id);
+  NotesDB.delete(db, id);
+  NotesFS.delete(_path, id);
 
-  note.linkIds.forEach(async (linkId) => {
-    const note = await NotesDB.getWithLinks(db, linkId);
+  note.linkIds.forEach((linkId) => {
+    const note = NotesDB.getWithLinks(db, linkId);
     reply(event, { type: "event/SET_NOTE", note });
   });
 
   reply(event, { type: "event/DELETED_NOTE", id });
 };
 
-const handleAddNote = async (
+const handleAddNote = (
   event: Electron.IpcMainEvent,
   cmd: IpcAddNoteCommand
 ) => {
   const { id, markdown } = cmd;
-  const db = await getDB();
+  const db = getDB();
 
-  await NotesDB.save(db, id, markdown);
+  NotesDB.save(db, id, markdown);
 
-  await NotesFS.save(_path, id, markdown);
+  NotesFS.save(_path, id, markdown);
 
-  const note = await NotesDB.getWithLinks(db, id);
+  const note = NotesDB.getWithLinks(db, id);
 
   reply(event, { type: "event/SET_NOTE", note });
 };
 
-const handleSetNote = async (
+const handleSetNote = (
   event: Electron.IpcMainEvent,
   cmd: IpcSetNoteCommand
 ) => {
   const { id, markdown } = cmd;
-  const db = await getDB();
+  const db = getDB();
 
-  const noteBefore = await NotesDB.get(db, id);
+  const noteBefore = NotesDB.get(db, id);
 
-  await NotesDB.save(db, id, markdown);
+  NotesDB.save(db, id, markdown);
 
-  await NotesFS.save(_path, id, markdown);
+  NotesFS.save(_path, id, markdown);
 
-  const noteAfter = await NotesDB.getWithLinks(db, id);
+  const noteAfter = NotesDB.getWithLinks(db, id);
 
   const linksAffected = [];
 
@@ -131,28 +131,28 @@ const handleSetNote = async (
 
   reply(event, { type: "event/SET_NOTE", note: noteAfter });
 
-  linksAffected.forEach(async (link) => {
-    const note = await NotesDB.getWithLinks(db, link);
+  linksAffected.forEach((link) => {
+    const note = NotesDB.getWithLinks(db, link);
     reply(event, { type: "event/SET_NOTE", note });
   });
 };
 
-const handleSearch = async (
+const handleSearch = (
   event: Electron.IpcMainInvokeEvent,
   query: string
-): Promise<NoteLink[]> => {
-  const db = await getDB();
+): NoteLink[] => {
+  const db = getDB();
 
-  const ids = await NotesDB.search(db, query);
-  const links = await NotesDB.getNoteLinks(db, ids);
+  const ids = NotesDB.search(db, query);
+  const links = NotesDB.getNoteLinks(db, ids);
 
   return links;
 };
 
-const handleWriteHTMLToClipboard = async (
+const handleWriteHTMLToClipboard = (
   event: Electron.IpcMainInvokeEvent,
   html: string
-): Promise<void> => {
+): void => {
   clipboard.writeHTML(html);
 };
 
