@@ -20,7 +20,7 @@ module.exports = [
       filename: "main.js",
     },
     externals: {
-      sqlite3: "commonjs sqlite3",
+      "better-sqlite3": "commonjs better-sqlite3",
     },
   },
 ];
