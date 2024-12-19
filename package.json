@@ -15,8 +15,8 @@
     "dist:win": "electron-builder -w",
     "publish": "electron-builder --publish always",
     "eslint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
-    "test": "jest",
-    "test-watch": "jest --watch",
+    "test": "ELECTRON_RUN_AS_NODE=1 electron ./node_modules/.bin/jest",
+    "test-watch": "ELECTRON_RUN_AS_NODE=1 electron ./node_modules/.bin/jest --watch",
     "postinstall": "electron-builder install-app-deps",
     "notarize": "./notarize.sh"
   },
