@@ -1,8 +1,8 @@
-import sqlite3 from "sqlite3";
-import { open, Database } from "sqlite";
+import BetterSqlite3 from "better-sqlite3";
 import { Note, NoteID, NoteLink, NoteWithLinks } from "../note";
 import path from "path";
 import { Fts } from "./fts";
+import { ParsedNote } from "../note/fromMarkdown";
 
 export interface NoteRow {
   id: string;
@@ -36,87 +36,68 @@ export class NoteNotFoundError extends Error {
 }
 
 export const NotesDB = {
-  async memory(): Promise<Database> {
-    return open({
-      filename: ":memory:",
-      driver: sqlite3.Database,
-    });
+  memory(): BetterSqlite3.Database {
+    return new BetterSqlite3(":memory:");
   },
 
-  async file(dirPath: string): Promise<Database> {
+  file(dirPath: string): BetterSqlite3.Database {
     const dbPath = path.join(dirPath, "skrift.db");
-    return open({
-      filename: dbPath,
-      driver: sqlite3.Database,
-    });
+    return new BetterSqlite3(dbPath);
   },
 
-  async initialize(db: Database): Promise<void> {
-    await db.run("DROP TABLE IF EXISTS notes");
-    await db.run(
+  initialize(db: BetterSqlite3.Database): void {
+    db.prepare("DROP TABLE IF EXISTS notes").run();
+    db.prepare(
       `CREATE VIRTUAL TABLE notes USING fts5(
         id UNINDEXED,
         title,
         markdown,
         modifiedAt UNINDEXED
       )`
-    );
+    ).run();
 
-    await db.run("DROP TABLE IF EXISTS links");
-    await db.run(`
-      CREATE TABLE links (
+    db.prepare("DROP TABLE IF EXISTS links").run();
+    db.prepare(
+      `CREATE TABLE links (
         fromId TEXT NOT NULL,
         toId TEXT NOT NULL,
         PRIMARY KEY (fromId, toId)
-      )
-    `);
+      )`
+    ).run();
   },
 
-  async save(
-    db: Database,
+  save(
+    db: BetterSqlite3.Database,
     id: NoteID,
     markdown: string,
     modifiedAt?: Date
-  ): Promise<void> {
+  ): void {
     const note = Note.fromMarkdown(markdown);
-    const driver = db.getDatabaseInstance();
 
-    return new Promise((resolve, reject) => {
-      driver.serialize(() => {
-        const promises = [
-          db.run("BEGIN"),
-          db.run(`DELETE FROM notes WHERE id = ?`, id),
-          db.run(`DELETE FROM links WHERE fromId = ?`, id),
-          db.run(
-            `INSERT INTO notes (id, title, markdown, modifiedAt) VALUES (?, ?, ?, ?)`,
-            [id, note.title, markdown, (modifiedAt || new Date()).getTime()]
-          ),
-          ...[...note.linkIds].map((link) =>
-            db.run(`INSERT INTO links (fromId, toId) VALUES (?, ?)`, [id, link])
-          ),
-          db.run("COMMIT"),
-        ];
-
-        Promise.all(promises)
-          .then(() => resolve())
-          .catch(reject);
-      });
-    });
+    return db.transaction((note: ParsedNote) => {
+      db.prepare("DELETE FROM notes WHERE id = ?").run(id);
+      db.prepare("DELETE FROM links WHERE fromId = ?").run(id);
+      db.prepare(
+        `INSERT INTO notes (id, title, markdown, modifiedAt) VALUES (?, ?, ?, ?)`
+      ).run([id, note.title, markdown, (modifiedAt || new Date()).getTime()]);
+      note.linkIds.forEach((link) =>
+        db.prepare("INSERT INTO links (fromId, toId) VALUES (?, ?)").run([id, link])
+      );
+    })(note);
   },
 
-  async exists(db: Database, id: NoteID): Promise<boolean> {
-    const row = await db.get<NoteID>(`SELECT id FROM notes WHERE id = ?`, id);
+  exists(db: BetterSqlite3.Database, id: NoteID): boolean {
+    const row = db.prepare<NoteID, NoteRow>(`SELECT id FROM notes WHERE id = ?`).get(id);
 
     return !!row;
   },
 
-  async get(db: Database, id: NoteID): Promise<Note> {
-    const row = await db.get<NoteRow>(`SELECT * FROM notes WHERE id = ?`, id);
+  get(db: BetterSqlite3.Database, id: NoteID): Note {
+    const row = db.prepare<string, NoteRow>(`SELECT * FROM notes WHERE id = ?`).get(id);
 
-    const backlinkIds = await db.all<LinkRow[]>(
-      `SELECT * FROM links WHERE toId = ?`,
-      id
-    );
+    const backlinkIds = db
+      .prepare<string, LinkRow>(`SELECT * FROM links WHERE toId = ?`)
+      .all(id);
 
     if (!row) {
       throw new NoteNotFoundError("Could not find note");
@@ -134,11 +115,12 @@ export const NotesDB = {
     };
   },
 
-  async getNoteLinks(db: Database, ids: NoteID[]): Promise<NoteLink[]> {
-    const links = await db.all<NoteLinkRow[]>(
-      `SELECT id, title FROM notes WHERE id IN (${[...ids].fill("?")})`,
-      ids
-    );
+  getNoteLinks(db: BetterSqlite3.Database, ids: NoteID[]): NoteLink[] {
+    const links = db
+      .prepare<[string[]], NoteLinkRow>(
+        `SELECT id, title FROM notes WHERE id IN (${[...ids].fill("?")})`
+      )
+      .all(ids);
 
     // `WHERE id IN (2, 1)` returns rows sorted by id, and not in the
     // specified order, so we need to do that manually.
@@ -147,10 +129,10 @@ export const NotesDB = {
     return links.sort((a, b) => positions.get(a.id)! - positions.get(b.id)!);
   },
 
-  async getWithLinks(db: Database, id: NoteID): Promise<NoteWithLinks> {
-    const note = await NotesDB.get(db, id);
-    const links = await NotesDB.getNoteLinks(db, [...note.linkIds]);
-    const backlinks = await NotesDB.getNoteLinks(db, [...note.backlinkIds]);
+  getWithLinks(db: BetterSqlite3.Database, id: NoteID): NoteWithLinks {
+    const note = NotesDB.get(db, id);
+    const links = NotesDB.getNoteLinks(db, [...note.linkIds]);
+    const backlinks = NotesDB.getNoteLinks(db, [...note.backlinkIds]);
 
     return {
       ...note,
@@ -159,12 +141,12 @@ export const NotesDB = {
     };
   },
 
-  async delete(db: Database, id: NoteID): Promise<void> {
-    await db.run(`DELETE FROM notes WHERE id = ?`, id);
-    await db.run(`DELETE FROM links WHERE toId = ? OR fromId = ?`, id, id);
+  delete(db: BetterSqlite3.Database, id: NoteID): void {
+    db.prepare(`DELETE FROM notes WHERE id = ?`).run(id);
+    db.prepare(`DELETE FROM links WHERE toId = ? OR fromId = ?`).run(id, id);
   },
 
-  async search(db: Database, query: string): Promise<NoteID[]> {
+  search(db: BetterSqlite3.Database, query: string): NoteID[] {
     if (query === "*") {
       return NotesDB.recent(db);
     }
@@ -175,18 +157,19 @@ export const NotesDB = {
       return [];
     }
 
-    const rows = await db.all<SearchRow[]>(
-      `SELECT * FROM notes WHERE notes MATCH ? LIMIT 50`,
-      Fts.toMatch(tokens)
-    );
+    const rows = db
+      .prepare<string, SearchRow>(`SELECT * FROM notes WHERE notes MATCH ? LIMIT 50`)
+      .all(Fts.toMatch(tokens));
 
     return rows.map((row) => row.id);
   },
 
-  async recent(db: Database): Promise<NoteID[]> {
-    const rows = await db.all<SearchRow[]>(
-      "SELECT * FROM notes ORDER BY modifiedAt DESC LIMIT 50"
-    );
+  recent(db: BetterSqlite3.Database): NoteID[] {
+    const rows = db
+      .prepare<[], SearchRow>(
+        "SELECT * FROM notes ORDER BY modifiedAt DESC LIMIT 50"
+      )
+      .all();
 
     return rows.map((row) => row.id);
   },

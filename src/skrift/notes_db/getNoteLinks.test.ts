@@ -1,20 +1,20 @@
-import { Database } from "sqlite";
-import { NotesDB, NoteNotFoundError } from ".";
+import BetterSqlite3 from "better-sqlite3";
+import { NotesDB } from ".";
 
 describe("NotesDB.getNoteLinks()", () => {
-  let db: Database;
+  let db: BetterSqlite3.Database;
 
-  beforeAll(async () => {
-    db = await NotesDB.memory();
-    await NotesDB.initialize(db);
+  beforeAll(() => {
+    db = NotesDB.memory();
+    NotesDB.initialize(db);
   });
 
-  it("gets note links in specified order", async () => {
+  it("gets note links in specified order", () => {
     const date = new Date();
-    await NotesDB.save(db, "a.md", "A", date);
-    await NotesDB.save(db, "b.md", "B", date);
+    NotesDB.save(db, "a.md", "A", date);
+    NotesDB.save(db, "b.md", "B", date);
 
-    const result = await NotesDB.getNoteLinks(db, ["b.md", "a.md"]);
+    const result = NotesDB.getNoteLinks(db, ["b.md", "a.md"]);
 
     expect(result.map((r) => r.id)).toEqual(["b.md", "a.md"]);
   });
