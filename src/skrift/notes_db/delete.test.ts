@@ -1,23 +1,23 @@
-import { Database } from "sqlite";
+import BetterSqlite3 from "better-sqlite3";
 import { NotesDB, NoteNotFoundError } from ".";
 
 describe("NotesDB.delete()", () => {
-  let db: Database;
+  let db: BetterSqlite3.Database;
 
-  beforeAll(async () => {
-    db = await NotesDB.memory();
-    await NotesDB.initialize(db);
+  beforeAll(() => {
+    db = NotesDB.memory();
+    NotesDB.initialize(db);
   });
 
-  it("deletes a note", async () => {
-    await NotesDB.save(
+  it("deletes a note", () => {
+    NotesDB.save(
       db,
       "a.md",
       "# Added note\n\nLinks: [#](b.md), [#](c.md)",
       new Date()
     );
 
-    await NotesDB.delete(db, "a.md");
-    await expect(NotesDB.get(db, "a.md")).rejects.toThrow(NoteNotFoundError);
+    NotesDB.delete(db, "a.md");
+    expect(() => NotesDB.get(db, "a.md")).toThrow(NoteNotFoundError);
   });
 });
