@@ -15,6 +15,7 @@ import { mouseEventToMode } from "../../mouseEventToMode";
 import { nodeViews } from "./nodeViews";
 import { noteLinkPlugin } from "./noteLinkPlugin";
 import { buildInputRules } from "./inputrules";
+import { AutoFocus } from "./AutoFocus";
 
 interface Props {
   note: NoteWithLinks;
@@ -126,6 +127,7 @@ export const NoteEditor: React.FC<Props> = ({
         handleDOMEvents={handleDOMEvents}
         nodeViews={_nodeViews}
       >
+        <AutoFocus />
         <div ref={setMount} />
       </ProseMirror>
     </div>
