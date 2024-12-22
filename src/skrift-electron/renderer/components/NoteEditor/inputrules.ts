@@ -1,4 +1,5 @@
 import { Schema } from "prosemirror-model";
+
 import {
   ellipsis,
   InputRule,
@@ -6,6 +7,11 @@ import {
   textblockTypeInputRule,
   wrappingInputRule,
 } from "prosemirror-inputrules";
+
+import {
+  makeBlockMathInputRule, makeInlineMathInputRule,
+  REGEX_INLINE_MATH_DOLLARS, REGEX_BLOCK_MATH_DOLLARS
+} from "@benrbray/prosemirror-math";
 
 export const buildInputRules = <S extends Schema>(schema: S) => {
   const hr = new InputRule(/^(---)$/, (state, match, start, end) => {
@@ -38,7 +44,10 @@ export const buildInputRules = <S extends Schema>(schema: S) => {
     (match) => ({ level: match[1].length })
   );
 
+  let inlineMathInputRule = makeInlineMathInputRule(REGEX_INLINE_MATH_DOLLARS, schema.nodes.math_inline);
+  let blockMathInputRule = makeBlockMathInputRule(REGEX_BLOCK_MATH_DOLLARS, schema.nodes.math_display);
+
   return inputRules({
-    rules: [ellipsis, hr, blockquote, orderedList, bulletList, heading],
+    rules: [ellipsis, hr, blockquote, orderedList, bulletList, heading, inlineMathInputRule, blockMathInputRule],
   });
 };
