@@ -83,7 +83,7 @@
     "autoprefixer": "^10.2.5",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
-    "concurrently": "^9.1.0",
+    "concurrently": "^9.1.1",
     "css-loader": "^7.1.2",
     "electron": "^33.2.1",
     "electron-builder": "^25.1.8",
