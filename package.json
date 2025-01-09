@@ -70,6 +70,7 @@
   "devDependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "^1.4.0",
     "@atlaskit/pragmatic-drag-and-drop-hitbox": "^1.0.3",
+    "@benrbray/prosemirror-math": "^1.0.0",
     "@nytimes/react-prosemirror": "^1.0.0",
     "@sentry/electron": "^5.8.0",
     "@types/better-sqlite3": "^7.6.12",
@@ -126,6 +127,7 @@
     "webpack-dev-server": "^5.2.0"
   },
   "dependencies": {
-    "better-sqlite3": "^11.7.0"
+    "better-sqlite3": "^11.7.0",
+    "markdown-it-math": "^4.1.1"
   }
 }

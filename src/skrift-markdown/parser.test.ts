@@ -25,4 +25,36 @@ describe("Parser", () => {
       ],
     });
   });
+
+  it("parses inline math", () => {
+    const markdown = "Here is some math: $1 + 2$";
+
+    const doc = markdownParser.parse(markdown);
+
+    expect(doc.toJSON()).toEqual({
+      type: "doc",
+      content: [
+        {
+          type: "paragraph",
+          content: [
+            { type: "text", text: "Here is some math: " },
+            { type: "math_inline" }
+          ]
+        }
+      ]
+    });
+  });
+
+  it("parses block math", () => {
+    const markdown = "$$\n1 + 2\n$$";
+
+    const doc = markdownParser.parse(markdown);
+
+    expect(doc.toJSON()).toEqual({
+      type: "doc",
+      content: [
+        { type: "math_display" }
+      ]
+    });
+  });
 });

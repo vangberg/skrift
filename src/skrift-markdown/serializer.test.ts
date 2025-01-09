@@ -27,4 +27,42 @@ describe("Serializer", () => {
 
     expect(markdown).toEqual(`[ABC](https://abc.com)`);
   });
+
+  it("serializes inline math", () => {
+    const doc = Node.fromJSON(schema, {
+      type: "doc",
+      content: [
+        {
+          type: "paragraph",
+          content: [
+            { type: "text", text: "Here is math: " },
+            {
+              type: "math_inline",
+              content: [{ type: "text", text: "1 + 2" }]
+            }
+          ]
+        }
+      ]
+    });
+
+    const markdown = markdownSerializer.serialize(doc);
+
+    expect(markdown).toEqual("Here is math: $1 + 2$");
+  });
+
+  it("serializes block math", () => {
+    const doc = Node.fromJSON(schema, {
+      type: "doc",
+      content: [
+        {
+          type: "math_display",
+          content: [{ type: "text", text: "1 + 2" }]
+        }
+      ]
+    });
+
+    const markdown = markdownSerializer.serialize(doc);
+
+    expect(markdown).toEqual("$$\n1 + 2\n$$");
+  });
 });

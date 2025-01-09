@@ -1,13 +1,19 @@
 import "prosemirror-view/style/prosemirror.css";
+import "@benrbray/prosemirror-math/dist/prosemirror-math.css";
+import "katex/dist/katex.min.css";
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { NoteID, NoteWithLinks } from "../../../../skrift/note";
-import { OpenCardMode } from "../../interfaces/state";
 import { ProseMirror, react, useEditorEffect } from "@nytimes/react-prosemirror";
+
+import { mathPlugin, mathBackspaceCmd, insertMathCmd, mathSerializer } from "@benrbray/prosemirror-math";
+
 import { keymap } from "prosemirror-keymap";
 import { buildKeymap } from "./keymap";
 import { history } from "prosemirror-history";
 import { EditorView } from "prosemirror-view";
+
+import { NoteID, NoteWithLinks } from "../../../../skrift/note";
+import { OpenCardMode } from "../../interfaces/state";
 import { markdownParser, schema } from "../../../../skrift-markdown/parser";
 import { EditorState } from "prosemirror-state";
 import { markdownSerializer } from "../../../../skrift-markdown/serializer";
@@ -45,6 +51,7 @@ export const NoteEditor: React.FC<Props> = ({
   const plugins = useMemo(
     () => [
       history(),
+      mathPlugin,
       keymap(buildKeymap(schema)),
       buildInputRules(schema),
       noteLinkPlugin,
