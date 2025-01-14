@@ -38,7 +38,10 @@ describe("Parser", () => {
           type: "paragraph",
           content: [
             { type: "text", text: "Here is some math: " },
-            { type: "math_inline" }
+            {
+              type: "math_inline",
+              content: [{ type: "text", text: "1 + 2" }]
+            }
           ]
         }
       ]
@@ -53,7 +56,10 @@ describe("Parser", () => {
     expect(doc.toJSON()).toEqual({
       type: "doc",
       content: [
-        { type: "math_display" }
+        {
+          type: "math_display",
+          content: [{ type: "text", text: "1 + 2" }]
+        }
       ]
     });
   });

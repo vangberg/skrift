@@ -12,6 +12,7 @@ import {
   makeInlineMathInputRule,
   REGEX_INLINE_MATH_DOLLARS, REGEX_BLOCK_MATH_DOLLARS
 } from "@benrbray/prosemirror-math";
+import { NodeSelection } from "prosemirror-state";
 
 export const buildInputRules = <S extends Schema>(schema: S) => {
   const hr = new InputRule(/^(---)$/, (state, match, start, end) => {
