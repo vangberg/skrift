@@ -9,7 +9,7 @@ import {
 } from "prosemirror-inputrules";
 
 import {
-  makeBlockMathInputRule, makeInlineMathInputRule,
+  makeInlineMathInputRule,
   REGEX_INLINE_MATH_DOLLARS, REGEX_BLOCK_MATH_DOLLARS
 } from "@benrbray/prosemirror-math";
 
@@ -45,7 +45,24 @@ export const buildInputRules = <S extends Schema>(schema: S) => {
   );
 
   let inlineMathInputRule = makeInlineMathInputRule(REGEX_INLINE_MATH_DOLLARS, schema.nodes.math_inline);
-  let blockMathInputRule = makeBlockMathInputRule(REGEX_BLOCK_MATH_DOLLARS, schema.nodes.math_display);
+
+  // For some reason, this code works, but using makeBlockMathInputRule doesn't.
+  let blockMathInputRule = new InputRule(REGEX_BLOCK_MATH_DOLLARS, (state, match, start, end) => {
+    let $start = state.doc.resolve(start);
+    if (!$start.node(-1).canReplaceWith($start.index(-1), $start.indexAfter(-1), schema.nodes.math_display)) {
+      return null;
+    }
+
+    let tr = state.tr
+      .delete(start, end)
+      .setBlockType(start, start, schema.nodes.math_display);
+
+    return tr.setSelection(NodeSelection.create(
+      tr.doc,
+      tr.mapping.map($start.pos - 1)
+    ));
+  });
+
 
   return inputRules({
     rules: [ellipsis, hr, blockquote, orderedList, bulletList, heading, inlineMathInputRule, blockMathInputRule],

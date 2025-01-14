@@ -18,6 +18,7 @@ nodes.math_display = (state, node) => {
   state.write('$$\n');
   state.renderInline(node);
   state.write('\n$$');
+  state.closeBlock(node);
 };
 const marks = defaultMarkdownSerializer.marks;
 
