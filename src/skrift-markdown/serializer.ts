@@ -5,44 +5,54 @@ import {
   fromPmNode,
   fromPmMark,
 } from "@handlewithcare/remark-prosemirror";
-import type { Node } from "prosemirror-model";
+import type { Node as PmNode } from "prosemirror-model";
 
 import { schema } from "./schema";
+import { PmNodeHandler } from "@handlewithcare/remark-prosemirror/lib/mdast-util-from-prosemirror";
+import { PmMarkHandler } from "@handlewithcare/remark-prosemirror/lib/mdast-util-from-prosemirror";
 
-export function proseMirrorToMarkdown(doc: Node) {
-  // Convert to mdast with the fromProseMirror util.
-  // It takes a schema, a set of node handlers, and a
-  // set of mark handlers, each of which converts a
-  // ProseMirror node or mark to an mdast node.
+type RequiredNodeHandlers = {
+  [K in keyof typeof schema.nodes]: PmNodeHandler;
+};
+
+type RequiredMarkHandlers = {
+  [K in keyof typeof schema.marks]: PmMarkHandler;
+};
+
+export function proseMirrorToMarkdown(doc: PmNode) {
   const mdast = fromProseMirror(doc, {
     schema: schema,
     nodeHandlers: {
-      // Simple nodes can be converted with the fromPmNode
-      // util.
       paragraph: fromPmNode("paragraph"),
       heading: fromPmNode("heading"),
       list_item: fromPmNode("listItem"),
-      // You can set mdast node properties from the
-      // ProseMirror node or its attrs
       ordered_list: fromPmNode("list", () => ({
         ordered: true,
       })),
       bullet_list: fromPmNode("list", () => ({
         ordered: false,
       })),
-    },
+      text: fromPmNode("text"),
+      hard_break: fromPmNode("break"),
+      horizontal_rule: fromPmNode("thematicBreak"),
+      code_block: fromPmNode("code"),
+      image: fromPmNode("image", (node) => ({
+        url: node.attrs.src,
+        title: node.attrs.title,
+        alt: node.attrs.alt
+      })),
+      doc: fromPmNode("root"),
+      blockquote: fromPmNode("blockquote"),
+    } satisfies RequiredNodeHandlers,
     markHandlers: {
-      // Simple marks can be converted with the fromPmMark
-      // util.
       em: fromPmMark("emphasis"),
       strong: fromPmMark("strong"),
-      // Again, mdast node properties can be set from the
-      // ProseMirror mark attrs
       link: fromPmMark("link", (mark) => ({
         url: mark.attrs["href"],
         title: mark.attrs["title"],
       })),
-    },
+      code: fromPmMark("inlineCode"),
+    } satisfies RequiredMarkHandlers,
   });
 
   return unified().use(remarkStringify).stringify(mdast);
