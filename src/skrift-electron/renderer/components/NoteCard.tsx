@@ -50,7 +50,7 @@ export const NoteCard: React.FC<Props> = ({
   const handleCopy = useCallback(() => {
     // For some reason it works when we add data-pm-slice. If interested in
     // debugging, look into clipboard.js in prosemirror-view.
-    Ipc.writeHTMLToClipboard(`<a data-pm-slice="0 0 []" href="${note.id}">#</a>`);
+    Ipc.writeHTMLToClipboard(`<a data-pm-slice="0 0 []" href="${note.id}">${note.title}</a>`);
   }, [note]);
 
   return (
