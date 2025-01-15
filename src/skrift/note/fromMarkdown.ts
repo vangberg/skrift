@@ -1,4 +1,5 @@
 import markdownit from "markdown-it";
+// @ts-ignore
 import { Token } from "markdown-it";
 
 export interface ParsedNote {
@@ -16,10 +17,10 @@ const getLinks = (tokens: Token[]): Set<string> => {
   tokens.forEach((token) => {
     if (token.type !== "inline") return;
 
-    token.children?.forEach((child) => {
+    token.children?.forEach((child: any) => {
       if (child.type !== "link_open") return;
 
-      const href = child.attrs?.find(([key]) => key === "href");
+      const href = child.attrs?.find(([key]: any) => key === "href");
 
       if (!href) return;
 

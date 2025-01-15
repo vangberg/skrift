@@ -1,11 +1,11 @@
 import "prosemirror-view/style/prosemirror.css";
 
 import React, { useCallback } from "react";
-import { useNote } from "../hooks/useNote";
-import { NoteID } from "../../../skrift/note";
-import { OpenCardMode } from "../interfaces/state";
-import { NoteEditor } from "../components/NoteEditor";
-import { Ipc } from "../ipc";
+import { useNote } from "../hooks/useNote.js";
+import { NoteID } from "../../../skrift/note/index.js";
+import { OpenCardMode } from "../interfaces/state/index.js";
+import { NoteEditor } from "../components/NoteEditor/index.js";
+import { Ipc } from "../ipc.js";
 
 interface Props {
   id: NoteID;

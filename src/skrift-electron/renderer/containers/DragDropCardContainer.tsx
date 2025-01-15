@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useContext } from "react";
-import { Card as CardType, StateContext } from "../interfaces/state";
-import { DragDropCard } from "../components/DragDropCard";
+import { Card as CardType, StateContext } from "../interfaces/state/index.js";
+import { DragDropCard } from "../components/DragDropCard.js";
 
 interface Props {
     card: CardType;

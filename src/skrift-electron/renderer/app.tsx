@@ -1,5 +1,5 @@
 import React from "react";
-import { AppContainer } from "./containers/AppContainer";
+import { AppContainer } from "./containers/AppContainer.js";
 import { createRoot } from "react-dom/client";
 import { EventEmitter } from "events";
 

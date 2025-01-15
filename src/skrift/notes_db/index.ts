@@ -1,8 +1,8 @@
 import BetterSqlite3 from "better-sqlite3";
-import { Note, NoteID, NoteLink, NoteWithLinks } from "../note";
+import { Note, NoteID, NoteLink, NoteWithLinks } from "../note/index.js";
 import path from "path";
-import { Fts } from "./fts";
-import { ParsedNote } from "../note/fromMarkdown";
+import { Fts } from "./fts.js";
+import { ParsedNote } from "../note/fromMarkdown.js";
 
 export interface NoteRow {
   id: string;

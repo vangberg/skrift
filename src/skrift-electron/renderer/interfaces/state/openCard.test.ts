@@ -1,5 +1,5 @@
-import { NoteCard, State } from ".";
-import { getState } from "./fixture";
+import { NoteCard, State } from "./index.js";
+import { getState } from "./fixture.js";
 
 describe("State.openCard", () => {
   describe("below", () => {

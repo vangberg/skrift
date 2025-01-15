@@ -1,4 +1,4 @@
-import { Path } from ".";
+import { Path } from "./index.js";
 
 describe("Path.equals", () => {
   it("is true", () => {

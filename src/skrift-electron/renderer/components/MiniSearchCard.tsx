@@ -1,9 +1,9 @@
 import React from "react";
 
-import { MiniCard } from "./MiniCard";
-import { MiniCardToolbar } from "./MiniCardToolbar";
-import { MiniCardBody } from "./MiniCardBody";
-import { SearchCard } from "../interfaces/state";
+import { MiniCard } from "./MiniCard.js";
+import { MiniCardToolbar } from "./MiniCardToolbar.js";
+import { MiniCardBody } from "./MiniCardBody.js";
+import { SearchCard } from "../interfaces/state/index.js";
 
 type Props = {
   card: SearchCard;

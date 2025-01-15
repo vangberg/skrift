@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect } from "react";
 import { ImmerHook } from "use-immer";
-import { SCache } from "../../../skrift/scache";
+import { SCache } from "../../../skrift/scache/index.js";
 
 type Cache = SCache<any>;
 

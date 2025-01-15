@@ -1,4 +1,4 @@
-import { NoteID, NoteWithLinks } from "../../skrift/note";
+import { NoteID, NoteWithLinks } from "../../skrift/note/index.js";
 
 export type IpcAddNoteCommand = {
   type: "command/ADD_NOTE";

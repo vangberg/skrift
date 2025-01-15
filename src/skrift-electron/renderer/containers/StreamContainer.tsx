@@ -1,11 +1,11 @@
 import React, { useCallback, useContext } from "react";
-import { Stream } from "../components/Stream";
+import { Stream } from "../components/Stream.js";
 import {
   Stream as StreamType,
   StateContext,
   OpenCardMode,
-} from "../interfaces/state";
-import { Path, StreamPath } from "../interfaces/path";
+} from "../interfaces/state/index.js";
+import { Path, StreamPath } from "../interfaces/path/index.js";
 
 interface Props {
   path: StreamPath;

@@ -1,10 +1,10 @@
 import React, { useCallback } from "react";
-import { NoteCardContainer } from "../containers/NoteCardContainer";
-import { SearchCardContainer } from "../containers/SearchCardContainer";
-import { StreamPath } from "../interfaces/path";
-import { OpenCardMode, Stream as StreamType } from "../interfaces/state";
-import { mouseEventToMode } from "../mouseEventToMode";
-import { DragDropCardContainer } from "../containers/DragDropCardContainer";
+import { NoteCardContainer } from "../containers/NoteCardContainer.js";
+import { SearchCardContainer } from "../containers/SearchCardContainer.js";
+import { StreamPath } from "../interfaces/path/index.js";
+import { OpenCardMode, Stream as StreamType } from "../interfaces/state/index.js";
+import { mouseEventToMode } from "../mouseEventToMode.js";
+import { DragDropCardContainer } from "../containers/DragDropCardContainer.js";
 
 type Props = {
   path: StreamPath;

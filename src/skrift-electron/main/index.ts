@@ -1,7 +1,7 @@
 import { app, BrowserWindow, Menu } from "electron";
 import { autoUpdater } from "electron-updater";
-import { setupIpc } from "./ipc";
-import { menu } from "./menu";
+import { setupIpc } from "./ipc.js";
+import { menu } from "./menu.js";
 
 let mainWindow: Electron.BrowserWindow;
 

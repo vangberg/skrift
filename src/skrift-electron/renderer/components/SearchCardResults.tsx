@@ -1,7 +1,7 @@
 import React from "react";
-import { NoteLink as NoteLinkType } from "../../../skrift/note";
-import { OpenCardMode } from "../interfaces/state";
-import { NoteLink } from "./NoteLink";
+import { NoteLink as NoteLinkType } from "../../../skrift/note/index.js";
+import { OpenCardMode } from "../interfaces/state/index.js";
+import { NoteLink } from "./NoteLink.js";
 
 type Props = {
   results: NoteLinkType[];

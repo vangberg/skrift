@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect } from "react";
-import { SearchCard } from "../components/SearchCard";
-import { Note } from "../../../skrift/note";
-import { useCache } from "../hooks/useCache";
-import { Ipc } from "../ipc";
-import { Path } from "../interfaces/path";
+import { SearchCard } from "../components/SearchCard.js";
+import { Note } from "../../../skrift/note/index.js";
+import { useCache } from "../hooks/useCache.js";
+import { Ipc } from "../ipc.js";
+import { Path } from "../interfaces/path/index.js";
 import {
   OpenCardMode,
   SearchCard as SearchCardType,
-} from "../interfaces/state";
-import { useCardActions } from "../hooks/useCardActions";
+} from "../interfaces/state/index.js";
+import { useCardActions } from "../hooks/useCardActions.js";
 
 interface Props {
   path: Path;

@@ -1,4 +1,4 @@
-import { State, Card, NoteCard } from ".";
+import { State, Card, NoteCard } from "./index.js";
 
 export const cardA = (): NoteCard => ({
   meta: { key: 1, collapsed: false },

@@ -1,4 +1,4 @@
-import { SCache } from "../../../src/skrift/scache";
+import { SCache } from "./index.js";
 
 describe("SCache.release", () => {
   it("decreases claims", () => {

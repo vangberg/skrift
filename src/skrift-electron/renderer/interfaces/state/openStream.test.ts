@@ -1,5 +1,5 @@
-import { State, NoteCard } from ".";
-import { getState } from "./fixture";
+import { State, NoteCard } from "./index.js";
+import { getState } from "./fixture.js";
 
 describe("State.openStream", () => {
   it("opens a new stream", () => {

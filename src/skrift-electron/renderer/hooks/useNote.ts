@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { NoteID, Note, NoteWithLinks } from "../../../skrift/note";
-import { Ipc } from "../ipc";
-import { useCache } from "./useCache";
+import { NoteID, Note, NoteWithLinks } from "../../../skrift/note/index.js";
+import { Ipc } from "../ipc.js";
+import { useCache } from "./useCache.js";
 
 export const useNote = (id: NoteID): NoteWithLinks | null => {
   const [note, setNote] = useCache<NoteWithLinks | null>(`note/${id}`, null);

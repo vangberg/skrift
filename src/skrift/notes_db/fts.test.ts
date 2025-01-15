@@ -1,4 +1,4 @@
-import { Fts, Parser, Quote, String, Bareword } from "./fts";
+import { Fts, Parser, Quote, String, Bareword } from "./fts.js";
 
 describe("Fts", () => {
   describe("Query", () => {

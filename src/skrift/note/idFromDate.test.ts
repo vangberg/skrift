@@ -1,4 +1,4 @@
-import { Note } from ".";
+import { Note } from "./index.js";
 
 describe("Note.idFromDate", () => {
   it("generates suitable string", () => {

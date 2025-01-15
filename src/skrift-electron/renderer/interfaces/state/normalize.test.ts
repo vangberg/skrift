@@ -1,5 +1,5 @@
-import { State, Card, Stream } from ".";
-import { cardA, cardB, cardC, cardD, getState } from "./fixture";
+import { State, Card, Stream } from "./index.js";
+import { cardA, cardB, cardC, cardD, getState } from "./fixture.js";
 
 describe("State.normalize", () => {
   it("ensures that at least one stream exists", () => {

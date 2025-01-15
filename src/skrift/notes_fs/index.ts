@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { NoteID, Note } from "../note";
+import { NoteID, Note } from "../note/index.js";
 
 export const NotesFS = {
   path(dirPath: string, id: NoteID): string {

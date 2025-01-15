@@ -1,13 +1,13 @@
 import { useCallback, useContext } from "react";
-import { NoteID } from "../../../skrift/note";
-import { Path } from "../interfaces/path";
+import { NoteID } from "../../../skrift/note/index.js";
+import { Path } from "../interfaces/path/index.js";
 import {
   Card,
   CardMeta,
   OpenCardMode,
   StateContext,
-} from "../interfaces/state";
-import { Ipc } from "../ipc";
+} from "../interfaces/state/index.js";
+import { Ipc } from "../ipc.js";
 
 interface CardActions<T extends Card> {
   onDeleteNote: (id: NoteID) => void;

@@ -3,9 +3,11 @@
     "strict": true,
     "noImplicitAny": true,
     "jsx": "react",
-    "esModuleInterop": true,
     "downlevelIteration": true,
     "allowJs": true,
-    "outDir": "./build"
+    "outDir": "./build",
+    "module": "node16",
+    "moduleResolution": "node16",
+    "esModuleInterop": true
   }
 }

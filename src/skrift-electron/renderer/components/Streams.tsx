@@ -1,7 +1,7 @@
 import React from "react";
-import { StreamContainer } from "../containers/StreamContainer";
-import { Stream } from "../interfaces/state";
-import { DropStreamContainer } from "../containers/DropStreamContainer";
+import { StreamContainer } from "../containers/StreamContainer.js";
+import { Stream } from "../interfaces/state/index.js";
+import { DropStreamContainer } from "../containers/DropStreamContainer.js";
 
 type Props = {
   streams: Stream[];

@@ -2,7 +2,11 @@
   "name": "skrift",
   "version": "0.24.0",
   "description": "Networked notes",
-  "main": "build/main.js",
+  "exports": "./build/main.js",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build:main": "webpack --config ./webpack.main.config.js",
     "build:renderer": "webpack --config ./webpack.renderer.config.js",

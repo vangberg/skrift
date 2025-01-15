@@ -1,20 +1,20 @@
 import "prosemirror-view/style/prosemirror.css";
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { NoteID, NoteWithLinks } from "../../../../skrift/note";
-import { OpenCardMode } from "../../interfaces/state";
+import { NoteID, NoteWithLinks } from "../../../../skrift/note/index.js";
+import { OpenCardMode } from "../../interfaces/state/index.js";
 import { ProseMirror, react, useEditorEffect } from "@nytimes/react-prosemirror";
 import { keymap } from "prosemirror-keymap";
-import { buildKeymap } from "./keymap";
+import { buildKeymap } from "./keymap.js";
 import { history } from "prosemirror-history";
 import { EditorView } from "prosemirror-view";
-import { markdownParser } from "../../../../skrift-markdown/parser";
-import { schema } from "../../../../skrift-markdown/schema";
+import { markdownParser } from "../../../../skrift-markdown/parser.js";
+import { schema } from "../../../../skrift-markdown/schema.js";
 import { EditorState } from "prosemirror-state";
-import { markdownSerializer } from "../../../../skrift-markdown/serializer";
-import { mouseEventToMode } from "../../mouseEventToMode";
-import { buildInputRules } from "./inputrules";
-import { AutoFocus } from "./AutoFocus";
+import { markdownSerializer } from "../../../../skrift-markdown/serializer.js";
+import { mouseEventToMode } from "../../mouseEventToMode.js";
+import { buildInputRules } from "./inputrules.js";
+import { AutoFocus } from "./AutoFocus.js";
 
 interface Props {
   note: NoteWithLinks;
