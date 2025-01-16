@@ -8,10 +8,10 @@ import { keymap } from "prosemirror-keymap";
 import { buildKeymap } from "./keymap.js";
 import { history } from "prosemirror-history";
 import { EditorView } from "prosemirror-view";
-import { markdownParser } from "../../../../skrift-markdown/parser.js";
+import { markdownToProseMirror } from "../../../../skrift-markdown/parser.js";
 import { schema } from "../../../../skrift-markdown/schema.js";
 import { EditorState } from "prosemirror-state";
-import { markdownSerializer } from "../../../../skrift-markdown/serializer.js";
+import { proseMirrorToMarkdown } from "../../../../skrift-markdown/serializer.js";
 import { mouseEventToMode } from "../../mouseEventToMode.js";
 import { buildInputRules } from "./inputrules.js";
 import { AutoFocus } from "./AutoFocus.js";
@@ -52,7 +52,7 @@ export const NoteEditor: React.FC<Props> = ({
 
   const [state, setState] = useState(() =>
     EditorState.create({
-      doc: markdownParser.parse(note.markdown),
+      doc: markdownToProseMirror(note.markdown),
       schema,
       plugins,
     }),
@@ -61,7 +61,7 @@ export const NoteEditor: React.FC<Props> = ({
   const handleChange = useCallback(
     (state: EditorState) => {
       setState(state)
-      onUpdate(markdownSerializer.serialize(state.doc));
+      onUpdate(proseMirrorToMarkdown(state.doc));
     },
     [onUpdate]
   );
