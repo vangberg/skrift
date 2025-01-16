@@ -1,6 +1,6 @@
 {
   "name": "skrift",
-  "version": "0.25.0",
+  "version": "0.26.0",
   "description": "Networked notes",
   "exports": "./build/main.js",
   "main": "build/main.js",
@@ -32,7 +32,6 @@
     },
     "mac": {
       "category": "public.app-category.productivity",
-      "hardenedRuntime": true,
       "entitlements": "entitlements.mac.plist"
     },
     "linux": {
