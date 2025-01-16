@@ -68,7 +68,6 @@ export const NoteCard: React.FC<Props> = ({
 
         <CardBody visible={!collapsed}>
           <NoteEditorContainer id={note.id} focus={focus} onOpen={onOpen} />
-          <NoteCardBacklinks note={note} onOpen={onOpen} />
         </CardBody>
       </>
     </Card>

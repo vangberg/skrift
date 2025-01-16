@@ -110,7 +110,7 @@ export const NoteEditor: React.FC<Props> = ({
   }
 
   return (
-    <div className="p-2 markdown skrift-note-editor flex flex-1 overflow-hidden">
+    <div className="markdown skrift-note-editor flex flex-1 overflow-hidden">
       <ProseMirror
         mount={mount}
         state={state}

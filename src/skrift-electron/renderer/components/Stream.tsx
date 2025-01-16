@@ -55,7 +55,7 @@ export const Stream: React.FC<Props> = ({
 
   return (
     <div
-      className="py-2 flex-1 flex flex-row border border-red-500 h-full overflow-hidden"
+      className="py-2 flex-1 flex flex-row h-full overflow-hidden"
     >
       <div className="flex items-center">
         <span
