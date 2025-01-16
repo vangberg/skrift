@@ -3,6 +3,7 @@
   "version": "0.25.0",
   "description": "Networked notes",
   "exports": "./build/main.js",
+  "main": "build/main.js",
   "type": "module",
   "engines": {
     "node": ">=20.18"

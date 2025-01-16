@@ -122,9 +122,6 @@ export const NoteEditor: React.FC<Props> = ({
         <AutoFocus />
         <div ref={setMount} />
       </ProseMirror>
-      <code>
-        {JSON.stringify(state.doc.toJSON(), null, 2)}
-      </code>
     </div>
   );
 };
