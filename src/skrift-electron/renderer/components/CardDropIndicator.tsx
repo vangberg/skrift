@@ -6,9 +6,9 @@ export const CardDropIndicator: React.FC<{ edge: Edge | null }> = ({ edge }) => 
     if (!edge) return null;
 
     const className = clsx(
-        "absolute left-0 right-0 h-0.5 bg-blue-500",
-        edge === "top" && "top-0",
-        edge === "bottom" && "bottom-0",
+        "absolute top-0 bottom-0 w-0.5 bg-blue-500",
+        edge === "left" && "left-0",
+        edge === "right" && "right-0",
     );
 
     return <div className={className} />;

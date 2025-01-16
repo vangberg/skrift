@@ -10,11 +10,11 @@ type Props = {
 export const Streams: React.FC<Props> = ({ streams }) => {
   return (
     <div className="h-screen flex flex-col min-h-full text-sm px-1 bg-gray-200">
-      {/* <DropStreamContainer mode="prepend" /> */}
+      <DropStreamContainer mode="prepend" />
       {streams.map((stream, index) => (
         <StreamContainer key={stream.key} path={[index]} stream={stream} />
       ))}
-      {/* <DropStreamContainer mode="append" /> */}
+      <DropStreamContainer mode="append" />
     </div>
   );
 };
