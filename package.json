@@ -5,7 +5,7 @@
   "exports": "./build/main.js",
   "type": "module",
   "engines": {
-    "node": ">=18"
+    "node": ">=20.18"
   },
   "scripts": {
     "build:main": "webpack --config ./webpack.main.config.js",
@@ -17,8 +17,8 @@
     "dist": "electron-builder -mwl",
     "publish": "electron-builder --publish always",
     "eslint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
-    "test": "ELECTRON_RUN_AS_NODE=1 electron ./node_modules/.bin/jest",
-    "test-watch": "ELECTRON_RUN_AS_NODE=1 electron ./node_modules/.bin/jest --watch",
+    "test": "ELECTRON_RUN_AS_NODE=1 electron --experimental-vm-modules ./node_modules/.bin/jest",
+    "test-watch": "ELECTRON_RUN_AS_NODE=1 electron --experimental-vm-modules ./node_modules/.bin/jest --watch",
     "postinstall": "electron-builder install-app-deps",
     "notarize": "./notarize.sh"
   },

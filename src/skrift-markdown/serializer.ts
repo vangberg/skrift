@@ -7,9 +7,9 @@ import {
 } from "@handlewithcare/remark-prosemirror";
 import type { Node as PmNode } from "prosemirror-model";
 
-import { schema } from "./schema";
-import { PmNodeHandler } from "@handlewithcare/remark-prosemirror/lib/mdast-util-from-prosemirror";
-import { PmMarkHandler } from "@handlewithcare/remark-prosemirror/lib/mdast-util-from-prosemirror";
+import { schema } from "./schema.js";
+import { PmNodeHandler } from "@handlewithcare/remark-prosemirror/lib/mdast-util-from-prosemirror.js";
+import { PmMarkHandler } from "@handlewithcare/remark-prosemirror/lib/mdast-util-from-prosemirror.js";
 
 type RequiredNodeHandlers = {
   [K in keyof typeof schema.nodes]: PmNodeHandler;

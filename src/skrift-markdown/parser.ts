@@ -8,10 +8,10 @@ import {
 } from "@handlewithcare/remark-prosemirror";
 import type { Node } from "prosemirror-model";
 
-import { schema } from "./schema";
+import { schema } from "./schema.js";
 
 import { type Nodes as MdastNodes } from "mdast";
-import { MdastNodeHandler } from "@handlewithcare/remark-prosemirror/lib/mdast-util-to-prosemirror";
+import { MdastNodeHandler } from "@handlewithcare/remark-prosemirror/lib/mdast-util-to-prosemirror.js";
 
 type RequiredMdastHandlers = {
   [Type in Exclude<MdastNodes["type"], "root">]: MdastNodeHandler<Type>;

@@ -1,5 +1,5 @@
-import { schema } from "./schema";
-import { proseMirrorToMarkdown } from "./serializer";
+import { schema } from "./schema.js";
+import { proseMirrorToMarkdown } from "./serializer.js";
 
 describe("proseMirrorToMarkdown", () => {
     const createDoc = (content: any) => {

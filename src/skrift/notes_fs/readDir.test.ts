@@ -1,8 +1,7 @@
-import path from "path";
 import { NotesFS } from "./index.js";
 import { Note } from "../note/index.js";
 
-const PATH = path.join(__dirname, "fixtures");
+const PATH = new URL("fixtures", import.meta.url).pathname
 
 describe("NotesFS.readDir", () => {
   it("reads notes one at a time", async () => {
