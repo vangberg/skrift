@@ -55,22 +55,9 @@ export const Stream: React.FC<Props> = ({
 
   return (
     <div
-      className="flex-auto max-w-2xl py-2 flex flex-col overflow-y-auto"
-      style={{ flexBasis: "100%" }}
+      className="py-2 flex flex-row border border-red-500"
     >
-      <div className="flex justify-center">
-        <span
-          onClick={onMinimizeAll}
-          className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
-        >
-          Minimize
-        </span>
-        <span
-          onClick={onMaximizeAll}
-          className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
-        >
-          Maximize
-        </span>
+      <div className="flex items-center">
         <span
           onClick={handleOpenSearch}
           className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
