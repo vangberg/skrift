@@ -1,5 +1,6 @@
 import { unified } from "unified";
 import remarkParse from "remark-parse";
+import remarkMath from "remark-math";
 import {
   remarkProseMirror,
   toPmNode,
@@ -7,6 +8,7 @@ import {
   type RemarkProseMirrorOptions,
 } from "@handlewithcare/remark-prosemirror";
 import type { Node } from "prosemirror-model";
+import type { Math, InlineMath } from "mdast-util-math";
 
 import { schema } from "./schema.js";
 
@@ -14,6 +16,7 @@ import { schema } from "./schema.js";
 export function markdownToProseMirror(markdown: string): Node {
   const doc = unified()
     .use(remarkParse)
+    .use(remarkMath)
     .use(remarkProseMirror, {
       schema: schema,
       handlers: {
@@ -69,6 +72,18 @@ export function markdownToProseMirror(markdown: string): Node {
           title: node.title,
           alt: node.alt
         })),
+
+        // Math nodes
+        math: (node: Math) => {
+          return schema.nodes.math_display.createAndFill({}, [
+            schema.text(node.value)
+          ]);
+        },
+        inlineMath: (node: InlineMath) => {
+          return schema.nodes.math_inline.createAndFill({}, [
+            schema.text(node.value)
+          ]);
+        },
 
         // Definition nodes (reference-style links)
         definition: () => [], // Definitions are preprocessed and don't need nodes

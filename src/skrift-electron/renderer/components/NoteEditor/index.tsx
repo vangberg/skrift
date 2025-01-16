@@ -1,10 +1,14 @@
 import "prosemirror-view/style/prosemirror.css";
+import "@benrbray/prosemirror-math/dist/prosemirror-math.css";
+import "katex/dist/katex.min.css";
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { NoteID, NoteWithLinks } from "../../../../skrift/note/index.js";
 import { OpenCardMode } from "../../interfaces/state/index.js";
 import { ProseMirror, react, useEditorEffect } from "@nytimes/react-prosemirror";
 import { keymap } from "prosemirror-keymap";
+import { mathPlugin } from "@benrbray/prosemirror-math";
+
 import { buildKeymap } from "./keymap.js";
 import { history } from "prosemirror-history";
 import { EditorView } from "prosemirror-view";
@@ -44,6 +48,7 @@ export const NoteEditor: React.FC<Props> = ({
   const plugins = useMemo(
     () => [
       history(),
+      mathPlugin,
       keymap(buildKeymap(schema)),
       buildInputRules(schema),
     ],
@@ -117,6 +122,9 @@ export const NoteEditor: React.FC<Props> = ({
         <AutoFocus />
         <div ref={setMount} />
       </ProseMirror>
+      <code>
+        {JSON.stringify(state.doc.toJSON(), null, 2)}
+      </code>
     </div>
   );
 };

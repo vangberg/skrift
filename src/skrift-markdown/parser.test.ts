@@ -139,4 +139,23 @@ describe("markdownToProseMirror", () => {
         expect(codeBlock?.attrs.params).toBe("javascript");
         expect(codeBlock?.textContent).toBe("const x = 1;");
     });
+
+    test("parses inline math", () => {
+        const markdown = "This is $x^2$ inline math";
+        const doc = markdownToProseMirror(markdown);
+        const paragraph = doc.firstChild;
+        const [text1, math, text2] = paragraph?.content.content || [];
+
+        expect(math.type.name).toBe("math_inline");
+        expect(math.textContent).toBe("x^2");
+    });
+
+    test("parses display math", () => {
+        const markdown = "$$\nx^2 + y^2 = z^2\n$$";
+        const doc = markdownToProseMirror(markdown);
+        const mathBlock = doc.firstChild;
+
+        expect(mathBlock?.type.name).toBe("math_display");
+        expect(mathBlock?.textContent).toBe("x^2 + y^2 = z^2");
+    });
 }); 
