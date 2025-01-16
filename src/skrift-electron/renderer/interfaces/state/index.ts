@@ -187,6 +187,36 @@ export const State = {
     State.normalize(state);
   },
 
+  dropOnNewStream(state: State, sourceKey: number, mode: "prepend" | "append") {
+    const sourcePath = Path.findByCardKey(state, sourceKey);
+
+    if (!sourcePath) return;
+
+    const fromStream = state.streams[Path.stream(sourcePath)];
+    const [removed] = fromStream.cards.splice(Path.last(sourcePath), 1);
+
+    const newStream: Stream = {
+      type: "stream",
+      key: key++,
+      cards: [removed],
+    };
+
+    switch (mode) {
+      case "prepend":
+        state.streams.unshift(newStream);
+        break;
+      case "append":
+        state.streams.push(newStream);
+        break;
+      default:
+        throw new Error(`Invalid mode: ${mode}`);
+    }
+
+    State.normalize(state);
+
+    return;
+  },
+
   close(state: State, options: CloseOptions) {
     if (options.path) {
       const { path } = options;
