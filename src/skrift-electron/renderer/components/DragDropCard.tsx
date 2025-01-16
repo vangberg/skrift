@@ -1,13 +1,13 @@
 import React, { PropsWithChildren, useEffect, useRef, useState } from "react";
 import { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
-import { CardDropIndicator } from "./CardDropIndicator";
+import { CardDropIndicator } from "./CardDropIndicator.js";
 import {
     draggable,
     dropTargetForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { attachClosestEdge, extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 import invariant from "tiny-invariant";
-import { MoveMode } from "../interfaces/state";
+import { MoveMode } from "../interfaces/state/index.js";
 
 interface Props {
     cardKey: number;

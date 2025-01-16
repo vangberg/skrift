@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { OpenCardMode } from "../interfaces/state";
+import { OpenCardMode } from "../interfaces/state/index.js";
 
 type Props = {
   query: string;

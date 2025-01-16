@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useContext } from "react";
-import { StateContext } from "../interfaces/state";
-import { DropStream } from "../components/DropStream";
+import { StateContext } from "../interfaces/state/index.js";
+import { DropStream } from "../components/DropStream.js";
 
 type Props = {
     mode: "prepend" | "append";

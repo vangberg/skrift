@@ -1,4 +1,4 @@
-import { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/dist/types/closest-edge";
+import { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 import clsx from "clsx";
 import React from "react";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Note } from "../../../skrift/note";
+import { Note } from "../../../skrift/note/index.js";
 
 interface Props {
   note: Note;

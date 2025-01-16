@@ -1,6 +1,6 @@
-import { IpcReply, IpcCommand } from "../shared/types";
 import { ipcRenderer, IpcRendererEvent } from "electron";
-import { Note } from "../../skrift/note";
+import { IpcReply, IpcCommand } from "../shared/types.js";
+import { Note } from "../../skrift/note/index.js";
 
 export const Ipc = {
   on(callback: (reply: IpcReply) => void) {

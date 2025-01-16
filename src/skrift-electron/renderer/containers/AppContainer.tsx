@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Splash } from "../components/Splash";
 import { useImmer } from "use-immer";
-import { CacheContext } from "../hooks/useCache";
-import { Ipc } from "../ipc";
-import { createStateActions, State, StateContext } from "../interfaces/state";
-import { StreamsContainer } from "./StreamsContainer";
+import { Splash } from "../components/Splash.js";
+import { CacheContext } from "../hooks/useCache.js";
+import { Ipc } from "../ipc.js";
+import { createStateActions, State, StateContext } from "../interfaces/state/index.js";
+import { StreamsContainer } from "./StreamsContainer.js";
 
 export const AppContainer: React.FC = () => {
   const cacheContext = useImmer({});

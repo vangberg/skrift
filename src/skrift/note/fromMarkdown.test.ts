@@ -1,4 +1,4 @@
-import { Note } from ".";
+import { Note } from "./index.js";
 
 const fullNote = `# A title
 

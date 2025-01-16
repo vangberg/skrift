@@ -1,5 +1,5 @@
-import { State } from ".";
-import { cardA, cardB, getState } from "./fixture";
+import { State } from "./index.js";
+import { cardA, cardB, getState } from "./fixture.js";
 
 describe("State.dropOnNewStream", () => {
     it("prepends a new stream", () => {

@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
-import { MiniNoteCardContainer } from "../containers/MiniNoteCardContainer";
-import { Stream } from "../interfaces/state";
-import { MiniSearchCard } from "./MiniSearchCard";
+import { MiniNoteCardContainer } from "../containers/MiniNoteCardContainer.js";
+import { Stream } from "../interfaces/state/index.js";
+import { MiniSearchCard } from "./MiniSearchCard.js";
 
 type Props = {
   stream: Stream;

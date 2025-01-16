@@ -1,4 +1,4 @@
-import { SCache } from ".";
+import { SCache } from "./index.js";
 
 describe("SCache.claim", () => {
   it("sets initial claim", () => {

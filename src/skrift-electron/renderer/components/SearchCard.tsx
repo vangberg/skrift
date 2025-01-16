@@ -1,12 +1,12 @@
 import React from "react";
-import { SearchCardInput } from "./SearchCardInput";
-import { Note } from "../../../skrift/note";
-import { CardToolbar } from "./CardToolbar";
-import { Card } from "./Card";
-import { CardBody } from "./CardBody";
-import { CardToolbarItem } from "./CardToolbarItem";
-import { SearchCardResults } from "./SearchCardResults";
-import { OpenCardMode } from "../interfaces/state";
+import { SearchCardInput } from "./SearchCardInput.js";
+import { Note } from "../../../skrift/note/index.js";
+import { CardToolbar } from "./CardToolbar.js";
+import { Card } from "./Card.js";
+import { CardBody } from "./CardBody.js";
+import { CardToolbarItem } from "./CardToolbarItem.js";
+import { SearchCardResults } from "./SearchCardResults.js";
+import { OpenCardMode } from "../interfaces/state/index.js";
 
 type Props = {
   query: string;

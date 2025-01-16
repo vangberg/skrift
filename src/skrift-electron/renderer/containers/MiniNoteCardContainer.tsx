@@ -1,7 +1,7 @@
 import React from "react";
-import { NoteID } from "../../../skrift/note";
-import { MiniNoteCard } from "../components/MiniNoteCard";
-import { useNote } from "../hooks/useNote";
+import { NoteID } from "../../../skrift/note/index.js";
+import { MiniNoteCard } from "../components/MiniNoteCard.js";
+import { useNote } from "../hooks/useNote.js";
 
 interface Props {
   id: NoteID;

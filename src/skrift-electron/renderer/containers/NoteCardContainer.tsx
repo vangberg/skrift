@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from "react";
-import { NoteCard } from "../components/NoteCard";
-import { useNote } from "../hooks/useNote";
-import { Path } from "../interfaces/path";
-import { NoteCard as NoteCardType } from "../interfaces/state";
-import { useCardActions } from "../hooks/useCardActions";
+import { NoteCard } from "../components/NoteCard.js";
+import { useNote } from "../hooks/useNote.js";
+import { Path } from "../interfaces/path/index.js";
+import { NoteCard as NoteCardType } from "../interfaces/state/index.js";
+import { useCardActions } from "../hooks/useCardActions.js";
 
 interface Props {
   card: NoteCardType;

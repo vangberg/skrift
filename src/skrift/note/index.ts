@@ -1,4 +1,4 @@
-import { fromMarkdown } from "./fromMarkdown";
+import { fromMarkdown } from "./fromMarkdown.js";
 
 export type NoteID = string;
 

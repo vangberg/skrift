@@ -1,7 +1,7 @@
 import React from "react";
 import { Updater } from "use-immer";
-import { NoteID } from "../../../../skrift/note";
-import { Path } from "../path";
+import { NoteID } from "../../../../skrift/note/index.js";
+import { Path } from "../path/index.js";
 
 export interface State {
   streams: Stream[];

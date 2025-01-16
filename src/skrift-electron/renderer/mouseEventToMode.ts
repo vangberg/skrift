@@ -1,4 +1,4 @@
-import { OpenCardMode } from "./interfaces/state";
+import { OpenCardMode } from "./interfaces/state/index.js";
 
 export const mouseEventToMode = (event: MouseEvent): OpenCardMode => {
   const { ctrlKey, metaKey, shiftKey } = event;

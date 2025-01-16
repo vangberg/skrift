@@ -1,5 +1,5 @@
-import path from "path";
-import { NotesFS } from ".";
+import path from "node:path";
+import { NotesFS } from "./index.js";
 
 const PATH = path.join(__dirname, "fixtures");
 

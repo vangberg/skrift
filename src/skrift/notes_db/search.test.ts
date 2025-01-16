@@ -1,5 +1,5 @@
 import BetterSqlite3 from "better-sqlite3";
-import { NotesDB } from ".";
+import { NotesDB } from "./index.js";
 
 describe("NotesDB.search()", () => {
   let db: BetterSqlite3.Database;

@@ -1,6 +1,11 @@
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-module.exports = [
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default [
   {
     mode: "development",
     entry: {
@@ -11,6 +16,9 @@ module.exports = [
     devtool: "source-map",
     resolve: {
       extensions: [".tsx", ".ts", ".js"],
+      extensionAlias: {
+        ".js": [".ts", ".tsx", ".js"]
+      }
     },
     module: {
       rules: [

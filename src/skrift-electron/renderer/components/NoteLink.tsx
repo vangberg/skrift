@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
-import { NoteLink as NoteLinkType } from "../../../skrift/note";
-import { OpenCardMode } from "../interfaces/state";
-import { mouseEventToMode } from "../mouseEventToMode";
+import { NoteLink as NoteLinkType } from "../../../skrift/note/index.js";
+import { OpenCardMode } from "../interfaces/state/index.js";
+import { mouseEventToMode } from "../mouseEventToMode.js";
 
 type Props = {
   link: NoteLinkType;

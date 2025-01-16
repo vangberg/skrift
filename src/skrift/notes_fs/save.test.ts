@@ -1,5 +1,5 @@
 import path from "path";
-import { NotesFS } from ".";
+import { NotesFS } from "./index.js";
 import fs from "fs";
 
 describe("NotesFS.save", () => {

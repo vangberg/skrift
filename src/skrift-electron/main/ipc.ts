@@ -6,13 +6,13 @@ import {
   IpcAddNoteCommand,
   IpcDeleteNoteCommand,
   IpcSetNoteCommand,
-} from "../shared/types";
+} from "../shared/types.js";
 import BetterSqlite3 from "better-sqlite3";
 import path from "path";
-import { TSet } from "../../skrift/tset";
-import { Note, NoteLink, NoteWithLinks } from "../../skrift/note";
-import { NotesDB } from "../../skrift/notes_db";
-import { NotesFS } from "../../skrift/notes_fs";
+import { TSet } from "../../skrift/tset.js";
+import { Note, NoteLink, NoteWithLinks } from "../../skrift/note/index.js";
+import { NotesDB } from "../../skrift/notes_db/index.js";
+import { NotesFS } from "../../skrift/notes_fs/index.js";
 
 const dir = app.isPackaged ? "Skrift" : "Skrift.dev";
 const _path = path.join(app.getPath("documents"), dir);

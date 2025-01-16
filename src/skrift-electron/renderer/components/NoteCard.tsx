@@ -1,16 +1,16 @@
 import React, { useCallback, useState } from "react";
 
-import { Ipc } from "../ipc";
-import { NoteCardBacklinks } from "./NoteCardBacklinks";
-import { NoteWithLinks } from "../../../skrift/note";
-import { NoteEditorContainer } from "../containers/NoteEditorContainer";
-import { Card } from "./Card";
-import { CardToolbar } from "./CardToolbar";
-import { CardBody } from "./CardBody";
-import { CardToolbarItem } from "./CardToolbarItem";
-import { NoteCard as NoteCardType, OpenCardMode } from "../interfaces/state";
-import { NoteCardTitle } from "./NoteCardTitle";
-import { CardTitle } from "./CardTitle";
+import { Ipc } from "../ipc.js";
+import { NoteCardBacklinks } from "./NoteCardBacklinks.js";
+import { NoteWithLinks } from "../../../skrift/note/index.js";
+import { NoteEditorContainer } from "../containers/NoteEditorContainer.js";
+import { Card } from "./Card.js";
+import { CardToolbar } from "./CardToolbar.js";
+import { CardBody } from "./CardBody.js";
+import { CardToolbarItem } from "./CardToolbarItem.js";
+import { NoteCard as NoteCardType, OpenCardMode } from "../interfaces/state/index.js";
+import { NoteCardTitle } from "./NoteCardTitle.js";
+import { CardTitle } from "./CardTitle.js";
 
 type Props = {
   card: NoteCardType;
