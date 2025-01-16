@@ -8,23 +8,15 @@ import {
 import type { Node as PmNode } from "prosemirror-model";
 
 import { schema } from "./schema.js";
-import { PmNodeHandler } from "@handlewithcare/remark-prosemirror/lib/mdast-util-from-prosemirror.js";
-import { PmMarkHandler } from "@handlewithcare/remark-prosemirror/lib/mdast-util-from-prosemirror.js";
-
-type RequiredNodeHandlers = {
-  [K in keyof typeof schema.nodes]: PmNodeHandler;
-};
-
-type RequiredMarkHandlers = {
-  [K in keyof typeof schema.marks]: PmMarkHandler;
-};
 
 export function proseMirrorToMarkdown(doc: PmNode) {
   const mdast = fromProseMirror(doc, {
     schema: schema,
     nodeHandlers: {
       paragraph: fromPmNode("paragraph"),
-      heading: fromPmNode("heading"),
+      heading: fromPmNode("heading", (node) => ({
+        depth: node.attrs.level,
+      })),
       list_item: fromPmNode("listItem"),
       ordered_list: fromPmNode("list", () => ({
         ordered: true,
@@ -32,18 +24,18 @@ export function proseMirrorToMarkdown(doc: PmNode) {
       bullet_list: fromPmNode("list", () => ({
         ordered: false,
       })),
-      text: fromPmNode("text"),
       hard_break: fromPmNode("break"),
       horizontal_rule: fromPmNode("thematicBreak"),
-      code_block: fromPmNode("code"),
+      code_block: fromPmNode("code", (node) => ({
+        value: node.textContent,
+      })),
       image: fromPmNode("image", (node) => ({
         url: node.attrs.src,
         title: node.attrs.title,
         alt: node.attrs.alt
       })),
-      doc: fromPmNode("root"),
       blockquote: fromPmNode("blockquote"),
-    } satisfies RequiredNodeHandlers,
+    },
     markHandlers: {
       em: fromPmMark("emphasis"),
       strong: fromPmMark("strong"),
@@ -51,8 +43,8 @@ export function proseMirrorToMarkdown(doc: PmNode) {
         url: mark.attrs["href"],
         title: mark.attrs["title"],
       })),
-      code: fromPmMark("inlineCode"),
-    } satisfies RequiredMarkHandlers,
+      // code: fromPmMark("inlineCode")
+    }
   });
 
   return unified().use(remarkStringify).stringify(mdast);
