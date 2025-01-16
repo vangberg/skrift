@@ -86,7 +86,7 @@ export const DragDropCard: React.FC<PropsWithChildren<Props>> = ({
     }, [cardKey]);
 
     return (
-        <div ref={ref} className="flex flex-1 max-w-[32rem] relative">
+        <div ref={ref} className="flex flex-1 max-w-[32rem] relative h-full overflow-hidden">
             {children}
             <CardDropIndicator edge={closestEdge} />
         </div>
