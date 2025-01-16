@@ -5,6 +5,7 @@ import { StreamPath } from "../interfaces/path/index.js";
 import { OpenCardMode, Stream as StreamType } from "../interfaces/state/index.js";
 import { mouseEventToMode } from "../mouseEventToMode.js";
 import { DragDropCardContainer } from "../containers/DragDropCardContainer.js";
+import { Icon } from "./Icon.js";
 
 type Props = {
   path: StreamPath;
@@ -55,27 +56,14 @@ export const Stream: React.FC<Props> = ({
 
   return (
     <div
-      className="flex-auto max-w-2xl py-2 flex flex-col overflow-y-auto"
-      style={{ flexBasis: "100%" }}
+      className="p-2 flex-1 flex flex-row h-full overflow-hidden"
     >
-      <div className="flex justify-center">
-        <span
-          onClick={onMinimizeAll}
-          className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
-        >
-          Minimize
-        </span>
-        <span
-          onClick={onMaximizeAll}
-          className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
-        >
-          Maximize
-        </span>
+      <div className="flex items-center">
         <span
           onClick={handleOpenSearch}
           className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
         >
-          Search
+          <Icon name="search" className="w-4 h-4" />
         </span>
       </div>
 

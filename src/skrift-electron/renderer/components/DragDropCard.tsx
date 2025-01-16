@@ -16,12 +16,12 @@ interface Props {
 
 function getMoveMode(closestEdge: Edge): MoveMode {
     switch (closestEdge) {
-        case "top":
-            return "above";
-        case "bottom":
-            return "below";
+        case "left":
+            return "before";
+        case "right":
+            return "after";
         default:
-            throw new Error("Invalid move mode");
+            throw new Error(`Invalid move mode ${closestEdge}`);
     }
 }
 
@@ -47,7 +47,7 @@ export const DragDropCard: React.FC<PropsWithChildren<Props>> = ({
                 return attachClosestEdge(data, {
                     input,
                     element,
-                    allowedEdges: ["top", "bottom"],
+                    allowedEdges: ["left", "right"],
                 })
             },
             onDragEnter: ({ self, source }) => {
@@ -86,7 +86,7 @@ export const DragDropCard: React.FC<PropsWithChildren<Props>> = ({
     }, [cardKey]);
 
     return (
-        <div ref={ref} className="relative">
+        <div ref={ref} className="flex flex-1 max-w-[32rem] relative h-full overflow-hidden">
             {children}
             <CardDropIndicator edge={closestEdge} />
         </div>

@@ -58,7 +58,7 @@ export type OpenCardMode = "below" | "push" | "replace";
 
 type OpenCard = Omit<NoteCard, "meta"> | Omit<SearchCard, "meta">;
 
-export type MoveMode = "above" | "below";
+export type MoveMode = "before" | "after";
 
 let key = 0;
 
@@ -174,10 +174,10 @@ export const State = {
 
     let targetStart: number;
     switch (mode) {
-      case "above":
+      case "before":
         targetStart = Path.last(targetPath);
         break;
-      case "below":
+      case "after":
         targetStart = Path.last(targetPath) + 1;
         break;
     }

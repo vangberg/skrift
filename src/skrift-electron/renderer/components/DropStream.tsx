@@ -32,22 +32,12 @@ export const DropStream: React.FC<Props> = ({ mode, onDrop }) => {
     <div
       ref={ref}
       className={clsx(
-        "bg-gray-300 my-2 w-20 shadow-inner rounded opacity-0 transition-opacity",
+        "bg-gray-300 my-2 h-2 shadow-inner rounded opacity-0 transition-opacity",
         {
           "opacity-100": isDraggedOver,
         }
       )}
-      style={{
-        flexGrow: 1,
-        flexShrink: 0,
-        flexBasis: "auto",
-      }}
     >
-      {/*
-          In this case we do not want to change the size when something
-          is dragged into the drop stream.
-           */}
-      <div className="hidden"></div>
     </div>
   );
 };

@@ -110,7 +110,7 @@ export const NoteEditor: React.FC<Props> = ({
   }
 
   return (
-    <div className="p-2 markdown skrift-note-editor">
+    <div className="markdown skrift-note-editor flex flex-1 overflow-hidden">
       <ProseMirror
         mount={mount}
         state={state}
@@ -120,7 +120,7 @@ export const NoteEditor: React.FC<Props> = ({
         handleDOMEvents={handleDOMEvents}
       >
         <AutoFocus />
-        <div ref={setMount} />
+        <div className="flex-1 overflow-y-auto" ref={setMount} />
       </ProseMirror>
     </div>
   );
