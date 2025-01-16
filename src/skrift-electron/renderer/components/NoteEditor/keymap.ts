@@ -24,12 +24,11 @@ export function buildKeymap<S extends Schema>(schema: S) {
 
   const enter: Command[] = [];
 
-  enter.push(splitListItem(schema.nodes.list_item));
-
   keys["Escape"] = selectParentNode;
 
   keys["Enter"] = chainCommands(
     ...enter,
+    splitListItem(schema.nodes.list_item),
     newlineInCode,
     createParagraphNear,
     liftEmptyBlock,

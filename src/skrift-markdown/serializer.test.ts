@@ -2,7 +2,7 @@ import { builders } from "prosemirror-test-builder";
 import { schema } from "./schema.js";
 import { proseMirrorToMarkdown } from "./serializer.js";
 
-const { doc, paragraph, bullet_list, list_item, ordered_list, heading, code_block, blockquote, horizontal_rule, hard_break, em } = builders(schema);
+const { doc, paragraph, bullet_list, list_item, ordered_list, heading, code_block, blockquote, horizontal_rule, hard_break, em, math_inline, math_display } = builders(schema);
 
 describe("proseMirrorToMarkdown", () => {
     test("serializes paragraphs", () => {
@@ -132,5 +132,25 @@ describe("proseMirrorToMarkdown", () => {
         ));
 
         expect(md).toBe("First line\\\nSecond line\n");
+    });
+
+    test("serializes inline math", () => {
+        const md = proseMirrorToMarkdown(doc(
+            paragraph(
+                "The equation ",
+                schema.nodes.math_inline.create({}, schema.text("x^2")),
+                " is quadratic"
+            )
+        ));
+
+        expect(md).toBe("The equation $x^2$ is quadratic\n");
+    });
+
+    test("serializes display math", () => {
+        const md = proseMirrorToMarkdown(doc(
+            schema.nodes.math_display.create({}, schema.text("x^2 + y^2 = z^2"))
+        ));
+
+        expect(md).toBe("$$\nx^2 + y^2 = z^2\n$$\n");
     });
 });

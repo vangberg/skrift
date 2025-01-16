@@ -1,5 +1,6 @@
 import { unified } from "unified";
 import remarkStringify from "remark-stringify";
+import remarkMath from "remark-math";
 import {
   fromProseMirror,
   fromPmNode,
@@ -35,6 +36,12 @@ export function proseMirrorToMarkdown(doc: PmNode) {
         alt: node.attrs.alt
       })),
       blockquote: fromPmNode("blockquote"),
+      math_inline: fromPmNode("inlineMath", (node) => ({
+        value: node.textContent,
+      })),
+      math_display: fromPmNode("math", (node) => ({
+        value: node.textContent,
+      })),
     },
     markHandlers: {
       em: fromPmMark("emphasis"),
@@ -47,5 +54,8 @@ export function proseMirrorToMarkdown(doc: PmNode) {
     }
   });
 
-  return unified().use(remarkStringify).stringify(mdast);
+  return unified()
+    .use(remarkStringify)
+    .use(remarkMath)
+    .stringify(mdast);
 }
