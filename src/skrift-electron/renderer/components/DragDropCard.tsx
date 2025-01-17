@@ -65,14 +65,15 @@ export const DragDropCard: React.FC<PropsWithChildren<Props>> = ({
             onGenerateDragPreview: ({ nativeSetDragImage }) => {
                 setCustomNativeDragPreview({
                     render({ container }) {
-                        // Create our preview element
                         const preview = document.createElement('div');
 
-                        // Populate and style the preview element however you like
-                        preview.textContent = 'Drag'
-                        preview.className = 'rounded-md bg-gray-100 p-2'
+                        preview.className = 'bg-white rounded-lg shadow-lg p-3 w-48 flex items-center justify-center border border-gray-200';
 
-                        // put the "preview" element into the container element
+                        const icon = document.createElement('div');
+                        icon.className = 'text-gray-400 text-sm';
+                        icon.innerHTML = '⋮⋮';
+                        preview.appendChild(icon);
+
                         container.appendChild(preview);
                     },
                     nativeSetDragImage,
