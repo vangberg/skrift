@@ -56,7 +56,7 @@ export const Stream: React.FC<Props> = ({
 
   return (
     <div
-      className="p-2 flex-1 flex flex-row gap-2 h-full overflow-hidden"
+      className="flex-1 flex flex-row h-full"
     >
       <div className="flex items-center">
         <span

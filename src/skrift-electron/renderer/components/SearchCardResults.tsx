@@ -10,7 +10,7 @@ type Props = {
 
 export const SearchCardResults: React.FC<Props> = ({ results, onOpen }) => {
   return (
-    <div className="overflow-y-auto h-full max-h-full">
+    <div className="overflow-y-auto min-h-0">
       {results.length > 0 && (
         <ul className="list-disc list-outside ml-5 mt-2">
           {results.map((link) => (

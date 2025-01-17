@@ -6,9 +6,9 @@ export const StreamDropIndicator: React.FC<{ edge: Edge | null }> = ({ edge }) =
     if (!edge) return null;
 
     const className = clsx(
-        "absolute left-0 right-0 h-0.5 bg-blue-500",
-        edge === "top" && "top-0",
-        edge === "bottom" && "bottom-0",
+        "absolute left-2 right-2 h-1 bg-blue-400 rounded-full",
+        edge === "top" && "-top-0.5",
+        edge === "bottom" && "-bottom-0.5",
     );
 
     return <div className={className} />
