@@ -16,7 +16,7 @@
     "start:react": "webpack serve --config ./webpack.renderer.config.js",
     "start": "concurrently \"npm:start:*\"",
     "dist": "electron-builder -mwl",
-    "publish": "electron-builder --publish always",
+    "release": "electron-builder -mwl",
     "eslint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "test": "ELECTRON_RUN_AS_NODE=1 electron --experimental-vm-modules ./node_modules/.bin/jest",
     "test-watch": "ELECTRON_RUN_AS_NODE=1 electron --experimental-vm-modules ./node_modules/.bin/jest --watch",

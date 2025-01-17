@@ -14,7 +14,7 @@ for the rationale behind Skrift.
 
 ## Build and release
 
-- `npm run build && npm run dist && npm run publish`
+- `npm run build && npm run release`
 
 ## Notarizing on Mac
 
