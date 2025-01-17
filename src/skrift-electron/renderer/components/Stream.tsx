@@ -4,8 +4,8 @@ import { SearchCardContainer } from "../containers/SearchCardContainer.js";
 import { StreamPath } from "../interfaces/path/index.js";
 import { OpenCardMode, Stream as StreamType } from "../interfaces/state/index.js";
 import { mouseEventToMode } from "../mouseEventToMode.js";
-import { DragDropCardContainer } from "../containers/DragDropCardContainer.js";
 import { Icon } from "./Icon.js";
+import { DragDropCard } from "./DragDropCard.js";
 
 type Props = {
   path: StreamPath;
@@ -26,22 +26,22 @@ export const Stream: React.FC<Props> = ({
     switch (card.type) {
       case "note":
         return (
-          <DragDropCardContainer card={card} key={card.meta.key}>
+          <DragDropCard key={card.meta.key} card={card}>
             <NoteCardContainer
               card={card}
               path={[...path, idx]}
             />
-          </DragDropCardContainer>
+          </DragDropCard>
         );
       case "search":
         return (
-          <DragDropCardContainer card={card} key={card.meta.key}>
+          <DragDropCard key={card.meta.key} card={card}>
             <SearchCardContainer
               key={card.meta.key}
               card={card}
               path={[...path, idx]}
             />
-          </DragDropCardContainer>
+          </DragDropCard>
         );
     }
   });

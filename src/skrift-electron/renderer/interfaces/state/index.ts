@@ -187,10 +187,12 @@ export const State = {
     State.normalize(state);
   },
 
-  dropOnNewStream(state: State, sourceKey: number, mode: "prepend" | "append") {
+  dropOnStream(state: State, sourceKey: number, targetStreamKey: number, mode: MoveMode) {
     const sourcePath = Path.findByCardKey(state, sourceKey);
+    if (!sourcePath) throw new Error("Source card not found");
 
-    if (!sourcePath) return;
+    const targetStreamIndex = state.streams.findIndex(s => s.key === targetStreamKey);
+    if (targetStreamIndex === -1) throw new Error("Target stream not found");
 
     const fromStream = state.streams[Path.stream(sourcePath)];
     const [removed] = fromStream.cards.splice(Path.last(sourcePath), 1);
@@ -202,19 +204,15 @@ export const State = {
     };
 
     switch (mode) {
-      case "prepend":
-        state.streams.unshift(newStream);
+      case "before":
+        state.streams.splice(targetStreamIndex, 0, newStream);
         break;
-      case "append":
-        state.streams.push(newStream);
+      case "after":
+        state.streams.splice(targetStreamIndex + 1, 0, newStream);
         break;
-      default:
-        throw new Error(`Invalid mode: ${mode}`);
     }
 
     State.normalize(state);
-
-    return;
   },
 
   close(state: State, options: CloseOptions) {
@@ -293,7 +291,7 @@ interface StateActions {
   updateCard: <T extends Card>(path: Path, card: Partial<T>) => void;
   updateMeta: (path: Path, card: Partial<CardMeta>) => void;
   dropOnCard: (sourceKey: number, targetKey: number, mode: MoveMode) => void;
-  dropOnNewStream: (sourceKey: number, mode: "prepend" | "append") => void;
+  dropOnStream: (sourceKey: number, targetStreamKey: number, mode: MoveMode) => void;
   close: (options: CloseOptions) => void;
 }
 
@@ -319,9 +317,9 @@ export const createStateActions = (setState: Updater<State>): StateActions => {
         State.dropOnCard(draft, sourceKey, targetKey, mode);
       });
     },
-    dropOnNewStream(sourceKey: number, mode: "prepend" | "append") {
+    dropOnStream(sourceKey: number, targetStreamKey: number, mode: MoveMode) {
       setState((draft) => {
-        State.dropOnNewStream(draft, sourceKey, mode);
+        State.dropOnStream(draft, sourceKey, targetStreamKey, mode);
       });
     },
     close(options: CloseOptions) {
