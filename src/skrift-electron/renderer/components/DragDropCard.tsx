@@ -6,6 +6,7 @@ import {
     dropTargetForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { attachClosestEdge, extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
+import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview';
 import { Card } from "../interfaces/state/index.js";
 
 interface Props {
@@ -61,6 +62,22 @@ export const DragDropCard: React.FC<PropsWithChildren<Props>> = ({
                 key: card.meta.key,
             }),
             element: el,
+            onGenerateDragPreview: ({ nativeSetDragImage }) => {
+                setCustomNativeDragPreview({
+                    render({ container }) {
+                        // Create our preview element
+                        const preview = document.createElement('div');
+
+                        // Populate and style the preview element however you like
+                        preview.textContent = 'Drag'
+                        preview.className = 'rounded-md bg-gray-100 p-2'
+
+                        // put the "preview" element into the container element
+                        container.appendChild(preview);
+                    },
+                    nativeSetDragImage,
+                });
+            },
         })
     }, [card.meta.key]);
 
@@ -70,4 +87,4 @@ export const DragDropCard: React.FC<PropsWithChildren<Props>> = ({
             <CardDropIndicator edge={closestEdge} />
         </div>
     );
-}; 
+};
