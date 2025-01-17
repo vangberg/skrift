@@ -6,28 +6,15 @@ import {
     dropTargetForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { attachClosestEdge, extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
-import invariant from "tiny-invariant";
-import { MoveMode } from "../interfaces/state/index.js";
+import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview';
+import { Card } from "../interfaces/state/index.js";
 
 interface Props {
-    cardKey: number;
-    onDrop: (sourceKey: number, targetKey: number, mode: MoveMode) => void;
-}
-
-function getMoveMode(closestEdge: Edge): MoveMode {
-    switch (closestEdge) {
-        case "left":
-            return "before";
-        case "right":
-            return "after";
-        default:
-            throw new Error(`Invalid move mode ${closestEdge}`);
-    }
+    card: Card;
 }
 
 export const DragDropCard: React.FC<PropsWithChildren<Props>> = ({
-    cardKey,
-    onDrop,
+    card,
     children
 }) => {
     const ref = useRef<HTMLDivElement>(null);
@@ -42,7 +29,7 @@ export const DragDropCard: React.FC<PropsWithChildren<Props>> = ({
             getData: ({ input, element }) => {
                 const data = {
                     type: "card",
-                    key: cardKey,
+                    key: card.meta.key,
                 }
                 return attachClosestEdge(data, {
                     input,
@@ -51,26 +38,19 @@ export const DragDropCard: React.FC<PropsWithChildren<Props>> = ({
                 })
             },
             onDragEnter: ({ self, source }) => {
-                if (source.data.key === cardKey) return;
+                if (source.data.key === card.meta.key) return;
                 setClosestEdge(extractClosestEdge(self.data));
             },
             onDrag: ({ self, source }) => {
-                if (source.data.key === cardKey) return;
+                if (source.data.key === card.meta.key) return;
                 setClosestEdge(extractClosestEdge(self.data));
             },
             onDragLeave: () => setClosestEdge(null),
-            onDrop: ({ source, location }) => {
+            onDrop: () => {
                 setClosestEdge(null);
-                const sourceKey = source.data.key as number;
-                const target = location.current.dropTargets[0];
-
-                const closestEdge = extractClosestEdge(target.data);
-                invariant(closestEdge, "No closest edge");
-
-                onDrop(sourceKey, cardKey, getMoveMode(closestEdge));
             },
         });
-    }, [cardKey, onDrop]);
+    }, [card.meta.key]);
 
     useEffect(() => {
         const el = ref.current;
@@ -79,16 +59,33 @@ export const DragDropCard: React.FC<PropsWithChildren<Props>> = ({
         return draggable({
             getInitialData: () => ({
                 type: "card",
-                key: cardKey,
+                key: card.meta.key,
             }),
             element: el,
+            onGenerateDragPreview: ({ nativeSetDragImage }) => {
+                setCustomNativeDragPreview({
+                    render({ container }) {
+                        const preview = document.createElement('div');
+
+                        preview.className = 'bg-white rounded-lg shadow-lg p-3 w-48 flex items-center justify-center border border-gray-200';
+
+                        const icon = document.createElement('div');
+                        icon.className = 'text-gray-400 text-sm';
+                        icon.innerHTML = '⋮⋮';
+                        preview.appendChild(icon);
+
+                        container.appendChild(preview);
+                    },
+                    nativeSetDragImage,
+                });
+            },
         })
-    }, [cardKey]);
+    }, [card.meta.key]);
 
     return (
-        <div ref={ref} className="flex flex-1 max-w-[32rem] relative h-full overflow-hidden">
+        <div ref={ref} className="flex flex-1 max-w-[32rem] relative h-full">
             {children}
             <CardDropIndicator edge={closestEdge} />
         </div>
     );
-}; 
+};

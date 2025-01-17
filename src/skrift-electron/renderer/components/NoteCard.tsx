@@ -55,21 +55,19 @@ export const NoteCard: React.FC<Props> = ({
 
   return (
     <Card>
-      <>
-        <CardToolbar>
-          <CardToolbarItem onClick={handleDelete}>Delete</CardToolbarItem>
-          <CardToolbarItem onClick={handleCopy}>Copy link</CardToolbarItem>
-          <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>
-        </CardToolbar>
+      <CardToolbar>
+        <CardToolbarItem onClick={handleDelete}>Delete</CardToolbarItem>
+        <CardToolbarItem onClick={handleCopy}>Copy link</CardToolbarItem>
+        <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>
+      </CardToolbar>
 
-        <CardTitle visible={collapsed}>
-          <NoteCardTitle note={note} />
-        </CardTitle>
+      <CardTitle visible={collapsed}>
+        <NoteCardTitle note={note} />
+      </CardTitle>
 
-        <CardBody visible={!collapsed}>
-          <NoteEditorContainer id={note.id} focus={focus} onOpen={onOpen} />
-        </CardBody>
-      </>
+      <CardBody visible={!collapsed}>
+        <NoteEditorContainer id={note.id} focus={focus} onOpen={onOpen} />
+      </CardBody>
     </Card>
   );
 };

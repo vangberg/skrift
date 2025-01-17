@@ -11,7 +11,7 @@ export const Card: React.FC<Props> = ({ className, children }) => {
     <div
       className={clsx(
         className,
-        "mx-2 my-2 relative flex flex-1 flex-col group h-full overflow-hidden"
+        "relative flex flex-1 flex-col group h-full"
       )}
     >
       {children}
