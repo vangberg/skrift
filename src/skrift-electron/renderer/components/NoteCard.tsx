@@ -17,6 +17,7 @@ type Props = {
   note: NoteWithLinks;
   focus: number;
   onOpen: (id: string, mode: OpenCardMode) => void;
+  onOpenBacklinks: () => void;
   onDelete: () => void;
   onClose: () => void;
   onToggle: () => void;
@@ -28,6 +29,7 @@ export const NoteCard: React.FC<Props> = ({
   note,
   focus,
   onOpen,
+  onOpenBacklinks,
   onDelete,
   onClose,
   onToggle,
@@ -56,6 +58,7 @@ export const NoteCard: React.FC<Props> = ({
   return (
     <Card>
       <CardToolbar>
+        <CardToolbarItem onClick={onOpenBacklinks}>Backlinks</CardToolbarItem>
         <CardToolbarItem onClick={handleDelete}>Delete</CardToolbarItem>
         <CardToolbarItem onClick={handleCopy}>Copy link</CardToolbarItem>
         <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>

@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const NoteCardContainer: React.FC<Props> = ({ card, path }) => {
-  const { onOpenNote, onDeleteNote, onClose, onUpdateMeta } = useCardActions(
+  const { onOpenNote, onDeleteNote, onClose, onUpdateMeta, onOpenSearch } = useCardActions(
     card,
     path
   );
@@ -20,6 +20,10 @@ export const NoteCardContainer: React.FC<Props> = ({ card, path }) => {
   const [focus, setFocus] = useState(0);
 
   const handleDelete = useCallback(() => onDeleteNote(id), [onDeleteNote, id]);
+
+  const handleOpenBacklinks = useCallback(() => {
+    onOpenSearch(card.id, "below")
+  }, [card.id, onOpenSearch]);
 
   const handleToggle = useCallback(() => {
     onUpdateMeta({ collapsed: !card.meta.collapsed });
@@ -39,6 +43,7 @@ export const NoteCardContainer: React.FC<Props> = ({ card, path }) => {
       note={note}
       focus={focus}
       onOpen={onOpenNote}
+      onOpenBacklinks={handleOpenBacklinks}
       onDelete={handleDelete}
       onClose={onClose}
       onToggle={handleToggle}
