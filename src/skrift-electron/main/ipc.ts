@@ -38,13 +38,8 @@ const handleLoadDir = async (event: Electron.IpcMainEvent) => {
   NotesFS.initialize(_path);
   const db = getDB();
 
-  let loaded = 0;
-  for await (const note of NotesFS.readDir(_path)) {
-    NotesDB.save(db, note.id, note.markdown, note.modifiedAt);
-    loaded += 1;
-    if (loaded % 100 === 0) {
-      reply(event, { type: "event/LOADING_DIR", loaded });
-    }
+  for await (const loaded of NotesDB.loadDir(db, NotesFS.readDir(_path))) {
+    reply(event, { type: "event/LOADING_DIR", loaded });
   }
 
   const initialNoteID = "20210108T145053.970Z.md";
