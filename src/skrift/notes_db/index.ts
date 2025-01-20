@@ -3,12 +3,14 @@ import { Note, NoteID, NoteLink, NoteWithLinks } from "../note/index.js";
 import path from "path";
 import { Fts } from "./fts.js";
 import { ParsedNote } from "../note/fromMarkdown.js";
+import { createHash } from "crypto";
 
 export interface NoteRow {
   id: string;
   title: string;
   markdown: string;
   modifiedAt: string;
+  checksum: string;
 }
 
 export interface NoteLinkRow {
@@ -46,19 +48,18 @@ export const NotesDB = {
   },
 
   initialize(db: BetterSqlite3.Database): void {
-    db.prepare("DROP TABLE IF EXISTS notes").run();
     db.prepare(
-      `CREATE VIRTUAL TABLE notes USING fts5(
+      `CREATE VIRTUAL TABLE IF NOT EXISTS notes USING fts5(
         id UNINDEXED,
         title,
         markdown,
-        modifiedAt UNINDEXED
+        modifiedAt UNINDEXED,
+        checksum UNINDEXED
       )`
     ).run();
 
-    db.prepare("DROP TABLE IF EXISTS links").run();
     db.prepare(
-      `CREATE TABLE links (
+      `CREATE TABLE IF NOT EXISTS links (
         fromId TEXT NOT NULL,
         toId TEXT NOT NULL,
         PRIMARY KEY (fromId, toId)
@@ -73,13 +74,14 @@ export const NotesDB = {
     modifiedAt?: Date
   ): void {
     const note = Note.fromMarkdown(markdown);
+    const checksum = NotesDB.computeChecksum(markdown);
 
     return db.transaction((note: ParsedNote) => {
       db.prepare("DELETE FROM notes WHERE id = ?").run(id);
       db.prepare("DELETE FROM links WHERE fromId = ?").run(id);
       db.prepare(
-        `INSERT INTO notes (id, title, markdown, modifiedAt) VALUES (?, ?, ?, ?)`
-      ).run([id, note.title, markdown, (modifiedAt || new Date()).getTime()]);
+        `INSERT INTO notes (id, title, markdown, modifiedAt, checksum) VALUES (?, ?, ?, ?, ?)`
+      ).run([id, note.title, markdown, (modifiedAt || new Date()).getTime(), checksum]);
       note.linkIds.forEach((link) =>
         db.prepare("INSERT INTO links (fromId, toId) VALUES (?, ?)").run([id, link])
       );
@@ -172,5 +174,54 @@ export const NotesDB = {
       .all();
 
     return rows.map((row) => row.id);
+  },
+
+  computeChecksum(markdown: string): string {
+    return createHash("md5").update(markdown).digest("hex");
+  },
+
+  async *loadDir(db: BetterSqlite3.Database, notes: AsyncIterable<Note>): AsyncGenerator<number, number> {
+    const existingNotes = new Set<string>(
+      db.prepare<[], { id: string }>("SELECT id FROM notes").all().map(row => row.id)
+    );
+
+    let loaded = 0;
+    let batchSize = 0;
+    for await (const note of notes) {
+      const checksum = NotesDB.computeChecksum(note.markdown);
+      const existing = db.prepare<[string], { checksum: string }>("SELECT checksum FROM notes WHERE id = ?").get(note.id);
+
+      if (!existing) {
+        // New note
+        NotesDB.save(db, note.id, note.markdown, note.modifiedAt);
+        loaded++;
+        batchSize++;
+      } else if (existing.checksum !== checksum) {
+        // Modified note
+        NotesDB.save(db, note.id, note.markdown, note.modifiedAt);
+        loaded++;
+        batchSize++;
+      }
+      existingNotes.delete(note.id);
+
+      if (batchSize >= 10) {
+        yield loaded;
+        batchSize = 0;
+      }
+    }
+
+    // Delete notes that no longer exist in the filesystem
+    for (const id of existingNotes) {
+      NotesDB.delete(db, id);
+      loaded++;
+      batchSize++;
+
+      if (batchSize >= 10) {
+        yield loaded;
+        batchSize = 0;
+      }
+    }
+
+    return loaded;
   },
 };
