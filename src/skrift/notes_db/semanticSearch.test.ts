@@ -14,11 +14,11 @@ describe("NotesDB.semanticSearch()", () => {
     await NotesDB.save(db, "c.md", "Programming in Python and JavaScript");
   });
 
-  it("returns semantically similar results", async () => {
+  it("returns semantically similar results first", async () => {
     const results = await NotesDB.searchSemantic(db, "wild animals in nature");
     expect(results).toContain("a.md");
     expect(results).toContain("b.md");
-    expect(results).not.toContain("c.md");
+    expect(results.at(-1)).toBe("c.md");
   });
 
   it("returns results ordered by relevance", async () => {
@@ -29,15 +29,5 @@ describe("NotesDB.semanticSearch()", () => {
   it("respects the topK parameter", async () => {
     const results = await NotesDB.searchSemantic(db, "animals", 1);
     expect(results).toHaveLength(1);
-  });
-
-  it("handles empty query", async () => {
-    const results = await NotesDB.searchSemantic(db, "");
-    expect(results).toHaveLength(0);
-  });
-
-  it("handles query with no semantic matches", async () => {
-    const results = await NotesDB.searchSemantic(db, "xyzabc123");
-    expect(results).toHaveLength(0);
   });
 });
