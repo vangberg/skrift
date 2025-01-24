@@ -18,6 +18,10 @@ export default [
           include: /src/,
           use: [{ loader: "ts-loader" }],
         },
+        {
+          test: /\.node$/,
+          loader: "node-loader",
+        },
       ],
     },
     output: {

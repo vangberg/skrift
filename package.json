@@ -102,6 +102,7 @@
     "html-webpack-plugin": "^5.3.1",
     "immer": "^10.1.1",
     "markdown-it": "^14.1.0",
+    "node-loader": "^2.1.0",
     "parsimmon": "^1.17.0",
     "postcss": "^8.2.15",
     "postcss-loader": "^8.1.1",
