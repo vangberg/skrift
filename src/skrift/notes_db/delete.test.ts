@@ -1,3 +1,4 @@
+import { describe, expect, test, beforeAll, beforeEach, afterEach } from 'vitest';
 import BetterSqlite3 from "better-sqlite3";
 import { NotesDB, NoteNotFoundError } from "./index.js";
 
@@ -9,7 +10,7 @@ describe("NotesDB.delete()", () => {
     NotesDB.initialize(db);
   });
 
-  it("deletes a note", () => {
+  test("deletes a note", () => {
     NotesDB.save(
       db,
       "a.md",

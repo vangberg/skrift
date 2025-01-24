@@ -1,7 +1,8 @@
+import { describe, expect, test } from 'vitest';
 import { SCache } from "./index.js";
 
 describe("SCache.claim", () => {
-  it("sets initial claim", () => {
+  test("sets initial claim", () => {
     const cache: SCache<null> = {};
 
     SCache.claim(cache, "a");
@@ -9,7 +10,7 @@ describe("SCache.claim", () => {
     expect(cache["a"]).toEqual({ claims: 1, value: null });
   });
 
-  it("sets initial claim with default value", () => {
+  test("sets initial claim with default value", () => {
     const cache: SCache<null> = {};
 
     SCache.claim(cache, "a", "default");
@@ -17,7 +18,7 @@ describe("SCache.claim", () => {
     expect(cache["a"]).toEqual({ claims: 1, value: "default" });
   });
 
-  it("increases existing claims", () => {
+  test("increases existing claims", () => {
     const cache: SCache<null> = {};
 
     SCache.claim(cache, "a");
@@ -26,7 +27,7 @@ describe("SCache.claim", () => {
     expect(cache["a"]).toEqual({ claims: 2, value: null });
   });
 
-  it("increases existing claims without overriding default value", () => {
+  test("increases existing claims without overriding default value", () => {
     const cache: SCache<null> = {};
 
     SCache.claim(cache, "a", "default");

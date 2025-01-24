@@ -1,3 +1,4 @@
+import { describe, beforeAll, expect, test } from 'vitest';
 import BetterSqlite3 from "better-sqlite3";
 import { NotesDB } from "./index.js";
 
@@ -9,7 +10,7 @@ describe("NotesDB.initialize()", () => {
     NotesDB.initialize(db);
   });
 
-  it("creates a notes table", () => {
+  test("creates a notes table", () => {
     const row = db.prepare(
       `SELECT * FROM sqlite_master WHERE type = 'table' AND name = 'notes'`
     ).run();
@@ -17,7 +18,7 @@ describe("NotesDB.initialize()", () => {
     expect(row).toBeTruthy();
   });
 
-  it("creates a links table", () => {
+  test("creates a links table", () => {
     const row = db.prepare(
       `SELECT * FROM sqlite_master WHERE type = 'table' AND name = 'links'`
     ).run();

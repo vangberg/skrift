@@ -1,3 +1,4 @@
+import { describe, expect, test, beforeAll, beforeEach, afterEach } from 'vitest';
 import BetterSqlite3 from "better-sqlite3";
 import { NotesDB, NoteRow, LinkRow } from "./index.js";
 
@@ -9,7 +10,7 @@ describe("NotesDB.save()", () => {
     NotesDB.initialize(db);
   });
 
-  it("inserts a new note", () => {
+  test("inserts a new note", () => {
     NotesDB.save(db, "a.md", "# Added note");
 
     const rows = db.prepare<string, NoteRow>(
@@ -18,7 +19,7 @@ describe("NotesDB.save()", () => {
     expect(rows.length).toEqual(1);
   });
 
-  it("updates an existing note", () => {
+  test("updates an existing note", () => {
     NotesDB.save(db, "a.md", "New note");
     NotesDB.save(db, "a.md", "Updated note");
 
@@ -29,7 +30,7 @@ describe("NotesDB.save()", () => {
     expect(rows[0].title).toEqual("Updated note");
   });
 
-  it("inserts new links", () => {
+  test("inserts new links", () => {
     NotesDB.save(db, "a.md", "[#](b.md) [#](c.md)");
 
     const rows = db.prepare<string, LinkRow>(
@@ -39,7 +40,7 @@ describe("NotesDB.save()", () => {
     expect(rows.map((row) => row.toId).sort()).toEqual(["b.md", "c.md"]);
   });
 
-  it("deletes and updates existing links", async () => {
+  test("deletes and updates existing links", async () => {
     NotesDB.save(db, "a.md", "[#](b.md) [#](c.md)");
     NotesDB.save(db, "a.md", "[#](b.md) [#](d.md)");
 
