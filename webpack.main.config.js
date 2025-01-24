@@ -18,10 +18,6 @@ export default [
           include: /src/,
           use: [{ loader: "ts-loader" }],
         },
-        {
-          test: /\.node$/,
-          loader: "node-loader",
-        },
       ],
     },
     output: {
@@ -34,6 +30,8 @@ export default [
     },
     externals: {
       "better-sqlite3": "better-sqlite3",
+      "sharp": "sharp",
+      "onnxruntime-node": "onnxruntime-node"
     },
   },
 ];
