@@ -10,8 +10,8 @@ describe("NotesDB.save()", () => {
     NotesDB.initialize(db);
   });
 
-  test("inserts a new note", () => {
-    NotesDB.save(db, "a.md", "# Added note");
+  test("inserts a new note", async () => {
+    await NotesDB.save(db, "a.md", "# Added note");
 
     const rows = db.prepare<string, NoteRow>(
       `SELECT * FROM notes WHERE title = ?`
@@ -19,9 +19,9 @@ describe("NotesDB.save()", () => {
     expect(rows.length).toEqual(1);
   });
 
-  test("updates an existing note", () => {
-    NotesDB.save(db, "a.md", "New note");
-    NotesDB.save(db, "a.md", "Updated note");
+  test("updates an existing note", async () => {
+    await NotesDB.save(db, "a.md", "New note");
+    await NotesDB.save(db, "a.md", "Updated note");
 
     const rows = db.prepare<string, NoteRow>(
       `SELECT * FROM notes WHERE id = ?`
@@ -30,8 +30,8 @@ describe("NotesDB.save()", () => {
     expect(rows[0].title).toEqual("Updated note");
   });
 
-  test("inserts new links", () => {
-    NotesDB.save(db, "a.md", "[#](b.md) [#](c.md)");
+  test("inserts new links", async () => {
+    await NotesDB.save(db, "a.md", "[#](b.md) [#](c.md)");
 
     const rows = db.prepare<string, LinkRow>(
       `SELECT * FROM links WHERE fromId = ?`
@@ -41,8 +41,8 @@ describe("NotesDB.save()", () => {
   });
 
   test("deletes and updates existing links", async () => {
-    NotesDB.save(db, "a.md", "[#](b.md) [#](c.md)");
-    NotesDB.save(db, "a.md", "[#](b.md) [#](d.md)");
+    await NotesDB.save(db, "a.md", "[#](b.md) [#](c.md)");
+    await NotesDB.save(db, "a.md", "[#](b.md) [#](d.md)");
 
     const rows = db.prepare<string, LinkRow>(
       `SELECT * FROM links WHERE fromId = ?`

@@ -5,13 +5,13 @@ import { NotesDB, NoteNotFoundError } from "./index.js";
 describe("NotesDB.delete()", () => {
   let db: BetterSqlite3.Database;
 
-  beforeAll(() => {
+  beforeEach(() => {
     db = NotesDB.memory();
     NotesDB.initialize(db);
   });
 
-  test("deletes a note", () => {
-    NotesDB.save(
+  test("deletes a note", async () => {
+    await NotesDB.save(
       db,
       "a.md",
       "# Added note\n\nLinks: [#](b.md), [#](c.md)",

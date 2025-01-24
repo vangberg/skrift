@@ -1,11 +1,11 @@
-import { describe, beforeAll, expect, test } from 'vitest';
+import { describe, beforeAll, expect, test, beforeEach } from 'vitest';
 import BetterSqlite3 from "better-sqlite3";
 import { NotesDB } from "./index.js";
 
 describe("NotesDB.initialize()", () => {
   let db: BetterSqlite3.Database;
 
-  beforeAll(() => {
+  beforeEach(() => {
     db = NotesDB.memory();
     NotesDB.initialize(db);
   });

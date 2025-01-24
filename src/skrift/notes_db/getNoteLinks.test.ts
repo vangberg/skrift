@@ -5,15 +5,15 @@ import { NotesDB } from "./index.js";
 describe("NotesDB.getNoteLinks()", () => {
   let db: BetterSqlite3.Database;
 
-  beforeAll(() => {
+  beforeEach(() => {
     db = NotesDB.memory();
     NotesDB.initialize(db);
   });
 
-  test("gets note links in specified order", () => {
+  test("gets note links in specified order", async () => {
     const date = new Date();
-    NotesDB.save(db, "a.md", "A", date);
-    NotesDB.save(db, "b.md", "B", date);
+    await NotesDB.save(db, "a.md", "A", date);
+    await NotesDB.save(db, "b.md", "B", date);
 
     const result = NotesDB.getNoteLinks(db, ["b.md", "a.md"]);
 

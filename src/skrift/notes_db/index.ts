@@ -1,9 +1,11 @@
 import BetterSqlite3 from "better-sqlite3";
+import * as sqliteVec from "sqlite-vec";
 import { Note, NoteID, NoteLink, NoteWithLinks } from "../note/index.js";
 import path from "path";
 import { Fts } from "./fts.js";
 import { ParsedNote } from "../note/fromMarkdown.js";
 import { createHash } from "crypto";
+import { pipeline } from "@huggingface/transformers";
 
 export interface NoteRow {
   id: string;
@@ -23,6 +25,11 @@ export interface SearchRow {
   title: string;
   markdown: string;
   modifiedAt: string;
+}
+
+export interface EmbeddingRow {
+  id: string;
+  embedding: Float32Array;
 }
 
 export interface LinkRow {
@@ -48,6 +55,8 @@ export const NotesDB = {
   },
 
   initialize(db: BetterSqlite3.Database): void {
+    sqliteVec.load(db)
+
     db.prepare(
       `CREATE VIRTUAL TABLE IF NOT EXISTS notes USING fts5(
         id UNINDEXED,
@@ -55,6 +64,13 @@ export const NotesDB = {
         markdown,
         modifiedAt UNINDEXED,
         checksum UNINDEXED
+      );
+      `
+    ).run();
+
+    db.prepare(
+      `CREATE VIRTUAL TABLE IF NOT EXISTS notes_embeddings USING vec0(
+        embedding float[384]
       )`
     ).run();
 
@@ -67,21 +83,39 @@ export const NotesDB = {
     ).run();
   },
 
-  save(
+  dropTables(db: BetterSqlite3.Database): void {
+    db.prepare("DROP TABLE IF EXISTS notes").run();
+    db.prepare("DROP TABLE IF EXISTS notes_embeddings").run();
+    db.prepare("DROP TABLE IF EXISTS links").run();
+  },
+
+  getRowid(db: BetterSqlite3.Database, id: NoteID): bigint {
+    const result = db.prepare("SELECT rowid FROM notes WHERE id = ?").run(id);
+    return BigInt(result.lastInsertRowid);
+  },
+
+  async save(
     db: BetterSqlite3.Database,
     id: NoteID,
     markdown: string,
     modifiedAt?: Date
-  ): void {
+  ): Promise<void> {
     const note = Note.fromMarkdown(markdown);
     const checksum = NotesDB.computeChecksum(markdown);
+    const embedding = await NotesDB.computeEmbedding(markdown);
 
     return db.transaction((note: ParsedNote) => {
       db.prepare("DELETE FROM notes WHERE id = ?").run(id);
       db.prepare("DELETE FROM links WHERE fromId = ?").run(id);
-      db.prepare(
+      db.prepare("DELETE FROM notes_embeddings WHERE rowid = ?").run(NotesDB.getRowid(db, id));
+
+      const result = db.prepare(
         `INSERT INTO notes (id, title, markdown, modifiedAt, checksum) VALUES (?, ?, ?, ?, ?)`
       ).run([id, note.title, markdown, (modifiedAt || new Date()).getTime(), checksum]);
+
+      const rowid = result.lastInsertRowid;
+      db.prepare("INSERT INTO notes_embeddings (rowid, embedding) VALUES (?, ?)").run([BigInt(rowid), embedding]);
+
       note.linkIds.forEach((link) =>
         db.prepare("INSERT INTO links (fromId, toId) VALUES (?, ?)").run([id, link])
       );
@@ -144,8 +178,11 @@ export const NotesDB = {
   },
 
   delete(db: BetterSqlite3.Database, id: NoteID): void {
+    const rowid = NotesDB.getRowid(db, id);
+
     db.prepare(`DELETE FROM notes WHERE id = ?`).run(id);
     db.prepare(`DELETE FROM links WHERE toId = ? OR fromId = ?`).run(id, id);
+    db.prepare(`DELETE FROM notes_embeddings WHERE rowid = ?`).run(rowid);
   },
 
   search(db: BetterSqlite3.Database, query: string): NoteID[] {
@@ -166,6 +203,27 @@ export const NotesDB = {
     return rows.map((row) => row.id);
   },
 
+  async searchSemantic(db: BetterSqlite3.Database, query: string, topK: number = 10): Promise<NoteID[]> {
+    const embedding = await NotesDB.computeEmbedding(query);
+
+    const rows = db.prepare<Float32Array, EmbeddingRow>(`
+        SELECT
+        id,
+        ROW_NUMBER() OVER (ORDER BY e.distance ASC) AS rank
+        FROM notes n
+        INNER JOIN (
+            SELECT rowid, distance
+            FROM notes_embeddings
+            WHERE embedding MATCH ?
+            ORDER BY distance ASC
+            LIMIT ?
+        ) e ON n.id = e.rowid
+        ORDER BY e.distance ASC
+    `).all(embedding);
+
+    return rows.map((row) => row.id as NoteID);
+  },
+
   recent(db: BetterSqlite3.Database): NoteID[] {
     const rows = db
       .prepare<[], SearchRow>(
@@ -178,6 +236,13 @@ export const NotesDB = {
 
   computeChecksum(markdown: string): string {
     return createHash("md5").update(markdown).digest("hex");
+  },
+
+  // Does this really belong in `NotesDB`?
+  async computeEmbedding(markdown: string): Promise<Float32Array> {
+    const model = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2", { dtype: "fp16" });
+    const output = await model(markdown, { pooling: "mean", normalize: true });
+    return new Float32Array(output.data);
   },
 
   async *loadDir(db: BetterSqlite3.Database, notes: AsyncIterable<Note>): AsyncGenerator<number, number> {
@@ -193,12 +258,12 @@ export const NotesDB = {
 
       if (!existing) {
         // New note
-        NotesDB.save(db, note.id, note.markdown, note.modifiedAt);
+        await NotesDB.save(db, note.id, note.markdown, note.modifiedAt);
         loaded++;
         batchSize++;
       } else if (existing.checksum !== checksum) {
         // Modified note
-        NotesDB.save(db, note.id, note.markdown, note.modifiedAt);
+        await NotesDB.save(db, note.id, note.markdown, note.modifiedAt);
         loaded++;
         batchSize++;
       }
