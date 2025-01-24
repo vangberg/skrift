@@ -6,6 +6,7 @@ import { Fts } from "./fts.js";
 import { ParsedNote } from "../note/fromMarkdown.js";
 import { createHash } from "crypto";
 import { pipeline } from "@huggingface/transformers";
+import { getSentenceTransformerPipeline } from "../huggingface.js";
 
 export interface RowIdRow {
   rowid: number;
@@ -196,7 +197,32 @@ export const NotesDB = {
     db.prepare(`DELETE FROM notes_embeddings WHERE rowid = ?`).run(rowid);
   },
 
-  search(db: BetterSqlite3.Database, query: string): NoteID[] {
+  async search(db: BetterSqlite3.Database, query: string): Promise<NoteID[]> {
+    const k = 60; // Constant for RRF calculation
+    const keywordResults = await NotesDB.searchKeyword(db, query);
+    const semanticResults = await NotesDB.searchSemantic(db, query);
+
+    // Create a map to store combined scores
+    const scores = new Map<NoteID, number>();
+
+    // Calculate RRF scores for keyword results
+    keywordResults.forEach((id, rank) => {
+      scores.set(id, 1 / (k + rank + 1));
+    });
+
+    // Add RRF scores for semantic results
+    semanticResults.forEach((id, rank) => {
+      const existingScore = scores.get(id) || 0;
+      scores.set(id, existingScore + 1 / (k + rank + 1));
+    });
+
+    // Sort by score descending
+    return Array.from(scores.entries())
+      .sort(([, a], [, b]) => b - a)
+      .map(([id]) => id);
+  },
+
+  async searchKeyword(db: BetterSqlite3.Database, query: string, limit: number = 50): Promise<NoteID[]> {
     if (query === "*") {
       return NotesDB.recent(db);
     }
@@ -208,13 +234,13 @@ export const NotesDB = {
     }
 
     const rows = db
-      .prepare<string, SearchRow>(`SELECT * FROM notes WHERE notes MATCH ? ORDER BY rank LIMIT 50`)
-      .all(Fts.toMatch(tokens));
+      .prepare<[string, number], SearchRow>(`SELECT * FROM notes WHERE notes MATCH ? ORDER BY rank LIMIT ?`)
+      .all(Fts.toMatch(tokens), limit);
 
     return rows.map((row) => row.id);
   },
 
-  async searchSemantic(db: BetterSqlite3.Database, query: string, topK: number = 10): Promise<NoteID[]> {
+  async searchSemantic(db: BetterSqlite3.Database, query: string, limit: number = 50): Promise<NoteID[]> {
     const embedding = await NotesDB.computeEmbedding(query);
 
     const rows = db.prepare<[Float32Array, number], EmbeddingRow>(`
@@ -231,7 +257,7 @@ export const NotesDB = {
             LIMIT ?
         ) e ON n.rowid = e.rowid
         ORDER BY e.distance ASC
-    `).all(embedding, topK);
+    `).all(embedding, limit);
 
     return rows.map((row) => row.id as NoteID);
   },
@@ -252,8 +278,9 @@ export const NotesDB = {
 
   // Does this really belong in `NotesDB`?
   async computeEmbedding(markdown: string): Promise<Float32Array> {
-    const model = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2", { dtype: "fp32" });
+    const model = await getSentenceTransformerPipeline();
     const output = await model(markdown, { pooling: "mean", normalize: true });
+
     return new Float32Array(output.data);
   },
 
