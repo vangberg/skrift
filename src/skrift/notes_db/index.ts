@@ -7,6 +7,10 @@ import { ParsedNote } from "../note/fromMarkdown.js";
 import { createHash } from "crypto";
 import { pipeline } from "@huggingface/transformers";
 
+export interface RowIdRow {
+  rowid: number;
+}
+
 export interface NoteRow {
   id: string;
   title: string;
@@ -89,9 +93,12 @@ export const NotesDB = {
     db.prepare("DROP TABLE IF EXISTS links").run();
   },
 
-  getRowid(db: BetterSqlite3.Database, id: NoteID): bigint {
-    const result = db.prepare("SELECT rowid FROM notes WHERE id = ?").run(id);
-    return BigInt(result.lastInsertRowid);
+  getRowid(db: BetterSqlite3.Database, id: NoteID): bigint | null {
+    const result = db.prepare<NoteID, RowIdRow>("SELECT rowid FROM notes WHERE id = ?").get(id);
+    if (!result) {
+      return null;
+    }
+    return BigInt(result.rowid);
   },
 
   async save(
@@ -105,9 +112,13 @@ export const NotesDB = {
     const embedding = await NotesDB.computeEmbedding(markdown);
 
     return db.transaction((note: ParsedNote) => {
+      const deleteRowId = NotesDB.getRowid(db, id);
+      if (deleteRowId) {
+        db.prepare("DELETE FROM notes_embeddings WHERE rowid = ?").run(deleteRowId);
+      }
+
       db.prepare("DELETE FROM notes WHERE id = ?").run(id);
       db.prepare("DELETE FROM links WHERE fromId = ?").run(id);
-      db.prepare("DELETE FROM notes_embeddings WHERE rowid = ?").run(NotesDB.getRowid(db, id));
 
       const result = db.prepare(
         `INSERT INTO notes (id, title, markdown, modifiedAt, checksum) VALUES (?, ?, ?, ?, ?)`
@@ -206,10 +217,11 @@ export const NotesDB = {
   async searchSemantic(db: BetterSqlite3.Database, query: string, topK: number = 10): Promise<NoteID[]> {
     const embedding = await NotesDB.computeEmbedding(query);
 
-    const rows = db.prepare<Float32Array, EmbeddingRow>(`
+    const rows = db.prepare<[Float32Array, number], EmbeddingRow>(`
         SELECT
         id,
-        ROW_NUMBER() OVER (ORDER BY e.distance ASC) AS rank
+        ROW_NUMBER() OVER (ORDER BY e.distance ASC) AS rank,
+        e.distance AS score
         FROM notes n
         INNER JOIN (
             SELECT rowid, distance
@@ -217,9 +229,9 @@ export const NotesDB = {
             WHERE embedding MATCH ?
             ORDER BY distance ASC
             LIMIT ?
-        ) e ON n.id = e.rowid
+        ) e ON n.rowid = e.rowid
         ORDER BY e.distance ASC
-    `).all(embedding);
+    `).all(embedding, topK);
 
     return rows.map((row) => row.id as NoteID);
   },
@@ -240,7 +252,7 @@ export const NotesDB = {
 
   // Does this really belong in `NotesDB`?
   async computeEmbedding(markdown: string): Promise<Float32Array> {
-    const model = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2", { dtype: "fp16" });
+    const model = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2", { dtype: "fp32" });
     const output = await model(markdown, { pooling: "mean", normalize: true });
     return new Float32Array(output.data);
   },
