@@ -1,3 +1,3 @@
-import { HuggingFace } from "../src/skrift/huggingface.js";
+import { Pipelines } from "../src/skrift/huggingface.js";
 
-HuggingFace.preload();
+Pipelines.preload();

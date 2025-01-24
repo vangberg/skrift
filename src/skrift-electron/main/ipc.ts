@@ -132,14 +132,14 @@ const handleSetNote = async (
   });
 };
 
-const handleSearch = (
+const handleSearch = async (
   event: Electron.IpcMainInvokeEvent,
   query: string
-): NoteLink[] => {
+): Promise<NoteLink[]> => {
   const db = getDB();
 
-  const ids = NotesDB.search(db, query);
-  const links = NotesDB.getNoteLinks(db, ids);
+  const ids = await NotesDB.search(db, query);
+  const links = await NotesDB.getNoteLinks(db, ids);
 
   return links;
 };
