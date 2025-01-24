@@ -81,14 +81,14 @@ const handleDeleteNote = (
   reply(event, { type: "event/DELETED_NOTE", id });
 };
 
-const handleAddNote = (
+const handleAddNote = async (
   event: Electron.IpcMainEvent,
   cmd: IpcAddNoteCommand
 ) => {
   const { id, markdown } = cmd;
   const db = getDB();
 
-  NotesDB.save(db, id, markdown);
+  await NotesDB.save(db, id, markdown);
 
   NotesFS.save(_path, id, markdown);
 
@@ -97,7 +97,7 @@ const handleAddNote = (
   reply(event, { type: "event/SET_NOTE", note });
 };
 
-const handleSetNote = (
+const handleSetNote = async (
   event: Electron.IpcMainEvent,
   cmd: IpcSetNoteCommand
 ) => {
@@ -106,7 +106,7 @@ const handleSetNote = (
 
   const noteBefore = NotesDB.get(db, id);
 
-  NotesDB.save(db, id, markdown);
+  await NotesDB.save(db, id, markdown);
 
   NotesFS.save(_path, id, markdown);
 

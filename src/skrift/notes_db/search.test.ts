@@ -5,11 +5,11 @@ import { NotesDB } from "./index.js";
 describe("NotesDB.search()", () => {
   let db: BetterSqlite3.Database;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     db = NotesDB.memory();
     NotesDB.initialize(db);
-    NotesDB.save(db, "a.md", "Monkey");
-    NotesDB.save(db, "b.md", "Tiger");
+    await NotesDB.save(db, "a.md", "Monkey");
+    await NotesDB.save(db, "b.md", "Tiger");
   });
 
   test("returns search results", () => {
