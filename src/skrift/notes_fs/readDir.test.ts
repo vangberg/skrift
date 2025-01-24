@@ -1,10 +1,11 @@
+import { describe, test, beforeAll, beforeEach, afterEach, expect } from 'vitest';
 import { NotesFS } from "./index.js";
 import { Note } from "../note/index.js";
 
 const PATH = new URL("fixtures", import.meta.url).pathname
 
 describe("NotesFS.readDir", () => {
-  it("reads notes one at a time", async () => {
+  test("reads notes one at a time", async () => {
     const generator = NotesFS.readDir(PATH);
     const result = await generator.next();
 
@@ -14,7 +15,7 @@ describe("NotesFS.readDir", () => {
     expect(value.title).toEqual("Note 1");
   });
 
-  it("reads all notes", async () => {
+  test("reads all notes", async () => {
     const notes = [];
 
     for await (const note of NotesFS.readDir(PATH)) {

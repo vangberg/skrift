@@ -1,8 +1,9 @@
+import { describe, expect, test } from 'vitest';
 import { State, Card, Stream } from "./index.js";
 import { cardA, cardB, cardC, cardD, getState } from "./fixture.js";
 
 describe("State.normalize", () => {
-  it("ensures that at least one stream exists", () => {
+  test("ensures that at least one stream exists", () => {
     const state: State = {
       streams: [],
     };
@@ -12,7 +13,7 @@ describe("State.normalize", () => {
     expect(state.streams.length).toEqual(1);
   });
 
-  it("does not collapse the last stream, even if empty", () => {
+  test("does not collapse the last stream, even if empty", () => {
     const state: State = {
       streams: [
         {
@@ -28,7 +29,7 @@ describe("State.normalize", () => {
     expect(state.streams.length).toEqual(1);
   });
 
-  it("collapses surplus empty streams", () => {
+  test("collapses surplus empty streams", () => {
     const state: State = {
       streams: [
         {
@@ -49,7 +50,7 @@ describe("State.normalize", () => {
     expect(state.streams.length).toEqual(1);
   });
 
-  it("collapses empty streams", () => {
+  test("collapses empty streams", () => {
     const state: State = {
       streams: [
         {

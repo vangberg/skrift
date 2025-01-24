@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest'
 import { builders } from "prosemirror-test-builder";
 import { schema } from "./schema.js";
 import { proseMirrorToMarkdown } from "./serializer.js";

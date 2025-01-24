@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { Note } from "./index.js";
 
 const fullNote = `# A title
@@ -9,17 +10,17 @@ describe("parseMarkdown", () => {
   describe("with full note", () => {
     const note = Note.fromMarkdown(fullNote);
 
-    it("parses title", () => {
+    test("parses title", () => {
       expect(note.title).toEqual("A title");
     });
 
-    it("parses body", () => {
+    test("parses body", () => {
       expect(note.body).toEqual(
         "Some content. [#](123.md).\nAnother link: [#](456.md)"
       );
     });
 
-    it("parses links", () => {
+    test("parses links", () => {
       expect(note.linkIds).toEqual(new Set(["123.md", "456.md"]));
     });
   });

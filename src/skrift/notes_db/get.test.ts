@@ -1,3 +1,4 @@
+import { describe, expect, test, beforeAll, beforeEach, afterEach } from 'vitest';
 import BetterSqlite3 from "better-sqlite3";
 import { NotesDB, NoteNotFoundError } from "./index.js";
 
@@ -9,7 +10,7 @@ describe("NotesDB.get()", () => {
     NotesDB.initialize(db);
   });
 
-  it("gets a note", () => {
+  test("gets a note", () => {
     const date = new Date();
     NotesDB.save(
       db,
@@ -25,7 +26,7 @@ describe("NotesDB.get()", () => {
     expect(result.modifiedAt).toEqual(date);
   });
 
-  it("gets a note with links", () => {
+  test("gets a note with links", () => {
     NotesDB.save(db, "a.md", "Alpha\n\n[#](b.md) [#](c.md)");
     NotesDB.save(db, "b.md", "Beta\n\n[#](a.md)");
     NotesDB.save(db, "c.md", "Charlie");
@@ -40,7 +41,7 @@ describe("NotesDB.get()", () => {
     expect(result.backlinks).toEqual([{ id: "b.md", title: "Beta" }]);
   });
 
-  it("gets backlinks", async () => {
+  test("gets backlinks", async () => {
     const date = new Date();
     NotesDB.save(db, "a.md", "[#](b.md)", date);
     NotesDB.save(db, "b.md", "# B", date);
@@ -49,7 +50,7 @@ describe("NotesDB.get()", () => {
     expect(result.backlinkIds).toEqual(new Set(["a.md"]));
   });
 
-  it("fails on unknown note", () => {
+  test("fails on unknown note", () => {
     expect(() => NotesDB.get(db, "unknown")).toThrow(NoteNotFoundError);
   });
 });
