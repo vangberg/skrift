@@ -65,7 +65,7 @@ export const DragDropStream: React.FC<PropsWithChildren<Props>> = ({
                 return attachClosestEdge(data, {
                     input,
                     element,
-                    allowedEdges: ["top", "bottom"],
+                    allowedEdges: ["left", "right"],
                 })
             },
             onDragEnter: conditionallySetClosestEdge,

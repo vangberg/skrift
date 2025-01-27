@@ -34,7 +34,7 @@ export const DragDropCard: React.FC<PropsWithChildren<Props>> = ({
                 return attachClosestEdge(data, {
                     input,
                     element,
-                    allowedEdges: ["left", "right"],
+                    allowedEdges: ["top", "bottom"],
                 })
             },
             onDragEnter: ({ self, source }) => {
