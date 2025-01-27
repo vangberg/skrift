@@ -198,6 +198,7 @@ export const NotesDB = {
   },
 
   async search(db: BetterSqlite3.Database, query: string): Promise<NoteID[]> {
+    // https://learn.microsoft.com/en-us/azure/search/hybrid-search-ranking
     const k = 60; // Constant for RRF calculation
     const keywordResults = await NotesDB.searchKeyword(db, query);
     const semanticResults = await NotesDB.searchSemantic(db, query);
