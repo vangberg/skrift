@@ -50,15 +50,15 @@ export const Stream: React.FC<Props> = ({
 
   const handleOpenSearch = useCallback(
     (event: React.MouseEvent) =>
-      onOpenSearch("", mouseEventToMode(event.nativeEvent)),
+      onOpenSearch("", "below"),
     [onOpenSearch]
   );
 
   return (
     <div
-      className="flex-1 flex flex-row h-full"
+      className="h-full min-h-0 flex flex-col"
     >
-      <div className="flex items-center">
+      <div className="flex flex-row justify-center">
         <span
           onClick={handleOpenSearch}
           className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"

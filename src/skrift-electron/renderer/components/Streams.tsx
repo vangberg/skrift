@@ -8,7 +8,7 @@ type Props = {
 
 export const Streams: React.FC<Props> = ({ streams }) => {
   return (
-    <div className="h-screen flex flex-col min-h-full text-sm bg-gray-200">
+    <div className="h-screen flex flex-row justify-start text-sm bg-gray-200">
       {streams.map((stream, index) => (
         <DragDropStreamContainer key={stream.key} stream={stream}>
           <StreamContainer key={stream.key} path={[index]} stream={stream} />
