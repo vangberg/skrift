@@ -51,19 +51,19 @@ body {
   }
 
   a {
-    @apply underline text-blue-500;
+    @apply underline text-blue-500 cursor-pointer;
   }
 
   a.known {
-    @apply underline text-blue-500;
+    @apply underline text-blue-500 cursor-pointer;
   }
 
   a.unknown {
-    @apply underline text-red-500;
+    @apply underline text-red-500 cursor-pointer;
   }
 
   a.external {
-    @apply no-underline text-blue-500;
+    @apply no-underline text-blue-500 cursor-pointer;
   }
 
   pre {
