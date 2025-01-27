@@ -76,7 +76,7 @@
     "@atlaskit/pragmatic-drag-and-drop-hitbox": "^1.0.3",
     "@benrbray/prosemirror-math": "^1.0.0",
     "@handlewithcare/remark-prosemirror": "^0.1.5",
-    "@nytimes/react-prosemirror": "^1.0.0",
+    "@nytimes/react-prosemirror": "^1.0.2",
     "@types/better-sqlite3": "^7.6.12",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^22.10.2",
