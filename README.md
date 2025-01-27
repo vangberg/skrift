@@ -3,6 +3,8 @@
 A personal note-taking app. See my post [Note Workflows in Skrift](https://harry.vangberg.name/posts/2021-12-30-note-workflows-in-skrift/)
 for the rationale behind Skrift.
 
+![skrift](https://github.com/user-attachments/assets/04fc5744-d595-42e7-8386-7b043dc92d68)
+
 ## Development
 
 - `asdf` is used for version management.
