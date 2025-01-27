@@ -103,7 +103,7 @@ export const DragDropStream: React.FC<PropsWithChildren<Props>> = ({
     }, [streamKey]);
 
     return (
-        <div ref={ref} className="p-2 first:ml-2 last:mr-2 h-full min-h-0 relative">
+        <div ref={ref} className="p-2 first:ml-2 last:mr-2 h-full min-h-0 flex-1 max-w-[32rem] relative">
             {children}
             <StreamDropIndicator edge={closestEdge} />
         </div>
