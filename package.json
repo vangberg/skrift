@@ -81,7 +81,7 @@
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^22.10.2",
     "@types/parsimmon": "^1.10.6",
-    "@types/react": "^19.0.1",
+    "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "@typescript-eslint/eslint-plugin": "^8.20.0",
     "@typescript-eslint/parser": "^8.18.0",
