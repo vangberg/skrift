@@ -5,6 +5,14 @@ for the rationale behind Skrift.
 
 ![skrift](https://github.com/user-attachments/assets/04fc5744-d595-42e7-8386-7b043dc92d68)
 
+## Installation
+
+Download the latest release from the [Releases](https://github.com/vangberg/skrift/releases) page.
+
+If you are on macOS, the app is unsigned (as I don't want to pay for an Apple Developer account),
+and cannot run, if it is downloaded via the browser. Download it via the terminal using `curl`
+instead.
+
 ## Development
 
 - `asdf` is used for version management.
