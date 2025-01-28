@@ -1,26 +1,18 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { NoteCardContainer } from "../containers/NoteCardContainer.js";
 import { SearchCardContainer } from "../containers/SearchCardContainer.js";
 import { StreamPath } from "../interfaces/path/index.js";
-import { OpenCardMode, Stream as StreamType } from "../interfaces/state/index.js";
-import { mouseEventToMode } from "../mouseEventToMode.js";
-import { Icon } from "./Icon.js";
+import { Stream as StreamType } from "../interfaces/state/index.js";
 import { DragDropCard } from "./DragDropCard.js";
 
 type Props = {
   path: StreamPath;
   stream: StreamType;
-  onOpenSearch: (query: string, mode: OpenCardMode) => void;
-  onMinimizeAll: () => void;
-  onMaximizeAll: () => void;
 };
 
 export const Stream: React.FC<Props> = ({
   path,
   stream,
-  onOpenSearch,
-  onMinimizeAll,
-  onMaximizeAll,
 }) => {
   const cards = stream.cards.map((card, idx) => {
     switch (card.type) {
@@ -46,27 +38,10 @@ export const Stream: React.FC<Props> = ({
     }
   });
 
-
-
-  const handleOpenSearch = useCallback(
-    (event: React.MouseEvent) =>
-      onOpenSearch("", "below"),
-    [onOpenSearch]
-  );
-
   return (
     <div
       className="h-full min-h-0 flex flex-col"
     >
-      <div className="flex flex-row justify-center">
-        <span
-          onClick={handleOpenSearch}
-          className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
-        >
-          <Icon name="search" className="w-4 h-4" />
-        </span>
-      </div>
-
       {cards}
     </div>
   );
