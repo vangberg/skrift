@@ -1,6 +1,6 @@
 {
   "name": "skrift",
-  "version": "0.26.0",
+  "version": "0.26.1",
   "description": "Networked notes",
   "exports": "./build/main.js",
   "main": "build/main.js",
