@@ -22,7 +22,7 @@ export const NoteCardContainer: React.FC<Props> = ({ card, path }) => {
   const handleDelete = useCallback(() => onDeleteNote(id), [onDeleteNote, id]);
 
   const handleOpenBacklinks = useCallback(() => {
-    onOpenSearch(card.id, "below")
+    onOpenSearch(card.id, "push")
   }, [card.id, onOpenSearch]);
 
   const handleToggle = useCallback(() => {
