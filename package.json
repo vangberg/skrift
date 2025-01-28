@@ -21,7 +21,8 @@
     "test": "ELECTRON_RUN_AS_NODE=1 electron --experimental-vm-modules ./node_modules/.bin/vitest run",
     "test-watch": "ELECTRON_RUN_AS_NODE=1 electron --experimental-vm-modules ./node_modules/.bin/vitest",
     "postinstall": "electron-builder install-app-deps",
-    "notarize": "./notarize.sh"
+    "notarize": "./notarize.sh",
+    "tag": "npm version minor && git push && git push --tags"
   },
   "build": {
     "appId": "com.halestreet.Skrift",
