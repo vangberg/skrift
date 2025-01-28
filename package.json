@@ -1,6 +1,6 @@
 {
   "name": "skrift",
-  "version": "0.26.0",
+  "version": "0.27.0",
   "description": "Networked notes",
   "exports": "./build/main.js",
   "main": "build/main.js",
@@ -22,7 +22,8 @@
     "test-watch": "ELECTRON_RUN_AS_NODE=1 electron --experimental-vm-modules ./node_modules/.bin/vitest",
     "postinstall": "electron-builder install-app-deps",
     "notarize": "./notarize.sh",
-    "huggingface:download": "tsx script/huggingfaceDownload.ts"
+    "huggingface:download": "tsx script/huggingfaceDownload.ts",
+    "tag": "npm version minor && git push && git push --tags"
   },
   "build": {
     "appId": "com.halestreet.Skrift",
@@ -78,25 +79,25 @@
     "@benrbray/prosemirror-math": "^1.0.0",
     "@handlewithcare/remark-prosemirror": "^0.1.5",
     "@huggingface/transformers": "^3.3.2",
-    "@nytimes/react-prosemirror": "^1.0.0",
+    "@nytimes/react-prosemirror": "^1.0.2",
     "@types/better-sqlite3": "^7.6.12",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^22.10.2",
     "@types/parsimmon": "^1.10.6",
-    "@types/react": "^19.0.1",
+    "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
-    "@typescript-eslint/eslint-plugin": "^8.19.0",
+    "@typescript-eslint/eslint-plugin": "^8.22.0",
     "@typescript-eslint/parser": "^8.18.0",
     "autoprefixer": "^10.2.5",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "concurrently": "^9.1.2",
     "css-loader": "^7.1.2",
-    "electron": "^33.3.1",
+    "electron": "^34.0.1",
     "electron-builder": "^25.1.8",
     "electron-unhandled": "^5.0.0",
     "electron-updater": "^6.3.9",
-    "eslint": "^9.17.0",
+    "eslint": "^9.18.0",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.1.0",
     "html-webpack-plugin": "^5.3.1",
@@ -104,7 +105,7 @@
     "markdown-it": "^14.1.0",
     "node-loader": "^2.1.0",
     "parsimmon": "^1.17.0",
-    "postcss": "^8.2.15",
+    "postcss": "^8.5.1",
     "postcss-loader": "^8.1.1",
     "postcss-nested": "^7.0.2",
     "prosemirror-commands": "^1.6.2",
@@ -140,6 +141,6 @@
     "webpack-dev-server": "^5.2.0"
   },
   "dependencies": {
-    "better-sqlite3": "^11.7.0"
+    "better-sqlite3": "^11.8.1"
   }
 }

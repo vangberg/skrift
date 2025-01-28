@@ -2,7 +2,7 @@ import clsx from "clsx";
 import React, { PropsWithChildren, useCallback } from "react";
 
 type Props = {
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent) => void;
   className?: string;
   ref?: React.Ref<HTMLDivElement>;
 };
