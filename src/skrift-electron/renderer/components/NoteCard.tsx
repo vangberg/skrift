@@ -11,13 +11,14 @@ import { CardToolbarItem } from "./CardToolbarItem.js";
 import { NoteCard as NoteCardType, OpenCardMode } from "../interfaces/state/index.js";
 import { NoteCardTitle } from "./NoteCardTitle.js";
 import { CardTitle } from "./CardTitle.js";
+import { mouseEventToMode } from "../mouseEventToMode.js";
 
 type Props = {
   card: NoteCardType;
   note: NoteWithLinks;
   focus: number;
   onOpen: (id: string, mode: OpenCardMode) => void;
-  onOpenBacklinks: () => void;
+  onOpenBacklinks: (mode: OpenCardMode) => void;
   onDelete: () => void;
   onClose: () => void;
   onToggle: () => void;
@@ -37,6 +38,10 @@ export const NoteCard: React.FC<Props> = ({
 }) => {
   const { collapsed } = card.meta;
   const handleFocus = useCallback(() => onFocus(), [onFocus]);
+
+  const handleOpenBacklinks = useCallback((event: React.MouseEvent) => {
+    onOpenBacklinks(mouseEventToMode(event.nativeEvent));
+  }, [onOpenBacklinks]);
 
   const handleDelete = useCallback(async () => {
     const { response } = await Ipc.showMessageBox({
@@ -58,7 +63,7 @@ export const NoteCard: React.FC<Props> = ({
   return (
     <Card>
       <CardToolbar>
-        <CardToolbarItem onClick={onOpenBacklinks}>Backlinks</CardToolbarItem>
+        <CardToolbarItem onClick={handleOpenBacklinks}>Backlinks</CardToolbarItem>
         <CardToolbarItem onClick={handleDelete}>Delete</CardToolbarItem>
         <CardToolbarItem onClick={handleCopy}>Copy link</CardToolbarItem>
         <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>

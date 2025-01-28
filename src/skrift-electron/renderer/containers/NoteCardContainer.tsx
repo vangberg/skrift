@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import { NoteCard } from "../components/NoteCard.js";
 import { useNote } from "../hooks/useNote.js";
 import { Path } from "../interfaces/path/index.js";
-import { NoteCard as NoteCardType } from "../interfaces/state/index.js";
+import { NoteCard as NoteCardType, OpenCardMode } from "../interfaces/state/index.js";
 import { useCardActions } from "../hooks/useCardActions.js";
 
 interface Props {
@@ -21,8 +21,8 @@ export const NoteCardContainer: React.FC<Props> = ({ card, path }) => {
 
   const handleDelete = useCallback(() => onDeleteNote(id), [onDeleteNote, id]);
 
-  const handleOpenBacklinks = useCallback(() => {
-    onOpenSearch(card.id, "push")
+  const handleOpenBacklinks = useCallback((mode: OpenCardMode) => {
+    onOpenSearch(card.id, mode)
   }, [card.id, onOpenSearch]);
 
   const handleToggle = useCallback(() => {
