@@ -30,6 +30,8 @@ export default [
     },
     externals: {
       "better-sqlite3": "better-sqlite3",
+      "sharp": "sharp",
+      "onnxruntime-node": "onnxruntime-node"
     },
   },
 ];

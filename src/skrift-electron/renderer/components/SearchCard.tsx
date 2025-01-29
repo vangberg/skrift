@@ -1,6 +1,6 @@
 import React from "react";
 import { SearchCardInput } from "./SearchCardInput.js";
-import { Note } from "../../../skrift/note/index.js";
+import { NoteLink } from "../../../skrift/note/index.js";
 import { CardToolbar } from "./CardToolbar.js";
 import { Card } from "./Card.js";
 import { CardBody } from "./CardBody.js";
@@ -10,7 +10,8 @@ import { OpenCardMode } from "../interfaces/state/index.js";
 
 type Props = {
   query: string;
-  results: Note[];
+  keywordResults: NoteLink[];
+  semanticResults: NoteLink[];
   onOpen: (id: string, mode: OpenCardMode) => void;
   onClose: () => void;
   onAdd: (title: string, mode: OpenCardMode) => void;
@@ -19,7 +20,8 @@ type Props = {
 
 export const SearchCard: React.FC<Props> = ({
   query,
-  results,
+  keywordResults,
+  semanticResults,
   onOpen,
   onClose,
   onAdd,
@@ -37,7 +39,11 @@ export const SearchCard: React.FC<Props> = ({
           onAdd={onAdd}
           onSearch={onSearch}
         />
-        <SearchCardResults onOpen={onOpen} results={results} />
+        <h2>Exact Matches</h2>
+        <SearchCardResults onOpen={onOpen} results={keywordResults} />
+
+        <h2>Semantic Matches</h2>
+        <SearchCardResults onOpen={onOpen} results={semanticResults} />
       </CardBody>
     </Card>
   );

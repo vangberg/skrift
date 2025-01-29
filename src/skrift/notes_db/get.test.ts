@@ -5,14 +5,14 @@ import { NotesDB, NoteNotFoundError } from "./index.js";
 describe("NotesDB.get()", () => {
   let db: BetterSqlite3.Database;
 
-  beforeAll(() => {
+  beforeEach(() => {
     db = NotesDB.memory();
     NotesDB.initialize(db);
   });
 
-  test("gets a note", () => {
+  test("gets a note", async () => {
     const date = new Date();
-    NotesDB.save(
+    await NotesDB.save(
       db,
       "a.md",
       "# Added note\n\nLinks: [#](b.md), [#](c.md)",
@@ -26,10 +26,10 @@ describe("NotesDB.get()", () => {
     expect(result.modifiedAt).toEqual(date);
   });
 
-  test("gets a note with links", () => {
-    NotesDB.save(db, "a.md", "Alpha\n\n[#](b.md) [#](c.md)");
-    NotesDB.save(db, "b.md", "Beta\n\n[#](a.md)");
-    NotesDB.save(db, "c.md", "Charlie");
+  test("gets a note with links", async () => {
+    await NotesDB.save(db, "a.md", "Alpha\n\n[#](b.md) [#](c.md)");
+    await NotesDB.save(db, "b.md", "Beta\n\n[#](a.md)");
+    await NotesDB.save(db, "c.md", "Charlie");
 
     const result = NotesDB.getWithLinks(db, "a.md");
     expect(result.links.sort()).toEqual(
@@ -43,8 +43,8 @@ describe("NotesDB.get()", () => {
 
   test("gets backlinks", async () => {
     const date = new Date();
-    NotesDB.save(db, "a.md", "[#](b.md)", date);
-    NotesDB.save(db, "b.md", "# B", date);
+    await NotesDB.save(db, "a.md", "[#](b.md)", date);
+    await NotesDB.save(db, "b.md", "# B", date);
 
     const result = NotesDB.get(db, "b.md");
     expect(result.backlinkIds).toEqual(new Set(["a.md"]));

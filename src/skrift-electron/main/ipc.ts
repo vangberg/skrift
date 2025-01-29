@@ -6,6 +6,7 @@ import {
   IpcAddNoteCommand,
   IpcDeleteNoteCommand,
   IpcSetNoteCommand,
+  IpcSearchCommand,
 } from "../shared/types.js";
 import BetterSqlite3 from "better-sqlite3";
 import path from "path";
@@ -81,14 +82,14 @@ const handleDeleteNote = (
   reply(event, { type: "event/DELETED_NOTE", id });
 };
 
-const handleAddNote = (
+const handleAddNote = async (
   event: Electron.IpcMainEvent,
   cmd: IpcAddNoteCommand
 ) => {
   const { id, markdown } = cmd;
   const db = getDB();
 
-  NotesDB.save(db, id, markdown);
+  await NotesDB.save(db, id, markdown);
 
   NotesFS.save(_path, id, markdown);
 
@@ -97,7 +98,7 @@ const handleAddNote = (
   reply(event, { type: "event/SET_NOTE", note });
 };
 
-const handleSetNote = (
+const handleSetNote = async (
   event: Electron.IpcMainEvent,
   cmd: IpcSetNoteCommand
 ) => {
@@ -106,7 +107,7 @@ const handleSetNote = (
 
   const noteBefore = NotesDB.get(db, id);
 
-  NotesDB.save(db, id, markdown);
+  await NotesDB.save(db, id, markdown);
 
   NotesFS.save(_path, id, markdown);
 
@@ -132,16 +133,21 @@ const handleSetNote = (
   });
 };
 
-const handleSearch = (
-  event: Electron.IpcMainInvokeEvent,
-  query: string
-): NoteLink[] => {
+const handleSearch = async (
+  event: Electron.IpcMainEvent,
+  cmd: IpcSearchCommand
+) => {
+  const { query } = cmd;
   const db = getDB();
 
-  const ids = NotesDB.search(db, query);
-  const links = NotesDB.getNoteLinks(db, ids);
+  const [keywordIds, semanticIds] = await Promise.all([
+    NotesDB.searchKeyword(db, query),
+    NotesDB.searchSemantic(db, query),
+  ]);
+  const keywordLinks = NotesDB.getNoteLinks(db, keywordIds);
+  const semanticLinks = NotesDB.getNoteLinks(db, semanticIds);
 
-  return links;
+  reply(event, { type: "event/SEARCH_RESULT", query, keyword: keywordLinks, semantic: semanticLinks });
 };
 
 const handleWriteHTMLToClipboard = (
@@ -169,10 +175,11 @@ export const setupIpc = () => {
       case "command/DELETE_NOTE":
         handleDeleteNote(event, command);
         break;
+      case "command/SEARCH":
+        handleSearch(event, command);
+        break;
     }
   });
-
-  ipcMain.handle("search", handleSearch);
 
   ipcMain.handle('show-message-box', async (event, options) => {
     return await dialog.showMessageBox(options);

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import { SearchCard } from "../components/SearchCard.js";
-import { Note } from "../../../skrift/note/index.js";
+import { Note, NoteLink } from "../../../skrift/note/index.js";
 import { useCache } from "../hooks/useCache.js";
 import { Ipc } from "../ipc.js";
 import { Path } from "../interfaces/path/index.js";
@@ -20,18 +20,31 @@ export const SearchCardContainer: React.FC<Props> = ({ path, card }) => {
 
   const { onOpenNote, onClose, onUpdate } = useCardActions(card, path);
 
-  const [results, setResults] = useCache<Note[]>(
-    `card/${card.meta.key}/results`,
+  const [keywordResults, setKeywordResults] = useCache<NoteLink[]>(
+    `card/${card.meta.key}/keywordResults`,
+    []
+  );
+  const [semanticResults, setSemanticResults] = useCache<NoteLink[]>(
+    `card/${card.meta.key}/semanticResults`,
     []
   );
 
   useEffect(() => {
     if (query !== "*" && query.length <= 1) {
-      return setResults([]);
+      return setKeywordResults([]);
     }
 
-    Ipc.search(query).then((results) => setResults(results));
-  }, [query, setResults]);
+    Ipc.send({ type: "command/SEARCH", query });
+
+    const deregister = Ipc.on((event) => {
+      if (event.type === "event/SEARCH_RESULT" && event.query === query) {
+        setKeywordResults(event.keyword);
+        setSemanticResults(event.semantic);
+      }
+    });
+
+    return deregister;
+  }, [query, setKeywordResults, setSemanticResults]);
 
   const handleSearch = useCallback(
     (query: string) => {
@@ -57,7 +70,8 @@ export const SearchCardContainer: React.FC<Props> = ({ path, card }) => {
       onClose={onClose}
       onSearch={handleSearch}
       query={query}
-      results={results}
+      keywordResults={keywordResults}
+      semanticResults={semanticResults}
     />
   );
 };
