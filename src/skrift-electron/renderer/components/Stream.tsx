@@ -39,9 +39,7 @@ export const Stream: React.FC<Props> = ({
   });
 
   return (
-    <div
-      className="h-full min-h-0 flex flex-col"
-    >
+    <div className="h-full min-h-0 flex flex-col">
       {cards}
     </div>
   );

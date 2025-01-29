@@ -261,26 +261,13 @@ export const State = {
   normalizeOnce(state: State): boolean {
     const { streams } = state;
 
-    // There should always be at least 1 stream.
-    if (streams.length === 0) {
-      streams.push({
-        key: key++,
-        type: "stream",
-        cards: [],
-      });
-      return true;
-    }
-
-    // We always want at least 1 stream, empty or not.
-    if (streams.length === 1) return false;
-
-    // Find the first empty stream and remove it.
-    streams.forEach((stream, index) => {
-      if (stream.cards.length === 0) {
+    // Use a for loop to allow early exit when an empty stream is removed.
+    for (let index = 0; index < streams.length; index++) {
+      if (streams[index].cards.length === 0) {
         streams.splice(index, 1);
         return true;
       }
-    });
+    }
 
     return false;
   },
