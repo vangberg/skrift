@@ -1,6 +1,5 @@
 import { ipcRenderer, IpcRendererEvent } from "electron";
 import { IpcReply, IpcCommand } from "../shared/types.js";
-import { Note } from "../../skrift/note/index.js";
 
 export const Ipc = {
   on(callback: (reply: IpcReply) => void) {
@@ -18,10 +17,6 @@ export const Ipc = {
 
   send(command: IpcCommand) {
     ipcRenderer.send("skrift", command);
-  },
-
-  search(query: String): Promise<Note[]> {
-    return ipcRenderer.invoke("search", query);
   },
 
   showMessageBox(options: Electron.MessageBoxOptions): Promise<Electron.MessageBoxReturnValue> {

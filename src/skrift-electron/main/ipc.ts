@@ -6,6 +6,7 @@ import {
   IpcAddNoteCommand,
   IpcDeleteNoteCommand,
   IpcSetNoteCommand,
+  IpcSearchCommand,
 } from "../shared/types.js";
 import BetterSqlite3 from "better-sqlite3";
 import path from "path";
@@ -133,15 +134,20 @@ const handleSetNote = async (
 };
 
 const handleSearch = async (
-  event: Electron.IpcMainInvokeEvent,
-  query: string
-): Promise<NoteLink[]> => {
+  event: Electron.IpcMainEvent,
+  cmd: IpcSearchCommand
+) => {
+  const { query } = cmd;
   const db = getDB();
 
-  const ids = await NotesDB.search(db, query);
-  const links = await NotesDB.getNoteLinks(db, ids);
+  const [keywordIds, semanticIds] = await Promise.all([
+    NotesDB.searchKeyword(db, query),
+    NotesDB.searchSemantic(db, query),
+  ]);
+  const keywordLinks = NotesDB.getNoteLinks(db, keywordIds);
+  const semanticLinks = NotesDB.getNoteLinks(db, semanticIds);
 
-  return links;
+  reply(event, { type: "event/SEARCH_RESULT", query, keyword: keywordLinks, semantic: semanticLinks });
 };
 
 const handleWriteHTMLToClipboard = (
@@ -169,10 +175,11 @@ export const setupIpc = () => {
       case "command/DELETE_NOTE":
         handleDeleteNote(event, command);
         break;
+      case "command/SEARCH":
+        handleSearch(event, command);
+        break;
     }
   });
-
-  ipcMain.handle("search", handleSearch);
 
   ipcMain.handle('show-message-box', async (event, options) => {
     return await dialog.showMessageBox(options);

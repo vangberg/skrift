@@ -1,4 +1,4 @@
-import { NoteID, NoteWithLinks } from "../../skrift/note/index.js";
+import { NoteID, NoteLink, NoteWithLinks } from "../../skrift/note/index.js";
 
 export type IpcAddNoteCommand = {
   type: "command/ADD_NOTE";
@@ -12,13 +12,14 @@ export type IpcSetNoteCommand = {
   markdown: string;
 };
 export type IpcDeleteNoteCommand = { type: "command/DELETE_NOTE"; id: NoteID };
-
+export type IpcSearchCommand = { type: "command/SEARCH"; query: string };
 export type IpcCommand =
   | { type: "command/LOAD_DIR" }
   | IpcAddNoteCommand
   | IpcLoadNoteCommand
   | IpcSetNoteCommand
-  | IpcDeleteNoteCommand;
+  | IpcDeleteNoteCommand
+  | IpcSearchCommand;
 
 export type IpcSetNoteEvent = { type: "event/SET_NOTE"; note: NoteWithLinks };
 
@@ -27,4 +28,5 @@ export type IpcReply =
   | { type: "event/LOADED_DIR"; initialNoteID: NoteID | null }
   | IpcSetNoteEvent
   | { type: "event/DELETED_NOTE"; id: NoteID }
-  | { type: "event/ADDED_LINK"; from: NoteID; to: NoteID };
+  | { type: "event/ADDED_LINK"; from: NoteID; to: NoteID }
+  | { type: "event/SEARCH_RESULT"; query: string; keyword: NoteLink[]; semantic: NoteLink[] };
