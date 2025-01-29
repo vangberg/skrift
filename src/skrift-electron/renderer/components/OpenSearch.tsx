@@ -7,7 +7,7 @@ type Props = {
 
 export const OpenSearch: React.FC<Props> = ({ onOpenSearch }) => {
     return (
-        <div className="mr-2 flex flex-col justify-center">
+        <div className="first:ml-2 mr-2 flex flex-col justify-center">
             <span
                 onClick={onOpenSearch}
                 className="p-1 text-gray-500 hover:bg-gray-500 hover:text-white rounded cursor-pointer select-none"
