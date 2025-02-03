@@ -73,7 +73,7 @@
   },
   "homepage": "https://github.com/vangberg/skrift#readme",
   "devDependencies": {
-    "@atlaskit/pragmatic-drag-and-drop": "^1.4.0",
+    "@atlaskit/pragmatic-drag-and-drop": "^1.5.0",
     "@atlaskit/pragmatic-drag-and-drop-hitbox": "^1.0.3",
     "@benrbray/prosemirror-math": "^1.0.0",
     "@handlewithcare/remark-prosemirror": "^0.1.5",
