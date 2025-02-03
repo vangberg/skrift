@@ -80,7 +80,7 @@
     "@nytimes/react-prosemirror": "^1.0.2",
     "@types/better-sqlite3": "^7.6.12",
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^22.10.2",
+    "@types/node": "^22.13.0",
     "@types/parsimmon": "^1.10.6",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
