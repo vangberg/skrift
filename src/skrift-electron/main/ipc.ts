@@ -42,13 +42,13 @@ const handleLoadDir = async (event: Electron.IpcMainEvent) => {
     reply(event, { type: "event/LOADING_DIR", loaded });
   }
 
-  const initialNoteID = "20210108T145053.970Z.md";
+  // const initialNoteID = "20210108T145053.970Z.md";
 
-  if (NotesDB.exists(db, initialNoteID)) {
-    reply(event, { type: "event/LOADED_DIR", initialNoteID });
-  } else {
-    reply(event, { type: "event/LOADED_DIR", initialNoteID: null });
-  }
+  // if (NotesDB.exists(db, initialNoteID)) {
+  // reply(event, { type: "event/LOADED_DIR", initialNoteID });
+  // } else {
+  reply(event, { type: "event/LOADED_DIR", initialNoteID: null });
+  // }
 };
 
 const handleLoadNote = (
