@@ -15,7 +15,7 @@ export const SearchCardInput: React.FC<Props> = ({
   const handleSubmit = useCallback(
     (event: React.FormEvent) => {
       event.preventDefault();
-      onAdd(query, "below");
+      onAdd(query, "replace");
     },
     [query, onAdd]
   );
