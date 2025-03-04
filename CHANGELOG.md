@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.29.0 (2025-03-04)
 
 - Show number of backlinks in card toolbar
 
