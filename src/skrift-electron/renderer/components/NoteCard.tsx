@@ -63,7 +63,7 @@ export const NoteCard: React.FC<Props> = ({
   return (
     <Card>
       <CardToolbar>
-        <CardToolbarItem onClick={handleOpenBacklinks}>Backlinks</CardToolbarItem>
+        <CardToolbarItem onClick={handleOpenBacklinks}>Backlinks ({note.backlinks.length})</CardToolbarItem>
         <CardToolbarItem onClick={handleDelete}>Delete</CardToolbarItem>
         <CardToolbarItem onClick={handleCopy}>Copy link</CardToolbarItem>
         <CardToolbarItem onClick={onClose}>Close</CardToolbarItem>
