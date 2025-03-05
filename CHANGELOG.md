@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Flip link click-logic: Click opens note below current note, Cmd/Ctrl-Click
+  opens note in new stream to the right.
+
 ## 0.29.0 (2025-03-04)
 
 - Show number of backlinks in card toolbar

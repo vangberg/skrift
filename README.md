@@ -22,8 +22,13 @@ instead.
 
 - `npm run test` will run the tests.
 
-## Build and release
+## Build
 
+- `npm run build && npm run dist`
+
+## Release
+
+- Bump version with `npm version minor`
 - `npm run build && npm run release`
 
 ## Notarizing on Mac

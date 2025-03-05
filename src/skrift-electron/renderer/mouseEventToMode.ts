@@ -4,8 +4,8 @@ export const mouseEventToMode = (event: MouseEvent): OpenCardMode => {
   const { ctrlKey, metaKey, shiftKey } = event;
   const superKey = ctrlKey || metaKey;
 
-  if (superKey) return "below";
+  if (superKey) return "push";
   if (shiftKey) return "replace";
 
-  return "push";
+  return "below";
 };
