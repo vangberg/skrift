@@ -2,17 +2,20 @@ import React from "react";
 import { NoteCardContainer } from "../containers/NoteCardContainer.js";
 import { SearchCardContainer } from "../containers/SearchCardContainer.js";
 import { StreamPath } from "../interfaces/path/index.js";
-import { Stream as StreamType } from "../interfaces/state/index.js";
+import { OpenCardMode, Stream as StreamType } from "../interfaces/state/index.js";
 import { DragDropCard } from "./DragDropCard.js";
+import { OpenSearch } from "./OpenSearch.js";
 
 type Props = {
   path: StreamPath;
   stream: StreamType;
+  onOpenSearch: (mode: OpenCardMode) => void;
 };
 
 export const Stream: React.FC<Props> = ({
   path,
   stream,
+  onOpenSearch,
 }) => {
   const cards = stream.cards.map((card, idx) => {
     switch (card.type) {
@@ -39,8 +42,11 @@ export const Stream: React.FC<Props> = ({
   });
 
   return (
-    <div className="h-full min-h-0 flex flex-col">
+    <div
+      className="h-full min-h-0 flex flex-col"
+    >
       {cards}
+      <OpenSearch onOpenSearch={onOpenSearch} />
     </div>
   );
 };

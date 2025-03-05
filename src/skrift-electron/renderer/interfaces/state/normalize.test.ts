@@ -3,7 +3,33 @@ import { State, Card, Stream } from "./index.js";
 import { cardA, cardB, cardC, cardD, getState } from "./fixture.js";
 
 describe("State.normalize", () => {
-  test("collapses all empty streams", () => {
+  test("ensures that at least one stream exists", () => {
+    const state: State = {
+      streams: [],
+    };
+
+    State.normalize(state);
+
+    expect(state.streams.length).toEqual(1);
+  });
+
+  test("does not collapse the last stream, even if empty", () => {
+    const state: State = {
+      streams: [
+        {
+          key: 1,
+          type: "stream",
+          cards: [],
+        },
+      ],
+    };
+
+    State.normalize(state);
+
+    expect(state.streams.length).toEqual(1);
+  });
+
+  test("collapses surplus empty streams", () => {
     const state: State = {
       streams: [
         {
@@ -21,7 +47,7 @@ describe("State.normalize", () => {
 
     State.normalize(state);
 
-    expect(state.streams.length).toEqual(0);
+    expect(state.streams.length).toEqual(1);
   });
 
   test("collapses empty streams", () => {
@@ -45,7 +71,7 @@ describe("State.normalize", () => {
     expect(state.streams.length).toEqual(1);
   });
 
-  test("allows all streams to be closed", () => {
+  test("collapses prepending empty streams", () => {
     const state: State = {
       streams: [
         {
@@ -53,11 +79,16 @@ describe("State.normalize", () => {
           type: "stream",
           cards: [],
         },
+        {
+          key: 2,
+          type: "stream",
+          cards: [cardA()],
+        },
       ],
     };
 
     State.normalize(state);
 
-    expect(state.streams.length).toEqual(0);
+    expect(state.streams.length).toEqual(1);
   });
 });
