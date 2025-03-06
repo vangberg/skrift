@@ -160,7 +160,7 @@ export const NotesDB = {
     }
 
     const rows = db
-      .prepare<string, SearchRow>(`SELECT * FROM notes WHERE notes MATCH ? LIMIT 50`)
+      .prepare<string, SearchRow>(`SELECT * FROM notes WHERE notes MATCH ? ORDER BY rank LIMIT 50`)
       .all(Fts.toMatch(tokens));
 
     return rows.map((row) => row.id);
