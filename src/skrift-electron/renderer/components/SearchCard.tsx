@@ -39,11 +39,14 @@ export const SearchCard: React.FC<Props> = ({
           onAdd={onAdd}
           onSearch={onSearch}
         />
-        <h2>Exact Matches</h2>
-        <SearchCardResults onOpen={onOpen} results={keywordResults} />
 
-        <h2>Semantic Matches</h2>
-        <SearchCardResults onOpen={onOpen} results={semanticResults} />
+        <div className="overflow-y-auto min-h-0">
+          <h2>Exact Matches</h2>
+          <SearchCardResults onOpen={onOpen} results={keywordResults} />
+
+          <h2>Semantic Matches</h2>
+          <SearchCardResults onOpen={onOpen} results={semanticResults} />
+        </div>
       </CardBody>
     </Card>
   );
