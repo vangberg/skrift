@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.30.0 (2025-06-04)
 
 - Flip link click-logic: Click opens note below current note, Cmd/Ctrl-Click
   opens note in new stream to the right.
